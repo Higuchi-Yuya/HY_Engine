@@ -19,6 +19,9 @@ public:
 	// 単位行列を求める
 	Matrix4 identity();
 
+	// 逆行列を求める
+	Matrix4 MakeInverse(const Matrix4* mat);
+
 	//拡大縮小行列の設定
 	Matrix4 scale(const Vector3& s);
 

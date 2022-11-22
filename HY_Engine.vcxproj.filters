@@ -55,6 +55,9 @@
     <Filter Include="ヘッダー ファイル\Engine\Sound">
       <UniqueIdentifier>{f6878f29-d0b4-475e-8476-e7846adddafc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル">
+      <UniqueIdentifier>{e876b2d0-8a41-4443-bdc1-0847181b8965}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,23 +69,8 @@
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DirectXBase\Render_basic.cpp">
-      <Filter>ソース ファイル\Engine\DirectXBase</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DirectXBase\WinApp.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Drawing\Line.cpp">
-      <Filter>ソース ファイル\Engine\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Drawing\Mesh.cpp">
-      <Filter>ソース ファイル\Engine\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Drawing\Sprite.cpp">
-      <Filter>ソース ファイル\Engine\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Drawing\Texture.cpp">
-      <Filter>ソース ファイル\Engine\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Input\Input.cpp">
       <Filter>ソース ファイル\Engine\Input</Filter>
@@ -102,6 +90,12 @@
     <ClCompile Include="Engine\Sound\Audio.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>ソース ファイル\Engine\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>ソース ファイル\Engine\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -110,23 +104,8 @@
     <ClInclude Include="Engine\DirectXBase\DirectXCommon.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DirectXBase\Render_basic.h">
-      <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DirectXBase\WinApp.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Drawing\Line.h">
-      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Drawing\Mesh.h">
-      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Drawing\Sprite.h">
-      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Drawing\Texture.h">
-      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Input\Input.h">
       <Filter>ヘッダー ファイル\Engine\Input</Filter>
@@ -146,5 +125,33 @@
     <ClInclude Include="Engine\Sound\Audio.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
+      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shaders\Basic.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\SpriteShaderHeader.hlsli">
+      <Filter>シェーダーファイル</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\shaders\BasicPS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\BasicVS.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpriteVertexShader.hlsl">
+      <Filter>シェーダーファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

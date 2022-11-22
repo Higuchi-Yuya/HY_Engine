@@ -1,9 +1,13 @@
 #include "SpriteShaderHeader.hlsli"
 
-VSOutput main(float4 pos : POSITION, float2 uv : TEXCOORD)
+float4 main(float4 pos : POSITION) : SV_POSITION
 {
-	VSOutput output; // ピクセルシェーダーに渡す値
-	output.svpos = mul(mat, pos);
-	output.uv = uv;
-	return output;
+	return pos;
 }
+//VSOutput main(float4 pos : POSITION, float2 uv : TEXCOORD)
+//{
+//	VSOutput output; // ピクセルシェーダーに渡す値
+//	output.svpos = mul(mat, pos);
+//	output.uv = uv;
+//	return output;
+//}

@@ -74,7 +74,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	SpriteManager* spriteManager = nullptr;
 	// スプライト共通部の初期化
 	spriteManager = new SpriteManager;
-	spriteManager->Initialize(dxCommon->GetDevice());
+	spriteManager->Initialize(dxCommon);
 	
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
@@ -84,7 +84,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region シーンに使う変数の初期化
 	// スプライト一枚の初期化
 	Sprite* sprite = new Sprite();
-	sprite->Initialize();
+	sprite->Initialize(spriteManager);
 #pragma endregion
 
 
@@ -157,11 +157,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		// 描画前処理
 
 		// 描画後処理
-	
+		spriteManager->Draw();
+		sprite->Draw();
+
 		//// 深度バッファクリア
 		dxCommon->ClearDepthBuffer();
 		//Meshの描画--------------------------------------------------------------//
-		
 		
 		//
 		//for (int i = 0; i < 20; i++)

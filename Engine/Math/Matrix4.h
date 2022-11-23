@@ -20,7 +20,7 @@ public:
 	Matrix4 identity();
 
 	// 逆行列を求める
-	Matrix4 MakeInverse(const Matrix4* mat);
+	Matrix4 MakeInverse();
 
 	//拡大縮小行列の設定
 	Matrix4 scale(const Vector3& s);
@@ -30,11 +30,20 @@ public:
 	Matrix4 rotateY(float angle);
 	Matrix4 rotateZ(float angle);
 
+	// 回転行列のまとめて合成( 順番は Z,X,Y )
+	Matrix4 rotation(Vector3 angle);
+
 	// 平行移動行列の作成
 	Matrix4 translate(const Vector3& t);
 
 	// 座標変換（ベクトルと行列の掛け算をする）
 	Vector3 transform(const Vector3& v, const Matrix4& m);
+
+	// ビュー行列作成
+	Matrix4 ViewMat(Vector3 eye, Vector3 target, Vector3 up);
+
+	// 射影行列作成
+	Matrix4 ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ);
 
 	// 代入演算子オーバーロード
 	Matrix4& operator*=(const Matrix4& m1);

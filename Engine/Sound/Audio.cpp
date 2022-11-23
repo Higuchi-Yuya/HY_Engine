@@ -1,13 +1,31 @@
 #include "Audio.h"
 
-void SoundManager::Initialize()
+Microsoft::WRL::ComPtr<IXAudio2>Sound::xAudio2_;
+IXAudio2MasteringVoice* Sound::masterVoice_;
+
+Sound::~Sound()
 {
-	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	result = xAudio2->CreateMasteringVoice(&masterVoice);
+	// xaudio2の解放
+	xAudio2_.Reset();
+	//バッファのメモリを解放
+	delete[] soundData_.pBuffer;
+
+	soundData_.pBuffer = 0;
+	soundData_.bufferSize = 0;
+	soundData_.wfex = {};
+}
+
+void Sound::StaticInitialize()
+{
+
+	HRESULT result;
+	result = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	result = xAudio2_->CreateMasteringVoice(&masterVoice_);
+
 }
 
 //音声データの読み込み
-SoundData SoundManager::SoundLoadWave(const char* filename) {
+void Sound::SoundLoadWave(const char* filename) {
 
 	HRESULT result;
 
@@ -53,15 +71,38 @@ SoundData SoundManager::SoundLoadWave(const char* filename) {
 	ChunkHeader data;
 	file.read((char*)&data, sizeof(data));
 
-	//JUNKチャンクを検出した場合
-	if (strncmp(data.id, "JUNK ", 4) == 0) {
+	//bextチャンクを検出した場合
+	if (strncmp(data.id, "bext", 4) == 0) {
 		//読み込み位置をJUNKチャンクの終わるまで進める
 		file.seekg(data.size, std::ios_base::cur);
 		//再読み込み
 		file.read((char*)&data, sizeof(data));
 	}
 
-	if (strncmp(data.id, "data ", 4) != 0) {
+	//JUNKチャンクを検出した場合
+	if (strncmp(data.id, "JUNK", 4) == 0) {
+		//読み込み位置をJUNKチャンクの終わるまで進める
+		file.seekg(data.size, std::ios_base::cur);
+		//再読み込み
+		file.read((char*)&data, sizeof(data));
+	}
+
+	//JUNKチャンクを検出した場合
+	if (strncmp(data.id, "junk", 4) == 0) {
+		//読み込み位置をJUNKチャンクの終わるまで進める
+		file.seekg(data.size, std::ios_base::cur);
+		//再読み込み
+		file.read((char*)&data, sizeof(data));
+	}
+	//LISTチャンクを検出した場合
+	if (strncmp(data.id, "LIST", 4) == 0) {
+		//読み込み位置をJUNKチャンクの終わるまで進める
+		file.seekg(data.size, std::ios_base::cur);
+		//再読み込み
+		file.read((char*)&data, sizeof(data));
+	}
+
+	if (strncmp(data.id, "data", 4) != 0) {
 		assert(0);
 	}
 
@@ -81,43 +122,45 @@ SoundData SoundManager::SoundLoadWave(const char* filename) {
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
 
-	return soundData;
+	soundData_ = soundData;
 
 }
 
 //-------音声データの解放-------//
-void SoundManager::SoundUnload(SoundData* soundData) {
+void Sound::SoundUnload() {
 	// xaudio2の解放
-	xAudio2.Reset();
+	xAudio2_.Reset();
 
 	//バッファのメモリを解放
-	delete[] soundData->pBuffer;
+	delete[] soundData_.pBuffer;
 
-	soundData->pBuffer = 0;
-	soundData->bufferSize = 0;
-	soundData->wfex = {};
+	soundData_.pBuffer = 0;
+	soundData_.bufferSize = 0;
+	soundData_.wfex = {};
 }
 
 //------サウンドの再生-------//
 
 //音声再生
-void SoundManager::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, bool loop, float volume) {
+void Sound::SoundPlayWave(bool loop, float volume) {
+	HRESULT result;
 
 	//波形フォーマットを元にSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+	result = xAudio2_->CreateSourceVoice(&pSourceVoice, &soundData_.wfex);
 	assert(SUCCEEDED(result));
 
 	//再生する波形データの設定
-	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData.pBuffer;
-	buf.AudioBytes = soundData.bufferSize;
+	buf.pAudioData = soundData_.pBuffer;
+	buf.AudioBytes = soundData_.bufferSize;
+
+	pSourceVoice->SetVolume(volume);
 
 	if (loop)
 	{
 		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;
+
 
 	//波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
@@ -126,20 +169,13 @@ void SoundManager::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, 
 }
 
 //----------音声ストップ------------//
-void SoundManager::StopWave(const SoundData& soundData)
+void Sound::StopWave()
 {
-	//波形フォーマットを元にSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
-	assert(SUCCEEDED(result));
-
-	XAUDIO2_VOICE_STATE state;
-	pSourceVoice->GetState(&state);
-	if (state.BuffersQueued == 0)
+	HRESULT result;
+	if (pSourceVoice != nullptr)
 	{
-		return;
+		result = pSourceVoice->Stop();
+		result = pSourceVoice->FlushSourceBuffers();
+		result = pSourceVoice->SubmitSourceBuffer(&buf);
 	}
-	result = pSourceVoice->Stop(0);
-	result = pSourceVoice->FlushSourceBuffers();
-	result = pSourceVoice->SubmitSourceBuffer(&buf);
 }

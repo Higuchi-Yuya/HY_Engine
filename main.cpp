@@ -115,33 +115,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 			OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 		}
 
-		
-
-		
-
 		//2.描画先の変更
 		//レンダーターゲットビューのハンドルを取得
-		
-		
-
-		
-
-		
-
-		////トリガー処理
-		//bool キーを押した状態か(uint8_t キー番号);
-		//bool キーを離した状態か(uint8_t キー番号);
-		//bool キーを押した瞬間か(uint8_t キー番号);
-		//bool キーを離した瞬間か(uint8_t キー番号);
-
-
-
-
-
-
-		
-		
-
 
 
 		//////////////////////////////////////////////
@@ -164,11 +139,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		dxCommon->ClearDepthBuffer();
 		//Meshの描画--------------------------------------------------------------//
 		
-		//
-		//for (int i = 0; i < 20; i++)
-		//{
-		//	line[i].Line_Draw(indices_count2, dxCommon->GetCommandList());
-		//}
+	
 		//4.描画コマンドここまで
 		
 #pragma region 前景スプライト描画

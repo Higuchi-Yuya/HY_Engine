@@ -33,42 +33,43 @@ struct FormatChunk {
 	WAVEFORMATEX fmt;	//波形フォーマット
 };
 
-//音声データ
-struct SoundData {
-	//波形フォーマット
-	WAVEFORMATEX wfex;
-	//バッファの先頭アドレス
-	BYTE* pBuffer;
-	//バッファサイズ
-	unsigned int bufferSize;
-};
-
-class SoundManager
+class Sound
 {
 public:
-	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masterVoice;
-	static const int kMaxSoundData = 256;
+	static Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
+	static IXAudio2MasteringVoice* masterVoice_;
+	~Sound();
 
 	// 初期化
-	void Initialize();
+	static void StaticInitialize();
 	//音声読み込み
-	SoundData SoundLoadWave(const char* filename);
+	void SoundLoadWave(const char* filename);
 	//音声再生
-	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, bool loop = false, float volume = 1.0f);
+	void SoundPlayWave(bool loop = false, float volume = 1.0f);
 	// 音声停止
-	void StopWave(const SoundData& soundData);
+	void StopWave();
 
 	//音声データ解放
-	void SoundUnload(SoundData* soundData);
-	//xAudio2の解放
-	void End();
+	void SoundUnload();
+
 
 private:
-	std::map<std::string, SoundData> soundDatas_;
+	//音声データ
+	struct SoundData {
+		//波形フォーマット
+		WAVEFORMATEX wfex;
+		//バッファの先頭アドレス
+		BYTE* pBuffer;
+		//バッファサイズ
+		unsigned int bufferSize;
+	};
+
+	SoundData soundData_;
+
+	IXAudio2SourceVoice* pSourceVoice = nullptr;
+
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
-	//波形フォーマットからSourceVoiceの生成
-	IXAudio2SourceVoice* sourceVoice = nullptr;
-	HRESULT result;
+
+
 };

@@ -1,4 +1,4 @@
-#include "Audio.h"
+#include "Sound.h"
 
 Microsoft::WRL::ComPtr<IXAudio2>Sound::xAudio2_;
 IXAudio2MasteringVoice* Sound::masterVoice_;

@@ -2,7 +2,6 @@
 
 #pragma comment(lib,"d3dcompiler.lib")
 
-
 #include<iostream>
 
 #include <math.h>

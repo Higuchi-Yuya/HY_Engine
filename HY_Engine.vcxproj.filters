@@ -31,12 +31,6 @@
     <Filter Include="ソース ファイル\Engine\DirectXBase">
       <UniqueIdentifier>{015f0fe1-9208-4e2b-aa95-8793d3c2dd08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\Drawing">
-      <UniqueIdentifier>{b149dae8-4421-4c38-bba9-8b16d08ef48d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Drawing">
-      <UniqueIdentifier>{968e1b2a-a2c7-4758-a83a-5b711438ee41}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\Input">
       <UniqueIdentifier>{14ab2cd9-8d2a-4e31-9ffa-444460c89ba3}</UniqueIdentifier>
     </Filter>
@@ -57,6 +51,12 @@
     </Filter>
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{e876b2d0-8a41-4443-bdc1-0847181b8965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\2D_Drawing">
+      <UniqueIdentifier>{b149dae8-4421-4c38-bba9-8b16d08ef48d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\2D_Drawing">
+      <UniqueIdentifier>{968e1b2a-a2c7-4758-a83a-5b711438ee41}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,14 +87,17 @@
     <ClCompile Include="Engine\Math\Vector4.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Sound\Audio.cpp">
+    <ClCompile Include="Engine\Sound\Sound.cpp">
       <Filter>ソース ファイル\Engine\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル\Engine\Drawing</Filter>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\Engine\DirectXBase</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteManager.cpp">
-      <Filter>ソース ファイル\Engine\Drawing</Filter>
+    <ClCompile Include="Engine\2D_Drawing\Sprite.cpp">
+      <Filter>ソース ファイル\Engine\2D_Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D_Drawing\SpriteManager.cpp">
+      <Filter>ソース ファイル\Engine\2D_Drawing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,14 +125,17 @@
     <ClInclude Include="Engine\Math\Vector4.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Sound\Audio.h">
+    <ClInclude Include="Engine\Sound\Sound.h">
       <Filter>ヘッダー ファイル\Engine\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
+    <ClInclude Include="Texture.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteManager.h">
-      <Filter>ヘッダー ファイル\Engine\Drawing</Filter>
+    <ClInclude Include="Engine\2D_Drawing\Sprite.h">
+      <Filter>ヘッダー ファイル\Engine\2D_Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2D_Drawing\SpriteManager.h">
+      <Filter>ヘッダー ファイル\Engine\2D_Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

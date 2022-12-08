@@ -75,6 +75,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	spriteManager = new SpriteManager;
 	spriteManager->Initialize(dxCommon);
 	
+	// ƒeƒNƒXƒ`ƒƒ‚Ì‰Šú‰»
+	Texture::StaticInitialize(dxCommon);
+	
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12‰Šú‰»ˆ—@‚±‚±‚Ü‚Å-------------//
 	///////////////////////////////////////////////////////
@@ -82,8 +85,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma region ƒV[ƒ“‚ÉŽg‚¤•Ï”‚Ì‰Šú‰»
 	// ƒXƒvƒ‰ƒCƒgˆê–‡‚Ì‰Šú‰»
+	int textureHandle;
+	int textureHandle2;
+	textureHandle = Texture::LoadTexture("risu.jpg");
+	textureHandle2 = Texture::LoadTexture("texture.png");
 	Sprite* sprite = new Sprite();
-	sprite->Initialize(spriteManager);
+	Sprite* sprite2 = new Sprite();
+	sprite->StaticInitialize(spriteManager);
+	sprite->Initialize(textureHandle,{100,100});
+	sprite2->Initialize(textureHandle2, { 200,200 });
 #pragma endregion
 
 
@@ -124,39 +134,45 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma endregion
 
-#pragma region ƒOƒ‰ƒtƒBƒbƒNƒXƒRƒ}ƒ“ƒh
+#pragma region •`‰æˆ—
 
-		//4.•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
+		//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
 		dxCommon->PreDraw();
-		// •`‰æ‘Oˆ—
+		
+#pragma region ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
+		// ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
+		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 
-		// •`‰æŒãˆ—
-		spriteManager->Draw();
-		sprite->Draw();
 
+		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		//// [“xƒoƒbƒtƒ@ƒNƒŠƒA
 		dxCommon->ClearDepthBuffer();
-		//Mesh‚Ì•`‰æ--------------------------------------------------------------//
-		
-	
-		//4.•`‰æƒRƒ}ƒ“ƒh‚±‚±‚Ü‚Å
+#pragma endregion
+
+#pragma region ‚R‚cƒ‚ƒfƒ‹•`‰æ
+		//-----‚±‚±‚©‚ç 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
+
+
+		//-----‚±‚±‚Ü‚Å 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
+#pragma endregion
 		
 #pragma region ‘OŒiƒXƒvƒ‰ƒCƒg•`‰æ
-// •`‰æ‘Oˆ—
-		
+		// •`‰æ‘Oˆ—
+		spriteManager->PreDraw();
+		//-----‚±‚±‚©‚ç 2D•`‰æ -------//
+		sprite->Draw();
+		sprite2->Draw();
 
-		
 
+
+		//-----‚±‚±‚Ü‚Å 2D•`‰æ -------//
 		// •`‰æŒãˆ—
-	
+		spriteManager->PostDraw();
 #pragma endregion
 
-
-		
-
-#pragma region ‰æ–Ê“ü‚ê‘Ö‚¦
+		// •`‰æƒRƒ}ƒ“ƒh‚ÌI—¹
 		dxCommon->PostDraw();
-#pragma endregion
+
 
 
 #pragma endregion

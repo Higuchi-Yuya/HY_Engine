@@ -206,14 +206,32 @@ void SpriteManager::Initialize(DirectXCommon* dxcommon)
 
 }
 
-void SpriteManager::Draw()
+void SpriteManager::PreDraw()
 {
-
 	// パイプラインステートとルートシグネチャの設定コマンド
 	dxcommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
 	dxcommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	// プリミティブ形状の設定コマンド
 	dxcommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
-	
+	// SRVヒープの設定コマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::srvHeap.Get() };
+	dxcommon_->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+}
+
+void SpriteManager::PostDraw()
+{
+}
+
+void SpriteManager::SetTextureCommands(uint32_t index)
+{
+	// SRVヒープの先頭ハンドルを取得
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
+	// 一つ分のハンドル
+	UINT incrementSize = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	// index分のハンドルをずらす
+	srvGpuHandle.ptr += incrementSize * index;
+
+	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 }

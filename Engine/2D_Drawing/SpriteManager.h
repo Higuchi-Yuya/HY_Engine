@@ -31,8 +31,17 @@ public:// メンバ関数
 	// 初期化
 	void Initialize(DirectXCommon* dxcommon);
 
-	// 描画
-	void Draw();
+	// 描画前設定
+	void PreDraw();
+
+	// 描画後設定
+	void PostDraw();
+
+	// テクスチャに必要なコマンド設定
+	void SetTextureCommands(uint32_t index);
+
+	//指定番号のテクスチャバッファを取得
+	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return Texture::textureBuffers_[index].Get(); }
 
 public:
 	static DirectXCommon* dxcommon_;

@@ -16,8 +16,11 @@ public:// サブクラス
 	};
 
 public:// メンバ関数
+	// スプライトマネージャーを借りる
+	static void StaticInitialize(SpriteManager* spriteManager);
+
 	// 初期化
-	void Initialize(SpriteManager *spriteManager);
+	void Initialize(uint32_t textureNum = UINT32_MAX, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f },Vector4 color={1,1,1,1});
 
 	// 更新処理
 	void Updata();
@@ -73,6 +76,21 @@ public:// メンバ関数
 	// 非表示のフラグの取得
 	const bool& GetInvisible()const { return isInvisible_; }
 
+	// テクスチャ切り出しの設定
+	void SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }
+
+	// 切り出しサイズの取得
+	const Vector2& GetTextureSize()const { return textureSize_; }
+
+
+public:// 静的メンバ変数
+
+	static SpriteManager* spriteManager_;
+
+private:// プライベートメンバ関数
+	// テクスチャサイズをイメージに合わせる
+	void AbjustTextureSize();
+
 private:// メンバ変数
 
 	SpriteManager::Vertex vertices[4] = {
@@ -84,16 +102,30 @@ private:// メンバ変数
 
 	Matrix4 matWorld;	//ワールド変換行列
 
-	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	//回転角
-	Vector3 position_ = { 100.0f,100.0f,0.0f };	//座標
-	Vector4 color_ = { 1,1,1,1 };	//座標
-	Vector2 size_ = { 100.0f,100.0f };//スプライトサイズ
-	Vector2 anchorPoint_ = { 0.5f,0.5f };//アンカーポイント(座標変換の基準点)
-	bool isFlipX_ = false;	//左右反転フラグ
-	bool isFlipY_ = false;	//上下反転フラグ
-	bool isInvisible_ = false;	//非表示フラグ
+	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	    // 回転角
 
-	SpriteManager* spriteManager_ = nullptr;
+	Vector3 position_ = { 100.0f,100.0f,0.0f };	// 座標
+	
+	Vector4 color_ = { 1,1,1,1 };	            // 色（RGBA）
+	
+	Vector2 size_ = { 100.0f,100.0f };          // スプライトサイズ
+	
+	Vector2 anchorPoint_ = { 0.5f,0.5f };       // アンカーポイント(座標変換の基準点)
+	
+	bool isFlipX_ = false;	                    // 左右反転フラグ
+	
+	bool isFlipY_ = false;	                    // 上下反転フラグ
+	
+	bool isInvisible_ = false;	                // 非表示フラグ
+
+	// テクスチャ左上座標
+	Vector2 textureLeftTop_ = { 0.0f,0.0f };
+
+	// テクスチャ切り出しサイズ
+	Vector2 textureSize_ = { 100.0f,100.0f };
+
+	// テクスチャ番号
+	uint32_t textureIndex_ = 0;
 
 	SpriteManager::ConstBufferData* constMap = nullptr;
 

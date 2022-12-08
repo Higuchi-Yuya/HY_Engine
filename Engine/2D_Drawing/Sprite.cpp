@@ -1,10 +1,23 @@
 #include "Sprite.h"
 #include "WinApp.h"
 
+SpriteManager* Sprite::spriteManager_ = nullptr;
 
-void Sprite::Initialize(SpriteManager* spriteManager)
+void Sprite::Initialize(uint32_t textureNum, Vector2 position, Vector2 size, Vector4 color)
 {
-	spriteManager_ = spriteManager;
+	// 元の画像のサイズに適応
+	if (textureNum != UINT32_MAX) {
+		textureIndex_ = textureNum;
+		AbjustTextureSize();
+		//テクスチャサイズをスプライトのサイズに適用
+		size_ = textureSize_;
+	}
+
+	// 引数で持ってきたものを代入
+	position_.x = position.x;
+	position_.y = position.y;
+	size_ = size;
+	color_ = color;
 
 	// 頂点データ
 
@@ -25,7 +38,6 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 頂点バッファの生成
-	
 	result = spriteManager_->dxcommon_->GetDevice()->CreateCommittedResource(
 		&heapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
@@ -69,7 +81,6 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファ生成
-	
 	result = spriteManager_->dxcommon_->GetDevice()->CreateCommittedResource(
 		&cbHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -93,8 +104,11 @@ void Sprite::Initialize(SpriteManager* spriteManager)
 	constMap->mat.m[1][1] = -2.0f / WinApp::window_height;
 	constMap->mat.m[3][0] = -1.0f;
 	constMap->mat.m[3][1] = 1.0f;
+}
 
-
+void Sprite::StaticInitialize(SpriteManager* spriteManager)
+{
+	spriteManager_ = spriteManager;
 }
 
 void Sprite::Updata()
@@ -122,6 +136,26 @@ void Sprite::Updata()
 	vertices[LT].pos = { left,top,0.0f };
 	vertices[RB].pos = { right,bottom,0.0f };
 	vertices[RT].pos = { right,top,0.0f };
+
+	//テクスチャバッファ取得
+	ID3D12Resource* textureBuffer = spriteManager_->GetTextureBuffer(textureIndex_);
+
+	//指定番号のテクスチャが読み込み済みなら
+	if (textureBuffer) {
+		//テクスチャ情報取得
+		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+
+		float tex_left = textureLeftTop_.x / resDesc.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
+		float tex_top = textureLeftTop_.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+
+		//頂点のUVに反映
+		vertices[LB].uv = { tex_left,tex_bottom };
+		vertices[LT].uv = { tex_left,tex_top };
+		vertices[RB].uv = { tex_right,tex_bottom };
+		vertices[RT].uv = { tex_right,tex_top };
+	}
 
 	// 頂点データをGPUに転送
 	std::copy(std::begin(vertices), std::end(vertices), vertMap);
@@ -161,6 +195,7 @@ void Sprite::Draw()
 	if (isInvisible_) {
 		return;
 	}
+	spriteManager_->SetTextureCommands(textureIndex_);
 
 	Updata();
 
@@ -172,4 +207,16 @@ void Sprite::Draw()
 
 	// 描画コマンド
 	spriteManager_->dxcommon_->GetCommandList()->DrawInstanced(_countof(vertices), 1, 0, 0); // 全ての頂点を使って描画
+}
+
+void Sprite::AbjustTextureSize()
+{
+	ID3D12Resource* textureBuffer = spriteManager_->GetTextureBuffer(textureIndex_);
+	assert(textureBuffer);
+
+	// テクスチャ情報取得
+	D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+
+	textureSize_.x = static_cast<float>(resDesc.Width);
+	textureSize_.y = static_cast<float>(resDesc.Height);
 }

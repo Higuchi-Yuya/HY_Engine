@@ -10,25 +10,30 @@ class Texture
 public:// メンバ関数
 
 	// テクスチャ読み込み
-	static void LoadTexture(uint32_t index, const std::string& fileName);
+	static uint32_t LoadTexture(const std::string& fileName = "NULL");
 	
 	// テクスチャで一度必要な初期化
 	static void StaticInitialize(DirectXCommon* dxcommon);
-	
-	// テクスチャに必要なコマンド設定
-	void SetTextureCommands(uint32_t index);
 
 public:// 静的メンバ変数
 	// SRVの最大個数
 	static const size_t kMaxSRVCount = 2056;
+	// デフォルトテクスチャ格納ディレクトリ
+	static std::string kDefaultTextureDirectoryPath;
+
 	// DirextXの基盤を借りてくる
 	static DirectXCommon* dxcommon_;
-
-
-private:// メンバ変数
-	// テクスチャバッファ
-	static std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSRVCount>textureBuffers_;
 	// SRVヒープ
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
+
+	// テクスチャリソースデスク
+	static D3D12_RESOURCE_DESC textureResourceDesc;
+
+	// テクスチャバッファ
+	static std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSRVCount>textureBuffers_;
+
+private:// メンバ変数
+	
+	
 };
 

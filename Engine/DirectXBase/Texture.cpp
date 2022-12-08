@@ -2,11 +2,13 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
+std::string Texture::kDefaultTextureDirectoryPath = "Resources/";
 DirectXCommon* Texture::dxcommon_ = nullptr;
 std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, Texture::kMaxSRVCount> Texture::textureBuffers_;
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> Texture::srvHeap;
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> Texture::srvHeap = nullptr;
+D3D12_RESOURCE_DESC Texture::textureResourceDesc{};
 
-void Texture::LoadTexture(uint32_t index, const std::string& fileName)
+uint32_t Texture::LoadTexture(const std::string& fileName)
 {
 	// 結果確認
 	HRESULT result;
@@ -31,8 +33,19 @@ void Texture::LoadTexture(uint32_t index, const std::string& fileName)
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
 
+	// ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPath = kDefaultTextureDirectoryPath + fileName;
+
+	// ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+
+	// ワイド文字列に変換
+	std::vector<wchar_t>wfilePath(filePathBufferSize);
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+
+
 	result = LoadFromWICFile(
-		L"Resources/texture.png",
+		wfilePath.data(),
 		WIC_FLAGS_NONE,
 		&metadata, scratchImg);
 
@@ -57,7 +70,7 @@ void Texture::LoadTexture(uint32_t index, const std::string& fileName)
 	textureHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 
 	//リソース設定
-	D3D12_RESOURCE_DESC textureResourceDesc{};
+	
 	textureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	textureResourceDesc.Format = metadata.format;
 	textureResourceDesc.Width = metadata.width;	// 幅
@@ -74,14 +87,14 @@ void Texture::LoadTexture(uint32_t index, const std::string& fileName)
 		&textureResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&textureBuffers_[index]));
+		IID_PPV_ARGS(&texBuff));
 
 	//全ミップマップについて
 	for (size_t i = 0; i < metadata.mipLevels; i++) {
 		//ミップマップレベルを指定してイメージを取得
 		const Image* img = scratchImg.GetImage(i, 0, 0);
 		//テクスチャバッファにデータ転送
-		result = textureBuffers_[index]->WriteToSubresource(
+		result = texBuff->WriteToSubresource(
 			(UINT)i,
 			nullptr,				//全領域へコピー
 			img->pixels,			//元データアドレス
@@ -119,7 +132,9 @@ void Texture::LoadTexture(uint32_t index, const std::string& fileName)
 			// SRVヒープの先頭ハンドルを取得
 			D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
 			srvHandle.ptr += incrementSize * i;
-			dxcommon_->GetDevice()->CreateShaderResourceView(textureBuffers_[i].Get(), &srvDesc, srvHandle);
+			dxcommon_->GetDevice()->CreateShaderResourceView(texBuff.Get(), &srvDesc, srvHandle);
+			//iを戻り値として返す
+			return i;
 		}
 	}
 	
@@ -142,20 +157,4 @@ void Texture::StaticInitialize(DirectXCommon* dxcommon)
 	result = dxcommon_->GetDevice()->CreateDescriptorHeap(&srvHeapDesc,
 		IID_PPV_ARGS(&srvHeap));
 	assert(SUCCEEDED(result));
-}
-
-void Texture::SetTextureCommands(uint32_t index)
-{
-	// SRVヒープの設定コマンド
-	dxcommon_->GetCommandList()->SetDescriptorHeaps(1, &srvHeap);
-
-	// SRVヒープの先頭ハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
-	// 一つ分のハンドル
-	UINT incrementSize = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	// index分のハンドルをずらす
-	srvGpuHandle.ptr += incrementSize * index;
-
-	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
 }

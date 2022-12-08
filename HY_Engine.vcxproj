@@ -152,6 +152,7 @@
     <ClCompile Include="Engine\2D_Drawing\SpriteManager.cpp" />
     <ClCompile Include="Engine\Camera\ViewProjection.cpp" />
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\DirectXBase\Texture.cpp" />
     <ClCompile Include="Engine\DirectXBase\WinApp.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />
     <ClCompile Include="Engine\Math\Matrix4.cpp" />
@@ -160,13 +161,13 @@
     <ClCompile Include="Engine\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Sound\Sound.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D_Drawing\Sprite.h" />
     <ClInclude Include="Engine\2D_Drawing\SpriteManager.h" />
     <ClInclude Include="Engine\Camera\ViewProjection.h" />
     <ClInclude Include="Engine\DirectXBase\DirectXCommon.h" />
+    <ClInclude Include="Engine\DirectXBase\Texture.h" />
     <ClInclude Include="Engine\DirectXBase\WinApp.h" />
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Engine\Math\Matrix4.h" />
@@ -174,7 +175,6 @@
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4.h" />
     <ClInclude Include="Engine\Sound\Sound.h" />
-    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D_Drawing;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D_Drawing;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -148,8 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\2D_Drawing\Sprite.cpp" />
-    <ClCompile Include="Engine\2D_Drawing\SpriteManager.cpp" />
+    <ClCompile Include="Engine\2D\Sprite.cpp" />
+    <ClCompile Include="Engine\2D\SpriteManager.cpp" />
     <ClCompile Include="Engine\Camera\ViewProjection.cpp" />
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp" />
     <ClCompile Include="Engine\DirectXBase\Texture.cpp" />
@@ -163,8 +163,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\2D_Drawing\Sprite.h" />
-    <ClInclude Include="Engine\2D_Drawing\SpriteManager.h" />
+    <ClInclude Include="Engine\2D\Sprite.h" />
+    <ClInclude Include="Engine\2D\SpriteManager.h" />
     <ClInclude Include="Engine\Camera\ViewProjection.h" />
     <ClInclude Include="Engine\DirectXBase\DirectXCommon.h" />
     <ClInclude Include="Engine\DirectXBase\Texture.h" />

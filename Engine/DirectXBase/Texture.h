@@ -23,17 +23,16 @@ public:// 静的メンバ変数
 
 	// DirextXの基盤を借りてくる
 	static DirectXCommon* dxcommon_;
+
 	// SRVヒープ
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
-
-	// テクスチャリソースデスク
-	static D3D12_RESOURCE_DESC textureResourceDesc;
 
 	// テクスチャバッファ
 	static std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSRVCount>textureBuffers_;
 
 private:// メンバ変数
-	
+	// テクスチャリソースデスク
+	static D3D12_RESOURCE_DESC textureResourceDesc;
 	
 };
 

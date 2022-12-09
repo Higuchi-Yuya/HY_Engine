@@ -96,8 +96,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite2->Initialize(textureHandle2, { 200,200 });
 #pragma endregion
 
-
-	
 	//ゲームループ
 	while (true) {
 #pragma region ウィンドウメッセージ処理

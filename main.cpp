@@ -11,14 +11,9 @@
 #include "DirectXCommon.h"
 #include "SpriteManager.h"
 #include "Sprite.h"
-
-using namespace Microsoft::WRL;
-using namespace std;
-
+#include "Object3d.h"
 
 #pragma endregion
-
-const float PI = 3.141592f;
 
 #pragma region おまじない
 // @brief コンソール画面にフォーマット付き文字列の表示
@@ -78,6 +73,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// テクスチャの初期化
 	Texture::StaticInitialize(dxCommon);
 	
+	// オブジェクトの初期化
+	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////
@@ -94,6 +92,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite->StaticInitialize(spriteManager);
 	sprite->Initialize(textureHandle,{100,100});
 	sprite2->Initialize(textureHandle2, { 200,200 });
+
+	Object3d* object3d = Object3d::Create();
 #pragma endregion
 
 	//ゲームループ
@@ -122,8 +122,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 			OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 		}
 		
-		//2.描画先の変更
-		//レンダーターゲットビューのハンドルを取得
+		object3d->Update();
 
 
 		//////////////////////////////////////////////
@@ -148,10 +147,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma endregion
 
 #pragma region ３Ｄモデル描画
+		Object3d::PreDraw(dxCommon->GetCommandList());
 		//-----ここから 3Dモデルの描画 -----//
+		
+		object3d->Draw();
 
-
+		
 		//-----ここまで 3Dモデルの描画 -----//
+		Object3d::PostDraw();
 #pragma endregion
 		
 #pragma region 前景スプライト描画
@@ -175,15 +178,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma endregion
 
-
-
-
 	}
 #pragma region  WindowsAPI後始末
 
 	//もうクラスは使わないので登録を解除する
 	delete sprite;
 	delete spriteManager;
+	delete object3d;
+
 	// 入力解放
 	delete input;
 

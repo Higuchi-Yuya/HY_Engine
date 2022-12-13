@@ -5,18 +5,12 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
-//#include <fstream>
-//#include <sstream>
-//#include <string>
-//#include <vector>
 using namespace std;
-
 
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
-ID3D12Device* Object3d::device = nullptr;
+ComPtr<ID3D12Device> Object3d::device = nullptr;
 
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
@@ -76,8 +70,6 @@ Object3d * Object3d::Create()
 		assert(0);
 		return nullptr;
 	}
-
-	// スケールをセット
 
 	return object3d;
 }
@@ -203,27 +195,29 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// ルートパラメータ
 	CD3DX12_ROOT_PARAMETER rootParams[4];
-	//定数バッファ0番
+	//定数バッファ0番 ---ワールド変換データ用
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
 	rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
 	rootParams[0].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
-	//定数バッファ1番
+
+	//定数バッファ1番 ---ビュープロジェクション変換データ用
 	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
 	rootParams[1].Descriptor.ShaderRegister = 1;					//定数バッファ番号
 	rootParams[1].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
-	//定数バッファ2番
+
+	//定数バッファ2番 ---マテリアルバッファビュー用
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
 	rootParams[2].Descriptor.ShaderRegister = 2;					//定数バッファ番号
 	rootParams[2].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
-	//テクスチャレジスタ0番
+
+	//テクスチャレジスタ0番 ---テクスチャシェーダーリソースビュー用
 	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
 	rootParams[3].DescriptorTable.pDescriptorRanges = &descRangeSRV;			//デスクリプタレンジ
 	rootParams[3].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
 	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
-
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);

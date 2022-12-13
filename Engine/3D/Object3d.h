@@ -18,10 +18,8 @@ private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-
 public: // 静的メンバ関数
 
-	
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
@@ -49,7 +47,7 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ComPtr<ID3D12Device> device;
 
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
@@ -68,8 +66,9 @@ private:// 静的メンバ関数
 
 public: // メンバ関数
 
-
+	// 初期化処理
 	bool Initialize();
+
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
@@ -85,8 +84,12 @@ public: // メンバ関数
 	/// </summary>
 	void SetModel(Model* model) { this->model = model; }
 
-private: // メンバ変数
+public:// パブリック変数
+
+	// ワールド変換データ
 	WorldTransform worldTransform_;
+
+private: // メンバ変数
 
 	// モデル
 	Model* model = nullptr;

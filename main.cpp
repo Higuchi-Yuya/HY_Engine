@@ -90,12 +90,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ƒXƒvƒ‰ƒCƒgˆê–‡‚Ì‰Šú‰»
 	int textureHandle;
 	int textureHandle2;
-	textureHandle = Texture::LoadTexture("risu.jpg");
+	textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
 	textureHandle2 = Texture::LoadTexture("texture.png");
 	Sprite* sprite = new Sprite();
 	Sprite* sprite2 = new Sprite();
 	sprite->StaticInitialize(spriteManager);
-	sprite->Initialize(textureHandle,{100,100});
+	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
 	Model* model = Model::LoadFromOBJ("skydome");
@@ -106,7 +106,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	
 	object3d->SetModel(model);
 	obj_2->SetModel(model_2);
-
+	object3d->worldTransform_.scale_ = { 10.0f,10.0f,10.0f };
+	
 	ViewProjection* view = new ViewProjection;
 	view->Initialize();
 
@@ -156,11 +157,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		
 #pragma region ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
 		// ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
+		spriteManager->PreDraw();
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
+		sprite->Draw();
+
 
 
 		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
-		//// [“xƒoƒbƒtƒ@ƒNƒŠƒA
+		spriteManager->PostDraw();
+		// [“xƒoƒbƒtƒ@ƒNƒŠƒA
 		dxCommon->ClearDepthBuffer();
 #pragma endregion
 
@@ -179,7 +184,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		// •`‰æ‘Oˆ—
 		spriteManager->PreDraw();
 		//-----‚±‚±‚©‚ç 2D•`‰æ -------//
-		sprite->Draw();
+		//sprite->Draw();
 		sprite2->Draw();
 
 

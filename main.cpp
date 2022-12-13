@@ -12,6 +12,8 @@
 #include "SpriteManager.h"
 #include "Sprite.h"
 #include "Object3d.h"
+#include "ViewProjection.h"
+#include "Model.h"
 
 #pragma endregion
 
@@ -76,6 +78,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// オブジェクトの初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
 
+	// ビュープロジェクションの初期化
+	ViewProjection::StaticInitialize(dxCommon->GetDevice());
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////
@@ -93,7 +98,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite->Initialize(textureHandle,{100,100});
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
+	Model* model = Model::LoadFromOBJ("skydome");
+	Model* model_2 = Model::LoadFromOBJ("Medama");
+
 	Object3d* object3d = Object3d::Create();
+	Object3d* obj_2 = Object3d::Create();
+	
+	object3d->SetModel(model);
+	obj_2->SetModel(model_2);
+
+	ViewProjection* view = new ViewProjection;
+	view->Initialize();
+
+
 #pragma endregion
 
 	//ゲームループ
@@ -122,9 +139,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 			OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 		}
 		
+		//object3d->SetScale(scale_);
 		object3d->Update();
-
-
+		obj_2->Update();
+		view->UpdateMatrix();
 		//////////////////////////////////////////////
 		//-------DireceX毎フレーム処理　ここまで--------//
 		////////////////////////////////////////////
@@ -150,8 +168,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		Object3d::PreDraw(dxCommon->GetCommandList());
 		//-----ここから 3Dモデルの描画 -----//
 		
-		object3d->Draw();
-
+		object3d->Draw(view);
+		obj_2->Draw(view);
 		
 		//-----ここまで 3Dモデルの描画 -----//
 		Object3d::PostDraw();
@@ -185,6 +203,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	delete sprite;
 	delete spriteManager;
 	delete object3d;
+	delete model;
 
 	// 入力解放
 	delete input;

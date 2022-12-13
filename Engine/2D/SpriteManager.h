@@ -51,6 +51,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
 
 	// 結果確認
-	HRESULT result;
+	HRESULT result = 0;
 };
 

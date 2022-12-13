@@ -1,9 +1,17 @@
-cbuffer cbuff0 : register(b0)
+cbuffer WorldTransform : register(b0)
 {
-	matrix mat; // ３Ｄ変換行列
+	float4 color; // 色（RGBA）
+	matrix world; // ３Ｄ変換行列
 };
 
-cbuffer cbuff1:register(b1)
+cbuffer ViewProjection : register(b1)
+{
+	matrix view;       // ビュー変換行列
+	matrix projection; // プロジェクション変換行列
+	float3 cameraPos;  // カメラ座標（ワールド座標
+}
+
+cbuffer cbuff1:register(b2)
 {
 	float3 m_ambient:packoffset(c0);// アンビエント係数
 	float3 m_diffuse:packoffset(c1);// ディフューズ係数
@@ -15,6 +23,7 @@ cbuffer cbuff1:register(b1)
 struct VSOutput
 {
 	float4 svpos : SV_POSITION; // システム用頂点座標
+	float4 worldpos : POSITION;	//ワールド座標
 	float3 normal :NORMAL; // 法線ベクトル
 	float2 uv  :TEXCOORD; // uv値
 };

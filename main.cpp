@@ -99,7 +99,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
 	Model* model = Model::LoadFromOBJ("sphere",true);
-	Model* model_2 = Model::LoadFromOBJ("Medama");
+	Model* model_2 = Model::LoadFromOBJ("Medama",true);
 
 	Object3d* object3d = Object3d::Create();
 	Object3d* obj_2 = Object3d::Create();

@@ -8,6 +8,7 @@
 #include <string>
 #include <d3d12.h>
 #include <d3dx12.h>
+#include <unordered_map>
 
 class Model
 {
@@ -58,7 +59,7 @@ public:// メンバ関数
 	~Model();
 
 	// OBJファイルから3Dモデルを読み込む
-	static Model* LoadFromOBJ(const std::string& modelname);
+	static Model* LoadFromOBJ(const std::string& modelname,bool smoothing = false);
 
 	/// <summary>
 	/// テクスチャ読み込み
@@ -77,10 +78,19 @@ public:// メンバ関数
 	// デバイスのセッター
 	static void SetDevice(ID3D12Device* device) { Model::device = device; }
 
+	// エッジ平滑化データの追加
+	void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex);
+
+	// 平滑化された頂点法線の計算
+	void CalculateSmoothedVertexNormals();
+
+	// 頂点データの数を取得
+	inline size_t GetVertexCount() { return vertices.size(); }
+
 private:
 	// 静的な関数内ではメンバ変数を呼び出せないためプライベートメンバ関数のパッケージを作った
 	// LoadFromOBJの中身
-	void LoadFromOBJInternal(const std::string& modelname);
+	void LoadFromOBJInternal(const std::string& modelname, bool smoothing = false);
 
 	/// <summary>
 	/// デスクリプタヒープの初期化
@@ -135,4 +145,7 @@ private:// メンバ変数
 
 	// マテリアル用定数バッファ
 	ComPtr<ID3D12Resource> constBuffB1; 
+
+	// 頂点法線スムージング用データ
+	std::unordered_map<unsigned short, std::vector<unsigned short>>smoothData;
 };

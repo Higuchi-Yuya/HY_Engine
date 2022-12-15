@@ -5,12 +5,17 @@ SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	float3 light = normalize(float3(1,-1,1)); // 右下奥　向きのライト
-	float light_diffuse = saturate(dot(-light, input.normal));
-	float3 shade_color;
-	shade_color = m_ambient;// アンビエント項
-	shade_color += m_diffuse * light_diffuse;// ディフューズ項
-	float4 texcolor = tex.Sample(smp, input.uv);
-	return float4(texcolor.rgb * shade_color, texcolor.a * m_alpha) * color;
+	//float3 light = normalize(float3(1,-1,1)); // 右下奥　向きのライト
+	//float light_diffuse = saturate(dot(-light, input.normal));
+	//float3 shade_color;
+	//shade_color = m_ambient;// アンビエント項
+	//shade_color += m_diffuse * light_diffuse;// ディフューズ項
+	//float4 texcolor = tex.Sample(smp, input.uv);
+	//return float4(texcolor.rgb * shade_color, texcolor.a * m_alpha) * color;
+	
+	// テクスチャマッピング
+	float4 texcolor = tex.Sample(smp,input.uv);
+	// テクスチャの色は使わず色を数値指定
+	return input.color * texcolor;
 
 }

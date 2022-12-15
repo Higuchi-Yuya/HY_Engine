@@ -98,15 +98,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
-	Model* model = Model::LoadFromOBJ("skydome");
+	Model* model = Model::LoadFromOBJ("sphere",true);
 	Model* model_2 = Model::LoadFromOBJ("Medama");
 
 	Object3d* object3d = Object3d::Create();
 	Object3d* obj_2 = Object3d::Create();
 	
 	object3d->SetModel(model);
-	obj_2->SetModel(model_2);
+	object3d->worldTransform_.position_ = { 20,0,0, };
 	object3d->worldTransform_.scale_ = { 10.0f,10.0f,10.0f };
+	obj_2->SetModel(model_2);
+	obj_2->worldTransform_.scale_ = { 10.0f,10.0f,10.0f };
 	
 	ViewProjection* view = new ViewProjection;
 	view->Initialize();
@@ -159,7 +161,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		// ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
 		spriteManager->PreDraw();
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
-		sprite->Draw();
+		//sprite->Draw();
 
 
 

@@ -213,7 +213,7 @@ void Sprite::AbjustTextureSize()
 {
 	ID3D12Resource* textureBuffer = spriteManager_->GetTextureBuffer(textureIndex_);
 	assert(textureBuffer);
-
+	
 	// テクスチャ情報取得
 	D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
 

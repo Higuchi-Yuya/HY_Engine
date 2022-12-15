@@ -4,7 +4,7 @@
 #include<wrl.h>
 #include<array>
 #include<string>
-
+#include <d3dx12.h>
 class Texture
 {
 public:// メンバ関数
@@ -12,6 +12,8 @@ public:// メンバ関数
 	// テクスチャ読み込み
 	static uint32_t LoadTexture(const std::string& fileName = "NULL");
 	
+	static uint32_t LoadTexture(const wchar_t* fileName);
+
 	// テクスチャで一度必要な初期化
 	static void StaticInitialize(DirectXCommon* dxcommon);
 
@@ -33,6 +35,5 @@ public:// 静的メンバ変数
 private:// メンバ変数
 	// テクスチャリソースデスク
 	static D3D12_RESOURCE_DESC textureResourceDesc;
-	
 };
 

@@ -125,17 +125,8 @@ private:// メンバ変数
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texbuff;
 
-	// デスクリプタサイズ
-	UINT descriptorHandleIncrementSize;
-
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
-
-	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-
-	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView;
@@ -148,4 +139,7 @@ private:// メンバ変数
 
 	// 頂点法線スムージング用データ
 	std::unordered_map<unsigned short, std::vector<unsigned short>>smoothData;
+
+	// テクスチャ番号
+	uint32_t textureIndex = 0;
 };

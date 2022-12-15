@@ -112,7 +112,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	
 	ViewProjection* view = new ViewProjection;
 	view->Initialize();
-
+	
 
 #pragma endregion
 
@@ -161,7 +161,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		// 背景スプライト描画
 		spriteManager->PreDraw();
 		//-----ここから 背景スプライト描画 -----//
-		//sprite->Draw();
+		sprite->Draw();
 
 
 
@@ -208,10 +208,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	//もうクラスは使わないので登録を解除する
 	delete sprite;
+	delete sprite2;
 	delete spriteManager;
 	delete object3d;
+	delete obj_2;
 	delete model;
-
+	delete model_2;
+	delete view;
 	// 入力解放
 	delete input;
 

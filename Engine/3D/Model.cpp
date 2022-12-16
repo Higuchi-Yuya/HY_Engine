@@ -17,17 +17,18 @@ Model::Model()
 
 Model::~Model()
 {
+	for (auto m : materials) {
+		delete m.second;
+	}
+	materials.clear();
 }
 
 Model* Model::LoadFromOBJ(const std::string& modelname, bool smoothing)
 {
 	Model* model = new Model;
 
-	// デスクリプタヒープ生成
-	model->InitializeDescriptorHeap();
-
 	// オブジェクトファイルからデータを読み込む
-	model->LoadFromOBJInternal(modelname,smoothing);
+	model->LoadFromOBJInternal(modelname, smoothing);
 
 	// バッファ生成
 	model->CreateBuffers();
@@ -37,14 +38,7 @@ Model* Model::LoadFromOBJ(const std::string& modelname, bool smoothing)
 
 void Model::LoadTexture(const std::string& directoryPath, const std::string& filename)
 {
-	// ファイルパスを結合
-	string filepath = directoryPath + filename;
 
-	// ユニコード文字列に変換する
-	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
-
-	textureIndex = Texture::LoadTexture(wfilepath);
 }
 
 void Model::LoadMaterial(const std::string& directoryPath, const std::string& filename)
@@ -57,6 +51,8 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 	if (file.fail()) {
 		assert(0);
 	}
+
+	Material* material = nullptr;
 
 	// 1行ずつ読み込む
 	string line;
@@ -74,42 +70,56 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 
 		// 先頭文字列がnewmtlならマテリアル名
 		if (key == "newmtl") {
+			// 既にマテリアルがあれば
+			if (material) {
+				// マテリアルをコンテナに登録
+				AddMaterial(material);
+			}
+
+			// 新しいマテリアルを生成
+			material = Material::Create();
+
 			// マテリアル名読み込み
-			line_stream >> material.name;
+			line_stream >> material->name;
 		}
 
 		// 先頭文字列がKsならアンビエント色
 		if (key == "Ka") {
-			line_stream >> material.ambient.x;
-			line_stream >> material.ambient.y;
-			line_stream >> material.ambient.z;
+			line_stream >> material->ambient.x;
+			line_stream >> material->ambient.y;
+			line_stream >> material->ambient.z;
 
 		}
 		// 先頭文字列がKsならディフューズ色
 		if (key == "Kd") {
-			line_stream >> material.diffuse.x;
-			line_stream >> material.diffuse.y;
-			line_stream >> material.diffuse.z;
+			line_stream >> material->diffuse.x;
+			line_stream >> material->diffuse.y;
+			line_stream >> material->diffuse.z;
 
 		}
 
 		// 先頭文字列がKsならスペキュラー色
 		if (key == "Ks") {
-			line_stream >> material.specular.x;
-			line_stream >> material.specular.y;
-			line_stream >> material.specular.z;
+			line_stream >> material->specular.x;
+			line_stream >> material->specular.y;
+			line_stream >> material->specular.z;
 
 		}
 		// 先頭文字列がmap_Kdならテクスチャファイル名
 		if (key == "map_Kd") {
 			// テクスチャのファイル名読み込み
-			line_stream >> material.textureFilename;
+			line_stream >> material->textureFilename;
 			// テクスチャ読み込み
-			LoadTexture(directoryPath, material.textureFilename);
+			material->LoadTexture(directoryPath, material->textureFilename);
 		}
 	}
 	// ファイルを閉じる
 	file.close();
+
+	if (material) {
+		// マテリアルを登録
+		AddMaterial(material);
+	}
 }
 
 void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial)
@@ -124,18 +134,19 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 	cmdList->IASetIndexBuffer(&ibView);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::srvHeap.Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { Texture::srvHeap.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	for (auto& m : materials) {
+		Material* material = m.second;
+		// マテリアル用定数バッファビューをセット
+		cmdList->SetGraphicsRootConstantBufferView(2, material->GetConstantBuffer()->GetGPUVirtualAddress());
 
-	// マテリアル用定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(2, constBuffB1->GetGPUVirtualAddress());
-
-	// シェーダリソースビューをセット
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
-	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvGpuHandle.ptr += incrementSize * textureIndex;
-	cmdList->SetGraphicsRootDescriptorTable(3, srvGpuHandle);
-
+		// シェーダリソースビューをセット
+		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
+		UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		srvGpuHandle.ptr += incrementSize * material->textureIndex;
+		cmdList->SetGraphicsRootDescriptorTable(3, srvGpuHandle);
+	}
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
@@ -244,7 +255,20 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 			// 法線ベクトルデータに追加
 			normals.emplace_back(normal);
 		}
+		// 先頭文字列がusemtlならマテリアルを割り当てる
+		if (key == "usemtl") {
 
+			// マテリアルの名読み込み
+			string materialName;
+			line_stream >> materialName;
+
+			// マテリアル名で検索し、マテリアルを割り当てる
+			auto itr = materials.find(materialName);
+			if (itr != materials.end()) {
+
+			}
+
+		}
 		// 先頭文字列がfならポリゴン（三角形）
 		if (key == "f") {
 			int faceIndexCount = 0;
@@ -256,10 +280,10 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 				unsigned short indexPosition, indexNormal, indexTexcoord;
 				// 頂点番号
 				index_stream >> indexPosition;
-				
+
 				index_stream.seekg(1, ios_base::cur);// スラッシュを飛ばす
 				// マテリアル、テクスチャがある場合
-				if (material.textureFilename.size() > 0) {
+				if (materials.size() > 0) {
 					index_stream >> indexTexcoord;
 					index_stream.seekg(1, ios_base::cur);// スラッシュを飛ばす
 					index_stream >> indexNormal;
@@ -340,26 +364,6 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 	}
 }
 
-void Model::InitializeDescriptorHeap()
-{
-	assert(device);
-
-	HRESULT result = S_FALSE;
-
-	// デスクリプタヒープを生成	
-	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
-	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
-	descHeapDesc.NumDescriptors = 1; // シェーダーリソースビュー1つ
-	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
-	if (FAILED(result)) {
-		assert(0);
-	}
-
-	//// デスクリプタサイズを取得
-	//descriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-}
-
 void Model::CreateBuffers()
 {
 	HRESULT result = S_FALSE;
@@ -412,28 +416,27 @@ void Model::CreateBuffers()
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
 
-	// リソースデスクをマテリアル用バッファにリサイズ
-	resourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
+	//// リソースデスクをマテリアル用バッファにリサイズ
+	//resourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
 
-	// マテリアル用定数バッファの生成
-	result = device->CreateCommittedResource(
-		&heapProps, // アップロード可能
-		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBuffB1));
+	for (auto& m : materials) {
+		Material* material = m.second;
+		material->Update();
+	}
 
-	assert(SUCCEEDED(result));
 
-	// マテリアル用定数バッファへデータ転送
-	ConstBufferDataB1* constMap1 = nullptr;
-	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
-	assert(SUCCEEDED(result));
-	
-	constMap1->ambient = material.ambient;
-	constMap1->diffuse = material.diffuse;
-	constMap1->specular = material.specular;
-	constMap1->alpha = material.alpha;
-	constBuffB1->Unmap(0, nullptr);
+
+
+}
+
+void Model::AddMaterial(Material* material)
+{
+	// コンテナに登録
+	materials.emplace(material->name, material);
+}
+
+void Model::SetDevice(ID3D12Device* device)
+{
+	Model::device = device;
+	Material::StaticInitialize(device);
 }

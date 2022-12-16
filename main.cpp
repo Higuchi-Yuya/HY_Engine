@@ -14,7 +14,7 @@
 #include "Object3d.h"
 #include "ViewProjection.h"
 #include "Model.h"
-
+#include "Quaternion.h"
 #pragma endregion
 
 #pragma region ‚¨‚Ü‚¶‚È‚¢
@@ -98,7 +98,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
-	Model* model = Model::LoadFromOBJ("sphere",true);
+	Model* model = Model::LoadFromOBJ("herfSphere",true);
 	Model* model_2 = Model::LoadFromOBJ("Medama",true);
 
 	Object3d* object3d = Object3d::Create();
@@ -112,7 +112,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	
 	ViewProjection* view = new ViewProjection;
 	view->Initialize();
-	
 
 #pragma endregion
 
@@ -146,6 +145,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		object3d->Update();
 		obj_2->Update();
 		view->UpdateMatrix();
+
 		//////////////////////////////////////////////
 		//-------DireceX–ˆƒtƒŒ[ƒ€ˆ—@‚±‚±‚Ü‚Å--------//
 		////////////////////////////////////////////

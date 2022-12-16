@@ -150,6 +150,8 @@
   <ItemGroup>
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\2D\SpriteManager.cpp" />
+    <ClCompile Include="Engine\3D\Material.cpp" />
+    <ClCompile Include="Engine\3D\Mesh.cpp" />
     <ClCompile Include="Engine\3D\Model.cpp" />
     <ClCompile Include="Engine\3D\Object3d.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
@@ -159,6 +161,7 @@
     <ClCompile Include="Engine\DirectXBase\WinApp.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />
     <ClCompile Include="Engine\Math\Matrix4.cpp" />
+    <ClCompile Include="Engine\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Math\Vector4.cpp" />
@@ -168,6 +171,8 @@
   <ItemGroup>
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\2D\SpriteManager.h" />
+    <ClInclude Include="Engine\3D\Material.h" />
+    <ClInclude Include="Engine\3D\Mesh.h" />
     <ClInclude Include="Engine\3D\Model.h" />
     <ClInclude Include="Engine\3D\Object3d.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
@@ -177,6 +182,7 @@
     <ClInclude Include="Engine\DirectXBase\WinApp.h" />
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Engine\Math\Matrix4.h" />
+    <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4.h" />

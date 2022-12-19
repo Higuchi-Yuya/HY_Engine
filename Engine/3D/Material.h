@@ -76,8 +76,6 @@ private:
 
 	ConstBufferDataB1* constMap = nullptr;
 
-
-
 private:
 	// コンストラクタ
 	Material() {

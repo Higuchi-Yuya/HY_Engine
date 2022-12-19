@@ -15,6 +15,8 @@
 #include "ViewProjection.h"
 #include "Model.h"
 #include "Quaternion.h"
+#include "Light.h"
+
 #pragma endregion
 
 #pragma region おまじない
@@ -81,6 +83,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ビュープロジェクションの初期化
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
 
+	// ライトの静的初期化
+	Light::StaticInititalize(dxCommon->GetDevice());
+
+	// オブジェクト共通のライトの初期化
+	Light* light = nullptr;
+
+	// ライトの生成
+	light = Light::Create();
+	// ライトの色を設定
+	light->SetLightDir({ 1,0,0 });
+	// 3Dオブジェクトにライトをセット
+	Object3d::SetLight(light);
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////
@@ -98,20 +113,21 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
-	Model* model = Model::LoadFromOBJ("herfSphere",true);
+	Model* model = Model::LoadFromOBJ("skydome",true);
 	Model* model_2 = Model::LoadFromOBJ("Medama",true);
 
-	Object3d* object3d = Object3d::Create();
+	//Object3d* object3d = Object3d::Create();
 	Object3d* obj_2 = Object3d::Create();
 	
-	object3d->SetModel(model);
-	object3d->worldTransform_.position_ = { 20,0,0, };
-	object3d->worldTransform_.scale_ = { 10.0f,10.0f,10.0f };
+	//object3d->SetModel(model);
+	//object3d->worldTransform_.position_ = { 10,0,0, };
+	//object3d->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
 	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.scale_ = { 10.0f,10.0f,10.0f };
+	obj_2->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
 	
 	ViewProjection* view = new ViewProjection;
-	view->Initialize();
+	view->DebugCameraInitialze(input);
+	
 
 #pragma endregion
 
@@ -141,10 +157,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 			OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 		}
 		
+		light->Update();
 		//object3d->SetScale(scale_);
-		object3d->Update();
+		//object3d->Update();
+		obj_2->worldTransform_.rotation_.y += 0.01f;
 		obj_2->Update();
-		view->UpdateMatrix();
+		view->DebugCameraUpdate();
 
 		//////////////////////////////////////////////
 		//-------DireceX毎フレーム処理　ここまで--------//
@@ -175,7 +193,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		Object3d::PreDraw(dxCommon->GetCommandList());
 		//-----ここから 3Dモデルの描画 -----//
 		
-		object3d->Draw(view);
+		//object3d->Draw(view);
 		obj_2->Draw(view);
 		
 		//-----ここまで 3Dモデルの描画 -----//
@@ -202,33 +220,35 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 
 #pragma endregion
-
 	}
 #pragma region  WindowsAPI後始末
 
 	//もうクラスは使わないので登録を解除する
+	// スプライトの解放
 	delete sprite;
 	delete sprite2;
-	delete spriteManager;
-	delete object3d;
+	// オブジェクトの解放
+	//delete object3d;
 	delete obj_2;
+	// モデルの解放
 	delete model;
 	delete model_2;
+	// ビューの解放
 	delete view;
+	// ライトの解放
+	delete light;
+
+	// スプライトマネージャーの解放
+	delete spriteManager;
 	// 入力解放
 	delete input;
-
 	// WindouwsAPIの終了処理
 	winApp->Finalize();
-
 	// WindouwsAPI解放
 	delete winApp;
-
 	// DirectXcommonの解放
 	delete dxCommon;
 #pragma endregion
-
-	//Render_basic::DestroyInstance();
 
 	return 0;
 }

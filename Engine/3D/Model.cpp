@@ -36,11 +36,6 @@ Model* Model::LoadFromOBJ(const std::string& modelname, bool smoothing)
 	return model;
 }
 
-void Model::LoadTexture(const std::string& directoryPath, const std::string& filename)
-{
-
-}
-
 void Model::LoadMaterial(const std::string& directoryPath, const std::string& filename)
 {
 	//ファイルストリーム
@@ -139,13 +134,13 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 	for (auto& m : materials) {
 		Material* material = m.second;
 		// マテリアル用定数バッファビューをセット
-		cmdList->SetGraphicsRootConstantBufferView(2, material->GetConstantBuffer()->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(3, material->GetConstantBuffer()->GetGPUVirtualAddress());
 
 		// シェーダリソースビューをセット
 		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
 		UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		srvGpuHandle.ptr += incrementSize * material->textureIndex;
-		cmdList->SetGraphicsRootDescriptorTable(3, srvGpuHandle);
+		cmdList->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
 	}
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);

@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <unordered_map>
-
 #include "Material.h"
 
 class Model
@@ -19,38 +18,12 @@ public:// サブクラス
 		Vector3 normal; // 法線ベクトル
 		Vector2 uv;  // uv座標
 	};
-
-	//// マテリアル
-	//struct Material
-	//{
-	//	std::string name;// マテリアル名
-	//	Vector3 ambient; // アンビエント影響度
-	//	Vector3 diffuse; // ディフューズ影響度
-	//	Vector3 specular; // スペキュラー影響度
-	//	float alpha; // アルファ
-	//	std::string textureFilename; // テクスチャファイル名
-	//	// コンストラクタ
-	//	Material() {
-	//		ambient = { 0.3f,0.3f,0.3f };
-	//		diffuse = { 0.0f,0.0f,0.0f };
-	//		specular = { 0.0f,0.0f,0.0f };
-	//		alpha = 1.0f;
-	//	}
-	//};
-
-
-
 public:// メンバ関数
 	Model();
 	~Model();
 
 	// OBJファイルから3Dモデルを読み込む
 	static Model* LoadFromOBJ(const std::string& modelname,bool smoothing = false);
-
-	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	void LoadTexture(const std::string& directoryPath, const std::string& filename);
 
 	/// <summary>
 	/// マテリアル読み込み
@@ -117,8 +90,6 @@ private:// メンバ変数
 
 	// インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView;
-
-
 
 	// 頂点法線スムージング用データ
 	std::unordered_map<unsigned short, std::vector<unsigned short>>smoothData;

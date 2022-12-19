@@ -278,6 +278,19 @@ Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m)
 	return result;
 }
 
+// 座標変換（ベクトルと行列の掛け算）を行うtransform 関数を作成する
+Vector3 Matrix4::transformNotW(const Vector3& v, const Matrix4& m)
+{
+	Vector3 result
+	{
+		(v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0]),
+		(v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1]),
+		(v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2])
+	};
+
+	return result;
+}
+
 // ビュー行列の作成
 Matrix4 Matrix4::ViewMat(Vector3 eye, Vector3 target, Vector3 up)
 {

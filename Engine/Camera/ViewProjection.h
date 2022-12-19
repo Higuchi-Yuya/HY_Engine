@@ -2,8 +2,10 @@
 #include"Vector3.h"
 #include "Vector4.h"
 #include"Matrix4.h"
+#include "WinApp.h"
 #include<d3d12.h>
 #include<wrl.h>
+#include "Input.h"
 
 class ViewProjection
 {
@@ -31,6 +33,12 @@ public:// メンバ関数
 	// バッファのゲッター
 	ID3D12Resource* GetBuff() { return constBuff.Get(); }
 
+	// デバッグカメラの初期化
+	void DebugCameraInitialze(Input* input);
+
+	// デバッグカメラの更新処理
+	void DebugCameraUpdate();
+
 private:// プライベート関数
 	// 円周率
 	const float PI = 3.141592f;
@@ -48,10 +56,16 @@ private:// プライベート関数
 	// 度数からラジアンに変換
 	float ToRadian(float angle) { return angle * (PI / 180); }
 
+	// ベクトルによる視点移動
+	void MoveEyeVector(const Vector3& move);
+
+	// ベクトルによる移動
+	void MoveVector(const Vector3& move);
+
 public:// パブリック変数
 #pragma region ビュー行列の設定
 	// 視点座標
-	Vector3 eye = { 0, 0, -50.0f };
+	Vector3 eye = { 0, 0, -20.0f };
 	// 注視点座標
 	Vector3 target = { 0, 0, 0 };
 	// 上方向ベクトル
@@ -62,7 +76,7 @@ public:// パブリック変数
 	// 垂直方向視野角
 	float fovAngleY = ToRadian(45.0f);
 	// ビューポートのアスペクト比
-	float aspectRatio = (float)16 / 9;
+	float aspectRatio = (float)WinApp::window_width / WinApp::window_height;
 	// 深度限界（手前側）
 	float nearZ = 0.1f;
 	// 深度限界（奥側）
@@ -85,6 +99,18 @@ private:// メンバ変数
 	// マッピング済みアドレス
 	ConstBufferDataViewProjection* constMap = nullptr;
 
+	// デバッグカメラに必要な変数
+#pragma region デバッグカメラ
+	// 入力クラスのポインタ
+	Input* input;
+	// カメラ注視点までの距離
+	float distance = 20;
+	// スケーリング
+	float scaleX = 1.0f;
+	float scaleY = 1.0f;
+	// 回転行列
+	Matrix4 matRot;
+#pragma endregion
 
 };
 

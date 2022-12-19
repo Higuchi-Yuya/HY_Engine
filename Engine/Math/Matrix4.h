@@ -39,6 +39,9 @@ public:
 	// 座標変換（ベクトルと行列の掛け算をする）
 	Vector3 transform(const Vector3& v, const Matrix4& m);
 
+	// 座標変換（ベクトルと行列の掛け算をする）
+	Vector3 transformNotW(const Vector3& v, const Matrix4& m);
+
 	// ビュー行列作成
 	Matrix4 ViewMat(Vector3 eye, Vector3 target, Vector3 up);
 

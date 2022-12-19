@@ -117,10 +117,10 @@
     <ClCompile Include="Engine\Math\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Mesh.cpp">
+    <ClCompile Include="Engine\3D\Material.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Material.cpp">
+    <ClCompile Include="Engine\3D\Light.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,10 +173,10 @@
     <ClInclude Include="Engine\Math\Quaternion.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Mesh.h">
+    <ClInclude Include="Engine\3D\Material.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Material.h">
+    <ClInclude Include="Engine\3D\Light.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
   </ItemGroup>

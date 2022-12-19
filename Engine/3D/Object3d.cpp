@@ -11,6 +11,7 @@ using namespace std;
 /// 静的メンバ変数の実体
 /// </summary>
 ComPtr<ID3D12Device> Object3d::device = nullptr;
+Light* Object3d::light = nullptr;
 
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
@@ -194,30 +195,36 @@ void Object3d::InitializeGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootParams[4];
-	//定数バッファ0番 ---ワールド変換データ用
-	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
-	rootParams[0].Descriptor.ShaderRegister = 0;					//定数バッファ番号
-	rootParams[0].Descriptor.RegisterSpace = 0;						//デフォルト値
-	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+	CD3DX12_ROOT_PARAMETER rootParams[5];
+	//テクスチャレジスタ0番 ---テクスチャシェーダーリソースビュー用
+	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
+	rootParams[0].DescriptorTable.pDescriptorRanges = &descRangeSRV;			//デスクリプタレンジ
+	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
+	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
 
-	//定数バッファ1番 ---ビュープロジェクション変換データ用
-	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[1].Descriptor.ShaderRegister = 1;					//定数バッファ番号
+	//定数バッファ0番 ---ワールド変換データ用
+	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
+	rootParams[1].Descriptor.ShaderRegister = 0;					//定数バッファ番号
 	rootParams[1].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
-	//定数バッファ2番 ---マテリアルバッファビュー用
+	//定数バッファ1番 ---ビュープロジェクション変換データ用
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[2].Descriptor.ShaderRegister = 2;					//定数バッファ番号
+	rootParams[2].Descriptor.ShaderRegister = 1;					//定数バッファ番号
 	rootParams[2].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
-	//テクスチャレジスタ0番 ---テクスチャシェーダーリソースビュー用
-	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
-	rootParams[3].DescriptorTable.pDescriptorRanges = &descRangeSRV;			//デスクリプタレンジ
-	rootParams[3].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
-	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
+	//定数バッファ2番 ---マテリアルバッファビュー用
+	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[3].Descriptor.ShaderRegister = 2;					//定数バッファ番号
+	rootParams[3].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+
+	//定数バッファ3番 ---ライトバッファビュー用
+	rootParams[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[4].Descriptor.ShaderRegister = 3;					//定数バッファ番号
+	rootParams[4].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -265,11 +272,15 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	if (model == nullptr)return;
 
 	// ワールド変換データ定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, worldTransform_.GetBuff()->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(1, worldTransform_.GetBuff()->GetGPUVirtualAddress());
 
 	// ビュープロジェクション変換データ定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(1, viewProjection->GetBuff()->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
+
+	// ライトの描画
+	light->Draw(cmdList);
 
 	// モデルを描画
 	model->Draw(cmdList, 1);
+
 }

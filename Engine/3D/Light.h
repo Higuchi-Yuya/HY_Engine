@@ -55,11 +55,6 @@ private:// プライベートメンバ関数
 	void CreateConstBuffer();
 
 	/// <summary>
-	/// マッピングする
-	/// </summary>
-	void Map();
-
-	/// <summary>
 	/// 行列の転送
 	/// </summary>
 	void TranferConstBuffer();
@@ -68,12 +63,13 @@ private:// メンバ変数
 	ComPtr<ID3D12Resource> constBuff;
 
 	// ライト光線方向（単位ベクトル）
-	Vector3 lightdir = { 1,0,1 };
+	Vector3 lightdir = { 1,0,0 };
+	
 	// ライトの色
 	Vector3 lightcolor = { 1.0f,1.0f,1.0f };
+	
 	// ダーティフラグ
 	bool dirty = false;
-
 
 };
 

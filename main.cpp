@@ -92,7 +92,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ライトの生成
 	light = Light::Create();
 	// ライトの色を設定
-	light->SetLightDir({ 1,0,0 });
+	light->SetLightDir({ 0,-1,5 });
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light);
 
@@ -124,7 +124,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	//object3d->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
 	obj_2->SetModel(model_2);
 	obj_2->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
-	
+	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,0.9f };
 	ViewProjection* view = new ViewProjection;
 	view->DebugCameraInitialze(input);
 	

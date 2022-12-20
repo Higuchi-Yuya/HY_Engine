@@ -27,7 +27,6 @@ Light* Light::Create()
 void Light::Initialize()
 {
 	CreateConstBuffer();
-	Map();
 	TranferConstBuffer();
 }
 
@@ -76,11 +75,6 @@ void Light::CreateConstBuffer()
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuff));
 	assert(SUCCEEDED(result));
-}
-
-void Light::Map()
-{
-
 }
 
 void Light::TranferConstBuffer()

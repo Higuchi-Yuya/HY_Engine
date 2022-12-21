@@ -13,7 +13,7 @@ public:// サブクラス
 	struct ConstBufferDataLight
 	{
 		Vector3 lightv;// ライトへの方向を表すベクトル
-		float pad2; // パディング
+		float pad1; // パディング
 		Vector3 lightcolor;// ライトの色
 	};
 
@@ -58,6 +58,7 @@ private:// プライベートメンバ関数
 	/// 行列の転送
 	/// </summary>
 	void TranferConstBuffer();
+
 private:// メンバ変数
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;

@@ -64,6 +64,12 @@
     <Filter Include="ヘッダー ファイル\Engine\2D">
       <UniqueIdentifier>{968e1b2a-a2c7-4758-a83a-5b711438ee41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{3510440c-bc5f-4aa3-9cfe-e16f94e52f34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{6fd2e1da-1d39-4a27-9fd7-85ce21ea017b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -123,6 +129,9 @@
     <ClCompile Include="Engine\3D\Light.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -178,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Light.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

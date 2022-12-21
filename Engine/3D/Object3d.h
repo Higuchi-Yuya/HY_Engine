@@ -46,10 +46,7 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static Object3d* Create();
 
-	/// <summary>
-	/// ライトのセット
-	/// </summary>
-	static void SetLight(Light* light) {Object3d::light = light;}
+
 
 
 private: // 静的メンバ変数
@@ -93,6 +90,11 @@ public: // メンバ関数
 	/// モデルの設定
 	/// </summary>
 	void SetModel(Model* model) { this->model = model; }
+
+	/// <summary>
+	/// ライトのセット
+	/// </summary>
+	static void SetLight(Light* light) { Object3d::light = light; }
 
 public:// パブリック変数
 

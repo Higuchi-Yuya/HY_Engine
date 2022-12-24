@@ -24,9 +24,9 @@ public: // メンバ関数
 
 public: // 定数
 	// ウィンドウ横幅
-	static const int window_width = 1280;
+	static const int window_width = 960;
 	// ウィンドウ縦幅
-	static const int window_height = 720;
+	static const int window_height = 640;
 
 private:
 	// ウィンドウハンドル

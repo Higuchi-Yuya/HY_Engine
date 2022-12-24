@@ -14,13 +14,14 @@ GameScene::~GameScene()
 	delete sprite;
 	delete sprite2;
 	// オブジェクトの解放
-	delete object3d;
 	delete obj_2;
 	// モデルの解放
-	delete model;
 	delete model_2;
 	// ビューの解放
 	delete view;
+
+	// プレイヤーの解放
+	delete player;
 }
 
 void GameScene::Initialize()
@@ -46,24 +47,14 @@ void GameScene::Initialize()
 	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
-	// モデルの初期化
-	model = Model::LoadFromOBJ("sphere", true);
-	model_2 = Model::LoadFromOBJ("Medama", true);
-
-	// オブジェクトの初期化
-	object3d = Object3d::Create();
-	obj_2 = Object3d::Create();
-
-	object3d->SetModel(model);
-	object3d->worldTransform_.position_ = { 10,0,0, };
-	object3d->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
-	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
-	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,0.95f };
-
 	// ビュープロジェクションの初期化
 	view = new ViewProjection;
 	view->DebugCameraInitialze(input);
+
+	// プレイヤーの初期化
+	player = new Player();
+	player->Initialize();
+
 }
 
 void GameScene::Update()
@@ -79,12 +70,9 @@ void GameScene::Update()
 
 	light->Update();
 
-	object3d->worldTransform_.rotation_.y += 0.01f;
-	object3d->Update();
-
-	obj_2->worldTransform_.rotation_.y += 0.01f;
-	obj_2->Update();
 	view->DebugCameraUpdate();
+
+	player->Update();
 
 }
 
@@ -95,8 +83,8 @@ void GameScene::Draw2Dback()
 
 void GameScene::Draw3D()
 {
-	object3d->Draw(view);
-	obj_2->Draw(view);
+	player->Draw(view);
+
 }
 
 void GameScene::Draw2Dfront()

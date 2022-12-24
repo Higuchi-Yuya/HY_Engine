@@ -70,6 +70,24 @@
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{6fd2e1da-1d39-4a27-9fd7-85ce21ea017b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application">
+      <UniqueIdentifier>{174a7b7d-d4bc-4c8d-bb83-a89fd759238c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application">
+      <UniqueIdentifier>{a0b14cac-d5e7-4409-bdac-2239522812b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Player">
+      <UniqueIdentifier>{4b9de03a-346f-4783-8a5a-8e0e5904c51e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application\Player">
+      <UniqueIdentifier>{2796c361-7b76-4f4b-8017-aac19b24eae6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application\Fruit">
+      <UniqueIdentifier>{1f7d133b-d12b-40aa-86b3-5e608e3ddd1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Fruit">
+      <UniqueIdentifier>{32aab362-db7f-40d2-b6c6-b1ae6938ede9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -132,6 +150,15 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Fruit.cpp">
+      <Filter>ソース ファイル\Application\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="FruitsPop.cpp">
+      <Filter>ソース ファイル\Application\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\Application\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -190,6 +217,15 @@
     </ClInclude>
     <ClInclude Include="GameScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Fruit.h">
+      <Filter>ヘッダー ファイル\Application\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="FruitsPop.h">
+      <Filter>ヘッダー ファイル\Application\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\Application\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

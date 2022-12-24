@@ -282,8 +282,8 @@ void DirectXCommon::InitializeSwapchain(WinApp* winApp)
 #pragma region スワップチェーンの設定
 	//スワップチェーンの設定
 	
-	swapChainDesc.Width = 1280;
-	swapChainDesc.Height = 720;
+	swapChainDesc.Width = winApp->window_width;
+	swapChainDesc.Height = winApp->window_height;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;			//色情報の書式
 	swapChainDesc.SampleDesc.Count = 1;							//マルチサンプルしない
 	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;			//バックバッファ用

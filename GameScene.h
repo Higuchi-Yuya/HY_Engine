@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Quaternion.h"
 #include "Light.h"
+#include "Player.h"
 
 class GameScene
 {
@@ -45,11 +46,11 @@ private:// メンバ変数
 	Sprite* sprite2 = nullptr;
 
 	// モデル
-	Model* model = nullptr;
+	
 	Model* model_2 = nullptr;
 
 	// オブジェクト
-	Object3d* object3d = nullptr;
+	Player* player = nullptr;
 	Object3d* obj_2 = nullptr;
 
 	// ビュープロジェクション

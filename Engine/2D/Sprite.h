@@ -29,10 +29,10 @@ public:// メンバ関数
 	void Draw();
 
 	// 座標設定
-	void SetPosition(const Vector3& position) { position_ = position; }
-
+	void SetPosition(const Vector2& position) { position_ = position; }
+	
 	// 座標の取得
-	const Vector3& GetPosition()const { return position_; }
+	const Vector2& GetPosition()const { return position_; }
 
 	// 回転の設定
 	void SetRotation(float rotation) { rotation_.z = rotation; }
@@ -104,7 +104,7 @@ private:// メンバ変数
 
 	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	    // 回転角
 
-	Vector3 position_ = { 100.0f,100.0f,0.0f };	// 座標
+	Vector2 position_ = { 100.0f,100.0f };	// 座標
 	
 	Vector4 color_ = { 1,1,1,1 };	            // 色（RGBA）
 	

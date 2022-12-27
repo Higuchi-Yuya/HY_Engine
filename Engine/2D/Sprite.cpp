@@ -168,7 +168,7 @@ void Sprite::Updata()
 	matTrans.identity();
 
 	matRot.rotation(rotation_);
-	matTrans.translate(position_);
+	matTrans.translate({ position_.x,position_.y,0.0f });
 
 	Matrix4 matProjection;
 	matProjection.identity();

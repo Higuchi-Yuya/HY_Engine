@@ -158,6 +158,7 @@
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
     <ClCompile Include="Engine\Camera\ViewProjection.cpp" />
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\DirectXBase\ImGuiManager.cpp" />
     <ClCompile Include="Engine\DirectXBase\Texture.cpp" />
     <ClCompile Include="Engine\DirectXBase\WinApp.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Engine\3D\WorldTransform.h" />
     <ClInclude Include="Engine\Camera\ViewProjection.h" />
     <ClInclude Include="Engine\DirectXBase\DirectXCommon.h" />
+    <ClInclude Include="Engine\DirectXBase\ImGuiManager.h" />
     <ClInclude Include="Engine\DirectXBase\Texture.h" />
     <ClInclude Include="Engine\DirectXBase\WinApp.h" />
     <ClInclude Include="Engine\Input\Input.h" />

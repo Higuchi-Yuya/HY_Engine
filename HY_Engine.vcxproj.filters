@@ -123,6 +123,9 @@
     <ClCompile Include="Engine\3D\Light.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DirectXBase\ImGuiManager.cpp">
+      <Filter>ソース ファイル\Engine\DirectXBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Light.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DirectXBase\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

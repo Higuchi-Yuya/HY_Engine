@@ -16,6 +16,7 @@
 #include "Model.h"
 #include "Quaternion.h"
 #include "Light.h"
+#include "ImGuiManager.h"
 
 #pragma endregion
 
@@ -60,6 +61,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// DirectXの初期化
 	dxCommon = new DirectXCommon();
 	dxCommon->Initalize(winApp);
+
+	// ImGuiの初期化
+	ImGuiManager* imguiManager = new ImGuiManager();
+	imguiManager->Initialize(winApp,dxCommon);
 
 	// ポインタ
 	Input* input = nullptr;
@@ -128,7 +133,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	ViewProjection* view = new ViewProjection;
 	view->DebugCameraInitialze(input);
 	
-
+	Vector2 spritePos = sprite2->GetPosition();
+	char buf[256] = "";
+	float f = 0.0f;
 #pragma endregion
 
 	//ゲームループ
@@ -160,6 +167,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		light->Update();
 		//object3d->SetScale(scale_);
 		//object3d->Update();
+		//spritePos = sprite2->GetPosition();
+		sprite2->SetPosition(spritePos);
+
 		obj_2->worldTransform_.rotation_.y += 0.01f;
 		obj_2->Update();
 		view->DebugCameraUpdate();
@@ -167,6 +177,27 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//////////////////////////////////////////////
 		//-------DireceX毎フレーム処理　ここまで--------//
 		////////////////////////////////////////////
+#pragma region IMGUIの更新処理
+		// ImGuiの更新処理
+		imguiManager->Begin();
+		// 表示項目の追加--------//
+
+		ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+		ImGui::Begin("Sprite 1");
+
+		ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
+
+		if (ImGui::Button("Reset")) {
+			spritePos = { 200.0f,200.0f };
+		}
+
+		ImGui::End();
+		// ---------------------//
+		imguiManager->End();
+#pragma endregion
+
+		
 
 #pragma endregion
 
@@ -214,10 +245,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		spriteManager->PostDraw();
 #pragma endregion
 
+#pragma region IMGUIの描画
+		imguiManager->Draw();
+#pragma endregion
+
+
 		// 描画コマンドの終了
 		dxCommon->PostDraw();
-
-
 
 #pragma endregion
 	}
@@ -238,6 +272,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ライトの解放
 	delete light;
 
+
+	// ImGuiのマネージャーを解放
+	imguiManager->Finalize();
+	delete imguiManager;
 	// スプライトマネージャーの解放
 	delete spriteManager;
 	// 入力解放

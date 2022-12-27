@@ -31,7 +31,7 @@ void Player::Update()
 	if (input->PushKey(DIK_A)) {
 		playerObj->worldTransform_.position_.x -= 0.2f;
 	}
-	else if (input->PushKey(DIK_D)) {
+	if (input->PushKey(DIK_D)) {
 		playerObj->worldTransform_.position_.x += 0.2f;
 	}
 

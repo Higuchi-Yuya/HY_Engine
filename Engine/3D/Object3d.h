@@ -7,7 +7,7 @@
 #include "ViewProjection.h"
 #include <d3dx12.h>
 #include "Model.h"
-#include "Light.h"
+#include "LightGroup.h"
 
 /// <summary>
 /// 3Dオブジェクト
@@ -49,7 +49,7 @@ public: // 静的メンバ関数
 	/// <summary>
 	/// ライトのセット
 	/// </summary>
-	static void SetLight(Light* light) {Object3d::light = light;}
+	static void SetLight(LightGroup* light) {Object3d::light = light;}
 
 
 private: // 静的メンバ変数
@@ -57,7 +57,7 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12Device> device;
 
 	// ライト
-	static Light* light;
+	static LightGroup* light;
 
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;

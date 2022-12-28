@@ -11,7 +11,7 @@ using namespace std;
 /// 静的メンバ変数の実体
 /// </summary>
 ComPtr<ID3D12Device> Object3d::device = nullptr;
-Light* Object3d::light = nullptr;
+LightGroup* Object3d::light = nullptr;
 
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;

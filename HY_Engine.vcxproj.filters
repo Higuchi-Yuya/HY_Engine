@@ -64,6 +64,12 @@
     <Filter Include="ヘッダー ファイル\Engine\2D">
       <UniqueIdentifier>{968e1b2a-a2c7-4758-a83a-5b711438ee41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D\Light">
+      <UniqueIdentifier>{a25ac2f5-d6c6-484b-987e-2f452efc4b47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\Light">
+      <UniqueIdentifier>{e178cf42-4d88-46b2-a4a0-8140beec9bca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -120,11 +126,14 @@
     <ClCompile Include="Engine\3D\Material.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Light.cpp">
-      <Filter>ソース ファイル\Engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DirectXBase\ImGuiManager.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\DirectionalLight.cpp">
+      <Filter>ソース ファイル\Engine\3D\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\LightGroup.cpp">
+      <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,11 +188,14 @@
     <ClInclude Include="Engine\3D\Material.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Light.h">
-      <Filter>ヘッダー ファイル\Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DirectXBase\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\DirectionalLight.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\LightGroup.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -56,7 +56,7 @@ void LightGroup::TransferConstBuffer()
 	constMap->ambientColor = ambientColor_;
 
 	// 平行光源
-	for (int i = 0; i < kDirLightNum; i++) {
+	for (int i = 0; i < DirLightNum; i++) {
 		// ライトが有効なら設定を転送
 		if (dirLights_[i].IsActive()) {
 			constMap->dirLights[i].active = 1;
@@ -93,14 +93,14 @@ void LightGroup::SetAmbientColor(const Vector3& color)
 
 void LightGroup::SetDirLightActive(int index, bool active)
 {
-	assert(0 <= index && index < kDirLightNum);
+	assert(0 <= index && index < DirLightNum);
 
 	dirLights_[index].SetActive(active);
 }
 
 void LightGroup::SetDirLightDir(int index, const Vector3& lightdir)
 {
-	assert(0 <= index && index < kDirLightNum);
+	assert(0 <= index && index < DirLightNum);
 
 	dirLights_[index].SetLightDir(lightdir);
 	dirty = true;
@@ -108,7 +108,7 @@ void LightGroup::SetDirLightDir(int index, const Vector3& lightdir)
 
 void LightGroup::SetDirLightColor(int index, const Vector3& lightcolor)
 {
-	assert(0 <= index && index < kDirLightNum);
+	assert(0 <= index && index < DirLightNum);
 
 	dirLights_[index].SetLightColor(lightcolor);
 	dirty = true;

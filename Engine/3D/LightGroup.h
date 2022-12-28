@@ -10,13 +10,13 @@ private:
 
 public:// 定数
 	// 平行光源の数
-	static const int kDirLightNum = 3;
+	static const int DirLightNum = 3;
 	// 点光源の数
-	static const int kPointLightNum = 3;
+	static const int PointLightNum = 3;
 	// スポットライトの数
-	static const int kSpotLightNum = 3;
+	static const int SpotLightNum = 3;
 	// 丸影の数
-	static const int kCircleShadowNum = 1;
+	static const int CircleShadowNum = 1;
 
 public:// サブクラス
 	struct ConstBufferData
@@ -25,7 +25,7 @@ public:// サブクラス
 		Vector3 ambientColor;
 		float pad1;
 		// 平行光源用
-		DirectionalLight::ConstBufferData dirLights[kDirLightNum];
+		DirectionalLight::ConstBufferData dirLights[DirLightNum];
 	};
 
 private:// 静的メンバ変数
@@ -95,8 +95,10 @@ private:// プライベートメンバ関数
 	void DefaultLightSetting();
 
 private:// メンバ変数
+
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
+
 	// 定数バッファのマップ
 	ConstBufferData* constMap = nullptr;
 
@@ -104,8 +106,7 @@ private:// メンバ変数
 	Vector3 ambientColor_ = { 1,1,1 };
 
 	// 平行光源の配列
-	DirectionalLight dirLights_[kDirLightNum];
-
+	DirectionalLight dirLights_[DirLightNum];
 
 	// ダーティフラグ
 	bool dirty = false;

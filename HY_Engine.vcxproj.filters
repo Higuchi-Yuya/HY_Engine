@@ -150,14 +150,14 @@
     <ClCompile Include="Engine\3D\Light\PointLight.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\Light\SpotLight.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Light\CircleShadow.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

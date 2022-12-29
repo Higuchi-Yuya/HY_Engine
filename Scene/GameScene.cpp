@@ -62,7 +62,7 @@ void GameScene::Initialize()
 
 	// ÉÇÉfÉãÇÃì«Ç›çûÇ›
 	model = Model::LoadFromOBJ("skydome", true);
-	model_2 = Model::LoadFromOBJ("sphere", true);
+	model_2 = Model::LoadFromOBJ("Medama", true);
 	groundModel = Model::LoadFromOBJ("ground");
 	modelFighter = Model::LoadFromOBJ("chr_sword");
 	

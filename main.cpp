@@ -10,13 +10,8 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
 #include "SpriteManager.h"
-#include "Sprite.h"
-#include "Object3d.h"
-#include "ViewProjection.h"
-#include "Model.h"
-#include "Quaternion.h"
 #include "LightGroup.h"
-#include "ImGuiManager.h"
+#include "GameScene.h"
 
 #pragma endregion
 
@@ -66,12 +61,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	ImGuiManager* imguiManager = new ImGuiManager();
 	imguiManager->Initialize(winApp,dxCommon);
 
-	// ポインタ
-	Input* input = nullptr;
-
 	// 入力の初期化
-	input = new Input();
-	input->Initialize(winApp);
+	Input::StaticInitialize(winApp);
 
 	// スプライトの初期化
 	SpriteManager* spriteManager = nullptr;
@@ -79,6 +70,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	spriteManager = new SpriteManager;
 	spriteManager->Initialize(dxCommon);
 	
+	Sprite::StaticInitialize(spriteManager);
+
 	// テクスチャの初期化
 	Texture::StaticInitialize(dxCommon);
 	
@@ -91,51 +84,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ライトの静的初期化
 	LightGroup::StaticInititalize(dxCommon->GetDevice());
 
-	// オブジェクト共通のライトの初期化
-	LightGroup* light = nullptr;
-
-	// ライトの生成
-	light = LightGroup::Create();
-	// ライトの色を設定
-	light->SetDirLightDir(0,{ 0,-1,5 });
-	// 3Dオブジェクトにライトをセット
-	Object3d::SetLight(light);
-
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////
 #pragma endregion
 
 #pragma region シーンに使う変数の初期化
-	// スプライト一枚の初期化
-	int textureHandle;
-	int textureHandle2;
-	textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
-	textureHandle2 = Texture::LoadTexture("texture.png");
-	Sprite* sprite = new Sprite();
-	Sprite* sprite2 = new Sprite();
-	sprite->StaticInitialize(spriteManager);
-	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
-	sprite2->Initialize(textureHandle2, { 200,200 });
+	GameScene* gameScene = new GameScene();
+	gameScene->Initialize();
 
-	Model* model = Model::LoadFromOBJ("skydome",true);
-	Model* model_2 = Model::LoadFromOBJ("Medama",true);
-
-	//Object3d* object3d = Object3d::Create();
-	Object3d* obj_2 = Object3d::Create();
-	
-	//object3d->SetModel(model);
-	//object3d->worldTransform_.position_ = { 10,0,0, };
-	//object3d->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
-	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
-	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
-	ViewProjection* view = new ViewProjection;
-	view->DebugCameraInitialze(input);
-	
-	Vector2 spritePos = sprite2->GetPosition();
-	char buf[256] = "";
-	float f = 0.0f;
 #pragma endregion
 
 	//ゲームループ
@@ -155,49 +112,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//----------DireceX毎フレーム処理　ここから------------//
 		///////////////////////////////////////////////////
 
-		// 入力の更新
-		input->Update();
-		
-		// 数字の0キーが押されていたら
-		if (input->PushKey(DIK_0))
-		{
-			OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
-		}
-		
-		light->Update();
-		//object3d->SetScale(scale_);
-		//object3d->Update();
-		//spritePos = sprite2->GetPosition();
-		sprite2->SetPosition(spritePos);
 
-		obj_2->worldTransform_.rotation_.y += 0.01f;
-		obj_2->Update();
-		view->DebugCameraUpdate();
+		gameScene->Update();
+
 
 		//////////////////////////////////////////////
 		//-------DireceX毎フレーム処理　ここまで--------//
 		////////////////////////////////////////////
 #pragma region IMGUIの更新処理
-		// ImGuiの更新処理
+	// ImGuiの更新処理
 		imguiManager->Begin();
-		// 表示項目の追加--------//
-
-		ImGui::SetNextWindowSize(ImVec2(500, 100));
-
-		ImGui::Begin("Sprite 1");
-
-		ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
-
-		if (ImGui::Button("Reset")) {
-			spritePos = { 200.0f,200.0f };
-		}
-
-		ImGui::End();
-		// ---------------------//
+		gameScene->ImguiUpdate();
+		
 		imguiManager->End();
 #pragma endregion
-
-		
 
 #pragma endregion
 
@@ -210,7 +138,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		// 背景スプライト描画
 		spriteManager->PreDraw();
 		//-----ここから 背景スプライト描画 -----//
-		sprite->Draw();
+		gameScene->Draw2DBack();
 
 
 
@@ -223,9 +151,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region ３Ｄモデル描画
 		Object3d::PreDraw(dxCommon->GetCommandList());
 		//-----ここから 3Dモデルの描画 -----//
-		
-		//object3d->Draw(view);
-		obj_2->Draw(view);
+		gameScene->Draw3D();
+
 		
 		//-----ここまで 3Dモデルの描画 -----//
 		Object3d::PostDraw();
@@ -235,8 +162,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		// 描画前処理
 		spriteManager->PreDraw();
 		//-----ここから 2D描画 -------//
-		//sprite->Draw();
-		sprite2->Draw();
+		gameScene->Draw2DFront();
 
 
 
@@ -258,28 +184,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region  WindowsAPI後始末
 
 	//もうクラスは使わないので登録を解除する
-	// スプライトの解放
-	delete sprite;
-	delete sprite2;
-	// オブジェクトの解放
-	//delete object3d;
-	delete obj_2;
-	// モデルの解放
-	delete model;
-	delete model_2;
-	// ビューの解放
-	delete view;
-	// ライトの解放
-	delete light;
 
+	// ゲームシーンの解放
+	delete gameScene;
 
 	// ImGuiのマネージャーを解放
 	imguiManager->Finalize();
 	delete imguiManager;
 	// スプライトマネージャーの解放
 	delete spriteManager;
-	// 入力解放
-	delete input;
+
 	// WindouwsAPIの終了処理
 	winApp->Finalize();
 	// WindouwsAPI解放

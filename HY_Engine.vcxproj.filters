@@ -70,6 +70,18 @@
     <Filter Include="ソース ファイル\Engine\3D\Light">
       <UniqueIdentifier>{e178cf42-4d88-46b2-a4a0-8140beec9bca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D\Object">
+      <UniqueIdentifier>{09efcf81-0ea6-4292-8b4b-d0d5de47cca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\Object">
+      <UniqueIdentifier>{7d5838ba-3d15-42cf-9207-02ab1c970e5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{716774fa-9c84-4ccd-b742-4ac8a73ac07b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{7bf60efa-b700-4947-a3f4-4dff651b3433}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,28 +123,40 @@
     <ClCompile Include="Engine\2D\SpriteManager.cpp">
       <Filter>ソース ファイル\Engine\2D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Object3d.cpp">
-      <Filter>ソース ファイル\Engine\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Model.cpp">
-      <Filter>ソース ファイル\Engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\WorldTransform.cpp">
       <Filter>ソース ファイル\Engine\3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Math\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Material.cpp">
-      <Filter>ソース ファイル\Engine\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DirectXBase\ImGuiManager.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\DirectionalLight.cpp">
+    <ClCompile Include="Engine\3D\Light\DirectionalLight.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\LightGroup.cpp">
+    <ClCompile Include="Engine\3D\Light\LightGroup.cpp">
+      <Filter>ソース ファイル\Engine\3D\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Object\Material.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Object\Model.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Object\Object3d.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Light\PointLight.cpp">
+      <Filter>ソース ファイル\Engine\3D\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Light\SpotLight.cpp">
+      <Filter>ソース ファイル\Engine\3D\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Light\CircleShadow.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,28 +197,40 @@
     <ClInclude Include="Engine\2D\SpriteManager.h">
       <Filter>ヘッダー ファイル\Engine\2D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Object3d.h">
-      <Filter>ヘッダー ファイル\Engine\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Model.h">
-      <Filter>ヘッダー ファイル\Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\WorldTransform.h">
       <Filter>ヘッダー ファイル\Engine\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\Quaternion.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Material.h">
-      <Filter>ヘッダー ファイル\Engine\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DirectXBase\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\DirectionalLight.h">
+    <ClInclude Include="Engine\3D\Light\LightGroup.h">
       <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\LightGroup.h">
+    <ClInclude Include="Engine\3D\Light\DirectionalLight.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Object\Material.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Object\Model.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Object\Object3d.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\PointLight.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\SpotLight.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\CircleShadow.h">
       <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
     </ClInclude>
   </ItemGroup>

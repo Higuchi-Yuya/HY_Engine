@@ -19,8 +19,11 @@ public:
 		LONG lZ;
 	};
 public: // メンバ関数
+	// 静的初期化
+	static void StaticInitialize(WinApp* winApp);
+
 	// 初期化
-	void Initialize(WinApp* winApp);
+	void Initialize();
 
 	// 更新
 	void Update();
@@ -100,6 +103,6 @@ private:// 静的メンバ変数
 	DIMOUSESTATE2 mouseStatePre = {};
 
 	// WindowsAPI
-	WinApp* winApp_ = nullptr;
+	static WinApp* winApp_;
 };
 

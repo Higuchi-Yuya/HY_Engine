@@ -39,6 +39,11 @@ public:// メンバ関数
 	// デバッグカメラの更新処理
 	void DebugCameraUpdate();
 
+	// カメラ注視点までの距離のセット
+	void SetDistance(float distance) {
+		this->distance = distance;
+	}
+
 private:// プライベート関数
 	// 円周率
 	const float PI = 3.141592f;
@@ -61,6 +66,8 @@ private:// プライベート関数
 
 	// ベクトルによる移動
 	void MoveVector(const Vector3& move);
+
+
 
 public:// パブリック変数
 #pragma region ビュー行列の設定
@@ -104,7 +111,7 @@ private:// メンバ変数
 	// 入力クラスのポインタ
 	Input* input;
 	// カメラ注視点までの距離
-	float distance = 20;
+	float distance = 3;
 	// スケーリング
 	float scaleX = 1.0f;
 	float scaleY = 1.0f;

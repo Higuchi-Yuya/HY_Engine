@@ -42,7 +42,9 @@ float4 main(VSOutput input) : SV_TARGET
 		if (pointLights[i].active) {
 			// ライトへの方向ベクトル
 			float3 lightv = pointLights[i].lightpos - input.worldpos.xyz;
+			// ベクトルの長さ
 			float d = length(lightv);
+			// 正規化し、単位ベクトルにする
 			lightv = normalize(lightv);
 
 			// 距離減衰係数
@@ -124,21 +126,6 @@ float4 main(VSOutput input) : SV_TARGET
 			shadecolor.rgb -= atten;
 		}
 	}
-
-	//// ライトに向かうベクトルと法線の内積
-	//float3 dotlightnormal = dot(lightv, input.normal);
-	//// 反射光ベクトル
-	//float3 reflect = normalize(-lightv + 2 * dotlightnormal * input.normal);
-	//
-
-	//// 拡散反射光
-	//float3 diffuse = dotlightnormal * m_diffuse;
-	//// 鏡面反射光
-	//float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
-	//
-	//// 全て加算する
-	//shadecolor.rgb = (ambient + diffuse + specular) * lightcolor;
-	//shadecolor.a = m_alpha;
 
 	// テクスチャの色は使わず色を数値指定
 	return color * shadecolor * texcolor;

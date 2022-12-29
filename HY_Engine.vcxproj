@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Scene</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Scene</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -151,11 +151,14 @@
   <ItemGroup>
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\2D\SpriteManager.cpp" />
-    <ClCompile Include="Engine\3D\DirectionalLight.cpp" />
-    <ClCompile Include="Engine\3D\LightGroup.cpp" />
-    <ClCompile Include="Engine\3D\Material.cpp" />
-    <ClCompile Include="Engine\3D\Model.cpp" />
-    <ClCompile Include="Engine\3D\Object3d.cpp" />
+    <ClCompile Include="Engine\3D\Light\CircleShadow.cpp" />
+    <ClCompile Include="Engine\3D\Light\DirectionalLight.cpp" />
+    <ClCompile Include="Engine\3D\Light\LightGroup.cpp" />
+    <ClCompile Include="Engine\3D\Light\PointLight.cpp" />
+    <ClCompile Include="Engine\3D\Light\SpotLight.cpp" />
+    <ClCompile Include="Engine\3D\Object\Material.cpp" />
+    <ClCompile Include="Engine\3D\Object\Model.cpp" />
+    <ClCompile Include="Engine\3D\Object\Object3d.cpp" />
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
     <ClCompile Include="Engine\Camera\ViewProjection.cpp" />
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp" />
@@ -169,16 +172,20 @@
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Math\Vector4.cpp" />
     <ClCompile Include="Engine\Sound\Sound.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\2D\SpriteManager.h" />
-    <ClInclude Include="Engine\3D\DirectionalLight.h" />
-    <ClInclude Include="Engine\3D\LightGroup.h" />
-    <ClInclude Include="Engine\3D\Material.h" />
-    <ClInclude Include="Engine\3D\Model.h" />
-    <ClInclude Include="Engine\3D\Object3d.h" />
+    <ClInclude Include="Engine\3D\Light\CircleShadow.h" />
+    <ClInclude Include="Engine\3D\Light\DirectionalLight.h" />
+    <ClInclude Include="Engine\3D\Light\LightGroup.h" />
+    <ClInclude Include="Engine\3D\Light\PointLight.h" />
+    <ClInclude Include="Engine\3D\Light\SpotLight.h" />
+    <ClInclude Include="Engine\3D\Object\Material.h" />
+    <ClInclude Include="Engine\3D\Object\Model.h" />
+    <ClInclude Include="Engine\3D\Object\Object3d.h" />
     <ClInclude Include="Engine\3D\WorldTransform.h" />
     <ClInclude Include="Engine\Camera\ViewProjection.h" />
     <ClInclude Include="Engine\DirectXBase\DirectXCommon.h" />
@@ -192,6 +199,7 @@
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4.h" />
     <ClInclude Include="Engine\Sound\Sound.h" />
+    <ClInclude Include="Scene\GameScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

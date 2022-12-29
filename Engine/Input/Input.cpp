@@ -5,14 +5,20 @@
 
 #include <cassert>
 
-void Input::Initialize(WinApp* winApp)
+WinApp* Input::winApp_ = nullptr;
+
+void Input::StaticInitialize(WinApp* winApp)
+{
+	// 借りてきたWinAppのインスタンスを記録
+	Input::winApp_ = winApp;
+}
+
+void Input::Initialize()
 {
 	HRESULT result;
-	// 借りてきたWinAppのインスタンスを記録
-	this->winApp_ = winApp;
 
 	//DirectInputの初期化
-	result = DirectInput8Create(winApp->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
 	//キーボードデバイスの生成
@@ -28,7 +34,7 @@ void Input::Initialize(WinApp* winApp)
 	assert(SUCCEEDED(result));
 
 	// キーボード排他制御レベルのセット
-	result = keyboard->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboard->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
 	// マウス入力データ形式のセット
@@ -36,7 +42,7 @@ void Input::Initialize(WinApp* winApp)
 	assert(SUCCEEDED(result));
 
 	// マウス排他制御レベルのセット
-	result = devMouse->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = devMouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
 

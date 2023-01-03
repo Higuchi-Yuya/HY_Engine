@@ -7,6 +7,7 @@
 #include "Quaternion.h"
 #include "Light.h"
 #include "Player.h"
+#include "FruitsPop.h"
 
 class GameScene
 {
@@ -46,7 +47,6 @@ private:// メンバ変数
 	Sprite* sprite2 = nullptr;
 
 	// モデル
-	
 	Model* model_2 = nullptr;
 
 	// オブジェクト
@@ -56,6 +56,7 @@ private:// メンバ変数
 	// ビュープロジェクション
 	ViewProjection* view = nullptr;
 
-
+	// フルーツ
+	FruitsPop* fruitsPop = nullptr;
 };
 

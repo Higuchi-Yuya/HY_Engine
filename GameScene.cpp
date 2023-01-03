@@ -20,8 +20,13 @@ GameScene::~GameScene()
 	// ビューの解放
 	delete view;
 
+	//delete fruitsPop;
+
 	// プレイヤーの解放
 	delete player;
+
+
+	
 }
 
 void GameScene::Initialize()
@@ -55,6 +60,11 @@ void GameScene::Initialize()
 	player = new Player();
 	player->Initialize();
 
+	// フルーツの初期化
+	fruitsPop = new FruitsPop();
+	fruitsPop->Initialize();
+
+
 }
 
 void GameScene::Update()
@@ -70,9 +80,18 @@ void GameScene::Update()
 
 	light->Update();
 
-	view->DebugCameraUpdate();
-
+	//view->DebugCameraUpdate();
+	view->UpdateMatrix();
 	player->Update();
+
+
+
+	fruitsPop->SetPlayer(player);
+	fruitsPop->Update();
+
+	if (input->TriggerKey(DIK_SPACE)) {
+		fruitsPop->Initialize();
+	}
 
 }
 
@@ -84,7 +103,7 @@ void GameScene::Draw2Dback()
 void GameScene::Draw3D()
 {
 	player->Draw(view);
-
+	fruitsPop->Draw(*view);
 }
 
 void GameScene::Draw2Dfront()

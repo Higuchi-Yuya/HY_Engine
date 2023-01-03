@@ -159,6 +159,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\Application\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 class Player
 {
 public:
+	Player();
 	~Player();
 
 	// 初期化
@@ -16,6 +17,17 @@ public:
 	void Update();
 	// 描画処理
 	void Draw(ViewProjection *view);
+
+	// ゲッター
+	// ポジション
+	const Vector3& GetPlayerPos() const {
+		Vector3 pos = playerObj->worldTransform_.position_;
+		pos.y += 1.5f;
+		return  pos;}
+
+	// かごの半径
+	const Vector3& GetBasketRadius() const { return playerBasketRadius; }
+
 private:
 	// インプット
 	Input* input = nullptr;
@@ -26,5 +38,9 @@ private:
 	// オブジェクト
 	Object3d* playerObj = nullptr;
 
+	Object3d* objCollision;
+
+	// プレイヤーのかごの大きさ
+	Vector3 playerBasketRadius = { 0.8f,0.2f,1.0f };
 };
 

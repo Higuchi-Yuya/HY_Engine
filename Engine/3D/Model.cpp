@@ -363,14 +363,15 @@ void Model::CreateBuffers()
 {
 	HRESULT result = S_FALSE;
 
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());//vertices
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
 	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
-	CD3DX12_RESOURCE_DESC resourceDesc2 = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
+	//CD3DX12_RESOURCE_DESC resourceDesc2 = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
+	
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
@@ -395,7 +396,7 @@ void Model::CreateBuffers()
 
 	// インデックスバッファ生成
 	result = device->CreateCommittedResource(
-		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc2, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&indexBuff));
 
 	// インデックスバッファへのデータ転送

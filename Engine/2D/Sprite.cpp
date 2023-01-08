@@ -5,6 +5,7 @@ SpriteManager* Sprite::spriteManager_ = nullptr;
 
 void Sprite::Initialize(uint32_t textureNum, Vector2 position, Vector2 size, Vector4 color)
 {
+	size_ = size;
 	// 元の画像のサイズに適応
 	if (textureNum != UINT32_MAX) {
 		textureIndex_ = textureNum;
@@ -16,7 +17,7 @@ void Sprite::Initialize(uint32_t textureNum, Vector2 position, Vector2 size, Vec
 	// 引数で持ってきたものを代入
 	position_.x = position.x;
 	position_.y = position.y;
-	size_ = size;
+	
 	color_ = color;
 
 	// 頂点データ

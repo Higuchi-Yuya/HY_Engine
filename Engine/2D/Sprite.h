@@ -29,10 +29,10 @@ public:// メンバ関数
 	void Draw();
 
 	// 座標設定
-	void SetPosition(const Vector3& position) { position_ = position; }
+	void SetPosition(const Vector2& position) { position_.x = position.x; position_.y = position.y; }
 
 	// 座標の取得
-	const Vector3& GetPosition()const { return position_; }
+	const Vector2& GetPosition()const { return { position_.x,position_.y }; }
 
 	// 回転の設定
 	void SetRotation(float rotation) { rotation_.z = rotation; }
@@ -75,6 +75,12 @@ public:// メンバ関数
 
 	// 非表示のフラグの取得
 	const bool& GetInvisible()const { return isInvisible_; }
+
+	// テクスチャ左上の座標の設定
+	void SetTextureLeftTop(const Vector2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
+
+	// 切り出し左上の座標の取得
+	const Vector2& GetTextureLeftTop()const { return textureLeftTop_; }
 
 	// テクスチャ切り出しの設定
 	void SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }

@@ -7,7 +7,7 @@ Fruit::Fruit()
 
 Fruit::~Fruit()
 {
-	delete model;
+	//delete model;
 	delete fruitObj;
 }
 
@@ -27,19 +27,20 @@ void Fruit::Initialize(Vector3 Pos, Model* model)
 
 	// 初期のポジションセット
 	fruitObj->worldTransform_.position_ = Pos;
+	fruitObj->Update();
 
 	isDeath = false;
 }
 
-void Fruit::Update(Player* player)
+void Fruit::Update()
 {
 	if (isDeath == false) {
 		// 落下
 		fruitObj->worldTransform_.position_.y -= 0.2f;
 
 		// プレイヤーとの当たり判定
-		if (collision.boxCollision(player->GetPlayerPos(), fruitObj->worldTransform_.position_,
-			player->GetBasketRadius(), fruitRadius)) {
+		if (collision.boxCollision(player_->GetPlayerPos(), fruitObj->worldTransform_.position_,
+			player_->GetBasketRadius(), fruitRadius)) {
 			// 当たっていたらフルーツを消す
 			isDeath = true;
 			isHit = true;

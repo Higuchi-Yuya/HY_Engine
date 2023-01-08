@@ -361,10 +361,10 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 
 void Model::CreateBuffers()
 {
-	HRESULT result = S_FALSE;
+	HRESULT result;
 
 	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
-	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
+	
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -391,6 +391,12 @@ void Model::CreateBuffers()
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
+	if (FAILED(result)) {
+		assert(0);
+		return;
+	}
+
+	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 	// リソース設定
 	resourceDesc.Width = sizeIB;
 
@@ -399,6 +405,10 @@ void Model::CreateBuffers()
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&indexBuff));
 
+	if (FAILED(result)) {
+		assert(0);
+		return;
+	}
 	// インデックスバッファへのデータ転送
 	unsigned short* indexMap = nullptr;
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
@@ -419,10 +429,6 @@ void Model::CreateBuffers()
 		Material* material = m.second;
 		material->Update();
 	}
-
-
-
-
 }
 
 void Model::AddMaterial(Material* material)

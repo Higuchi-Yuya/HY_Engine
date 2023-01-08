@@ -162,6 +162,9 @@
     <ClCompile Include="Collision.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreSprite.cpp">
+      <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -231,6 +234,9 @@
       <Filter>ヘッダー ファイル\Application\Player</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreSprite.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>

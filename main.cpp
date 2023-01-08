@@ -59,6 +59,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// 入力の初期化
 	Input::StaticInitialize(winApp);
 
+	// サウンドの初期化
+	Sound::StaticInitialize();
+
 	// スプライトの初期化
 	SpriteManager* spriteManager = nullptr;
 	// スプライト共通部の初期化

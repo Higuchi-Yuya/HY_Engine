@@ -3,51 +3,38 @@
 
 FruitsPop::FruitsPop()
 {
-	appleModel = Model::LoadFromOBJ("Medama", true);
-	orangeModel = Model::LoadFromOBJ("herfSphere", true);
-	bananaModel = Model::LoadFromOBJ("sphere", true);
-	bombModel = Model::LoadFromOBJ("cube");
+	appleModel = Model::LoadFromOBJ("apple",true);
+	orangeModel = Model::LoadFromOBJ("orange",true);
+	bananaModel = Model::LoadFromOBJ("banana");
+	bombModel = Model::LoadFromOBJ("bomb",true);
 
 }
 
 FruitsPop::~FruitsPop()
 {
-
 	//fruits.clear();
-
-	delete model;
 	delete appleModel;
 	delete orangeModel;
 	delete bananaModel;
 	delete bombModel;
-	delete player;
+
 }
 
 void FruitsPop::Initialize()
 {
-
-	fruits.clear();
-
 	fruitPopTimer = 0;
 	fruitPopInterval = 0.5 * 60;
 	score = 0;
+	fruits.clear();
 }
 
 void FruitsPop::Update()
 {
+	
 	fruitPopTimer++;
 
 	// フルーツの消滅フラグ立っていたらリストから消す
 	//fruits.remove_if([](std::unique_ptr<Fruit>& fruit) { return fruit->IsDeath(); });
-	//for (auto itr = fruits.begin(); itr != fruits.end();) {
-	//	if (itr->get()->IsDeath() == true)
-	//	{
-	//		itr = fruits.erase(itr);
-	//	}
-	//	else {
-	//		++itr;
-	//	}
-	//}
 
 	// フルーツのポップタイムになったらポップ
 	if (fruitPopTimer >= fruitPopInterval) {
@@ -137,28 +124,36 @@ void FruitsPop::Update()
 	}
 
 	// フルーツのリストの更新処理呼び出し
-	for (std::unique_ptr<Fruit>& fruit : fruits) {
-		fruit->Update(player);
+	if (fruits.size() >= 1) {
+		for (std::unique_ptr<Fruit>& fruit : fruits) {
+			fruit->SetPlayer(player);
+			fruit->Update();
 
-		if (fruit->IsHit() == true) {
-			switch (fruit->typeNum)
-			{
-			case 0:// りんごの点数
-				score += 5;
-				break;
-			case 1:// オレンジの点数
-				score += 5;
-				break;
-			case 2:// バナナの点数
-				score += 10;
-				break;
-			case 3:// 爆弾の点数
-				score -= 20;
-			default:
-				break;
+			if (fruit->IsHit() == true && fruit->IsPlus() == false) {
+				switch (fruit->typeNum)
+				{
+				case 0:// りんごの点数
+					score += 5;
+					fruit->SetIsPlus(true);
+					break;
+				case 1:// オレンジの点数
+					score += 5;
+					fruit->SetIsPlus(true);
+					break;
+				case 2:// バナナの点数
+					score += 10;
+					fruit->SetIsPlus(true);
+					break;
+				case 3:// 爆弾の点数
+					score -= 20;
+					fruit->SetIsPlus(true);
+				default:
+					break;
+				}
 			}
 		}
 	}
+
 
 	// スコアが０以下になったら０にする
 	if (score <= 0) {
@@ -166,19 +161,27 @@ void FruitsPop::Update()
 	}
 }
 
-void FruitsPop::Draw(ViewProjection& view)
+void FruitsPop::Draw(ViewProjection* view)
 {
 	// フルーツの消滅フラグ立っていたらリストから消す
 	//fruits.remove_if([](std::unique_ptr<Fruit>& fruit) { return fruit->IsDeath(); });
-
-	for (std::unique_ptr<Fruit>& fruit : fruits) {
-		fruit->Draw(&view);
+	if (fruits.size() >= 1) {
+		for (std::unique_ptr<Fruit>& fruit : fruits) {
+			fruit->Draw(view);
+		}
 	}
-
 
 }
 
 void FruitsPop::SetPlayer(Player* player)
 {
 	this->player = player;
+}
+
+void FruitsPop::Finalize()
+{
+	delete appleModel;
+	delete orangeModel;
+	delete bananaModel;
+	delete bombModel;
 }

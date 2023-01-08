@@ -38,7 +38,7 @@ private:
 	// オブジェクト
 	Object3d* playerObj = nullptr;
 
-	Object3d* objCollision;
+
 
 	// プレイヤーのかごの大きさ
 	Vector3 playerBasketRadius = { 0.8f,0.2f,1.0f };

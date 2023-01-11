@@ -66,6 +66,7 @@ struct CircleShadow
 	uint active;
 };
 
+// ライトグループ
 cbuffer LightGroup : register(b3)
 {
 	float3 ambientColor;

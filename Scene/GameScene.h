@@ -55,7 +55,7 @@ private:// メンバ変数
 	Vector3 circleShadowAtten = { 0.5f,0.6f,0.0f };
 	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };
 
-	Vector3 fighterPos = { 1,0.0f,0 };
+	Vector3 fighterPos = { 0,0.0f,0 };
 
 	// テクスチャハンドル
 	int textureHandle;

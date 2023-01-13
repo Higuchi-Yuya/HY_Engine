@@ -104,6 +104,8 @@ void SpriteManager::Initialize(DirectXCommon* dxcommon)
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;// ソースの値を100%使う
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;// デストの値を0%使う
 
+
+
 	//// 加算合成
 	//blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	//blenddesc.SrcBlend = D3D12_BLEND_ONE;

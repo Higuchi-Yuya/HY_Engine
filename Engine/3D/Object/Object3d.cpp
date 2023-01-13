@@ -15,9 +15,21 @@ LightGroup* Object3d::light = nullptr;
 
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
+ComPtr<ID3D12PipelineState> Object3d::pipelinestateNormal = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::pipelinestateADDITION = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::pipelinestateADDITIONALPHA = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::pipelinestateSUBTRACTION = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::pipelinestateSCREEN = nullptr;
 
-void Object3d::StaticInitialize(ID3D12Device * device, int window_width, int window_height)
+std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::inputLayout;
+
+ComPtr<ID3DBlob> Object3d::vsBlob; 
+ComPtr<ID3DBlob> Object3d::psBlob;	
+ComPtr<ID3DBlob> Object3d::errorBlob;
+
+//Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
+
+void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
 {
 	// nullptrチェック
 	assert(device);
@@ -30,12 +42,33 @@ void Object3d::StaticInitialize(ID3D12Device * device, int window_width, int win
 	// ワールドトランスフォームにデバイスを貸す
 	WorldTransform::StaticInitialize(device);
 
+	// シェーダーファイルの読み込みと初期化
+	InitializeShader();
+
+	// ルートシグネチャの初期化
+	InitializeRootSignature();
+
 	// パイプライン初期化
-	InitializeGraphicsPipeline();
+
+	// ノーマル
+	InitializeGraphicsPipelineNormal();
+
+	// 加算
+	InitializeGraphicsPipelineADDITION();
+
+	// 加算（透過あり）
+	InitializeGraphicsPipelineADDITIONALPHA();
+
+	// 減算
+	InitializeGraphicsPipelineSUBTRACTION();
+
+	// スクリーン
+	InitializeGraphicsPipelineSCREEN();
+
 
 }
 
-void Object3d::PreDraw(ID3D12GraphicsCommandList * cmdList)
+void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
 	assert(Object3d::cmdList == nullptr);
@@ -44,7 +77,7 @@ void Object3d::PreDraw(ID3D12GraphicsCommandList * cmdList)
 	Object3d::cmdList = cmdList;
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestate.Get());
+	cmdList->SetPipelineState(pipelinestateNormal.Get());
 	// ルートシグネチャの設定
 	cmdList->SetGraphicsRootSignature(rootsignature.Get());
 	// プリミティブ形状を設定
@@ -57,7 +90,7 @@ void Object3d::PostDraw()
 	Object3d::cmdList = nullptr;
 }
 
-Object3d * Object3d::Create()
+Object3d* Object3d::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
 	Object3d* object3d = new Object3d();
@@ -75,77 +108,9 @@ Object3d * Object3d::Create()
 	return object3d;
 }
 
-void Object3d::InitializeGraphicsPipeline()
+void Object3d::InitializeGraphicsPipelineNormal()
 {
 	HRESULT result = S_FALSE;
-	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
-	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
-
-	// 頂点シェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/OBJVertexShader.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&vsBlob, &errorBlob);
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
-
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/OBJPixcelShader.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&psBlob, &errorBlob);
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
-
-	// 頂点レイアウト
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{ // xy座標(1行で書いたほうが見やすい)
-			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{ // 法線ベクトル(1行で書いたほうが見やすい)
-			"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-		{ // uv座標(1行で書いたほうが見やすい)
-			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		},
-	};
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
@@ -163,15 +128,17 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
 
 	// ブレンドステートの設定
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
@@ -180,8 +147,8 @@ void Object3d::InitializeGraphicsPipeline()
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout;
-	gpipeline.InputLayout.NumElements = _countof(inputLayout);
+	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
+	gpipeline.InputLayout.NumElements = inputLayout.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -189,6 +156,252 @@ void Object3d::InitializeGraphicsPipeline()
 	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = rootsignature.Get();
+
+	// グラフィックスパイプラインの生成
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateNormal));
+	assert(SUCCEEDED(result));
+
+}
+
+void Object3d::InitializeGraphicsPipelineADDITION()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
+	gpipeline.InputLayout.NumElements = inputLayout.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = rootsignature.Get();
+
+	// グラフィックスパイプラインの生成
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateADDITION));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeGraphicsPipelineADDITIONALPHA()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
+	gpipeline.InputLayout.NumElements = inputLayout.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = rootsignature.Get();
+
+	// グラフィックスパイプラインの生成
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateADDITIONALPHA));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeGraphicsPipelineSUBTRACTION()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_ZERO;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_COLOR;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
+	gpipeline.InputLayout.NumElements = inputLayout.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = rootsignature.Get();
+
+	// グラフィックスパイプラインの生成
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateSUBTRACTION));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeGraphicsPipelineSCREEN()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+	blenddesc.DestBlend = D3D12_BLEND_ONE;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
+	gpipeline.InputLayout.NumElements = inputLayout.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = rootsignature.Get();
+
+	// グラフィックスパイプラインの生成
+	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateSCREEN));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeRootSignature()
+{
+	HRESULT result = S_FALSE;
 
 	// デスクリプタレンジ
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
@@ -239,20 +452,88 @@ void Object3d::InitializeGraphicsPipeline()
 	// ルートシグネチャの生成
 	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
 	assert(SUCCEEDED(result));
+}
 
-	gpipeline.pRootSignature = rootsignature.Get();
+void Object3d::InitializeShader()
+{
+	HRESULT result = S_FALSE;
 
-	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate));
-	assert(SUCCEEDED(result));
+	// 頂点シェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/OBJVertexShader.hlsl",	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&vsBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
 
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
+
+	// ピクセルシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/shaders/OBJPixcelShader.hlsl",	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&psBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
+
+	// 頂点レイアウト
+	inputLayout.push_back
+	({
+		// xy座標(1行で書いたほうが見やすい)
+		   "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
+		   D3D12_APPEND_ALIGNED_ELEMENT,
+		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+	});
+	inputLayout.push_back
+	({
+		// 法線ベクトル(1行で書いたほうが見やすい)
+		   "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
+		   D3D12_APPEND_ALIGNED_ELEMENT,
+		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+
+	});
+	inputLayout.push_back
+	({
+		// uv座標(1行で書いたほうが見やすい)
+		   "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+		   D3D12_APPEND_ALIGNED_ELEMENT,
+		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+	});
 }
 
 bool Object3d::Initialize()
 {
 	// nullptrチェック
 	worldTransform_.Initialize();
-	
+
 	return true;
 }
 
@@ -267,7 +548,7 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	// nullptrチェック
 	assert(device);
 	assert(Object3d::cmdList);
-	
+
 	// モデルがセットされていなければ描画をスキップ
 	if (model == nullptr)return;
 
@@ -283,4 +564,29 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	// モデルを描画
 	model->Draw(cmdList, 1);
 
+}
+
+void Object3d::SetBlendMode(BlendMode mode)
+{
+	switch (mode)
+	{
+	case Object3d::NORMAL:// ノーマルブレンド
+		cmdList->SetPipelineState(pipelinestateNormal.Get());
+		break;
+	case Object3d::ADDITION:// 加算ブレンド
+		cmdList->SetPipelineState(pipelinestateADDITION.Get());
+		break;
+	case Object3d::ADDITIONALPHA:// 加算ブレンド（透過あり）
+		cmdList->SetPipelineState(pipelinestateADDITIONALPHA.Get());
+		break;
+	case Object3d::SUBTRACTION:// 減算ブレンド
+		cmdList->SetPipelineState(pipelinestateSUBTRACTION.Get());
+		break;
+	case Object3d::SCREEN:// スクリーン
+		cmdList->SetPipelineState(pipelinestateSCREEN.Get());
+		break;
+
+	default:
+		break;
+	}
 }

@@ -81,9 +81,9 @@ void GameScene::Initialize()
 	object3d->SetModel(model);
 
 	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.position_ = { -1,1,0 };
+	obj_2->worldTransform_.position_ = { 0,1,0 };
 	obj_2->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,0.5f };
 
 	groundObj->SetModel(groundModel);
 
@@ -177,12 +177,14 @@ void GameScene::ImguiUpdate()
 
 void GameScene::Draw2DBack()
 {
-	sprite->Draw();
+	//sprite->Draw();
 }
 
 void GameScene::Draw3D()
 {
 	object3d->Draw(view);
+	
+
 	obj_2->Draw(view);
 	objFighter->Draw(view);
 

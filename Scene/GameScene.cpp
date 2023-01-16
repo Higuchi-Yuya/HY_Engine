@@ -1,5 +1,5 @@
 #include "GameScene.h"
-
+#include "Collision.h"
 GameScene::~GameScene()
 {
 	// 入力解放
@@ -94,6 +94,28 @@ void GameScene::Initialize()
 	view->SetDistance(3.0f);
 
 	spritePos = sprite2->GetPosition();
+
+	rotation = keisan.MakeAxisAngle({ 0.0f,0.0f,1.0f }, 3.141592 / 2.0f);
+	pointY = { 0.0f,1.0f,0.0f };
+	rotateMatrix = rotation.MakeRotateMatrix(rotation);
+	rotateByQuaternion = keisan.RotateVector(pointY, rotation);
+	rotateByMatrix = rotateMatrix.transform(pointY, rotateMatrix);
+
+	// 球の初期値を設定
+	sphere.center = { 0,2,0 };
+	sphere.radius = 1.0f;
+
+	// 平面の初期値を設定
+	plane.normal = { 0,1,0 };
+	plane.distance = 0.0f;
+
+	// 三角形の初期値を設定
+	triangle.p0 = { -1.0f,0,-1.0f };
+	triangle.p1 = { -1.0f,0,+1.0f };
+	triangle.p2 = { +1.0f,0,-1.0f };
+
+	triangle.normal = { 0.0f,1.0f,0.0f };
+
 }
 
 void GameScene::Update()
@@ -140,6 +162,19 @@ void GameScene::Update()
 	groundObj->Update();
 
 	view->DebugCameraUpdate();
+
+	// 球移動
+	{
+		Vector3 moveY = { 0,0.01f,0 };
+		if (input->PushKey(DIK_8)) { sphere.center += moveY; }
+		else if (input->PushKey(DIK_2)) { sphere.center -= moveY; }
+
+		Vector3 moveX = { 0.01f,0,0 };
+		if (input->PushKey(DIK_6)) { sphere.center += moveX; }
+		else if (input->PushKey(DIK_4)) { sphere.center -= moveX; }
+
+	}
+	hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
 }
 
 void GameScene::ImguiUpdate()
@@ -152,6 +187,17 @@ void GameScene::ImguiUpdate()
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 	
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
+
+
+
+	ImGui::InputFloat3("rotateByQuaternion", &rotateByQuaternion.x);
+
+	ImGui::InputFloat3("rotateByMatrix", &rotateByMatrix.x);
+
+
+	ImGui::InputFloat3("sphere", &sphere.center.x);
+	ImGui::Text("hit:%d", hit);
+	ImGui::InputFloat3("sphere.inter", &inter.x);
 
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };

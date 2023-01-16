@@ -114,7 +114,7 @@ Matrix4 Quaternion::MakeRotateMatrix(const Quaternion& quaternion)
 	};
 
 
-	return Matrix4();
+	return result;
 }
 
 Quaternion& Quaternion::operator/=(float s)

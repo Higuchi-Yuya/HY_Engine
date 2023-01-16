@@ -6,6 +6,7 @@
 #include "Quaternion.h"
 #include "LightGroup.h"
 #include "ImGuiManager.h"
+#include "CollisionPrimitive.h"
 
 class GameScene
 {
@@ -80,6 +81,22 @@ private:// メンバ変数
 
 	// ビュープロジェクション
 	ViewProjection* view = nullptr;
+
+	// Quaternion確認
+	Quaternion keisan;
+	Quaternion rotation;
+	Vector3 pointY;
+	Matrix4 rotateMatrix;
+	Vector3 rotateByQuaternion;
+	Vector3 rotateByMatrix;
+
+	// 当たり判定
+	Sphere sphere;
+	Plane plane;
+	Triangle triangle;
+	Vector3 inter;
+	bool hit;
+
 
 	Vector2 spritePos;
 	char buf[256] = "";

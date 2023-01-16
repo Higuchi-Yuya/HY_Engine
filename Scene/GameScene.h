@@ -39,10 +39,14 @@ private:// メンバ変数
 	// オブジェクト共通のライトの初期化
 	LightGroup* light = nullptr;
 	
+	// 平行光源
+	bool isActiveDirectional = false;
+
 	// 点光源のステータス
-	float pointLightPos[3] = { 0,0,0 };
+	float pointLightPos[3] = { 0,1,0 };
 	float pointLightColor[3] = { 1,1,1 };
 	float pointLightAtten[3] = { 0.3f,0.1f,0.1f };
+	bool isActivePoint = false;
 
 	// スポットライトのステータス
 	Vector3 spotLightDir = { 0,-1,0 };
@@ -50,13 +54,15 @@ private:// メンバ変数
 	Vector3 spotLightColor = { 1,1,1 };
 	Vector3 spotLightAtten = { 0.0f,0.0f,0.0f };
 	Vector2 spotLightFactorAngle = { 20.0f,30.0f };
+	bool isActiveSpot = false;
 
 	// 丸影のステータス
 	Vector3 circleShadowDir = { 0,-1,0 };
-	Vector3 circleShadowAtten = { 0.5f,0.6f,0.0f };
+	Vector3 circleShadowAtten = { 2.3f,0.6f,0.0f };
 	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };
+	bool isActiveCircleShadow = false;
 
-	Vector3 fighterPos = { 0,0.0f,0 };
+	Vector3 fighterPos = { 1,0.0f,0 };
 
 	// テクスチャハンドル
 	int textureHandle;

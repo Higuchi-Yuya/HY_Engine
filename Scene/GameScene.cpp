@@ -32,9 +32,9 @@ void GameScene::Initialize()
 	// ライトの生成
 	light = LightGroup::Create();
 	// ライト設定
-	light->SetDirLightActive(0, true);
-	light->SetDirLightActive(1, true);
-	light->SetDirLightActive(2, true);
+	light->SetDirLightActive(0, false);
+	light->SetDirLightActive(1, false);
+	light->SetDirLightActive(2, false);
 	//light->SetPointLightActive(0, true);
 	//pointLightPos[0] = 0.5f;
 	//pointLightPos[1] = 1.0f;
@@ -43,8 +43,10 @@ void GameScene::Initialize()
 	light->SetPointLightActive(0, false);
 	light->SetPointLightActive(1, false);
 	light->SetPointLightActive(2, false);
-	//light->SetSpotLightActive(0, true);
-	light->SetCircleShadowActive(0, true);
+
+	light->SetSpotLightActive(0, false);
+
+	light->SetCircleShadowActive(0, false);
 
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light);
@@ -129,15 +131,15 @@ void GameScene::Update()
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
 
-	//light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
-	//light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
-	//light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
+	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
 
-	//light->SetSpotLightDir(0, spotLightDir);
-	//light->SetSpotLightPos(0, spotLightPos);
-	//light->SetSpotLightColor(0, spotLightColor);
-	//light->SetSpotLightAtten(0, spotLightAtten);
-	//light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
+	light->SetSpotLightDir(0, spotLightDir);
+	light->SetSpotLightPos(0, spotLightPos);
+	light->SetSpotLightColor(0, spotLightColor);
+	light->SetSpotLightAtten(0, spotLightAtten);
+	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
 
 	light->SetCircleShadowDir(0, circleShadowDir);
 	light->SetCircleShadowCasterPos(0, fighterPos);
@@ -206,15 +208,74 @@ void GameScene::ImguiUpdate()
 	ImGui::End();
 
 	ImGui::Begin("Light");
-
-	//ImGui::SetWindowPos(ImVec2(100, 0));
 	ImGui::SetNextWindowSize(ImVec2(500, 200));
-	
-	ImGui::InputFloat3("circleShadowDir", &circleShadowDir.x);
-	//ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
-	ImGui::InputFloat3("circleShadowAtten", &circleShadowAtten.x);
-	ImGui::InputFloat2("circleShadowFactorAngle", &circleShadowFactorAngle.x);
-	ImGui::InputFloat3("fighterPos", &fighterPos.x);
+
+	// 平行光源
+	if (ImGui::TreeNode("DirectionalLight")) {
+		ImGui::Checkbox("Is Active", &isActiveDirectional);
+		if (isActiveDirectional == true) {
+			light->SetDirLightActive(0, true);
+		}
+		else if(isActiveDirectional == false) {
+			light->SetDirLightActive(0, false);
+		}
+
+		ImGui::TreePop();
+	}
+	// ポイントライト
+	if (ImGui::TreeNode("PointLight")) {
+		ImGui::Checkbox("Is Active", &isActivePoint);
+
+		if (isActivePoint == true) {
+			light->SetPointLightActive(0, true);
+		}
+		else if (isActivePoint == false) {
+			light->SetPointLightActive(0, false);
+		}
+
+		ImGui::InputFloat3("pointLightPos", pointLightPos);
+		ImGui::ColorEdit3("pointLightColor", pointLightColor, ImGuiColorEditFlags_Float);
+		ImGui::InputFloat3("pointLightAtten", pointLightAtten);
+
+		ImGui::TreePop();
+	}
+	// スポットライト
+	if (ImGui::TreeNode("spotLight")) {
+		ImGui::Checkbox("Is Active", &isActiveSpot);
+
+		if (isActiveSpot == true) {
+			light->SetSpotLightActive(0, true);
+		}
+		else if (isActiveSpot == false) {
+			light->SetSpotLightActive(0, false);
+		}
+
+		ImGui::InputFloat3("spotLightPos", &spotLightPos.x);
+		ImGui::InputFloat3("spotLightDir", &spotLightDir.x);
+		ImGui::InputFloat3("spotLightAtten", &spotLightAtten.x);
+		ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
+		ImGui::InputFloat2("spotLightFactorAngle", &spotLightFactorAngle.x);
+
+		ImGui::TreePop();
+	}
+	// 丸影
+	if (ImGui::TreeNode("circleShadow")) {
+		ImGui::Checkbox("Is Active", &isActiveCircleShadow);
+
+		if (isActiveCircleShadow == true) {
+			light->SetCircleShadowActive(0, true);
+		}
+		else if (isActiveCircleShadow == false) {
+			light->SetCircleShadowActive(0, false);
+		}
+		ImGui::InputFloat3("circleShadowDir", &circleShadowDir.x);
+		//ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
+		ImGui::InputFloat3("circleShadowAtten", &circleShadowAtten.x);
+		ImGui::InputFloat2("circleShadowFactorAngle", &circleShadowFactorAngle.x);
+		ImGui::InputFloat3("fighterPos", &fighterPos.x);
+
+		ImGui::TreePop();
+	}
 
 	ImGui::End();
 	// ---------------------//

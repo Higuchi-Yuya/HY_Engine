@@ -12,6 +12,12 @@ GameScene::~GameScene()
 	delete obj_2;
 	delete objFighter;
 	delete groundObj;
+
+	delete point1;
+	delete point2;
+	delete point3;
+	delete rayobj;
+
 	// モデルの解放
 	delete model;
 	delete model_2;
@@ -32,7 +38,7 @@ void GameScene::Initialize()
 	// ライトの生成
 	light = LightGroup::Create();
 	// ライト設定
-	light->SetDirLightActive(0, false);
+	light->SetDirLightActive(0, true);
 	light->SetDirLightActive(1, false);
 	light->SetDirLightActive(2, false);
 	//light->SetPointLightActive(0, true);
@@ -73,6 +79,11 @@ void GameScene::Initialize()
 	obj_2 = Object3d::Create();
 	objFighter = Object3d::Create();
 
+	point1= Object3d::Create();
+	point2=Object3d::Create();
+	point3= Object3d::Create();
+	rayobj= Object3d::Create();
+
 	groundObj = Object3d::Create();
 
 
@@ -83,9 +94,9 @@ void GameScene::Initialize()
 	object3d->SetModel(model);
 
 	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.position_ = { 0,1,0 };
+	obj_2->worldTransform_.position_ = { -1,1,0 };
 	obj_2->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,0.5f };
+	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 	groundObj->SetModel(groundModel);
 
@@ -117,6 +128,25 @@ void GameScene::Initialize()
 	triangle.p2 = { +1.0f,0,-1.0f };
 
 	triangle.normal = { 0.0f,1.0f,0.0f };
+
+	// レイの初期値を設定
+	ray.start = { 0,1,0 };
+	ray.dir = { 0,-1,0 };
+
+	// 確認用オブジェ
+	point1->SetModel(model_2);
+	point2->SetModel(model_2);
+	point3->SetModel(model_2);
+
+	point1->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
+	point1->worldTransform_.position_ = triangle.p0;
+	point2->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
+	point2->worldTransform_.position_ = triangle.p1;
+	point3->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
+	point3->worldTransform_.position_ = triangle.p2;
+
+	rayobj->SetModel(modelFighter);
+	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
 }
 
@@ -176,7 +206,28 @@ void GameScene::Update()
 		else if (input->PushKey(DIK_4)) { sphere.center -= moveX; }
 
 	}
-	hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+	// レイ操作
+	{
+		Vector3 moveZ = { 0,0,0.01f };
+		if (input->PushKey(DIK_UP)) { ray.start += moveZ; }
+		else if (input->PushKey(DIK_DOWN)) { ray.start -= moveZ; }
+
+		Vector3 moveX = { 0.01f,0,0 };
+		if (input->PushKey(DIK_RIGHT)) { ray.start += moveX; }
+		else if (input->PushKey(DIK_LEFT)) { ray.start -= moveX; }
+	}
+
+	point1->Update();
+	point2->Update();
+	point3->Update();
+
+	rayobj->worldTransform_.position_ = ray.start;
+	rayobj->Update();
+
+
+	hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
+	hitRay = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
+
 }
 
 void GameScene::ImguiUpdate()
@@ -190,16 +241,11 @@ void GameScene::ImguiUpdate()
 	
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
 
-
-
 	ImGui::InputFloat3("rotateByQuaternion", &rotateByQuaternion.x);
 
 	ImGui::InputFloat3("rotateByMatrix", &rotateByMatrix.x);
 
 
-	ImGui::InputFloat3("sphere", &sphere.center.x);
-	ImGui::Text("hit:%d", hit);
-	ImGui::InputFloat3("sphere.inter", &inter.x);
 
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };
@@ -278,6 +324,21 @@ void GameScene::ImguiUpdate()
 	}
 
 	ImGui::End();
+
+	// 当たり判定-----------------------//
+	ImGui::Begin("Collision");
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat3("sphere", &sphere.center.x);
+	ImGui::Text("hit:%d", hit);
+	ImGui::InputFloat3("sphere.inter", &inter.x);
+
+	ImGui::InputFloat3("rayStart", &ray.start.x);
+	ImGui::InputFloat3("rayDir", &ray.dir.x);
+	ImGui::Text("hitRay:%d", hitRay);
+	ImGui::InputFloat3("ray.inter", &inter.x);
+
+	ImGui::End();
 	// ---------------------//
 
 }
@@ -294,6 +355,11 @@ void GameScene::Draw3D()
 
 	obj_2->Draw(view);
 	objFighter->Draw(view);
+
+	point1->Draw(view);
+	point2->Draw(view);
+	point3->Draw(view);
+	rayobj->Draw(view);
 
 	groundObj->Draw(view);
 }

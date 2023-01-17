@@ -119,3 +119,106 @@ bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& trian
 
 	return true;
 }
+
+bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, float* distance, Vector3* inter)
+{
+	const float epsilon = 1.0e-5f; // 誤差吸収用の微小な値
+	// 面法線トレイの方向ベクトルの内積
+	Vector3 V;
+	float d1 = V.dot(plane.normal, ray.dir);
+	// 裏面には当たらない
+	if (d1 > -epsilon) { return false; }
+	// 始点と原点の距離（平面の法線方向）
+	// 面法線トレイの視点座標（位置ベクトル）の内積
+	float d2 = V.dot(plane.normal, ray.start);
+	// 始点と平面の距離（平面の法線方向）
+	float dist = d2 - plane.distance;
+	// 始点と平面の距離（レイ方向）
+	float t = dist / -d1;
+	// 交点が始点より後ろにあるので、当たらない
+	if (t < 0)return false;
+	// 距離を書き込む
+	if (distance) { *distance = t; }
+
+	// 交点を計算
+	if (inter) { *inter = ray.start + t * ray.dir; }
+
+	return true;
+}
+
+bool Collision::CheckRay2Triangle(const Ray& ray, const Triangle& triangle, float* distance, Vector3* inter)
+{
+	// 三角形が乗っている平面を算出
+	Plane plane;
+	Vector3 interPlane;
+	Vector3 V;
+	plane.normal = triangle.normal;
+	plane.distance = V.dot(triangle.normal, triangle.p0);
+
+	// レイと平面が当たっていなければ、当たっていない
+	if (!CheckRay2Plane(ray, plane, distance, &interPlane)) { return false; }
+
+	// レイと平面が当たっていたので、距離と交点が書き込まれた
+	// レイと平面の交点が三角形の内側にあるか判定
+	const float epsilon = 1.0e-5f;// 誤差吸収用の微小な値
+	Vector3 m;
+
+	// 辺p0_p1について
+	Vector3 pt_p0 = triangle.p0 - interPlane;
+	Vector3 p0_p1 = triangle.p1 - triangle.p0;
+	m = pt_p0.cross(p0_p1);
+
+	// 辺の外側であれば当たっていないので判定を打ち切る
+	if (V.dot(m, triangle.normal) < -epsilon) { return false; }
+
+	// 辺p1_p2について
+	Vector3 pt_p1 = triangle.p1 - interPlane;
+	Vector3 p1_p2 = triangle.p2 - triangle.p1;
+	m = pt_p1.cross(p1_p2);
+
+	// 辺の外側であれば当たっていないので判定を打ち切る
+	if (V.dot(m, triangle.normal) < -epsilon) { return false; }
+
+	// 辺p2_p0について
+	Vector3 pt_p2 = triangle.p2 - interPlane;
+	Vector3 p2_p0 = triangle.p0 - triangle.p2;
+	m = pt_p2.cross(p2_p0);
+
+	// 辺の外側であれば当たっていないので判定を打ち切る
+	if (V.dot(m, triangle.normal) < -epsilon) { return false; }
+
+	// 内側なので、当たっている
+	if (inter) {
+		*inter = interPlane;
+	}
+
+	return true;
+}
+
+bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance, Vector3* inter)
+{
+	Vector3 m = ray.start - sphere.center;
+	Vector3 V;
+	float b = V.dot(m, ray.dir);
+	float c = V.dot(m, m) - sphere.radius * sphere.radius;
+
+	// rayの始点がsphereの外側にあり(c>0)、rayがsphereから離れていく方向を差している場合(b>0)、当たらない
+	if (c > 0.0f && b > 0.0f) { return false; }
+
+	float discr = b * b - c;
+
+	// 負の判別式は例が球を外れていることに一致
+	if (discr < 0.0f) { return false; }
+
+	// レイは球と交差している
+	// 交差する最小の値tを計算
+	float t = -b - sqrtf(discr);
+
+	// ｔが負である場合、レイは球の内側から開始しているのでｔをゼロにクランプ
+	if (t < 0)t = 0.0f;
+	if (distance) { *distance = t; }
+
+	if (inter) { *inter = ray.start + t * ray.dir; }
+
+	return true;
+}

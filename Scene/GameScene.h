@@ -40,7 +40,7 @@ private:// メンバ変数
 	LightGroup* light = nullptr;
 	
 	// 平行光源
-	bool isActiveDirectional = false;
+	bool isActiveDirectional = true;
 
 	// 点光源のステータス
 	float pointLightPos[3] = { 0,1,0 };
@@ -58,7 +58,7 @@ private:// メンバ変数
 
 	// 丸影のステータス
 	Vector3 circleShadowDir = { 0,-1,0 };
-	Vector3 circleShadowAtten = { 2.3f,0.6f,0.0f };
+	Vector3 circleShadowAtten = { 2.0f,0.6f,0.0f };
 	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };
 	bool isActiveCircleShadow = false;
 
@@ -81,6 +81,13 @@ private:// メンバ変数
 	// オブジェクト
 	Object3d* object3d = nullptr;
 	Object3d* obj_2 = nullptr;
+
+	Object3d* point1 = nullptr;
+	Object3d* point2 = nullptr;
+	Object3d* point3 = nullptr;
+
+	Object3d* rayobj = nullptr;
+
 	Object3d* objFighter = nullptr;
 	Object3d* groundObj = nullptr;
 
@@ -100,9 +107,12 @@ private:// メンバ変数
 	Sphere sphere;
 	Plane plane;
 	Triangle triangle;
+	Ray ray;
+	float distance;
 	Vector3 inter;
-	bool hit;
 
+	bool hit;
+	bool hitRay;
 
 	Vector2 spritePos;
 	char buf[256] = "";

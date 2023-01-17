@@ -168,6 +168,9 @@
     <ClCompile Include="Engine\Collision\Collision.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -246,7 +249,7 @@
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionPrimitive.h">
-      <Filter>ソース ファイル\Engine\Collision</Filter>
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -162,6 +162,7 @@
     <ClCompile Include="Engine\3D\WorldTransform.cpp" />
     <ClCompile Include="Engine\Camera\ViewProjection.cpp" />
     <ClCompile Include="Engine\Collision\Collision.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp" />
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp" />
     <ClCompile Include="Engine\DirectXBase\ImGuiManager.cpp" />
     <ClCompile Include="Engine\DirectXBase\Texture.cpp" />

@@ -58,9 +58,9 @@ private:// メンバ変数
 
 	// 丸影のステータス
 	Vector3 circleShadowDir = { 0,-1,0 };
-	Vector3 circleShadowAtten = { 2.0f,0.6f,0.0f };
+	Vector3 circleShadowAtten = { 1.5f,0.6f,0.0f };
 	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };
-	bool isActiveCircleShadow = false;
+	bool isActiveCircleShadow = true;
 
 	Vector3 fighterPos = { 1,0.0f,0 };
 

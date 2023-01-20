@@ -52,7 +52,7 @@ void GameScene::Initialize()
 
 	light->SetSpotLightActive(0, false);
 
-	light->SetCircleShadowActive(0, false);
+	light->SetCircleShadowActive(0, true);
 
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light);
@@ -356,10 +356,10 @@ void GameScene::Draw3D()
 	obj_2->Draw(view);
 	objFighter->Draw(view);
 
-	point1->Draw(view);
-	point2->Draw(view);
-	point3->Draw(view);
-	rayobj->Draw(view);
+	//point1->Draw(view);
+	//point2->Draw(view);
+	//point3->Draw(view);
+	//rayobj->Draw(view);
 
 	groundObj->Draw(view);
 }

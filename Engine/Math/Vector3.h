@@ -26,6 +26,7 @@ public:
 	Vector3& operator+=(const Vector3& v);
 	Vector3& operator-=(const Vector3& v);
 	Vector3& operator*=(float s);
+	Vector3& operator*=(const Vector3& v);
 	Vector3& operator/=(float s);
 };
 
@@ -34,6 +35,7 @@ public:
 //※いろんな引数のパターンに対応(引数の順序)するため、以下のように準備している
 const Vector3 operator+(const Vector3& v1, const Vector3& v2);
 const Vector3 operator-(const Vector3& v1, const Vector3& v2);
+const Vector3 operator*(const Vector3& v1, const Vector3& v2);
 const Vector3 operator*(const Vector3& v, float s);
 const Vector3 operator*(float s, const Vector3& v);
 const Vector3 operator/(const Vector3& v, float s);

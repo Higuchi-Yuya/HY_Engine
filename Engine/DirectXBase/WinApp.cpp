@@ -2,6 +2,10 @@
 
 #include <tchar.h>
 #pragma comment(lib,"winmm.lib")
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 void WinApp::Initialize()
 {
@@ -21,7 +25,7 @@ void WinApp::Initialize()
 
 	//ウィンドウオブジェクトの生成
 	hwnd = CreateWindow(w.lpszClassName,//クラス名指定
-		_T("LE2B_18_ヒグチ_ユウヤ_CG2"),     //タイトルバーの文字
+		_T("HY_Engine"),     //タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,			     //タイトルバーと境界線があるウィンドウ
 		CW_USEDEFAULT,					     //表示x座標はOSにお任せ
 		CW_USEDEFAULT,					     //表示y座標はOSにお任せ
@@ -69,6 +73,9 @@ bool WinApp::ProcessMessage()
 
 LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	// ImGui用ウィンドウプロシージャ呼び出し
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))return true;
+
 	//ウィンドウが破壊されたら呼ばれる
 	switch (msg)
 	{
@@ -79,3 +86,4 @@ LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 	
+

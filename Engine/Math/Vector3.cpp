@@ -45,9 +45,9 @@ Vector3 Vector3::cross(const Vector3& v) const
 Vector3 Vector3::distanceFrom(const Vector3& v, const Vector3& v2) const
 {
 	return  Vector3(
-		std::sqrt(std::pow(v2.x - v.x, 2)),
-		std::sqrt(std::pow(v2.y - v.y, 2)),
-		std::sqrt(std::pow(v2.z - v.z, 2))
+		(float)std::sqrt(std::pow(v2.x - v.x, 2)),
+		(float)std::sqrt(std::pow(v2.y - v.y, 2)),
+		(float)std::sqrt(std::pow(v2.z - v.z, 2))
 	);
 }
 
@@ -85,6 +85,14 @@ Vector3& Vector3::operator*=(float s)
 	return *this;
 }
 
+Vector3& Vector3::operator*=(const Vector3& v)
+{
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+	return *this;
+}
+
 Vector3& Vector3::operator/=(float s)
 {
 	x /= s;
@@ -103,6 +111,13 @@ const Vector3 operator-(const Vector3& v1, const Vector3& v2)
 {
 	Vector3 temp(v1);
 	return temp -= v2;
+}
+
+const Vector3 operator*(const Vector3& v1, const Vector3& v2)
+{
+	Vector3 temp(v1);
+
+	return temp *= v2;
 }
 
 const Vector3 operator*(const Vector3& v, float s)

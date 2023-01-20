@@ -1,0 +1,8 @@
+# MagicaVoxel @ Ephtracy
+
+newmtl palette
+illum 1
+Ka 0.010 0.010 0.010
+Kd 0.800 0.800 0.800
+Ks 0.100 0.100 0.100
+map_Kd chr_sword.png

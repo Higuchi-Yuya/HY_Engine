@@ -117,6 +117,85 @@ Matrix4 Quaternion::MakeRotateMatrix(const Quaternion& quaternion)
 	return result;
 }
 
+Quaternion Quaternion::Lerp(const Quaternion& q1, const Quaternion& q2, float t)
+{
+	float cos = dot(q1, q2);
+	Quaternion t2 = q2;
+	if (cos < 0.0f) {
+		cos = -cos;
+		t2 = { -q2.x,-q2.y,-q2.z, -q2.w };
+	}
+	float k0 = 1.0f - t;
+	float k1 = t;
+
+	return q1 * k0 + t2 * k1;
+}
+
+Quaternion Quaternion::Slerp(const Quaternion& q1, const Quaternion& q2, float t)
+{
+	float cos = dot(q1, q2);
+	Quaternion t2 = q2;
+	if (cos < 0.0f) {
+		cos = -cos;
+		t2 = { -q2.x,-q2.y,-q2.z, -q2.w };
+	}
+	float k0 = 1.0f - t;
+	float k1 = t;
+
+	if ((1.0f - cos) > 0.001f) {
+		float theta = (float)acos(cos);
+		k0 = (float)(sin(theta * k0) / sin(theta));
+		k1 = (float)(sin(theta * k1) / sin(theta));
+	}
+
+	// θ=0のときにも正しく球面線形補間が行われるように
+	// EPSILONは極小の値で1.0fに近い値の時には線形補間を利用する。
+	// 0.0005fとかそういう値でいいが、大きすぎて用いさすげても駄目である
+	// 計算精度の問題で、1.0fに近い状態（特異点に近い）は計算結果の誤差も大きいためこのようにする
+	float EPSILON = 0.0005f;
+	if (cos >= 1.0f - EPSILON) {
+		return k0 * q1 + k1 * t2;
+	}
+
+	return q1 * k0 + t2 * k1;
+}
+
+float Quaternion::dot(const Quaternion& q1, const Quaternion& q2)
+{
+	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+}
+
+float Quaternion::length(const Quaternion& q)
+{
+	return (float)sqrt(dot(q, q));
+}
+
+Quaternion Quaternion::operator-(const Quaternion& q)
+{
+	Quaternion result = { -q.x,-q.y,-q.z,-q.w };
+	return result;
+}
+
+Quaternion& Quaternion::operator+=(const Quaternion& q)
+{
+	Quaternion result = *this;
+	result.x += q.x;
+	result.y += q.y;
+	result.z += q.z;
+	result.w += q.w;
+	return result;
+}
+
+Quaternion& Quaternion::operator-=(const Quaternion& q)
+{
+	Quaternion result = *this;
+	result.x -= q.x;
+	result.y -= q.y;
+	result.z -= q.z;
+	result.w -= q.w;
+	return result;
+}
+
 Quaternion& Quaternion::operator/=(float s)
 {
 	x /= s;
@@ -132,8 +211,42 @@ Quaternion& Quaternion::operator*=(const Quaternion& q)
 	return result;
 }
 
+Quaternion& Quaternion::operator*=(float s)
+{
+	Quaternion result = *this;
+	result.x *= s;
+	result.y *= s;
+	result.z *= s;
+	result.w *= s;
+	return result;
+}
+
+const Quaternion operator+(const Quaternion& q1, const Quaternion& q2)
+{
+	Quaternion result = q1;
+	return result += q2;
+}
+
+const Quaternion operator-(const Quaternion& q1, const Quaternion& q2)
+{
+	Quaternion result = q1;
+	return result -= q2;
+}
+
 const Quaternion operator*(const Quaternion& q1, const Quaternion& q2)
 {
 	Quaternion result = q1;
 	return result *= q2;
+}
+
+const Quaternion operator*(const Quaternion& q, float s)
+{
+	Quaternion result = q;
+	return result *= s;
+}
+
+const Quaternion operator*(float s, const Quaternion& q)
+{
+	Quaternion result = q;
+	return result *= s;
 }

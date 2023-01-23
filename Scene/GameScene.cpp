@@ -108,11 +108,14 @@ void GameScene::Initialize()
 
 	spritePos = sprite2->GetPosition();
 
-	rotation = keisan.MakeAxisAngle({ 0.0f,0.0f,1.0f }, 3.141592 / 2.0f);
-	pointY = { 0.0f,1.0f,0.0f };
-	rotateMatrix = rotation.MakeRotateMatrix(rotation);
-	rotateByQuaternion = keisan.RotateVector(pointY, rotation);
-	rotateByMatrix = rotateMatrix.transform(pointY, rotateMatrix);
+	rotation0 = keisan.MakeAxisAngle({ 0.71f,0.71f,0.0f }, 0.3f);
+	rotation1 = {-rotation0.x,-rotation0.y, -rotation0.z, -rotation0.w};//keisan.MakeAxisAngle({ 0.71f,0.0f,0.71f }, 3.141592f);
+
+	interpolate0 = keisan.Slerp(rotation0, rotation1, 0.0f);
+	interpolate1 = keisan.Slerp(rotation0, rotation1, 0.3f);
+	interpolate2 = keisan.Slerp(rotation0, rotation1, 0.5f);
+	interpolate3 = keisan.Slerp(rotation0, rotation1, 0.7f);
+	interpolate4 = keisan.Slerp(rotation0, rotation1, 1.0f);
 
 	// ãÖÇÃèâä˙ílÇê›íË
 	sphere.center = { 0,2,0 };
@@ -241,10 +244,11 @@ void GameScene::ImguiUpdate()
 	
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
 
-	ImGui::InputFloat3("rotateByQuaternion", &rotateByQuaternion.x);
-
-	ImGui::InputFloat3("rotateByMatrix", &rotateByMatrix.x);
-
+	ImGui::InputFloat4("interpolate0", &interpolate0.x, "%.2f");
+	ImGui::InputFloat4("interpolate1", &interpolate1.x, "%.2f");
+	ImGui::InputFloat4("interpolate2", &interpolate2.x, "%.2f");
+	ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
+	ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
 
 
 	if (ImGui::Button("Reset")) {

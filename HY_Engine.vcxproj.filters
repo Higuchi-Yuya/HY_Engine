@@ -90,7 +90,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Application\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -162,7 +162,7 @@
     <ClCompile Include="Engine\3D\Light\CircleShadow.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\GameScene.cpp">
+    <ClCompile Include="Application\Scene\GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collision\Collision.cpp">
@@ -236,7 +236,7 @@
     <ClInclude Include="Engine\3D\Light\PointLight.h">
       <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\GameScene.h">
+    <ClInclude Include="Application\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Light\SpotLight.h">

@@ -80,7 +80,7 @@ private:// メンバ変数
 
 	// オブジェクト
 	Object3d* object3d = nullptr;
-	Object3d* obj_2 = nullptr;
+	Object3d* obj_2[500];
 
 	Object3d* point1 = nullptr;
 	Object3d* point2 = nullptr;
@@ -97,11 +97,13 @@ private:// メンバ変数
 
 	// Quaternion確認
 	Quaternion keisan;
-	Quaternion rotation;
-	Vector3 pointY;
-	Matrix4 rotateMatrix;
-	Vector3 rotateByQuaternion;
-	Vector3 rotateByMatrix;
+	Quaternion rotation0;
+	Quaternion rotation1;
+	Quaternion interpolate0;
+	Quaternion interpolate1;
+	Quaternion interpolate2;
+	Quaternion interpolate3;
+	Quaternion interpolate4;
 
 	// 当たり判定
 	Sphere sphere;

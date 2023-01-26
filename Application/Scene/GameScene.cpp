@@ -9,7 +9,10 @@ GameScene::~GameScene()
 	delete sprite2;
 	// オブジェクトの解放
 	delete object3d;
-	delete obj_2;
+	for (int i = 0; i < 500; i++) {
+		delete obj_2[i];
+	}
+	
 	delete objFighter;
 	delete groundObj;
 
@@ -76,7 +79,16 @@ void GameScene::Initialize()
 	
 	// オブジェクトの初期化
 	object3d = Object3d::Create();
-	obj_2 = Object3d::Create();
+	for (size_t i = 0; i < 500; i++)
+	{
+
+		obj_2[i] = Object3d::Create();
+		obj_2[i]->SetModel(model_2);
+		obj_2[i]->worldTransform_.position_ = { -1,1,0 };
+		obj_2[i]->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+		obj_2[i]->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+	}
+
 	objFighter = Object3d::Create();
 
 	point1= Object3d::Create();
@@ -93,10 +105,7 @@ void GameScene::Initialize()
 
 	object3d->SetModel(model);
 
-	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.position_ = { -1,1,0 };
-	obj_2->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+
 
 	groundObj->SetModel(groundModel);
 
@@ -108,11 +117,14 @@ void GameScene::Initialize()
 
 	spritePos = sprite2->GetPosition();
 
-	rotation = keisan.MakeAxisAngle({ 0.0f,0.0f,1.0f }, 3.141592 / 2.0f);
-	pointY = { 0.0f,1.0f,0.0f };
-	rotateMatrix = rotation.MakeRotateMatrix(rotation);
-	rotateByQuaternion = keisan.RotateVector(pointY, rotation);
-	rotateByMatrix = rotateMatrix.transform(pointY, rotateMatrix);
+	rotation0 = keisan.MakeAxisAngle({ 0.71f,0.71f,0.0f }, 0.3f);
+	rotation1 = {-rotation0.x,-rotation0.y, -rotation0.z, -rotation0.w};//keisan.MakeAxisAngle({ 0.71f,0.0f,0.71f }, 3.141592f);
+
+	interpolate0 = keisan.Slerp(rotation0, rotation1, 0.0f);
+	interpolate1 = keisan.Slerp(rotation0, rotation1, 0.3f);
+	interpolate2 = keisan.Slerp(rotation0, rotation1, 0.5f);
+	interpolate3 = keisan.Slerp(rotation0, rotation1, 0.7f);
+	interpolate4 = keisan.Slerp(rotation0, rotation1, 1.0f);
 
 	// 球の初期値を設定
 	sphere.center = { 0,2,0 };
@@ -188,8 +200,12 @@ void GameScene::Update()
 	//spritePos = sprite2->GetPosition();
 	sprite2->SetPosition(spritePos);
 	
-	obj_2->worldTransform_.rotation_.y += 0.01f;
-	obj_2->Update();
+	for (size_t i = 0; i < 500; i++)
+	{
+		obj_2[i]->worldTransform_.rotation_.y += 0.01f;
+		obj_2[i]->Update();
+	}
+
 
 	groundObj->Update();
 
@@ -241,10 +257,11 @@ void GameScene::ImguiUpdate()
 	
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
 
-	ImGui::InputFloat3("rotateByQuaternion", &rotateByQuaternion.x);
-
-	ImGui::InputFloat3("rotateByMatrix", &rotateByMatrix.x);
-
+	ImGui::InputFloat4("interpolate0", &interpolate0.x, "%.2f");
+	ImGui::InputFloat4("interpolate1", &interpolate1.x, "%.2f");
+	ImGui::InputFloat4("interpolate2", &interpolate2.x, "%.2f");
+	ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
+	ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
 
 
 	if (ImGui::Button("Reset")) {
@@ -352,8 +369,11 @@ void GameScene::Draw3D()
 {
 	object3d->Draw(view);
 	
-
-	obj_2->Draw(view);
+	for (size_t i = 0; i < 500; i++)
+	{
+		obj_2[i]->Draw(view);
+	}
+	
 	objFighter->Draw(view);
 
 	//point1->Draw(view);

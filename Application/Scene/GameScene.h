@@ -80,7 +80,7 @@ private:// メンバ変数
 
 	// オブジェクト
 	Object3d* object3d = nullptr;
-	Object3d* obj_2 = nullptr;
+	Object3d* obj_2[500];
 
 	Object3d* point1 = nullptr;
 	Object3d* point2 = nullptr;

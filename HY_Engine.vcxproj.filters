@@ -76,17 +76,23 @@
     <Filter Include="ソース ファイル\Engine\3D\Object">
       <UniqueIdentifier>{7d5838ba-3d15-42cf-9207-02ab1c970e5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scene">
-      <UniqueIdentifier>{716774fa-9c84-4ccd-b742-4ac8a73ac07b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Scene">
-      <UniqueIdentifier>{7bf60efa-b700-4947-a3f4-4dff651b3433}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\Collision">
       <UniqueIdentifier>{1d25d745-63ba-48f7-88f9-bf8a5739b229}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Engine\Collision">
       <UniqueIdentifier>{e2a5674b-2d1b-46eb-b325-814150d9c2a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application">
+      <UniqueIdentifier>{3bf7bd47-acb8-41e2-a89a-8b694158a705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application\Scene">
+      <UniqueIdentifier>{716774fa-9c84-4ccd-b742-4ac8a73ac07b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application">
+      <UniqueIdentifier>{4dce8020-bf13-4ef8-bfe0-68ebc4646c22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Scene">
+      <UniqueIdentifier>{7bf60efa-b700-4947-a3f4-4dff651b3433}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +169,7 @@
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
     <ClCompile Include="Application\Scene\GameScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collision\Collision.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
@@ -237,7 +243,7 @@
       <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
     </ClInclude>
     <ClInclude Include="Application\Scene\GameScene.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Light\SpotLight.h">
       <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>

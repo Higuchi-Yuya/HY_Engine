@@ -9,7 +9,10 @@ GameScene::~GameScene()
 	delete sprite2;
 	// オブジェクトの解放
 	delete object3d;
-	delete obj_2;
+	for (int i = 0; i < 500; i++) {
+		delete obj_2[i];
+	}
+	
 	delete objFighter;
 	delete groundObj;
 
@@ -76,7 +79,16 @@ void GameScene::Initialize()
 	
 	// オブジェクトの初期化
 	object3d = Object3d::Create();
-	obj_2 = Object3d::Create();
+	for (size_t i = 0; i < 500; i++)
+	{
+
+		obj_2[i] = Object3d::Create();
+		obj_2[i]->SetModel(model_2);
+		obj_2[i]->worldTransform_.position_ = { -1,1,0 };
+		obj_2[i]->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+		obj_2[i]->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+	}
+
 	objFighter = Object3d::Create();
 
 	point1= Object3d::Create();
@@ -93,10 +105,7 @@ void GameScene::Initialize()
 
 	object3d->SetModel(model);
 
-	obj_2->SetModel(model_2);
-	obj_2->worldTransform_.position_ = { -1,1,0 };
-	obj_2->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	obj_2->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+
 
 	groundObj->SetModel(groundModel);
 
@@ -191,8 +200,12 @@ void GameScene::Update()
 	//spritePos = sprite2->GetPosition();
 	sprite2->SetPosition(spritePos);
 	
-	obj_2->worldTransform_.rotation_.y += 0.01f;
-	obj_2->Update();
+	for (size_t i = 0; i < 500; i++)
+	{
+		obj_2[i]->worldTransform_.rotation_.y += 0.01f;
+		obj_2[i]->Update();
+	}
+
 
 	groundObj->Update();
 
@@ -356,8 +369,11 @@ void GameScene::Draw3D()
 {
 	object3d->Draw(view);
 	
-
-	obj_2->Draw(view);
+	for (size_t i = 0; i < 500; i++)
+	{
+		obj_2[i]->Draw(view);
+	}
+	
 	objFighter->Draw(view);
 
 	//point1->Draw(view);

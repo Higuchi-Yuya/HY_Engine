@@ -177,6 +177,18 @@
     <ClCompile Include="Engine\Collision\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Collision\CollisionTypes.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\BaseCollider.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\CollisionInfo.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Object\Fog.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -256,6 +268,18 @@
     </ClInclude>
     <ClInclude Include="Engine\Collision\CollisionPrimitive.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\CollisionTypes.h">
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\BaseCollider.h">
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\CollisionInfo.h">
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Object\Fog.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

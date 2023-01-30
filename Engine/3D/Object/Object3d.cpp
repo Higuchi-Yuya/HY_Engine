@@ -12,6 +12,7 @@ using namespace std;
 /// </summary>
 ComPtr<ID3D12Device> Object3d::device = nullptr;
 LightGroup* Object3d::light = nullptr;
+Fog* Object3d::fog = nullptr;
 
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
@@ -408,7 +409,7 @@ void Object3d::InitializeRootSignature()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootParams[5];
+	CD3DX12_ROOT_PARAMETER rootParams[6];
 	//テクスチャレジスタ0番 ---テクスチャシェーダーリソースビュー用
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
 	rootParams[0].DescriptorTable.pDescriptorRanges = &descRangeSRV;			//デスクリプタレンジ
@@ -438,6 +439,12 @@ void Object3d::InitializeRootSignature()
 	rootParams[4].Descriptor.ShaderRegister = 3;					//定数バッファ番号
 	rootParams[4].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+
+	//定数バッファ4番 ---フォグバッファビュー用
+	rootParams[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[5].Descriptor.ShaderRegister = 4;					//定数バッファ番号
+	rootParams[5].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -534,6 +541,8 @@ bool Object3d::Initialize()
 	// nullptrチェック
 	worldTransform_.Initialize();
 
+	fog->Initialize();
+
 	return true;
 }
 
@@ -541,6 +550,7 @@ void Object3d::Update()
 {
 	// ワールドトランスフォームの行列更新と転送
 	worldTransform_.UpdateMatrix();
+	fog->UpdateMatrix();
 }
 
 void Object3d::Draw(ViewProjection* viewProjection)
@@ -557,6 +567,9 @@ void Object3d::Draw(ViewProjection* viewProjection)
 
 	// ビュープロジェクション変換データ定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
+
+	// フォグの描画
+	fog->Draw(cmdList);
 
 	// ライトの描画
 	light->Draw(cmdList);

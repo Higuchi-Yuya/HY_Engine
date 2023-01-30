@@ -3,6 +3,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <DirectXMath.h>
+#include "Fog.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include <d3dx12.h>
@@ -66,6 +67,11 @@ public: // 静的メンバ関数
 	static void SetLight(LightGroup* light) {Object3d::light = light;}
 
 	/// <summary>
+	/// フォグのセット
+	/// </summary>
+	static void SetFog(Fog* fog) { Object3d::fog = fog; }
+
+	/// <summary>
 	/// ルートシグネチャの生成
 	/// </summary>
 	static void InitializeRootSignature();
@@ -106,6 +112,9 @@ private: // 静的メンバ変数
 
 	// ライト
 	static LightGroup* light;
+
+	// フォグ
+	static Fog* fog;
 
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;

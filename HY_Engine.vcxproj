@@ -153,6 +153,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Collision\BaseCollider.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionInfo.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionTypes.cpp" />
     <ClCompile Include="Engine\2D\Sprite.cpp" />
     <ClCompile Include="Engine\2D\SpriteManager.cpp" />
     <ClCompile Include="Engine\3D\Light\CircleShadow.cpp" />
@@ -160,6 +163,7 @@
     <ClCompile Include="Engine\3D\Light\LightGroup.cpp" />
     <ClCompile Include="Engine\3D\Light\PointLight.cpp" />
     <ClCompile Include="Engine\3D\Light\SpotLight.cpp" />
+    <ClCompile Include="Engine\3D\Object\Fog.cpp" />
     <ClCompile Include="Engine\3D\Object\Material.cpp" />
     <ClCompile Include="Engine\3D\Object\Model.cpp" />
     <ClCompile Include="Engine\3D\Object\Object3d.cpp" />
@@ -182,6 +186,9 @@
     <ClCompile Include="Application\Scene\GameScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Collision\BaseCollider.h" />
+    <ClInclude Include="Engine\Collision\CollisionInfo.h" />
+    <ClInclude Include="Engine\Collision\CollisionTypes.h" />
     <ClInclude Include="Engine\2D\Sprite.h" />
     <ClInclude Include="Engine\2D\SpriteManager.h" />
     <ClInclude Include="Engine\3D\Light\CircleShadow.h" />
@@ -189,6 +196,7 @@
     <ClInclude Include="Engine\3D\Light\LightGroup.h" />
     <ClInclude Include="Engine\3D\Light\PointLight.h" />
     <ClInclude Include="Engine\3D\Light\SpotLight.h" />
+    <ClInclude Include="Engine\3D\Object\Fog.h" />
     <ClInclude Include="Engine\3D\Object\Material.h" />
     <ClInclude Include="Engine\3D\Object\Model.h" />
     <ClInclude Include="Engine\3D\Object\Object3d.h" />

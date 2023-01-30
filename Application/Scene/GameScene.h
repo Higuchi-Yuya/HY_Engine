@@ -123,5 +123,7 @@ private:// ƒƒ“ƒo•Ï”
 	Vector2 spritePos;
 	char buf[256] = "";
 	float f = 0.0f;
+
+	Fog* fog = nullptr;
 };
 

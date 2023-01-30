@@ -76,6 +76,15 @@ cbuffer LightGroup : register(b3)
 	CircleShadow circleShadows[CIRCLESHADOW_NUM];
 }
 
+// フォグ
+cbuffer Fog : register(b4)
+{
+	float4 fogColor;
+	bool isActiveFog;
+	float nearFog;
+	float farFog;
+}
+
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {

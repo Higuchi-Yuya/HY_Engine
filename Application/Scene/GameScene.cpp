@@ -30,6 +30,8 @@ GameScene::~GameScene()
 	delete view;
 	// ライトの解放
 	delete light;
+	// フォグの解放
+	delete fog;
 }
 
 void GameScene::Initialize()
@@ -59,6 +61,12 @@ void GameScene::Initialize()
 
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light);
+
+	fog = Fog::Create();
+	fog->nearFog = 10;
+	fog->farFog = 100;
+	fog->isActiveFog = true;
+	Object3d::SetFog(fog);
 
 	// テクスチャハンドルの読み込み
 	textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
@@ -162,6 +170,7 @@ void GameScene::Initialize()
 	rayobj->SetModel(modelFighter);
 	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
+
 }
 
 void GameScene::Update()
@@ -246,6 +255,8 @@ void GameScene::Update()
 	hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
 	hitRay = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
 
+	fog->UpdateMatrix();
+	Object3d::SetFog(fog);
 }
 
 void GameScene::ImguiUpdate()
@@ -265,6 +276,9 @@ void GameScene::ImguiUpdate()
 	ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
 	ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
 	ImGui::InputFloat4("directionTodirection", &dirToDir.x, "%.2f");
+
+	ImGui::SliderFloat("nearFog", &fog->nearFog, 0.0f, 100.0f, "%.1f");
+	ImGui::SliderFloat("farFog", &fog->farFog, 50.0f, 500.0f, "%.1f");
 
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };

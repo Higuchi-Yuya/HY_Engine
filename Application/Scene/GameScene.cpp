@@ -126,6 +126,8 @@ void GameScene::Initialize()
 	interpolate3 = keisan.Slerp(rotation0, rotation1, 0.7f);
 	interpolate4 = keisan.Slerp(rotation0, rotation1, 1.0f);
 
+	dirToDir = keisan.DirectionToDirection(direction1, direction2);
+
 	// ‹…‚Ì‰Šú’l‚ğİ’è
 	sphere.center = { 0,2,0 };
 	sphere.radius = 1.0f;
@@ -262,7 +264,7 @@ void GameScene::ImguiUpdate()
 	ImGui::InputFloat4("interpolate2", &interpolate2.x, "%.2f");
 	ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
 	ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
-
+	ImGui::InputFloat4("directionTodirection", &dirToDir.x, "%.2f");
 
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };

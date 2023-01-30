@@ -47,6 +47,9 @@ public:
 	// Quaternion‚ğ‹…–ÊüŒ`•âŠÔ‚·‚éŠÖ”
 	Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t);
 
+	// u‚©‚çv‚Ö‚Ì‰ñ“]‚ğ¶¬
+	Quaternion DirectionToDirection(const Vector3& u, const Vector3& v);
+
 	// dot ŠÖ”
 	float dot(const Quaternion& q1, const Quaternion& q2);
 

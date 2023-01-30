@@ -105,6 +105,10 @@ private:// ƒƒ“ƒo•Ï”
 	Quaternion interpolate3;
 	Quaternion interpolate4;
 
+	Vector3 direction1 = { 1.0f,0.0f,1.0f };
+	Vector3 direction2 = { 1.0f,1.0f,0.0f };
+	Quaternion dirToDir;
+
 	// “–‚½‚è”»’è
 	Sphere sphere;
 	Plane plane;

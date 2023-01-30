@@ -160,6 +160,30 @@ Quaternion Quaternion::Slerp(const Quaternion& q1, const Quaternion& q2, float t
 	return q1 * k0 + t2 * k1;
 }
 
+Quaternion Quaternion::DirectionToDirection(const Vector3& u, const Vector3& v)
+{
+	// uとvを正規化して内積を求める。u,vを単位ベクトル前提とするなら正規化は不要
+	Vector3 U = u;
+	U.normalize();
+	Vector3 V = v;
+	V.normalize();
+
+	float dot = V.dot(U, V);
+
+	// u,vの外積をとる
+	Vector3 cross = U.cross(V);
+
+	// 軸は単位ベクトルである必要があるので正規化
+	// uとvが単位ベクトルであっても、外積が単位ベクトルとは限らないのでここの正規化は必須
+	Vector3 axis = cross.normalize();
+
+	// 単位ベクトルで内積をとっているのでacosで角度を求める
+	float theta = std::acos(dot);
+
+	// axisとthetaで任意軸回転を作って返す
+	return MakeAxisAngle(axis, theta);
+}
+
 float Quaternion::dot(const Quaternion& q1, const Quaternion& q2)
 {
 	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;

@@ -84,6 +84,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ライトの静的初期化
 	LightGroup::StaticInititalize(dxCommon->GetDevice());
 
+	// フォグの静的初期化
+	Fog::StaticInitialize(dxCommon->GetDevice());
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////

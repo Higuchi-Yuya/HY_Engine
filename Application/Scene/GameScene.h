@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "Sound.h"
 #include "Object3d.h"
 #include "ViewProjection.h"
 #include "Model.h"
@@ -125,5 +126,10 @@ private:// ƒƒ“ƒo•Ï”
 	float f = 0.0f;
 
 	Fog* fog = nullptr;
+	bool isFogActive=true;
+
+	Sound sound;
+	bool isActiveSound = false;
+	bool isStopSound = false;
 };
 

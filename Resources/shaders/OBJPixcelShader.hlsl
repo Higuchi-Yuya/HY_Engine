@@ -129,16 +129,21 @@ float4 main(VSOutput input) : SV_TARGET
 
 	// もしフォグがアクティブならフォグの処理をする
 	if (isActiveFog == true) {
+
 		// 距離の計算
 		float dis = distance(cameraPos, input.worldpos.xyz);
+
 		// フォグの距離によっての減衰を計算
-		float f = smoothstep(nearFog, farFog, dis);
+		float rate = smoothstep(nearFog, farFog, dis);
 
 		// フォグの色と求めたフォグの距離を掛けて最終的なフォグのカラーを算出
-		float4 specialFogColor = f * fogColor;
+		float4 specialFogColor = rate * fogColor;
+
+		// オブジェクト色
+		float4 outputColor = color * shadecolor * texcolor;
 
 		// フォグを全体的なカラー処理に加算
-		return color * shadecolor * texcolor + specialFogColor;
+		return outputColor * (1.0f - rate) + specialFogColor * rate;
 	}
 
 

@@ -170,7 +170,7 @@ void GameScene::Initialize()
 	rayobj->SetModel(modelFighter);
 	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
-
+	sound.SoundLoadWave("Resources/GameClear.wav");
 }
 
 void GameScene::Update()
@@ -257,6 +257,15 @@ void GameScene::Update()
 
 	fog->UpdateMatrix();
 	Object3d::SetFog(fog);
+
+	if (isActiveSound == true) {
+		sound.SoundPlayWave(true, 0.01f);
+		isActiveSound = false;
+	}
+	if (isStopSound == true) {
+		sound.StopWave();
+		isStopSound = false;
+	}
 }
 
 void GameScene::ImguiUpdate()
@@ -270,15 +279,12 @@ void GameScene::ImguiUpdate()
 	
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
 
-	ImGui::InputFloat4("interpolate0", &interpolate0.x, "%.2f");
-	ImGui::InputFloat4("interpolate1", &interpolate1.x, "%.2f");
-	ImGui::InputFloat4("interpolate2", &interpolate2.x, "%.2f");
-	ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
-	ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
-	ImGui::InputFloat4("directionTodirection", &dirToDir.x, "%.2f");
-
-	ImGui::SliderFloat("nearFog", &fog->nearFog, 0.0f, 100.0f, "%.1f");
-	ImGui::SliderFloat("farFog", &fog->farFog, 50.0f, 500.0f, "%.1f");
+	//ImGui::InputFloat4("interpolate0", &interpolate0.x, "%.2f");
+	//ImGui::InputFloat4("interpolate1", &interpolate1.x, "%.2f");
+	//ImGui::InputFloat4("interpolate2", &interpolate2.x, "%.2f");
+	//ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
+	//ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
+	//ImGui::InputFloat4("directionTodirection", &dirToDir.x, "%.2f");
 
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };
@@ -286,8 +292,8 @@ void GameScene::ImguiUpdate()
 
 	ImGui::End();
 
+	ImGui::SetNextWindowSize(ImVec2(500, 250));
 	ImGui::Begin("Light");
-	ImGui::SetNextWindowSize(ImVec2(500, 200));
 
 	// 平行光源
 	if (ImGui::TreeNode("DirectionalLight")) {
@@ -355,25 +361,47 @@ void GameScene::ImguiUpdate()
 
 		ImGui::TreePop();
 	}
+	// フォグ
+	if (ImGui::TreeNode("Fog")) {
+		ImGui::Checkbox("Is Active", &isFogActive);
+
+		if (isFogActive == true) {
+			fog->isActiveFog = true;
+		}
+		else if (isFogActive == false) {
+			fog->isActiveFog = false;
+		}
+
+		ImGui::SliderFloat("nearFog", &fog->nearFog, 0.0f, 100.0f, "%.1f");
+		ImGui::SliderFloat("farFog", &fog->farFog, 50.0f, 500.0f, "%.1f");
+		ImGui::ColorEdit4("fogColor", &fog->fogColor.x, ImGuiColorEditFlags_Float);
+		ImGui::TreePop();
+	}
 
 	ImGui::End();
 
 	// 当たり判定-----------------------//
-	ImGui::Begin("Collision");
+	//ImGui::Begin("Collision");
+	//ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	//ImGui::InputFloat3("sphere", &sphere.center.x);
+	//ImGui::Text("hit:%d", hit);
+	//ImGui::InputFloat3("sphere.inter", &inter.x);
+
+	//ImGui::InputFloat3("rayStart", &ray.start.x);
+	//ImGui::InputFloat3("rayDir", &ray.dir.x);
+	//ImGui::Text("hitRay:%d", hitRay);
+	//ImGui::InputFloat3("ray.inter", &inter.x);
+
+	//ImGui::End();
+	// ---------------------//
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
-
-	ImGui::InputFloat3("sphere", &sphere.center.x);
-	ImGui::Text("hit:%d", hit);
-	ImGui::InputFloat3("sphere.inter", &inter.x);
-
-	ImGui::InputFloat3("rayStart", &ray.start.x);
-	ImGui::InputFloat3("rayDir", &ray.dir.x);
-	ImGui::Text("hitRay:%d", hitRay);
-	ImGui::InputFloat3("ray.inter", &inter.x);
+	ImGui::Begin("Sound");
+	
+	ImGui::Checkbox("Is Active", &isActiveSound);
+	ImGui::Checkbox("Is Stop", &isStopSound);
 
 	ImGui::End();
-	// ---------------------//
-
 }
 
 void GameScene::Draw2DBack()

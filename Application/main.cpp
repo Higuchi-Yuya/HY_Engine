@@ -81,6 +81,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ビュープロジェクションの初期化
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
 
+	// サウンドの静的の初期化
+	Sound::StaticInitialize();
+
 	// ライトの静的初期化
 	LightGroup::StaticInititalize(dxCommon->GetDevice());
 

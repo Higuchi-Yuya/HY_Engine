@@ -487,7 +487,15 @@ void GameScene::BlackOut()
 		switch (scene)
 		{
 		case GameScene::Scene::Title:
-			if (oldScene == Scene::Title) {
+			if (oldScene == Scene::Result) {
+				blackAlpha -= 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha <= 0) {
+					blackAlpha = 0;
+					sceneChangeFlag = false;
+				}
+			}
+			else{
 				blackAlpha += 0.025f;
 				blackOut->SetColor({ 1,1,1,blackAlpha });
 				if (blackAlpha >= 1) {
@@ -496,14 +504,7 @@ void GameScene::BlackOut()
 					Reset();
 				}
 			}
-			else if(oldScene == Scene::Result) {
-				blackAlpha -= 0.025f;
-				blackOut->SetColor({ 1,1,1,blackAlpha });
-				if (blackAlpha <= 0) {
-					blackAlpha = 0;
-					sceneChangeFlag = false;
-				}
-			}
+
 			break;
 		case GameScene::Scene::Game:
 			if (oldScene == Scene::Title || oldScene == Scene::Result) {

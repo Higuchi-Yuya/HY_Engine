@@ -43,6 +43,8 @@ public:
 	// 種類の番号
 	int typeNum = 0;
 
+	Vector3 splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t);
+
 private:
 	// モデル
 	Model* model = nullptr;
@@ -66,5 +68,34 @@ private:
 	Collision collision;
 
 	Player* player_ = nullptr;
+
+	bool IsSpline = false;
+#pragma region スプライン曲線
+	// スタートのポジション
+	Vector3 start;
+	// 途中のポジション１
+	Vector3 p1;
+	// 途中のポジション２
+	Vector3 p2;
+	// 終了のポジション
+	Vector3 end;
+
+	std::vector<Vector3> points;
+	size_t startIndex = 1;
+	// 移動の位置
+	Vector3 position;
+
+	// スタートする時間
+	float startCount = 0;
+	// 今の時間
+	float nowCount = 0;
+	// 経過時間
+	float elapsedTime = 0;
+	// 全体の時間
+	float maxTime = 1.2f * 60;
+	// 移動完了の率(経過時間 / 全体時間) : timeRate(%)
+	float timeRate;
+#pragma endregion
+
 };
 

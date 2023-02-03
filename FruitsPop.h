@@ -40,7 +40,7 @@ private:
 	int fruitPopTimer = 0;
 
 	// フルーツのポップする間隔
-	int fruitPopInterval = 0.5 * 60;
+	int fruitPopInterval = 0.3 * 60;
 
 	// ポップする位置
 	Vector3 popPos = { 0,5,1 };

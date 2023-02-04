@@ -17,8 +17,13 @@ Model::Model()
 
 Model::~Model()
 {
+	
 	for (auto m : materials) {
 		delete m.second;
+	}
+	// ‘SƒƒbƒVƒ…‚ğíœ
+	for (auto mesh : meshes) {
+		delete mesh;
 	}
 	materials.clear();
 }

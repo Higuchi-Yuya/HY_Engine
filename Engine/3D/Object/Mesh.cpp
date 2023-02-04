@@ -25,17 +25,16 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	// デスクリプタヒープの配列
 	ID3D12DescriptorHeap* ppHeaps[] = { Texture::srvHeap.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	//for (auto& m : materials) {
-	//	Material* material = m.second;
-		// マテリアル用定数バッファビューをセット
-		cmdList->SetGraphicsRootConstantBufferView(3, material->GetConstantBuffer()->GetGPUVirtualAddress());
 
-		// シェーダリソースビューをセット
-		D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
-		UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-		srvGpuHandle.ptr += incrementSize * material->textureIndex;
-		cmdList->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
-	//}
+	// マテリアル用定数バッファビューをセット
+	cmdList->SetGraphicsRootConstantBufferView(3, material->GetConstantBuffer()->GetGPUVirtualAddress());
+
+	// シェーダリソースビューをセット
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
+	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvGpuHandle.ptr += incrementSize * material->textureIndex;
+	cmdList->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
+
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }

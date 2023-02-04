@@ -36,6 +36,9 @@ GameScene::~GameScene()
 	delete light;
 	// フォグの解放
 	delete fog;
+
+	delete atariModel;
+	delete atariObj;
 }
 
 void GameScene::Initialize()
@@ -157,8 +160,8 @@ void GameScene::Initialize()
 	triangle.normal = { 0.0f,1.0f,0.0f };
 
 	// レイの初期値を設定
-	ray.start = { 0,1,0 };
-	ray.dir = { 0,-1,0 };
+	ray.start = { 10,0.5f,0 };
+	ray.dir = { -1,0,0 };
 
 	// 確認用オブジェ
 	point1->SetModel(model_2);
@@ -176,6 +179,10 @@ void GameScene::Initialize()
 	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
 	sound.SoundLoadWave("Resources/GameClear.wav");
+
+	atariModel = Model::LoadFromOBJ("sphere", true);
+	atariObj = Object3d::Create();
+	atariObj->SetModel(atariModel);
 }
 
 void GameScene::Update()
@@ -270,6 +277,12 @@ void GameScene::Update()
 	if (isStopSound == true) {
 		sound.StopWave();
 		isStopSound = false;
+	}
+
+	RaycastHit raycastHit;
+	if (collisionManager->Raycast(ray, &raycastHit)) {
+		atariObj->worldTransform_.position_ = raycastHit.inter;
+		atariObj->Update();
 	}
 }
 
@@ -428,7 +441,7 @@ void GameScene::Draw3D()
 	//point2->Draw(view);
 	//point3->Draw(view);
 	//rayobj->Draw(view);
-
+	atariObj->Draw(view);
 	groundObj->Draw(view);
 }
 

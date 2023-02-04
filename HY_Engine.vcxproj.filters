@@ -192,11 +192,17 @@
     <ClCompile Include="Engine\Collision\SphereCollider.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionManager.cpp">
+    <ClCompile Include="Engine\Collision\CollisionManager.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Application\Scene\Player.cpp">
       <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Collision\RaycastHit.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Object\Mesh.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -298,6 +304,12 @@
     </ClInclude>
     <ClInclude Include="Application\Scene\Player.h">
       <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\RaycastHit.h">
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Object\Mesh.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

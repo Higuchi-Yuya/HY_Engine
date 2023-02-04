@@ -117,7 +117,6 @@ private:// ƒƒ“ƒo•Ï”
 	Sphere sphere;
 	Plane plane;
 	Triangle triangle;
-	Ray ray;
 	float distance;
 	Vector3 inter;
 
@@ -135,6 +134,15 @@ private:// ƒƒ“ƒo•Ï”
 	bool isActiveSound = false;
 	bool isStopSound = false;
 
+#pragma region “–‚½‚è”»’è
 	CollisionManager* collisionManager = nullptr;
+	Ray ray;
+	
+
+	Model* atariModel = nullptr;
+	Object3d* atariObj = nullptr;
+#pragma endregion
+
+	
 };
 

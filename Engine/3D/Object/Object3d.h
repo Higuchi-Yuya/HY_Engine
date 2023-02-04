@@ -11,9 +11,13 @@
 #include "LightGroup.h"
 #include <vector>
 
+#include "CollisionInfo.h"
+//#include "BaseCollider.h"
+
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
+class BaseCollider;
 
 class Object3d
 {
@@ -143,24 +147,44 @@ private:// 静的メンバ関数
 
 public: // メンバ関数
 
+	// コンストラクタ
+	Object3d() = default;
+
+	// デストラクタ
+	virtual ~Object3d();
+
 	// 初期化処理
-	bool Initialize();
+	virtual bool Initialize();
 
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ViewProjection* viewProjection);
+	virtual void Draw(ViewProjection* viewProjection);
+
+	/// <summary>
+	/// ワールド行列の取得
+	/// </summary>
+	const Matrix4& GetMatWorld() { return worldTransform_.matWorld_; }
 
 	/// <summary>
 	/// モデルの設定
 	/// </summary>
 	void SetModel(Model* model) { this->model = model; }
 
+	/// <summary>
+	/// コライダーのセット
+	/// </summary>
+	void SetCollider(BaseCollider* collider);
+
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	virtual void OnCollision(const CollisionInfo&info){}
 
 
 public:// パブリック変数
@@ -169,12 +193,15 @@ public:// パブリック変数
 	WorldTransform worldTransform_;
 
 private: // メンバ変数
-
-
-
 	// モデル
 	Model* model = nullptr;
 
+protected:// メンバ変数
+	// クラス名（デバッグ用）
+	const char* name = nullptr;
+
+	// コライダー
+	BaseCollider* collider = nullptr;
 
 };
 

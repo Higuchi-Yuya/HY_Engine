@@ -9,6 +9,9 @@
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
 
+class CollisionManager;
+class Player;
+
 class GameScene
 {
 public:// メンバ関数
@@ -81,7 +84,7 @@ private:// メンバ変数
 
 	// オブジェクト
 	Object3d* object3d = nullptr;
-	Object3d* obj_2[500];
+	Object3d* objMedama = nullptr;
 
 	Object3d* point1 = nullptr;
 	Object3d* point2 = nullptr;
@@ -89,7 +92,7 @@ private:// メンバ変数
 
 	Object3d* rayobj = nullptr;
 
-	Object3d* objFighter = nullptr;
+	Player* objFighter = nullptr;
 	Object3d* groundObj = nullptr;
 
 
@@ -126,10 +129,12 @@ private:// メンバ変数
 	float f = 0.0f;
 
 	Fog* fog = nullptr;
-	bool isFogActive=true;
+	bool isFogActive = true;
 
 	Sound sound;
 	bool isActiveSound = false;
 	bool isStopSound = false;
+
+	CollisionManager* collisionManager = nullptr;
 };
 

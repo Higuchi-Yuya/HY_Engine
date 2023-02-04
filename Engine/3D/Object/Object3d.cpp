@@ -1,8 +1,8 @@
 ﻿#include "Object3d.h"
 #include <d3dcompiler.h>
-
+#include "BaseCollider.h"
 #pragma comment(lib, "d3dcompiler.lib")
-
+#include "CollisionManager.h"
 //using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace std;
@@ -536,8 +536,20 @@ void Object3d::InitializeShader()
 	});
 }
 
+Object3d::~Object3d()
+{
+	if (collider) {
+		// 子リジョンマネージャから登録を解除する
+		CollisionManager::GetInstance()->RemoveCollider(collider);
+		delete collider;
+	}
+}
+
 bool Object3d::Initialize()
 {
+	// クラス名の文字列を取得
+	name = typeid(*this).name();
+
 	// nullptrチェック
 	worldTransform_.Initialize();
 
@@ -551,6 +563,11 @@ void Object3d::Update()
 	// ワールドトランスフォームの行列更新と転送
 	worldTransform_.UpdateMatrix();
 	fog->UpdateMatrix();
+
+	// 末尾に当たり判定更新
+	if (collider) {
+		collider->Update();
+	}
 }
 
 void Object3d::Draw(ViewProjection* viewProjection)
@@ -576,6 +593,19 @@ void Object3d::Draw(ViewProjection* viewProjection)
 
 	// モデルを描画
 	model->Draw(cmdList, 1);
+
+}
+
+void Object3d::SetCollider(BaseCollider* collider)
+{
+	collider->SetObject(this);
+	this->collider = collider;
+
+	// コリジョンマネージャに登録
+	CollisionManager::GetInstance()->AddCollider(collider);
+
+	// コライダーを更新しておく
+	collider->Update();
 
 }
 

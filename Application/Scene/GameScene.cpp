@@ -1,5 +1,9 @@
 #include "GameScene.h"
 #include "Collision.h"
+#include "SphereCollider.h"
+#include "CollisionManager.h"
+#include "Player.h"
+
 GameScene::~GameScene()
 {
 	// 入力解放
@@ -9,10 +13,10 @@ GameScene::~GameScene()
 	delete sprite2;
 	// オブジェクトの解放
 	delete object3d;
-	for (int i = 0; i < 500; i++) {
-		delete obj_2[i];
-	}
-	
+
+	delete objMedama;
+
+
 	delete objFighter;
 	delete groundObj;
 
@@ -84,25 +88,26 @@ void GameScene::Initialize()
 	model_2 = Model::LoadFromOBJ("Medama", true);
 	groundModel = Model::LoadFromOBJ("ground");
 	modelFighter = Model::LoadFromOBJ("chr_sword");
-	
+
 	// オブジェクトの初期化
 	object3d = Object3d::Create();
-	for (size_t i = 0; i < 500; i++)
-	{
 
-		obj_2[i] = Object3d::Create();
-		obj_2[i]->SetModel(model_2);
-		obj_2[i]->worldTransform_.position_ = { -1,1,0 };
-		obj_2[i]->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-		obj_2[i]->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
-	}
 
-	objFighter = Object3d::Create();
+	objMedama = Object3d::Create();
+	objMedama->SetModel(model_2);
+	objMedama->worldTransform_.position_ = { -1,1,0 };
+	objMedama->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	objMedama->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+	objMedama->SetCollider(new SphereCollider);
 
-	point1= Object3d::Create();
-	point2=Object3d::Create();
-	point3= Object3d::Create();
-	rayobj= Object3d::Create();
+	collisionManager = CollisionManager::GetInstance();
+
+	objFighter = Player::Create(modelFighter);
+
+	point1 = Object3d::Create();
+	point2 = Object3d::Create();
+	point3 = Object3d::Create();
+	rayobj = Object3d::Create();
 
 	groundObj = Object3d::Create();
 
@@ -126,7 +131,7 @@ void GameScene::Initialize()
 	spritePos = sprite2->GetPosition();
 
 	rotation0 = keisan.MakeAxisAngle({ 0.71f,0.71f,0.0f }, 0.3f);
-	rotation1 = {-rotation0.x,-rotation0.y, -rotation0.z, -rotation0.w};//keisan.MakeAxisAngle({ 0.71f,0.0f,0.71f }, 3.141592f);
+	rotation1 = { -rotation0.x,-rotation0.y, -rotation0.z, -rotation0.w };//keisan.MakeAxisAngle({ 0.71f,0.0f,0.71f }, 3.141592f);
 
 	interpolate0 = keisan.Slerp(rotation0, rotation1, 0.0f);
 	interpolate1 = keisan.Slerp(rotation0, rotation1, 0.3f);
@@ -199,23 +204,23 @@ void GameScene::Update()
 	light->SetCircleShadowAtten(0, circleShadowAtten);
 	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
 
-	objFighter->worldTransform_.position_ = fighterPos;
+	//objFighter->worldTransform_.position_ = fighterPos;
 
 	light->Update();
 
 	//object3d->SetScale(scale_);
 	object3d->Update();
 
-	objFighter->worldTransform_.rotation_.y += 0.01f;
+	//objFighter->worldTransform_.rotation_.y += 0.01f;
+	collisionManager->CheckAllCollisions();
 	objFighter->Update();
 	//spritePos = sprite2->GetPosition();
 	sprite2->SetPosition(spritePos);
-	
-	for (size_t i = 0; i < 500; i++)
-	{
-		obj_2[i]->worldTransform_.rotation_.y += 0.01f;
-		obj_2[i]->Update();
-	}
+
+
+	objMedama->worldTransform_.rotation_.y += 0.01f;
+	objMedama->Update();
+
 
 
 	groundObj->Update();
@@ -276,7 +281,7 @@ void GameScene::ImguiUpdate()
 
 	//ImGui::SetWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
-	
+
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
 
 	//ImGui::InputFloat4("interpolate0", &interpolate0.x, "%.2f");
@@ -301,7 +306,7 @@ void GameScene::ImguiUpdate()
 		if (isActiveDirectional == true) {
 			light->SetDirLightActive(0, true);
 		}
-		else if(isActiveDirectional == false) {
+		else if (isActiveDirectional == false) {
 			light->SetDirLightActive(0, false);
 		}
 
@@ -397,7 +402,7 @@ void GameScene::ImguiUpdate()
 	// ---------------------//
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 	ImGui::Begin("Sound");
-	
+
 	ImGui::Checkbox("Is Active", &isActiveSound);
 	ImGui::Checkbox("Is Stop", &isStopSound);
 
@@ -412,12 +417,11 @@ void GameScene::Draw2DBack()
 void GameScene::Draw3D()
 {
 	object3d->Draw(view);
+
+
+	objMedama->Draw(view);
 	
-	for (size_t i = 0; i < 500; i++)
-	{
-		obj_2[i]->Draw(view);
-	}
-	
+
 	objFighter->Draw(view);
 
 	//point1->Draw(view);

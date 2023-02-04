@@ -7,6 +7,10 @@ public:
 	// 球と平面の当たり判定
 	static bool CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Vector3* inter = nullptr);
 
+	// 球と球
+	static bool CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB, Vector3* inter = nullptr);
+	static bool CheckSphere2SphereOiOi(const Sphere& sphereA, const Sphere& sphereB, Vector3* inter = nullptr, Vector3* reject = nullptr);
+
 	// 点と三角形の最近接点を求める
 	static void ClosestPtPoint2Triangle(const Vector3& point, const Triangle& triangle, Vector3* closest);
 

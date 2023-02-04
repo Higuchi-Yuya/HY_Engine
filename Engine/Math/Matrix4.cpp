@@ -335,6 +335,51 @@ Matrix4 Matrix4::ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, 
 	return *this;
 }
 
+Matrix4 Matrix4::operator-() const
+{
+	Matrix4 result;
+	float temp[4][8] = {};
+
+	float a;
+
+	//
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			temp[i][j] = m[i][j];
+
+			if (i == j)temp[i][4 + j] = 1;
+		}
+	}
+
+	for (int k = 0; k < 4; k++) {
+		a = 1 / temp[k][k];
+
+		for (int j = 0; j < 8; j++) {
+			temp[k][j] *= a;
+		}
+
+		for (int i = 0; i < 4; i++) {
+			if (i == k) {
+				continue;
+			}
+
+			a = -temp[i][k];
+
+			for (int j = 0; j < 8; j++) {
+				temp[i][j] += temp[k][j] * a;
+			}
+		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			result.m[i][j] = temp[i][4 + j];
+		}
+	}
+	return result;
+	
+}
+
 // 代入演算子　*=　オーバーロード関数（行列と行列の積）
 Matrix4& Matrix4::operator*=(const Matrix4& m1)
 {

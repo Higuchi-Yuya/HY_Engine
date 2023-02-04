@@ -25,5 +25,10 @@ private:
 	Object3d* atari = nullptr;
 
 	Input* input = new Input;
+
+	// 接地フラグ
+	bool onGround = true;
+	// 落下ベクトル
+	Vector3 fallV;
 };
 

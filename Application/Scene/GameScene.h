@@ -11,6 +11,7 @@
 
 class CollisionManager;
 class Player;
+class TouchableObject;
 
 class GameScene
 {
@@ -93,7 +94,7 @@ private:// メンバ変数
 	Object3d* rayobj = nullptr;
 
 	Player* objFighter = nullptr;
-	Object3d* groundObj = nullptr;
+	TouchableObject* groundObj = nullptr;
 
 
 	// ビュープロジェクション

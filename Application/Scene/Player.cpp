@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "Input.h"
 #include "SphereCollider.h"
+#include "CollisionManager.h"
+#include "CollisionAttribute.h"
 
 Player* Player::Create(Model* model)
 {
@@ -41,6 +43,7 @@ bool Player::Initialize()
 
 	// 半径分だけ足元から浮いた座標を球の中心にする
 	SetCollider(new SphereCollider(Vector3(0, radius, 0), radius));
+	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	atariModel = new Model;
 	atariModel = Model::LoadFromOBJ("sphere");
@@ -78,8 +81,66 @@ void Player::Update()
 		worldTransform_.position_ += move;
 	}
 
+	// 落下処理
+	if (!onGround) {
+		// 下向き加速度
+		const float fallAcc = -0.01f;
+		const float fallVYMin = -0.5f;
+		// 加速
+		fallV.y = max(fallV.y + fallAcc, fallVYMin);
+		// 移動
+		worldTransform_.position_.x += fallV.x;
+		worldTransform_.position_.y += fallV.y;
+		worldTransform_.position_.z += fallV.z;
+	}
+	// ジャンプ操作
+	else if (input->TriggerKey(DIK_SPACE)) {
+		onGround = false;
+		const float jumpVYFist = 0.2f;
+		fallV = { 0, jumpVYFist, 0 };
+	}
+
 	// 行列の更新など
 	Object3d::Update();
+
+	// 球コライダーを取得
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	assert(sphereCollider);
+
+	// 球の上端から球の下端までのレイキャスト用レイを準備
+	Ray ray;
+	ray.start = sphereCollider->center;
+	ray.start.y += sphereCollider->GetRadius();
+	ray.dir = { 0,-1,0 };
+	RaycastHit raycastHit;
+
+	// 接地状態
+	if (onGround) {
+		// スムーズに坂を下る為の吸着距離
+		const float adsDistance = 0.2f;
+		// 接地を維持
+		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
+			onGround = true;
+			worldTransform_.position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			// 行列の更新など
+			Object3d::Update();
+		}
+		// 地面がないので落下
+		else {
+			onGround = false;
+			fallV = {0,0,0};
+		}
+	}
+	// 落下状態
+	else if (fallV.y <= 0.0f) {
+		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
+			// 着地
+			onGround = true;
+			worldTransform_.position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			// 行列の更新など
+			Object3d::Update();
+		}
+	}
 }
 
 void Player::Draw(ViewProjection* view)

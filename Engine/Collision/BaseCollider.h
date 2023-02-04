@@ -2,12 +2,14 @@
 #include "CollisionTypes.h"
 #include "Object3d.h"
 #include "CollisionInfo.h"
+
 /// <summary>
 /// コライダー基底クラス
 /// </summary>
 class BaseCollider
 {
 public:
+	friend class CollisionManager;
 	BaseCollider() = default;
 	// 仮想デストラクタ
 	virtual ~BaseCollider() = default;
@@ -29,10 +31,35 @@ public:
 	/// </summary>
 	inline void OnCollision(const CollisionInfo& info) { object3d->OnCollision(info); }
 
+	/// <summary>
+	/// 当たり判定属性をセット
+	/// </summary>
+	/// <param name="attribute">当たり判定属性</param>
+	inline void SetAttribute(unsigned short attribute) {
+		this->attribute = attribute;
+	}
+
+	/// <summary>
+	/// 当たり判定属性を追加
+	/// </summary>
+	/// <param name="attribute">当たり判定属性</param>
+	inline void AddAttribute(unsigned short attribute) {
+		this->attribute |= attribute;
+	}
+
+	/// <summary>
+	/// 当たり判定属性を削除
+	/// </summary>
+	/// <param name="attribute">当たり判定属性</param>
+	inline void RemoveAttribute(unsigned short attribute) {
+		this->attribute &= !attribute;
+	}
 
 protected:
 	Object3d* object3d = nullptr;
 	// 形状タイプ
 	CollisionShapeType shapeType = SHAPE_UNKNOWN;
+	// 当たり判定属性
+	unsigned short attribute = 0b1111111111111111;
 };
 

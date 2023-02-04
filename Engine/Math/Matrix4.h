@@ -49,6 +49,7 @@ public:
 	Matrix4 ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ);
 
 	// 代入演算子オーバーロード
+	Matrix4 operator - () const;
 	Matrix4& operator*=(const Matrix4& m1);
 
 	Matrix4 operator*(const Matrix4& m1);

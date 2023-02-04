@@ -3,6 +3,8 @@
 #include "SphereCollider.h"
 #include "CollisionManager.h"
 #include "Player.h"
+#include "MeshCollider.h"
+#include "TouchableObject.h"
 
 GameScene::~GameScene()
 {
@@ -89,7 +91,7 @@ void GameScene::Initialize()
 	// モデルの読み込み
 	model = Model::LoadFromOBJ("skydome", true);
 	model_2 = Model::LoadFromOBJ("Medama", true);
-	groundModel = Model::LoadFromOBJ("ground");
+	groundModel = Model::LoadFromOBJ("ground2");
 	modelFighter = Model::LoadFromOBJ("chr_sword");
 
 	// オブジェクトの初期化
@@ -112,8 +114,10 @@ void GameScene::Initialize()
 	point3 = Object3d::Create();
 	rayobj = Object3d::Create();
 
-	groundObj = Object3d::Create();
-
+	
+	groundObj = TouchableObject::Create(groundModel);
+	//groundObj->worldTransform_.scale_ = { 0.1f,0.1f, 0.1f };
+	//groundObj->worldTransform_.rotation_ = { 0,0,0.1f };
 
 	objFighter->SetModel(modelFighter);
 	objFighter->worldTransform_.position_ = fighterPos;
@@ -123,7 +127,7 @@ void GameScene::Initialize()
 
 
 
-	groundObj->SetModel(groundModel);
+	//groundObj->SetModel(groundModel);
 
 	// ビュープロジェクションの初期化
 	view = new ViewProjection;
@@ -161,7 +165,7 @@ void GameScene::Initialize()
 
 	// レイの初期値を設定
 	ray.start = { 10,0.5f,0 };
-	ray.dir = { -1,0,0 };
+	ray.dir = { 0,-1,0 };
 
 	// 確認用オブジェ
 	point1->SetModel(model_2);
@@ -195,6 +199,7 @@ void GameScene::Update()
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
+	fighterPos = objFighter->worldTransform_.position_;
 
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));

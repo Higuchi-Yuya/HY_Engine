@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Scene\Player.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\BaseCollider.cpp" />
     <ClCompile Include="Engine\Collision\CollisionInfo.cpp" />
@@ -189,9 +190,12 @@
     <ClCompile Include="Application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Collision\RaycastHit.cpp" />
     <ClCompile Include="Engine\3D\Object\Mesh.cpp" />
+    <ClCompile Include="Engine\Collision\MeshCollider.cpp" />
+    <ClCompile Include="Application\Scene\TouchableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
+    <ClInclude Include="Engine\Collision\CollisionAttribute.h" />
     <ClInclude Include="Engine\3D\Object\Mesh.h" />
     <ClInclude Include="Engine\Collision\BaseCollider.h" />
     <ClInclude Include="Engine\Collision\CollisionInfo.h" />
@@ -226,6 +230,8 @@
     <ClInclude Include="Engine\Sound\Sound.h" />
     <ClInclude Include="Application\Scene\GameScene.h" />
     <ClInclude Include="Engine\Collision\RaycastHit.h" />
+    <ClInclude Include="Engine\Collision\MeshCollider.h" />
+    <ClInclude Include="Application\Scene\TouchableObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -17,6 +17,12 @@ public:
 
 	// XV
 	void Update()override;
+	
+	inline const Vector3& GetOffset() { return offset; }
+
+	inline void SetOffset(const Vector3& offset) { this->offset = offset; }
+
+	inline float GetRadius() { return radius; }
 
 	inline void SetRadius(float radius) { this->radius = radius; }
 

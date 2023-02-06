@@ -561,13 +561,18 @@ bool Object3d::Initialize()
 void Object3d::Update()
 {
 	// ワールドトランスフォームの行列更新と転送
-	worldTransform_.UpdateMatrix();
+	UpdateWorldMatrix();
 	fog->UpdateMatrix();
 
 	// 末尾に当たり判定更新
 	if (collider) {
 		collider->Update();
 	}
+}
+
+void Object3d::UpdateWorldMatrix()
+{
+	worldTransform_.UpdateMatrix();
 }
 
 void Object3d::Draw(ViewProjection* viewProjection)
@@ -601,8 +606,13 @@ void Object3d::SetCollider(BaseCollider* collider)
 	collider->SetObject(this);
 	this->collider = collider;
 
+	// ワールド行列を更新しおく
+	worldTransform_.UpdateMatrix();
+
 	// コリジョンマネージャに登録
 	CollisionManager::GetInstance()->AddCollider(collider);
+
+	
 
 	// コライダーを更新しておく
 	collider->Update();

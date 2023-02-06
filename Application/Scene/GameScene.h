@@ -8,6 +8,7 @@
 #include "LightGroup.h"
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
+#include <vector>
 
 class CollisionManager;
 class Player;
@@ -83,6 +84,10 @@ private:// メンバ変数
 	Model* modelFighter = nullptr;
 	Model* groundModel = nullptr;
 
+	Model* modelPlane = nullptr;
+	Model* modelBox = nullptr;
+	Model* modelPyramid = nullptr;
+
 	// オブジェクト
 	Object3d* object3d = nullptr;
 	Object3d* objMedama = nullptr;
@@ -95,8 +100,10 @@ private:// メンバ変数
 
 	Player* objFighter = nullptr;
 	TouchableObject* groundObj = nullptr;
+	//TouchableObject* groundObj2 = nullptr;
 
-
+	//std::vector<Object3d*>objects;
+	
 	// ビュープロジェクション
 	ViewProjection* view = nullptr;
 

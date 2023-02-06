@@ -58,10 +58,10 @@ void MeshCollider::ConstructTriangles(Model* model)
 void MeshCollider::Update()
 {
 	// ワールド行列の逆行列を計算
-	invMatWorld.MakeInverse();
+	invMatWorld = -invMatWorld;
 }
 
-bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter)
+bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter, Vector3* reject)
 {
 	// オブジェクトのローカル座標系での球を得る（半径はXスケールを参照)
 	Sphere localSphere;
@@ -76,11 +76,16 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter)
 	for (; it != triangles.cend(); ++it) {
 		const Triangle& triangle = *it;
 
-		if (Collision::CheckSphere2Triangle(localSphere, triangle, inter)) {
+		if (Collision::CheckSphere2Triangle(localSphere, triangle, inter, reject)) {
 			if (inter) {
 				const Matrix4& matWorld = GetObject3d()->GetMatWorld();
 
 				*inter = keisanM4.transform(*inter, matWorld);
+			}
+			if (reject) {
+				const Matrix4& matWorld = GetObject3d()->GetMatWorld();
+				// ワールド座標系での排斥ベクトルに変換
+				*reject = Matrix4::transformNotW(*reject, matWorld);
 			}
 			return true;
 		}

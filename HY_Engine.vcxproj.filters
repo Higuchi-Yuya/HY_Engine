@@ -213,6 +213,9 @@
     <ClCompile Include="Application\Scene\TouchableObject.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Collision\QueryCallback.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -328,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="Application\Scene\TouchableObject.h">
       <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision\QueryCallback.h">
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

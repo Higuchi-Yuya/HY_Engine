@@ -192,6 +192,7 @@
     <ClCompile Include="Engine\3D\Object\Mesh.cpp" />
     <ClCompile Include="Engine\Collision\MeshCollider.cpp" />
     <ClCompile Include="Application\Scene\TouchableObject.cpp" />
+    <ClCompile Include="Engine\Collision\QueryCallback.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Engine\Collision\RaycastHit.h" />
     <ClInclude Include="Engine\Collision\MeshCollider.h" />
     <ClInclude Include="Application\Scene\TouchableObject.h" />
+    <ClInclude Include="Engine\Collision\QueryCallback.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

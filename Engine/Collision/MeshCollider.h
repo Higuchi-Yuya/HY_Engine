@@ -24,7 +24,7 @@ public:
 	void Update()override;
 
 	// ‹…‚Æ‚Ì“–‚½‚è”»’è
-	bool CheckCollisionSphere(const Sphere& sphere, Vector3* inter = nullptr);
+	bool CheckCollisionSphere(const Sphere& sphere, Vector3* inter = nullptr, Vector3* reject = nullptr);
 
 	// ƒŒƒC‚Æ‚Ì“–‚½‚è”»’è
 	bool CheckCollisionRay(const Ray& ray, float* distance = nullptr, Vector3* inter = nullptr);

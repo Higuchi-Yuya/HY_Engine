@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "MeshCollider.h"
 #include "TouchableObject.h"
+#include <time.h>
 
 GameScene::~GameScene()
 {
@@ -21,7 +22,11 @@ GameScene::~GameScene()
 
 	delete objFighter;
 	delete groundObj;
-
+	//delete groundObj2;
+	//for (auto object : objects) {
+	//	delete object;
+	//}
+	//objects.clear();
 	delete point1;
 	delete point2;
 	delete point3;
@@ -32,6 +37,10 @@ GameScene::~GameScene()
 	delete model_2;
 	delete modelFighter;
 	delete groundModel;
+	delete modelPlane;
+	delete modelBox;
+	delete modelPyramid;
+
 	// ビューの解放
 	delete view;
 	// ライトの解放
@@ -45,6 +54,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
+	srand((unsigned int)time(NULL));
 	// 入力の初期化
 	input = new Input();
 	input->Initialize();
@@ -93,6 +103,40 @@ void GameScene::Initialize()
 	model_2 = Model::LoadFromOBJ("Medama", true);
 	groundModel = Model::LoadFromOBJ("ground2");
 	modelFighter = Model::LoadFromOBJ("chr_sword");
+	modelPlane = Model::LoadFromOBJ("plane1x1");
+	modelBox = Model::LoadFromOBJ("box1x1x1");
+	modelPyramid = Model::LoadFromOBJ("pyramid1x1");
+
+	objFighter = Player::Create(modelFighter);
+	objFighter->worldTransform_.position_ = { 0,5,0 };
+
+	// モデルテーブル
+	Model* modeltable[10] = {
+		modelPlane,
+		modelPlane,
+		modelPlane,
+		modelPlane,
+		modelPlane,
+		modelPlane,
+		modelPlane,
+		modelPlane,
+		modelBox,
+		modelPyramid,
+	};
+
+	const int DIV_NUM = 10;
+	const float LAND_SCALE = 2.0f;
+	//for (int i = 0; i < DIV_NUM; i++) {
+	//	for (int j = 0; j < DIV_NUM; j++) {
+
+	//		int modelIndex = rand() % 10;
+
+	//		TouchableObject* object = TouchableObject::Create(modeltable[modelIndex]);
+	//		object->worldTransform_.scale_ = { LAND_SCALE,LAND_SCALE,LAND_SCALE };
+	//		object->worldTransform_.position_={ (j - DIV_NUM / 2) * LAND_SCALE, 0, (i - DIV_NUM / 2) * LAND_SCALE };
+	//		objects.push_back(object);
+	//	}
+	//}
 
 	// オブジェクトの初期化
 	object3d = Object3d::Create();
@@ -107,7 +151,7 @@ void GameScene::Initialize()
 
 	collisionManager = CollisionManager::GetInstance();
 
-	objFighter = Player::Create(modelFighter);
+
 
 	point1 = Object3d::Create();
 	point2 = Object3d::Create();
@@ -116,8 +160,12 @@ void GameScene::Initialize()
 
 	
 	groundObj = TouchableObject::Create(groundModel);
-	//groundObj->worldTransform_.scale_ = { 0.1f,0.1f, 0.1f };
-	//groundObj->worldTransform_.rotation_ = { 0,0,0.1f };
+	//groundObj->worldTransform_.scale_.x += 5;
+
+	//groundObj2 = TouchableObject::Create(modelBox);
+	//groundObj2->worldTransform_.position_.x += 2;
+	//groundObj2->UpdateWorldMatrix();
+
 
 	objFighter->SetModel(modelFighter);
 	objFighter->worldTransform_.position_ = fighterPos;
@@ -199,6 +247,10 @@ void GameScene::Update()
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
+	if (input->TriggerKey(DIK_R)) {
+		objFighter->worldTransform_.position_ = { 1.0f, 10.0f,0.0f };
+		objFighter->UpdateWorldMatrix();
+	}
 	fighterPos = objFighter->worldTransform_.position_;
 
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
@@ -223,8 +275,12 @@ void GameScene::Update()
 	//object3d->SetScale(scale_);
 	object3d->Update();
 
+
+
 	//objFighter->worldTransform_.rotation_.y += 0.01f;
 	collisionManager->CheckAllCollisions();
+
+
 	objFighter->Update();
 	//spritePos = sprite2->GetPosition();
 	sprite2->SetPosition(spritePos);
@@ -234,9 +290,11 @@ void GameScene::Update()
 	objMedama->Update();
 
 
-
+	//for (auto object : objects) {
+	//	object->Update();
+	//}
 	groundObj->Update();
-
+	//groundObj2->Update();
 	view->DebugCameraUpdate();
 
 	// 球移動
@@ -289,6 +347,8 @@ void GameScene::Update()
 		atariObj->worldTransform_.position_ = raycastHit.inter;
 		atariObj->Update();
 	}
+
+	
 }
 
 void GameScene::ImguiUpdate()
@@ -312,6 +372,8 @@ void GameScene::ImguiUpdate()
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };
 	}
+
+	ImGui::InputFloat3("fighterPos", &fighterPos.x);
 
 	ImGui::End();
 
@@ -434,6 +496,7 @@ void GameScene::Draw2DBack()
 
 void GameScene::Draw3D()
 {
+
 	object3d->Draw(view);
 
 
@@ -448,6 +511,10 @@ void GameScene::Draw3D()
 	//rayobj->Draw(view);
 	atariObj->Draw(view);
 	groundObj->Draw(view);
+	//groundObj2->Draw(view);
+	//for (auto object : objects) {
+	//	object->Draw(view);
+	//}
 }
 
 void GameScene::Draw2DFront()

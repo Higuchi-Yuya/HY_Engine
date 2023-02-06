@@ -2,6 +2,7 @@
 #include <forward_list>
 #include "CollisionPrimitive.h"
 #include "RaycastHit.h"
+#include "QueryCallback.h"
 
 #include <d3d12.h>
 class BaseCollider;
@@ -37,6 +38,8 @@ public:// メンバ関数
 	/// <returns>レイが任意のコライダーと交わる場合はtrue、それ以外はfalse</returns>
 	bool Raycast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
 
+	// 球による衝突全検索
+	void QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute = (unsigned short)0xffffffff);
 
 	// 全ての衝突チェック
 	void CheckAllCollisions();

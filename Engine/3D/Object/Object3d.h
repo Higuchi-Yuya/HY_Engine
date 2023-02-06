@@ -160,7 +160,13 @@ public: // メンバ関数
 	/// 毎フレーム処理
 	/// </summary>
 	virtual void Update();
-
+	
+	/// <summary>
+	/// 行列の更新
+	/// </summary>
+	/// <returns></returns>
+	void UpdateWorldMatrix();
+	
 	/// <summary>
 	/// 描画
 	/// </summary>

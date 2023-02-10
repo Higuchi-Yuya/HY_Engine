@@ -509,16 +509,12 @@ void GameScene::Draw3D()
 	//point2->Draw(view);
 	//point3->Draw(view);
 	//rayobj->Draw(view);
-	atariObj->Draw(view);
+	//atariObj->Draw(view);
 	groundObj->Draw(view);
-	//groundObj2->Draw(view);
-	//for (auto object : objects) {
-	//	object->Draw(view);
-	//}
 }
 
 void GameScene::Draw2DFront()
 {
 
-	sprite2->Draw();
+	//sprite2->Draw();
 }

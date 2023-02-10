@@ -194,7 +194,7 @@ void Player::Update()
 void Player::Draw(ViewProjection* view)
 {
 	Object3d::Draw(view);
-	atari->Draw(view);
+	//atari->Draw(view);
 }
 
 void Player::OnCollision(const CollisionInfo& info)

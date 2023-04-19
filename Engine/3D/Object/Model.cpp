@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cassert>
 #include "Texture.h"
+#include "assimp/aabb.h"
 
 using namespace DirectX;
 using namespace std;

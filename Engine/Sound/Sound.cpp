@@ -3,6 +3,8 @@
 Microsoft::WRL::ComPtr<IXAudio2>Sound::xAudio2_;
 IXAudio2MasteringVoice* Sound::masterVoice_;
 
+std::string Sound::kDefaultSoundDirectoryPath = "Resources/Sound/";
+
 Sound::~Sound()
 {
 	// xaudio2の解放
@@ -25,14 +27,18 @@ void Sound::StaticInitialize()
 }
 
 //音声データの読み込み
-void Sound::SoundLoadWave(const char* filename) {
+void Sound::SoundLoadWave(const std::string& filename) {
 
 	//-------①ファイルオープン-------//
 
 	//ファイル入力ストリームのインスタンス
 	std::ifstream file;
+
+	std::string fullPath = kDefaultSoundDirectoryPath + filename;
+
 	//.wavファイルをバイナリモードで開く
-	file.open(filename, std::ios_base::binary);
+	file.open(fullPath.c_str(), std::ios_base::binary);
+
 	//ファイルオープン失敗を検出する
 	assert(file.is_open());
 

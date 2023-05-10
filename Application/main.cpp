@@ -78,6 +78,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// オブジェクトの初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
 
+	// FBXのローダーの初期化
+	//FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
+
 	// ビュープロジェクションの初期化
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
 
@@ -199,6 +202,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	delete imguiManager;
 	// スプライトマネージャーの解放
 	delete spriteManager;
+	// FBXローダーの解放
+	//FbxLoader::GetInstance()->Finalize();
+
 
 	// WindouwsAPIの終了処理
 	winApp->Finalize();

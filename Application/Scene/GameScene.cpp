@@ -7,12 +7,14 @@
 #include "TouchableObject.h"
 #include <time.h>
 
+#include "FbxLoader.h"
+
 GameScene::~GameScene()
 {
 	// 入力解放
 	delete input;
 	// スプライトの解放
-	delete sprite;
+	//delete sprite;
 	delete sprite2;
 	// オブジェクトの解放
 	delete object3d;
@@ -78,29 +80,31 @@ void GameScene::Initialize()
 
 	light->SetCircleShadowActive(0, true);
 
+	
+
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light);
 
 	fog = Fog::Create();
 	fog->nearFog = 10;
 	fog->farFog = 100;
-	fog->isActiveFog = true;
+	fog->isActiveFog = false;
 	Object3d::SetFog(fog);
 
 	// テクスチャハンドルの読み込み
-	textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
-	textureHandle2 = Texture::LoadTexture("texture.png");
+	//textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
+	textureHandle2 = Texture::Load2DTexture("texture.png");
 
 	// スプライトの初期化
-	sprite = new Sprite();
+	//sprite = new Sprite();
 	sprite2 = new Sprite();
 
-	sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
+	//sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2, { 200,200 });
 
 	// モデルの読み込み
 	model = Model::LoadFromOBJ("skydome", true);
-	model_2 = Model::LoadFromOBJ("Medama", true);
+	model_2 = Model::LoadFromOBJ("doragon", true);
 	groundModel = Model::LoadFromOBJ("ground2");
 	modelFighter = Model::LoadFromOBJ("chr_sword");
 	modelPlane = Model::LoadFromOBJ("plane1x1");
@@ -230,11 +234,14 @@ void GameScene::Initialize()
 	rayobj->SetModel(modelFighter);
 	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
-	sound.SoundLoadWave("Resources/GameClear.wav");
+	sound.SoundLoadWave("GameClear.wav");
 
 	atariModel = Model::LoadFromOBJ("sphere", true);
 	atariObj = Object3d::Create();
 	atariObj->SetModel(atariModel);
+
+	// モデル名を指定してファイルを読み込み
+	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
 }
 
 void GameScene::Update()
@@ -253,6 +260,8 @@ void GameScene::Update()
 	}
 	fighterPos = objFighter->worldTransform_.position_;
 
+
+
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
@@ -267,6 +276,10 @@ void GameScene::Update()
 	light->SetCircleShadowCasterPos(0, fighterPos);
 	light->SetCircleShadowAtten(0, circleShadowAtten);
 	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
+
+	light->SetAmbientColor(AmColor);
+	light->SetDiffuseColor(DiColor);
+	light->SetSpecularColor(SpColor);
 
 	//objFighter->worldTransform_.position_ = fighterPos;
 
@@ -383,6 +396,11 @@ void GameScene::ImguiUpdate()
 	// 平行光源
 	if (ImGui::TreeNode("DirectionalLight")) {
 		ImGui::Checkbox("Is Active", &isActiveDirectional);
+
+		ImGui::ColorEdit3("ambientColor", &AmColor.x);
+		ImGui::ColorEdit3("diffuseColor", &DiColor.x);
+		ImGui::ColorEdit3("specularColor", &SpColor.x);
+
 		if (isActiveDirectional == true) {
 			light->SetDirLightActive(0, true);
 		}
@@ -516,5 +534,5 @@ void GameScene::Draw3D()
 void GameScene::Draw2DFront()
 {
 
-	//sprite2->Draw();
+	sprite2->Draw();
 }

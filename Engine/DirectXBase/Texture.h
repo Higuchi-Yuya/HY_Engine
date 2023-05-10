@@ -10,6 +10,8 @@ class Texture
 public:// メンバ関数
 
 	// テクスチャ読み込み
+	static uint32_t Load2DTexture(const std::string& fileName = "NULL");
+
 	static uint32_t LoadTexture(const std::string& fileName = "NULL");
 	
 	static uint32_t LoadTexture(const wchar_t* fileName);
@@ -20,6 +22,10 @@ public:// メンバ関数
 public:// 静的メンバ変数
 	// SRVの最大個数
 	static const size_t kMaxSRVCount = 2056;
+
+	// デフォルトテクスチャ2D格納ディレクトリ
+	static std::string kDefault2DTextureDirectoryPath;
+
 	// デフォルトテクスチャ格納ディレクトリ
 	static std::string kDefaultTextureDirectoryPath;
 

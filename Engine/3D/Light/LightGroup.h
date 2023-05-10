@@ -27,6 +27,10 @@ public:// サブクラス
 		// 環境光の色
 		Vector3 ambientColor;
 		float pad1;
+		Vector3 diffuseColor;// ディフューズカラー
+		float pad2;
+		Vector3 specularColor; // スペキュラーカラー
+		float pad3; // パディング
 		// 平行光源用
 		DirectionalLight::ConstBufferData dirLights[DirLightNum];
 		// 点光源用
@@ -64,6 +68,18 @@ public:// メンバ関数
 	/// </summary>
 	/// <param name="color">ライト色</param>
 	void SetAmbientColor(const Vector3& color);
+
+	/// <summary>
+	/// ディフューズのライト色をセット
+	/// </summary>
+	/// <param name="color">ライト色</param>
+	void SetDiffuseColor(const Vector3& color);
+
+	/// <summary>
+	/// スペキュラーのライト色をセット
+	/// </summary>
+	/// <param name="color">ライト色</param>
+	void SetSpecularColor(const Vector3& color);
 
 	/// <summary>
 	/// 平行光源の有効フラグをセット
@@ -225,6 +241,12 @@ private:// メンバ変数
 
 	// 環境光の色
 	Vector3 ambientColor_ = { 1,1,1 };
+
+	// ディフューズの色
+	Vector3 diffuseColor_ = { 1,1,1 };
+
+	// スペキュラーの色
+	Vector3 specularColor_ = { 1,1,1 };
 
 	// 平行光源の配列
 	DirectionalLight dirLights_[DirLightNum];

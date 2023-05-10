@@ -80,14 +80,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)/Lib/assimp/include</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)Lib\assimp\include</IncludePath>
     <OutDir>$(SolutionDir)..\Generated\Outputs\HY_Engine\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)/Lib/assimp/include</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)Lib\assimp\include</IncludePath>
     <OutDir>$(SolutionDir)..\Generated\Outputs\HY_Engine\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(LibraryPath)</LibraryPath>
@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,7 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -197,6 +197,9 @@
     <ClCompile Include="Engine\Collision\MeshCollider.cpp" />
     <ClCompile Include="Application\Scene\TouchableObject.cpp" />
     <ClCompile Include="Engine\Collision\QueryCallback.cpp" />
+    <ClCompile Include="Engine\3D\FBX\FbxLoader.cpp" />
+    <ClCompile Include="Engine\3D\FBX\FbxModel.cpp" />
+    <ClCompile Include="Engine\3D\FBX\FbxAnimetion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
@@ -238,6 +241,9 @@
     <ClInclude Include="Engine\Collision\MeshCollider.h" />
     <ClInclude Include="Application\Scene\TouchableObject.h" />
     <ClInclude Include="Engine\Collision\QueryCallback.h" />
+    <ClInclude Include="Engine\3D\FBX\FbxLoader.h" />
+    <ClInclude Include="Engine\3D\FBX\FbxModel.h" />
+    <ClInclude Include="Engine\3D\FBX\FbxAnimetion.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

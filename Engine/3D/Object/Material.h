@@ -18,9 +18,12 @@ public:// サブクラス
 	{
 		Vector3 ambient; // アンビエント係数
 		float pad1; // パディング
+
 		Vector3 diffuse; // ディフューズ係数
 		float pad2; // パディング
+
 		Vector3 specular; // スペキュラー係数
+
 		float alpha; // アルファ
 	};
 public: // 静的メンバ関数
@@ -46,6 +49,7 @@ public:
 	Vector3 ambient; // アンビエント影響度
 	Vector3 diffuse; // ディフューズ影響度
 	Vector3 specular; // スペキュラー影響度
+
 	float alpha; // アルファ
 	std::string textureFilename; // テクスチャファイル名
 
@@ -80,8 +84,9 @@ private:
 	// コンストラクタ
 	Material() {
 		ambient = { 0.3f, 0.3f, 0.3f };
-		diffuse = { 0.0f, 0.0f, 0.0f };
-		specular = { 0.0f, 0.0f, 0.0f };
+		diffuse = { 0.8f, 0.8f, 0.8f };
+		specular = { 0.9f, 0.9f, 0.9f };
+
 		alpha = 1.0f;
 	}
 	/// <summary>

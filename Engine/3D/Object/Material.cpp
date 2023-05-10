@@ -38,6 +38,7 @@ void Material::Update()
 	constMap->ambient = ambient;
 	constMap->diffuse = diffuse;
 	constMap->specular = specular;
+
 	constMap->alpha = alpha;
 	constBuff->Unmap(0, nullptr);
 }

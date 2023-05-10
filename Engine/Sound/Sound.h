@@ -43,7 +43,7 @@ public:
 	// 初期化
 	static void StaticInitialize();
 	//音声読み込み
-	void SoundLoadWave(const char* filename);
+	void SoundLoadWave(const std::string& filename);
 	//音声再生
 	void SoundPlayWave(bool loop = false, float volume = 1.0f);
 	// 音声停止
@@ -63,6 +63,9 @@ private:
 		//バッファサイズ
 		unsigned int bufferSize;
 	};
+
+	// デフォルトサウンド格納ディレクトリ
+	static std::string kDefaultSoundDirectoryPath;
 
 	SoundData soundData_;
 

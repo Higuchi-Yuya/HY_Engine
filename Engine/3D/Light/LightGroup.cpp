@@ -55,6 +55,12 @@ void LightGroup::TransferConstBuffer()
 	// 環境光
 	constMap->ambientColor = ambientColor_;
 
+	// ディフューズカラー
+	constMap->diffuseColor = diffuseColor_;
+
+	// スペキュラーカラー
+	constMap->specularColor = specularColor_;
+
 	// 平行光源
 	for (int i = 0; i < DirLightNum; i++) {
 		// ライトが有効なら設定を転送
@@ -137,6 +143,18 @@ void LightGroup::DefaultLightSetting()
 void LightGroup::SetAmbientColor(const Vector3& color)
 {
 	ambientColor_ = color;
+	dirty = true;
+}
+
+void LightGroup::SetDiffuseColor(const Vector3& color)
+{
+	diffuseColor_ = color;
+	dirty = true;
+}
+
+void LightGroup::SetSpecularColor(const Vector3& color)
+{
+	specularColor_ = color;
 	dirty = true;
 }
 

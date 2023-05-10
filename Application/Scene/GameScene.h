@@ -8,6 +8,8 @@
 #include "LightGroup.h"
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
+#include "FbxLoader.h"
+
 #include <vector>
 
 class CollisionManager;
@@ -70,12 +72,16 @@ private:// メンバ変数
 
 	Vector3 fighterPos = { 1,0.0f,0 };
 
+	Vector3 AmColor={1,1,1};
+	Vector3 DiColor={ 1,1,1 };
+	Vector3 SpColor={ 1,1,1 };
+
 	// テクスチャハンドル
 	int textureHandle;
 	int textureHandle2;
 
 	// スプライト
-	Sprite* sprite = nullptr;
+	//Sprite* sprite = nullptr;
 	Sprite* sprite2 = nullptr;
 
 	// モデル

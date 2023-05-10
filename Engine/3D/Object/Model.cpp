@@ -145,7 +145,7 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 	// objファイルを開く
 	//const string modelname = "skydome";
 	const string filename = modelname + ".obj"; // "triangle_mat.obj"
-	const string directoryPath = "Resources/" + modelname + "/"; // "Resources/triangle_mat/"
+	const string directoryPath = "Resources/3D_Resources/Object_File/" + modelname + "/"; // "Resources/triangle_mat/"
 	file.open(directoryPath + filename); //"Resources/triangle_mat/triangle_mat.obj"
 	// ファイルオープン失敗をチェック
 	if (file.fail()) {

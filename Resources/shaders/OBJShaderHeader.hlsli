@@ -13,10 +13,10 @@ cbuffer ViewProjection : register(b1)
 
 cbuffer cbuff1:register(b2)
 {
-	float3 m_ambient:packoffset(c0);// アンビエント係数
-	float3 m_diffuse:packoffset(c1);// ディフューズ係数
-	float3 m_specular:packoffset(c2);// スペキュラー係数
-	float m_alpha : packoffset(c2.w);// アルファ
+	float3 m_ambient;//:packoffset(c0);// アンビエント係数
+	float3 m_diffuse;//:packoffset(c1);// ディフューズ係数
+	float3 m_specular;//:packoffset(c2);// スペキュラー係数
+	float m_alpha;//: packoffset(c2.w);// アルファ
 }
 
 // 平行光源の数
@@ -70,6 +70,9 @@ struct CircleShadow
 cbuffer LightGroup : register(b3)
 {
 	float3 ambientColor;
+	float3 diffuseColor;// ディフューズカラー
+	float3 specularColor;// スペキュラーカラー
+	
 	DirLight dirLights[DIRLIGHT_NUM];
 	PointLight pointLights[POINTLIGHT_NUM];
 	SpotLight spotLights[SPOTLIGHT_NUM];

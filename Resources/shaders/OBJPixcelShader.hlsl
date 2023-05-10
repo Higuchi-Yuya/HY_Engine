@@ -15,25 +15,43 @@ float4 main(VSOutput input) : SV_TARGET
 	float3 eyedir = normalize(cameraPos - input.worldpos.xyz);
 
 	// 環境反射光
-	float3 ambient = m_ambient;
+    float3 ambientIndensity = m_ambient;
+    float3 ambient = ambientIndensity * ambientColor;
 
 	// シェーディングによる色
-	float4 shadecolor = float4(ambientColor * ambient, m_alpha);
+	float4 shadecolor = { 0,0,0, m_alpha };
 
 	// 平行光源
 	for (int i = 0; i < DIRLIGHT_NUM; i++) {
 		if (dirLights[i].active) {
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(dirLights[i].lightv, input.normal);
+
+			float lightIntensity = smoothstep(0, 0.01, dotlightnormal);
+
 			// 反射光ベクトル
 			float3 reflect = normalize(-dirLights[i].lightv + 2 * dotlightnormal * input.normal);
+			
+			// リムライト
+            float4 rimDot = 1 - dot(eyedir, input.normal);
+            float rimIntensity = smoothstep(0.716 - 0.01, 0.716 + 0.01, rimDot);
+            float3 rimColor = { 1, 0, 0 };
+            float3 rim = rimIntensity * rimColor;
+			
 			// 拡散反射光
-			float3 diffuse = dotlightnormal * m_diffuse;
-			// 鏡面反射光
-			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
+			float3 diffuseIndesity = lightIntensity * m_diffuse;
+			float3 diffuse = diffuseIndesity * diffuseColor;
 
+			// 鏡面反射光
+			float3 specularIdensity = smoothstep(0.005, 0.01, pow(saturate(dot(reflect, eyedir)), shininess) * m_specular);
+			float3 specular = specularIdensity * specularColor;
+			
 			// 全て加算する
-			shadecolor.rgb += (diffuse + specular) * dirLights[i].lightcolor;
+			float3 sColor= (1 - diffuseIndesity) * ambient + diffuse;
+			sColor = (1 - specularIdensity) * sColor + specular;
+            sColor = (1 - rimIntensity) * sColor + rim;
+			
+			shadecolor.rgb += sColor * dirLights[i].lightcolor;
 		}
 	}
 
@@ -60,8 +78,8 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 
 			// 全て加算する
-			shadecolor.rgb += atten * (diffuse + specular) * pointLights[i].lightcolor;
-		}
+            shadecolor.rgb += atten * (ambient + diffuse + specular) * pointLights[i].lightcolor;
+        }
 	}
 
 	// スポットライト
@@ -93,8 +111,8 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 
 			// 全て加算する
-			shadecolor.rgb += atten * (diffuse + specular) * spotLights[i].lightcolor;
-		}
+            shadecolor.rgb += atten * (ambient + diffuse + specular) * spotLights[i].lightcolor;
+        }
 	}
 
 	// 丸影

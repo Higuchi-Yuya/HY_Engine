@@ -94,6 +94,12 @@
     <Filter Include="ヘッダー ファイル\Application\Scene">
       <UniqueIdentifier>{7bf60efa-b700-4947-a3f4-4dff651b3433}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\FBX">
+      <UniqueIdentifier>{9d0da850-0dc0-43e6-9d34-2664095ba45f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D\FBX">
+      <UniqueIdentifier>{d04585d9-89ee-44d1-bffb-da5931370e5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\main.cpp">
@@ -216,6 +222,15 @@
     <ClCompile Include="Engine\Collision\QueryCallback.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3D\FBX\FbxAnimetion.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\FBX\FbxLoader.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\FBX\FbxModel.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -334,6 +349,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Collision\QueryCallback.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\FBX\FbxAnimetion.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\FBX\FbxLoader.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\FBX\FbxModel.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

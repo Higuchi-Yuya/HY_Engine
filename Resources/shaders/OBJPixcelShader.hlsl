@@ -6,10 +6,13 @@ SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 float4 main(VSOutput input) : SV_TARGET
 {	
 	// テクスチャマッピング
-	float4 texcolor = tex.Sample(smp,input.uv);
+	
+    float2 tilling = { 10, 10 };
+    float2 offset = { 0, 0 };
+    float4 texcolor = tex.Sample(smp, input.uv * tilling + offset);
 	
 	// 光沢度
-	const float shininess = 4.0f;
+	const float shininess = 32.0f;
 
 	// 頂点から視点への方向ベクトル
 	float3 eyedir = normalize(cameraPos - input.worldpos.xyz);
@@ -35,8 +38,12 @@ float4 main(VSOutput input) : SV_TARGET
 			// リムライト
             float4 rimDot = 1 - dot(eyedir, input.normal);
             float rimIntensity = smoothstep(0.716 - 0.01, 0.716 + 0.01, rimDot);
-            float3 rimColor = { 1, 0, 0 };
+            float3 rimColor = { 1, 1, 1 };
             float3 rim = rimIntensity * rimColor;
+			
+			// 環境反射光
+            float3 ambientIndensity = m_ambient;
+            float3 ambient = ambientIndensity * ambientColor;
 			
 			// 拡散反射光
 			float3 diffuseIndesity = lightIntensity * m_diffuse;
@@ -47,7 +54,8 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 specular = specularIdensity * specularColor;
 			
 			// 全て加算する
-			float3 sColor= (1 - diffuseIndesity) * ambient + diffuse;
+            float3 sColor = (1 - diffuseIndesity) * ambient;
+            sColor += diffuse;
 			sColor = (1 - specularIdensity) * sColor + specular;
             sColor = (1 - rimIntensity) * sColor + rim;
 			

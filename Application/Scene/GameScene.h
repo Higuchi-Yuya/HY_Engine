@@ -72,9 +72,9 @@ private:// メンバ変数
 
 	Vector3 fighterPos = { 1,0.0f,0 };
 
-	Vector3 AmColor={1,1,1};
-	Vector3 DiColor={ 1,1,1 };
-	Vector3 SpColor={ 1,1,1 };
+	Vector3 AmColor={1,0,0};
+	Vector3 DiColor={ 0,1,0 };
+	Vector3 SpColor={ 0,0,1 };
 
 	// テクスチャハンドル
 	int textureHandle;

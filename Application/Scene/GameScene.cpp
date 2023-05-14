@@ -106,7 +106,7 @@ void GameScene::Initialize()
 	model = Model::LoadFromOBJ("skydome", true);
 	model_2 = Model::LoadFromOBJ("doragon", true);
 	groundModel = Model::LoadFromOBJ("ground2");
-	modelFighter = Model::LoadFromOBJ("chr_sword");
+	modelFighter = Model::LoadFromOBJ("sphere");
 	modelPlane = Model::LoadFromOBJ("plane1x1");
 	modelBox = Model::LoadFromOBJ("box1x1x1");
 	modelPyramid = Model::LoadFromOBJ("pyramid1x1");
@@ -515,7 +515,7 @@ void GameScene::Draw2DBack()
 void GameScene::Draw3D()
 {
 
-	object3d->Draw(view);
+	//object3d->Draw(view);
 
 
 	objMedama->Draw(view);
@@ -528,7 +528,8 @@ void GameScene::Draw3D()
 	//point3->Draw(view);
 	//rayobj->Draw(view);
 	//atariObj->Draw(view);
-	groundObj->Draw(view);
+	
+	//groundObj->Draw(view);
 }
 
 void GameScene::Draw2DFront()

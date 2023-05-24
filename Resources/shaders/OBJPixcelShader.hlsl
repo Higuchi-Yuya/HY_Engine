@@ -7,7 +7,7 @@ float4 main(VSOutput input) : SV_TARGET
 {	
 	// テクスチャマッピング
 	
-    float2 tilling = { 10, 10 };
+    float2 tilling = { 1, 1 };
     float2 offset = { 0, 0 };
     float4 texcolor = tex.Sample(smp, input.uv * tilling + offset);
 	

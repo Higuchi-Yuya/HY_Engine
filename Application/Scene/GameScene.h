@@ -9,6 +9,7 @@
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
 #include "FbxLoader.h"
+#include "LevelLoder.h"
 
 #include <vector>
 
@@ -87,7 +88,7 @@ private:// メンバ変数
 	// モデル
 	Model* model = nullptr;
 	Model* model_2 = nullptr;
-	Model* modelFighter = nullptr;
+	//Model* modelFighter = nullptr;
 	Model* groundModel = nullptr;
 
 	Model* modelPlane = nullptr;
@@ -104,7 +105,7 @@ private:// メンバ変数
 
 	Object3d* rayobj = nullptr;
 
-	Player* objFighter = nullptr;
+	//Player* objFighter = nullptr;
 	TouchableObject* groundObj = nullptr;
 	//TouchableObject* groundObj2 = nullptr;
 
@@ -157,6 +158,22 @@ private:// メンバ変数
 	Object3d* atariObj = nullptr;
 #pragma endregion
 
-	
+#pragma region ローダーの確認
+	LevelData* levelData = nullptr;
+
+	Model* modelSkydome = nullptr;
+	Model* modelGround = nullptr;
+	Model* modelFighter = nullptr;
+	Model* modelSphere = nullptr;
+
+	Object3d* objSkydome = nullptr;
+	Object3d* objGround = nullptr;
+	Object3d* objFighter = nullptr;
+	Object3d* objSphere = nullptr;
+
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
+#pragma endregion
+
 };
 

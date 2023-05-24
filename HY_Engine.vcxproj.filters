@@ -16,9 +16,6 @@
     <Filter Include="ソース ファイル\Engine">
       <UniqueIdentifier>{8cad6531-e3ea-4d58-b68a-c400843c126e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\Camera">
-      <UniqueIdentifier>{12d77864-4b93-4c53-b115-90d181194d5a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Engine">
       <UniqueIdentifier>{b22b2d4b-e339-4086-908b-9b57cbd1ea7d}</UniqueIdentifier>
     </Filter>
@@ -100,13 +97,22 @@
     <Filter Include="ヘッダー ファイル\Engine\3D\FBX">
       <UniqueIdentifier>{d04585d9-89ee-44d1-bffb-da5931370e5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\LevelLoder">
+      <UniqueIdentifier>{27fd540d-aa7e-4940-ba43-f4461c70e6c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\LevelLoder">
+      <UniqueIdentifier>{71e63edb-ec52-44e4-90e4-5f50df354623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\Camera">
+      <UniqueIdentifier>{12d77864-4b93-4c53-b115-90d181194d5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
-      <Filter>ソース ファイル\Engine\Camera</Filter>
+      <Filter>ソース ファイル\Engine\3D\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
@@ -230,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\FBX\FbxModel.cpp">
       <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\LevelLoder\LevelLoder.cpp">
+      <Filter>ソース ファイル\Engine\LevelLoder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\FBX\FbxModel.h">
       <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\LevelLoder\LevelLoder.h">
+      <Filter>ヘッダー ファイル\Engine\LevelLoder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

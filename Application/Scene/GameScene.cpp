@@ -111,8 +111,6 @@ void GameScene::Initialize()
 	modelBox = Model::LoadFromOBJ("box1x1x1");
 	modelPyramid = Model::LoadFromOBJ("pyramid1x1");
 
-	objFighter = Player::Create(modelFighter);
-	objFighter->worldTransform_.position_ = { 0,5,0 };
 
 	// モデルテーブル
 	Model* modeltable[10] = {
@@ -171,8 +169,6 @@ void GameScene::Initialize()
 	//groundObj2->UpdateWorldMatrix();
 
 
-	objFighter->SetModel(modelFighter);
-	objFighter->worldTransform_.position_ = fighterPos;
 
 
 	object3d->SetModel(model);
@@ -240,6 +236,56 @@ void GameScene::Initialize()
 	atariObj = Object3d::Create();
 	atariObj->SetModel(atariModel);
 
+#pragma region ローダー用の読み込み
+	// レベルデータの読み込み
+	levelData = LevelLoader::LoadFile("testScene");
+
+	// モデル読み込み
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelFighter = Model::LoadFromOBJ("chr_sword", true);
+	modelSphere = Model::LoadFromOBJ("sphere", true);
+
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("chr_sword", modelFighter));
+	models.insert(std::make_pair("sphere", modelSphere));
+
+	// レベルデータからオブジェクトを生成、配置
+	for (auto& objectData : levelData->objects) {
+		// ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end()) {
+			model = it->second;
+		}
+
+		// モデルを指定して3Dオブジェクトを生成
+		Object3d* newObject = Object3d::Create();
+		newObject->SetModel(model);
+
+		// 座標
+		Vector3 pos;
+		pos = objectData.translation;
+		newObject->worldTransform_.position_ = pos;
+
+		// 回転角
+		Vector3 rot;
+		rot= objectData.rotation;
+		newObject->worldTransform_.rotation_ = rot;
+
+		// スケール
+		Vector3 scale;
+		scale= objectData.scaling;
+		newObject->worldTransform_.scale_ = scale;
+
+		// 配列に登録
+		objects.push_back(newObject);
+	}
+#pragma endregion
+
+	
+
 	// モデル名を指定してファイルを読み込み
 	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
 }
@@ -258,7 +304,7 @@ void GameScene::Update()
 		objFighter->worldTransform_.position_ = { 1.0f, 10.0f,0.0f };
 		objFighter->UpdateWorldMatrix();
 	}
-	fighterPos = objFighter->worldTransform_.position_;
+	//fighterPos = objFighter->worldTransform_.position_;
 
 
 
@@ -294,7 +340,7 @@ void GameScene::Update()
 	collisionManager->CheckAllCollisions();
 
 
-	objFighter->Update();
+	//objFighter->Update();
 	//spritePos = sprite2->GetPosition();
 	sprite2->SetPosition(spritePos);
 
@@ -361,7 +407,9 @@ void GameScene::Update()
 		atariObj->Update();
 	}
 
-	
+	for (auto& object : objects) {
+		object->Update();
+	}
 }
 
 void GameScene::ImguiUpdate()
@@ -516,12 +564,14 @@ void GameScene::Draw3D()
 {
 
 	//object3d->Draw(view);
+	for (auto& object : objects) {
+		object->Draw(view);
+	}
 
-
-	objMedama->Draw(view);
+	//objMedama->Draw(view);
 	
 
-	objFighter->Draw(view);
+	//objFighter->Draw(view);
 
 	//point1->Draw(view);
 	//point2->Draw(view);

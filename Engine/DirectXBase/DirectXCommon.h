@@ -32,6 +32,21 @@ public:// メンバ関数
 	// バックバッファの数を取得
 	size_t GetBackBufferCount() const { return backBuffers.size(); }
 
+	// コマンドキュアを取得
+	ID3D12CommandQueue* GetCommandQueue()const { return commandQueue.Get(); }
+
+	// フェンスの量を増やす
+	inline void PreIncrimentFenceValue() { ++fenceVal; }
+
+	// フェンス取得
+	inline ID3D12Fence* GetFence() const { return fence.Get(); }
+	inline UINT64 GetFenceValue() { return fenceVal; }
+
+	// コマンドアロケータを取得
+	inline ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator.Get(); }
+
+
+
 private:
 	// デバイスの初期化
 	void InitalizeDevice();

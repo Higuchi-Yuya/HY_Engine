@@ -1,6 +1,5 @@
 #include "Material.h"
-#include "Texture.h"
-
+#include "TextureManager.h"
 using namespace std;
 /// <summary>
 /// Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
@@ -30,7 +29,7 @@ void Material::LoadTexture(const std::string& directoryPath, const std::string& 
 	wchar_t wfilepath[128];
 	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 
-	textureIndex = Texture::LoadTexture(wfilepath);
+	textureIndex = TextureManager::LoadTexture(wfilepath);
 }
 
 void Material::Update()

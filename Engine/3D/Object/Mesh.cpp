@@ -1,6 +1,6 @@
 #include "Mesh.h"
 #include <DirectXMath.h>
-#include "Texture.h"
+#include "TextureManager.h"
 
 using namespace DirectX;
 
@@ -23,14 +23,14 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetIndexBuffer(&ibView);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { Texture::srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::srvHeap.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// マテリアル用定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(3, material->GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// シェーダリソースビューをセット
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = Texture::srvHeap->GetGPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = TextureManager::srvHeap->GetGPUDescriptorHandleForHeapStart();
 	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	srvGpuHandle.ptr += incrementSize * material->textureIndex;
 	cmdList->SetGraphicsRootDescriptorTable(0, srvGpuHandle);

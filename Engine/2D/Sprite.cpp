@@ -3,10 +3,10 @@
 
 SpriteManager* Sprite::spriteManager_ = nullptr;
 
-void Sprite::Initialize(uint32_t textureNum, Vector2 position, Vector2 size, Vector4 color)
+void Sprite::Initialize(Texture* textureNum, Vector2 position, Vector2 size, Vector4 color)
 {
 	// 元の画像のサイズに適応
-	if (textureNum != UINT32_MAX) {
+	if (textureNum != nullptr) {
 		textureIndex_ = textureNum;
 		AbjustTextureSize();
 		//テクスチャサイズをスプライトのサイズに適用
@@ -138,7 +138,7 @@ void Sprite::Updata()
 	vertices[RT].pos = { right,top,0.0f };
 
 	//テクスチャバッファ取得
-	ID3D12Resource* textureBuffer = spriteManager_->GetTextureBuffer(textureIndex_);
+	ID3D12Resource* textureBuffer = textureIndex_->buffer.Get();
 
 	//指定番号のテクスチャが読み込み済みなら
 	if (textureBuffer) {
@@ -211,7 +211,7 @@ void Sprite::Draw()
 
 void Sprite::AbjustTextureSize()
 {
-	ID3D12Resource* textureBuffer = spriteManager_->GetTextureBuffer(textureIndex_);
+	ID3D12Resource* textureBuffer = textureIndex_->buffer.Get();
 	assert(textureBuffer);
 	
 	// テクスチャ情報取得

@@ -10,6 +10,7 @@
 #include "CollisionPrimitive.h"
 #include "FbxLoader.h"
 #include "LevelLoder.h"
+#include "TextureManager.h"
 
 #include <vector>
 
@@ -79,7 +80,7 @@ private:// メンバ変数
 
 	// テクスチャハンドル
 	int textureHandle;
-	int textureHandle2;
+	Texture textureHandle2;
 
 	// スプライト
 	//Sprite* sprite = nullptr;
@@ -171,7 +172,7 @@ private:// メンバ変数
 	Object3d* objFighter = nullptr;
 	Object3d* objSphere = nullptr;
 
-	std::map<std::string, Model*> models;
+	//std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
 #pragma endregion
 

@@ -73,7 +73,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	Sprite::StaticInitialize(spriteManager);
 
 	// テクスチャの初期化
-	Texture::StaticInitialize(dxCommon);
+	TextureManager::StaticInitialize(dxCommon);
 	
 	// オブジェクトの初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);

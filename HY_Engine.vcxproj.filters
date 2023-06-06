@@ -240,6 +240,9 @@
     <ClCompile Include="Engine\LevelLoder\LevelLoder.cpp">
       <Filter>ソース ファイル\Engine\LevelLoder</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DirectXBase\TextureManager.cpp">
+      <Filter>ソース ファイル\Engine\DirectXBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="Engine\LevelLoder\LevelLoder.h">
       <Filter>ヘッダー ファイル\Engine\LevelLoder</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DirectXBase\TextureManager.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

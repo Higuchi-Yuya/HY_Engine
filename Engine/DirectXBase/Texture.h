@@ -1,45 +1,33 @@
 #pragma once
-#include<DirectXTex.h>
+
 #include"DirectXCommon.h"
 #include<wrl.h>
 #include<array>
 #include<string>
 #include <d3dx12.h>
+#include <DirectXTex.h>
+#include "Vector2.h"
+
 class Texture
 {
-public:// メンバ関数
+private:
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = D3D12_CPU_DESCRIPTOR_HANDLE(); //SRVのハンドル(CPU側)
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = D3D12_GPU_DESCRIPTOR_HANDLE(); //SRVのハンドル(GPU側)
 
-	// テクスチャ読み込み
-	static uint32_t Load2DTexture(const std::string& fileName = "NULL");
+public:
+	Microsoft::WRL::ComPtr<ID3D12Resource> buffer; //テクスチャのリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> uploadBuffer;
+	Vector2 size = {0.0f,0.0f};
+	bool isMaterial = false;
 
-	static uint32_t LoadTexture(const std::string& fileName = "NULL");
-	
-	static uint32_t LoadTexture(const wchar_t* fileName);
+public:
+	Texture() {};
 
-	// テクスチャで一度必要な初期化
-	static void StaticInitialize(DirectXCommon* dxcommon);
+public: // セッター
+	inline void SetCpuHandle(const D3D12_CPU_DESCRIPTOR_HANDLE& cpuHandle) { this->cpuHandle = cpuHandle; }
+	inline void SetGpuHandle(const D3D12_GPU_DESCRIPTOR_HANDLE& gpuHandle) { this->gpuHandle = gpuHandle; }
 
-public:// 静的メンバ変数
-	// SRVの最大個数
-	static const size_t kMaxSRVCount = 2056;
-
-	// デフォルトテクスチャ2D格納ディレクトリ
-	static std::string kDefault2DTextureDirectoryPath;
-
-	// デフォルトテクスチャ格納ディレクトリ
-	static std::string kDefaultTextureDirectoryPath;
-
-	// DirextXの基盤を借りてくる
-	static DirectXCommon* dxcommon_;
-
-	// SRVヒープ
-	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
-
-	// テクスチャバッファ
-	static std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSRVCount>textureBuffers_;
-
-private:// メンバ変数
-	// テクスチャリソースデスク
-	static D3D12_RESOURCE_DESC textureResourceDesc;
+public: // ゲッター
+	inline D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() { return gpuHandle; }
 };
 

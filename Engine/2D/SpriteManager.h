@@ -8,6 +8,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4.h"
+#include <TextureManager.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
 class SpriteManager
@@ -38,10 +39,10 @@ public:// メンバ関数
 	void PostDraw();
 
 	// テクスチャに必要なコマンド設定
-	void SetTextureCommands(uint32_t index);
+	void SetTextureCommands(Texture* index);
 
 	//指定番号のテクスチャバッファを取得
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return Texture::textureBuffers_[index].Get(); }
+	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return TextureManager::textureBuffers_[index].Get(); }
 
 public:
 	static DirectXCommon* dxcommon_;

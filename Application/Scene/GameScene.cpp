@@ -21,8 +21,6 @@ GameScene::~GameScene()
 
 	delete objMedama;
 
-
-	delete objFighter;
 	delete groundObj;
 	//delete groundObj2;
 	//for (auto object : objects) {
@@ -37,7 +35,6 @@ GameScene::~GameScene()
 	// モデルの解放
 	delete model;
 	delete model_2;
-	delete modelFighter;
 	delete groundModel;
 	delete modelPlane;
 	delete modelBox;
@@ -52,6 +49,25 @@ GameScene::~GameScene()
 
 	delete atariModel;
 	delete atariObj;
+
+	delete levelData;
+	delete modelSkydome;
+	delete 	modelGround;
+	delete modelFighter;
+	delete modelSphere;
+	delete objSkydome;
+	delete objGround;
+	delete objFighter;
+	delete objSphere;
+	//for (auto it = models.begin(); it == models.end(); it++) {
+	//	delete* it;
+	//}
+	//models.clear();
+	//for (auto it = objects.begin(); it == objects.end(); it++) {
+	//	delete* it;
+	//}
+	objects.clear();
+
 }
 
 void GameScene::Initialize()
@@ -93,20 +109,20 @@ void GameScene::Initialize()
 
 	// テクスチャハンドルの読み込み
 	//textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
-	textureHandle2 = Texture::Load2DTexture("texture.png");
+	textureHandle2 = TextureManager::Load2DTexture("texture.png");
 
 	// スプライトの初期化
 	//sprite = new Sprite();
 	sprite2 = new Sprite();
 
 	//sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
-	sprite2->Initialize(textureHandle2, { 200,200 });
+	sprite2->Initialize(&textureHandle2, { 200,200 });
 
 	// モデルの読み込み
 	model = Model::LoadFromOBJ("skydome", true);
 	model_2 = Model::LoadFromOBJ("doragon", true);
 	groundModel = Model::LoadFromOBJ("ground2");
-	modelFighter = Model::LoadFromOBJ("sphere");
+	//modelFighter = Model::LoadFromOBJ("sphere");
 	modelPlane = Model::LoadFromOBJ("plane1x1");
 	modelBox = Model::LoadFromOBJ("box1x1x1");
 	modelPyramid = Model::LoadFromOBJ("pyramid1x1");
@@ -227,7 +243,7 @@ void GameScene::Initialize()
 	point3->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
 	point3->worldTransform_.position_ = triangle.p2;
 
-	rayobj->SetModel(modelFighter);
+	//rayobj->SetModel(modelFighter);
 	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
 	sound.SoundLoadWave("GameClear.wav");
@@ -246,42 +262,42 @@ void GameScene::Initialize()
 	modelFighter = Model::LoadFromOBJ("chr_sword", true);
 	modelSphere = Model::LoadFromOBJ("sphere", true);
 
-	models.insert(std::make_pair("skydome", modelSkydome));
-	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("chr_sword", modelFighter));
-	models.insert(std::make_pair("sphere", modelSphere));
+	//models.insert(std::make_pair("skydome", modelSkydome));
+	//models.insert(std::make_pair("ground", modelGround));
+	//models.insert(std::make_pair("chr_sword", modelFighter));
+	//models.insert(std::make_pair("sphere", modelSphere));
 
-	// レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects) {
-		// ファイル名から登録済みモデルを検索
-		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.fileName);
-		if (it != models.end()) {
-			model = it->second;
-		}
+	//レベルデータからオブジェクトを生成、配置
+	//for (auto& objectData : levelData->objects) {
+	//	// ファイル名から登録済みモデルを検索
+	//	Model* model = nullptr;
+	//	decltype(models)::iterator it = models.find(objectData.fileName);
+	//	if (it != models.end()) {
+	//		model = it->second;
+	//	}
 
-		// モデルを指定して3Dオブジェクトを生成
-		Object3d* newObject = Object3d::Create();
-		newObject->SetModel(model);
+	//	// モデルを指定して3Dオブジェクトを生成
+	//	Object3d* newObject = Object3d::Create();
+	//	newObject->SetModel(model);
 
-		// 座標
-		Vector3 pos;
-		pos = objectData.translation;
-		newObject->worldTransform_.position_ = pos;
+	//	// 座標
+	//	Vector3 pos;
+	//	pos = objectData.translation;
+	//	newObject->worldTransform_.position_ = pos;
 
-		// 回転角
-		Vector3 rot;
-		rot= objectData.rotation;
-		newObject->worldTransform_.rotation_ = rot;
+	//	// 回転角
+	//	Vector3 rot;
+	//	rot= objectData.rotation;
+	//	newObject->worldTransform_.rotation_ = rot;
 
-		// スケール
-		Vector3 scale;
-		scale= objectData.scaling;
-		newObject->worldTransform_.scale_ = scale;
+	//	// スケール
+	//	Vector3 scale;
+	//	scale= objectData.scaling;
+	//	newObject->worldTransform_.scale_ = scale;
 
-		// 配列に登録
-		objects.push_back(newObject);
-	}
+	//	// 配列に登録
+	//	objects.push_back(newObject);
+	//}
 #pragma endregion
 
 	

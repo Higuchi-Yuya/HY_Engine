@@ -3,6 +3,7 @@
 #include "Matrix4.h"
 #include "Vector2.h"
 #include "Vector4.h"
+#include "Texture.h"
 
 class Sprite
 {
@@ -20,7 +21,7 @@ public:// メンバ関数
 	static void StaticInitialize(SpriteManager* spriteManager);
 
 	// 初期化
-	void Initialize(uint32_t textureNum = UINT32_MAX, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f },Vector4 color={1,1,1,1});
+	void Initialize(Texture* textureNum=nullptr, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f },Vector4 color={1,1,1,1});
 
 	// 更新処理
 	void Updata();
@@ -125,7 +126,7 @@ private:// メンバ変数
 	Vector2 textureSize_ = { 100.0f,100.0f };
 
 	// テクスチャ番号
-	uint32_t textureIndex_ = 0;
+	Texture* textureIndex_;
 
 	SpriteManager::ConstBufferData* constMap = nullptr;
 

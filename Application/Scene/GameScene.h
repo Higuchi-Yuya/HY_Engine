@@ -107,7 +107,7 @@ private:// ƒƒ“ƒo•Ï”
 	//Object3d* rayobj = nullptr;
 
 	//Player* objFighter = nullptr;
-	TouchableObject* groundObj = nullptr;
+	//TouchableObject* groundObj = nullptr;
 	//TouchableObject* groundObj2 = nullptr;
 
 	//std::vector<Object3d*>objects;

@@ -21,7 +21,6 @@ public:// メンバ関数
 
 	// モデルのマテリアルテクスチャの読み込み
 	static Texture LoadTexture(std::string fileName);
-
 	static Texture* LoadTextureP(std::string fileName);
 
 	// テクスチャで一度必要な初期化

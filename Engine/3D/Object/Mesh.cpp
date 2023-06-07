@@ -30,10 +30,7 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetGraphicsRootConstantBufferView(3, material->GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// シェーダリソースビューをセット
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = TextureManager::srvHeap->GetGPUDescriptorHandleForHeapStart();
-	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvGpuHandle.ptr += incrementSize * material->textureIndex;
-	cmdList->SetGraphicsRootDescriptorTable(0, srvGpuHandle);
+	cmdList->SetGraphicsRootDescriptorTable(0, material->textureIndex.GetGpuHandle());
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);

@@ -227,13 +227,6 @@ void SpriteManager::PostDraw()
 
 void SpriteManager::SetTextureCommands(Texture* index)
 {
-	//// SRVヒープの先頭ハンドルを取得
-	//D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle = TextureManager::srvHeap->GetGPUDescriptorHandleForHeapStart();
-	//// 一つ分のハンドル
-	//UINT incrementSize = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	//// index分のハンドルをずらす
-	//srvGpuHandle.ptr += incrementSize * index;
-
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
 	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, index->GetGpuHandle());
 }

@@ -41,9 +41,6 @@ public:// メンバ関数
 	// テクスチャに必要なコマンド設定
 	void SetTextureCommands(Texture* index);
 
-	//指定番号のテクスチャバッファを取得
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return TextureManager::textureBuffers_[index].Get(); }
-
 public:
 	static DirectXCommon* dxcommon_;
 private:

@@ -6,6 +6,7 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <string>
+#include "TextureManager.h"
 
 class Material
 {
@@ -54,7 +55,7 @@ public:
 	std::string textureFilename; // テクスチャファイル名
 
 	// テクスチャ番号
-	uint32_t textureIndex = 0;
+	Texture textureIndex;
 public:
 	/// <summary>
 	/// 定数バッファの取得

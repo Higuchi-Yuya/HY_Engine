@@ -17,28 +17,28 @@ GameScene::~GameScene()
 	//delete sprite;
 	delete sprite2;
 	// オブジェクトの解放
-	delete object3d;
+	//delete object3d;
 
 	delete objMedama;
 
-	delete groundObj;
+	//delete groundObj;
 	//delete groundObj2;
 	//for (auto object : objects) {
 	//	delete object;
 	//}
 	//objects.clear();
-	delete point1;
-	delete point2;
-	delete point3;
-	delete rayobj;
+	//delete point1;
+	//delete point2;
+	//delete point3;
+	//delete rayobj;
 
 	// モデルの解放
-	delete model;
+	//delete model;
 	delete model_2;
-	delete groundModel;
-	delete modelPlane;
-	delete modelBox;
-	delete modelPyramid;
+	//delete groundModel;
+	//delete modelPlane;
+	//delete modelBox;
+	//delete modelPyramid;
 
 	// ビューの解放
 	delete view;
@@ -47,18 +47,18 @@ GameScene::~GameScene()
 	// フォグの解放
 	delete fog;
 
-	delete atariModel;
-	delete atariObj;
+	//delete atariModel;
+	//delete atariObj;
 
-	delete levelData;
-	delete modelSkydome;
+	//delete levelData;
+	//delete modelSkydome;
 	delete 	modelGround;
-	delete modelFighter;
-	delete modelSphere;
-	delete objSkydome;
-	delete objGround;
-	delete objFighter;
-	delete objSphere;
+	//delete modelFighter;
+	//delete modelSphere;
+	//delete objSkydome;
+	//delete objGround;
+	//delete objFighter;
+	//delete objSphere;
 	//for (auto it = models.begin(); it == models.end(); it++) {
 	//	delete* it;
 	//}
@@ -66,7 +66,7 @@ GameScene::~GameScene()
 	//for (auto it = objects.begin(); it == objects.end(); it++) {
 	//	delete* it;
 	//}
-	objects.clear();
+	//objects.clear();
 
 }
 
@@ -109,38 +109,38 @@ void GameScene::Initialize()
 
 	// テクスチャハンドルの読み込み
 	//textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
-	textureHandle2 = TextureManager::Load2DTexture("texture.png");
+	textureHandle2.reset(TextureManager::Load2DTextureP("texture.png"));
 
 	// スプライトの初期化
 	//sprite = new Sprite();
 	sprite2 = new Sprite();
 
 	//sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
-	sprite2->Initialize(&textureHandle2, { 200,200 });
+	sprite2->Initialize(textureHandle2.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,0.5f});
 
 	// モデルの読み込み
-	model = Model::LoadFromOBJ("skydome", true);
+	//model = Model::LoadFromOBJ("skydome", true);
 	model_2 = Model::LoadFromOBJ("doragon", true);
-	groundModel = Model::LoadFromOBJ("ground2");
-	//modelFighter = Model::LoadFromOBJ("sphere");
-	modelPlane = Model::LoadFromOBJ("plane1x1");
-	modelBox = Model::LoadFromOBJ("box1x1x1");
-	modelPyramid = Model::LoadFromOBJ("pyramid1x1");
+	//groundModel = Model::LoadFromOBJ("ground2");
+	////modelFighter = Model::LoadFromOBJ("sphere");
+	//modelPlane = Model::LoadFromOBJ("plane1x1");
+	//modelBox = Model::LoadFromOBJ("box1x1x1");
+	//modelPyramid = Model::LoadFromOBJ("pyramid1x1");
 
 
 	// モデルテーブル
-	Model* modeltable[10] = {
-		modelPlane,
-		modelPlane,
-		modelPlane,
-		modelPlane,
-		modelPlane,
-		modelPlane,
-		modelPlane,
-		modelPlane,
-		modelBox,
-		modelPyramid,
-	};
+	//Model* modeltable[10] = {
+	//	modelPlane,
+	//	modelPlane,
+	//	modelPlane,
+	//	modelPlane,
+	//	modelPlane,
+	//	modelPlane,
+	//	modelPlane,
+	//	modelPlane,
+	//	modelBox,
+	//	modelPyramid,
+	//};
 
 	const int DIV_NUM = 10;
 	const float LAND_SCALE = 2.0f;
@@ -157,27 +157,27 @@ void GameScene::Initialize()
 	//}
 
 	// オブジェクトの初期化
-	object3d = Object3d::Create();
+	//object3d = Object3d::Create();
 
 
 	objMedama = Object3d::Create();
 	objMedama->SetModel(model_2);
-	objMedama->worldTransform_.position_ = { -1,1,0 };
-	objMedama->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	objMedama->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
-	objMedama->SetCollider(new SphereCollider);
+	//objMedama->worldTransform_.position_ = { -1,1,0 };
+	//objMedama->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	//objMedama->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
+	//objMedama->SetCollider(new SphereCollider);
 
 	collisionManager = CollisionManager::GetInstance();
 
 
 
-	point1 = Object3d::Create();
-	point2 = Object3d::Create();
-	point3 = Object3d::Create();
-	rayobj = Object3d::Create();
+	//point1 = Object3d::Create();
+	//point2 = Object3d::Create();
+	//point3 = Object3d::Create();
+	//rayobj = Object3d::Create();
 
 	
-	groundObj = TouchableObject::Create(groundModel);
+	//groundObj = TouchableObject::Create(groundModel);
 	//groundObj->worldTransform_.scale_.x += 5;
 
 	//groundObj2 = TouchableObject::Create(modelBox);
@@ -187,7 +187,7 @@ void GameScene::Initialize()
 
 
 
-	object3d->SetModel(model);
+	//object3d->SetModel(model);
 
 
 
@@ -232,35 +232,35 @@ void GameScene::Initialize()
 	ray.dir = { 0,-1,0 };
 
 	// 確認用オブジェ
-	point1->SetModel(model_2);
-	point2->SetModel(model_2);
-	point3->SetModel(model_2);
+	//point1->SetModel(model_2);
+	//point2->SetModel(model_2);
+	//point3->SetModel(model_2);
 
-	point1->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
-	point1->worldTransform_.position_ = triangle.p0;
-	point2->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
-	point2->worldTransform_.position_ = triangle.p1;
-	point3->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
-	point3->worldTransform_.position_ = triangle.p2;
+	//point1->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
+	//point1->worldTransform_.position_ = triangle.p0;
+	//point2->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
+	//point2->worldTransform_.position_ = triangle.p1;
+	//point3->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
+	//point3->worldTransform_.position_ = triangle.p2;
 
 	//rayobj->SetModel(modelFighter);
-	rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
+	//rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
 
 	sound.SoundLoadWave("GameClear.wav");
 
-	atariModel = Model::LoadFromOBJ("sphere", true);
-	atariObj = Object3d::Create();
-	atariObj->SetModel(atariModel);
+	//atariModel = Model::LoadFromOBJ("sphere", true);
+	//atariObj = Object3d::Create();
+	//atariObj->SetModel(atariModel);
 
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
 	levelData = LevelLoader::LoadFile("testScene");
 
 	// モデル読み込み
-	modelSkydome = Model::LoadFromOBJ("skydome");
+	//modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
-	modelFighter = Model::LoadFromOBJ("chr_sword", true);
-	modelSphere = Model::LoadFromOBJ("sphere", true);
+	//modelFighter = Model::LoadFromOBJ("chr_sword", true);
+	//modelSphere = Model::LoadFromOBJ("sphere", true);
 
 	//models.insert(std::make_pair("skydome", modelSkydome));
 	//models.insert(std::make_pair("ground", modelGround));
@@ -317,8 +317,8 @@ void GameScene::Update()
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
 	if (input->TriggerKey(DIK_R)) {
-		objFighter->worldTransform_.position_ = { 1.0f, 10.0f,0.0f };
-		objFighter->UpdateWorldMatrix();
+		//objFighter->worldTransform_.position_ = { 1.0f, 10.0f,0.0f };
+		//objFighter->UpdateWorldMatrix();
 	}
 	//fighterPos = objFighter->worldTransform_.position_;
 
@@ -348,7 +348,7 @@ void GameScene::Update()
 	light->Update();
 
 	//object3d->SetScale(scale_);
-	object3d->Update();
+	//object3d->Update();
 
 
 
@@ -368,7 +368,7 @@ void GameScene::Update()
 	//for (auto object : objects) {
 	//	object->Update();
 	//}
-	groundObj->Update();
+	//groundObj->Update();
 	//groundObj2->Update();
 	view->DebugCameraUpdate();
 
@@ -394,12 +394,12 @@ void GameScene::Update()
 		else if (input->PushKey(DIK_LEFT)) { ray.start -= moveX; }
 	}
 
-	point1->Update();
-	point2->Update();
-	point3->Update();
+	//point1->Update();
+	//point2->Update();
+	//point3->Update();
 
-	rayobj->worldTransform_.position_ = ray.start;
-	rayobj->Update();
+	//rayobj->worldTransform_.position_ = ray.start;
+	//rayobj->Update();
 
 
 	hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
@@ -419,13 +419,13 @@ void GameScene::Update()
 
 	RaycastHit raycastHit;
 	if (collisionManager->Raycast(ray, &raycastHit)) {
-		atariObj->worldTransform_.position_ = raycastHit.inter;
-		atariObj->Update();
+		//atariObj->worldTransform_.position_ = raycastHit.inter;
+		//atariObj->Update();
 	}
 
-	for (auto& object : objects) {
-		object->Update();
-	}
+	//for (auto& object : objects) {
+	//	object->Update();
+	//}
 }
 
 void GameScene::ImguiUpdate()
@@ -580,11 +580,11 @@ void GameScene::Draw3D()
 {
 
 	//object3d->Draw(view);
-	for (auto& object : objects) {
-		object->Draw(view);
-	}
+	//for (auto& object : objects) {
+	//	object->Draw(view);
+	//}
 
-	//objMedama->Draw(view);
+	objMedama->Draw(view);
 	
 
 	//objFighter->Draw(view);

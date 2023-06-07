@@ -25,11 +25,11 @@ void Material::LoadTexture(const std::string& directoryPath, const std::string& 
 	// ファイルパスを結合
 	string filepath = directoryPath + filename;
 
-	// ユニコード文字列に変換する
-	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
+	//// ユニコード文字列に変換する
+	//wchar_t wfilepath[128];
+	//int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 
-	textureIndex = TextureManager::LoadTexture(wfilepath);
+	textureIndex = TextureManager::LoadTexture(filepath);
 }
 
 void Material::Update()

@@ -195,6 +195,7 @@ void Sprite::Draw()
 	if (isInvisible_) {
 		return;
 	}
+
 	spriteManager_->SetTextureCommands(textureIndex_);
 
 	Updata();

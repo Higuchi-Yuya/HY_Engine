@@ -21,7 +21,7 @@ public:// ƒƒ“ƒoŠÖ”
 	static void StaticInitialize(SpriteManager* spriteManager);
 
 	// ‰Šú‰»
-	void Initialize(Texture* textureNum=nullptr, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f },Vector4 color={1,1,1,1});
+	void Initialize(Texture* textureNum = nullptr, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f }, Vector4 color = { 1,1,1,1 });
 
 	// XVˆ—
 	void Updata();

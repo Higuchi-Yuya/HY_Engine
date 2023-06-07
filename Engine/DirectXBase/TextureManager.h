@@ -14,16 +14,18 @@ class TextureManager
 public:// メンバ関数
 
 	// テクスチャ読み込み
+
+	// 2Dのテクスチャの読み込み
 	static Texture Load2DTexture(const std::string& fileName = "NULL");
+	static Texture* Load2DTextureP(const std::string fileName);
 
-	static uint32_t LoadTexture(const std::string& fileName = "NULL");
+	// モデルのマテリアルテクスチャの読み込み
+	static Texture LoadTexture(std::string fileName);
 
-	static uint32_t LoadTexture(const wchar_t* fileName);
+	static Texture* LoadTextureP(std::string fileName);
 
 	// テクスチャで一度必要な初期化
 	static void StaticInitialize(DirectXCommon* dxcommon);
-
-	static void CreateSRV(Texture& texture, ID3D12Resource* buffer);
 
 public:// 静的メンバ変数
 	static UINT srvIncrementIndex;
@@ -43,18 +45,9 @@ public:// 静的メンバ変数
 	// SRVヒープ
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
 
-	// テクスチャバッファ
-	static std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxSRVCount>textureBuffers_;
-
-	//// テクスチャ全体
-	//static std::map<std::string, std::unique_ptr<Texture>> textureMap;
-
 private:// プライベート関数
-	//[[nodiscard]]
-	ID3D12Resource* UpLoadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, ID3D12Device* device, ID3D12GraphicsCommandList* commandList);
-
-	// 
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device, uint64_t intermediateSize);
+	// シェーダリソースビューの作成
+	static void CreateSRV(Texture& texture, ID3D12Resource* buffer);
 
 	// コマンドを一回積んだあとに解放する関数
 	static void ExcuteComandList();
@@ -62,7 +55,5 @@ private:// プライベート関数
 private:// メンバ変数
 	// テクスチャリソースデスク
 	static D3D12_RESOURCE_DESC textureResourceDesc;
-
-
 };
 

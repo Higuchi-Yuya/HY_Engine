@@ -80,31 +80,31 @@ private:// メンバ変数
 
 	// テクスチャハンドル
 	int textureHandle;
-	Texture textureHandle2;
+	std::unique_ptr<Texture> textureHandle2;
 
 	// スプライト
 	//Sprite* sprite = nullptr;
 	Sprite* sprite2 = nullptr;
 
 	// モデル
-	Model* model = nullptr;
+	//Model* model = nullptr;
 	Model* model_2 = nullptr;
-	//Model* modelFighter = nullptr;
-	Model* groundModel = nullptr;
+	////Model* modelFighter = nullptr;
+	//Model* groundModel = nullptr;
 
-	Model* modelPlane = nullptr;
-	Model* modelBox = nullptr;
-	Model* modelPyramid = nullptr;
+	//Model* modelPlane = nullptr;
+	//Model* modelBox = nullptr;
+	//Model* modelPyramid = nullptr;
 
 	// オブジェクト
-	Object3d* object3d = nullptr;
+	//Object3d* object3d = nullptr;
 	Object3d* objMedama = nullptr;
 
-	Object3d* point1 = nullptr;
-	Object3d* point2 = nullptr;
-	Object3d* point3 = nullptr;
+	//Object3d* point1 = nullptr;
+	//Object3d* point2 = nullptr;
+	//Object3d* point3 = nullptr;
 
-	Object3d* rayobj = nullptr;
+	//Object3d* rayobj = nullptr;
 
 	//Player* objFighter = nullptr;
 	TouchableObject* groundObj = nullptr;
@@ -155,25 +155,25 @@ private:// メンバ変数
 	Ray ray;
 	
 
-	Model* atariModel = nullptr;
-	Object3d* atariObj = nullptr;
+	//Model* atariModel = nullptr;
+	//Object3d* atariObj = nullptr;
 #pragma endregion
 
 #pragma region ローダーの確認
 	LevelData* levelData = nullptr;
 
-	Model* modelSkydome = nullptr;
+	//Model* modelSkydome = nullptr;
 	Model* modelGround = nullptr;
-	Model* modelFighter = nullptr;
-	Model* modelSphere = nullptr;
+	//Model* modelFighter = nullptr;
+	//Model* modelSphere = nullptr;
 
-	Object3d* objSkydome = nullptr;
-	Object3d* objGround = nullptr;
-	Object3d* objFighter = nullptr;
-	Object3d* objSphere = nullptr;
+	//Object3d* objSkydome = nullptr;
+	//Object3d* objGround = nullptr;
+	//Object3d* objFighter = nullptr;
+	//Object3d* objSphere = nullptr;
 
 	//std::map<std::string, Model*> models;
-	std::vector<Object3d*> objects;
+	//std::vector<Object3d*> objects;
 #pragma endregion
 
 };

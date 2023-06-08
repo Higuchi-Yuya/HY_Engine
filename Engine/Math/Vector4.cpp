@@ -92,19 +92,22 @@ Vector4& Vector4::operator/=(float s)
 const Vector4 operator+(const Vector4& v1, const Vector4& v2)
 {
 	Vector4 temp(v1);
-	return temp + v2;
+	temp += v2;
+	return temp;
 }
 
 const Vector4 operator-(const Vector4& v1, const Vector4& v2)
 {
 	Vector4 temp(v1);
-	return temp - v2;
+	temp -= v2;
+	return temp;
 }
 
 const Vector4 operator*(const Vector4& v, float s)
 {
 	Vector4 temp(v);
-	return temp * s;
+	temp *= s;
+	return temp;
 }
 
 const Vector4 operator*(float s, const Vector4& v)
@@ -115,5 +118,6 @@ const Vector4 operator*(float s, const Vector4& v)
 const Vector4 operator/(const Vector4& v, float s)
 {
 	Vector4 temp(v);
-	return temp / s;
+	temp /= s;
+	return temp;
 }

@@ -428,7 +428,8 @@ Texture TextureManager::LoadTexture(std::string fileName)
 Texture* TextureManager::LoadTextureP(std::string fileName)
 {
 	// 作成するテクスチャ
-	Texture tex;
+	Texture *tex;
+	tex = new Texture();
 
 	// 結果確認
 	HRESULT result;
@@ -481,7 +482,7 @@ Texture* TextureManager::LoadTextureP(std::string fileName)
 	textureResourceDesc.Alignment = 0;
 
 	// テクスチャのサイズをセット
-	tex.size = { (float)textureResourceDesc.Width, (float)textureResourceDesc.Height };
+	tex->size = { (float)textureResourceDesc.Width, (float)textureResourceDesc.Height };
 
 	// テクスチャバッファの生成
 
@@ -492,12 +493,12 @@ Texture* TextureManager::LoadTextureP(std::string fileName)
 			&textureResourceDesc,				// Resourceの設定
 			D3D12_RESOURCE_STATE_COPY_DEST,		// データ転送される設定
 			nullptr,							// Clear最適値。使わないのでNullptr
-			IID_PPV_ARGS(&tex.buffer));			// 作成するResourceポインタへのポインタ
+			IID_PPV_ARGS(&tex->buffer));			// 作成するResourceポインタへのポインタ
 
 	assert(SUCCEEDED(result));
 
 	// SRVヒープを作成
-	CreateSRV(tex, tex.buffer.Get());
+	CreateSRV(*tex, tex->buffer.Get());
 
 	// サブリソースを作成
 	std::vector<D3D12_SUBRESOURCE_DATA> subResourcesDatas{};
@@ -515,7 +516,7 @@ Texture* TextureManager::LoadTextureP(std::string fileName)
 		assert(SUCCEEDED(result));
 	}
 
-	uint64_t uploadSize = GetRequiredIntermediateSize(tex.buffer.Get(), 0, (UINT)metadata.mipLevels);
+	uint64_t uploadSize = GetRequiredIntermediateSize(tex->buffer.Get(), 0, (UINT)metadata.mipLevels);
 
 	// ヒープの設定
 	D3D12_HEAP_PROPERTIES textureHeapProp1{};
@@ -538,7 +539,7 @@ Texture* TextureManager::LoadTextureP(std::string fileName)
 
 	UpdateSubresources(
 		dxcommon_->GetCommandList(),
-		tex.buffer.Get(),
+		tex->buffer.Get(),
 		uploadBuffer.Get(),
 		0,
 		0,
@@ -548,7 +549,7 @@ Texture* TextureManager::LoadTextureP(std::string fileName)
 	// Textureへの転送後は利用できるよう、D3D12_RESOUCE_STATE_COPY_DESTからD3D12_RESOURCE_STATE_GEMEROC_READへResourceStateを変更する
 	D3D12_RESOURCE_BARRIER  barrier{};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource = tex.buffer.Get();
+	barrier.Transition.pResource = tex->buffer.Get();
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
@@ -556,7 +557,7 @@ Texture* TextureManager::LoadTextureP(std::string fileName)
 	dxcommon_->GetCommandList()->ResourceBarrier(1, &barrier);
 	ExcuteComandList();
 
-	return &tex;
+	return tex;
 }
 
 void TextureManager::StaticInitialize(DirectXCommon* dxcommon)

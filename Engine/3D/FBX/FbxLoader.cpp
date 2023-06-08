@@ -25,22 +25,22 @@ void FbxLoader::Finalize()
 	delete fbxLoader_;
 }
 
-//FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
-//{
-//	// モデルと同じ名前のフォルダから読み込む
-//	const string directoryPath = baseDirectory + modelName + "/";
-//	// 拡張子.fbxを付加
-//	const string fileName = modelName + ".fbx";
-//	// 連結してフルパスを得る
-//	const string fullpath = directoryPath + fileName;
-//
-//	// FBXファイルを読み込み、その情報をシーンにインポートする
-//	mScene = aiImportFile(fullpath.c_str(), flag);
-//
-//	// シーンが生成できているかどうか確認
-//	if (!mScene) {
-//		assert(0);
-//	}
-//
-//	return nullptr;
-//}
+FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
+{
+	// モデルと同じ名前のフォルダから読み込む
+	const string directoryPath = baseDirectory + modelName + "/";
+	// 拡張子.fbxを付加
+	const string fileName = modelName + ".fbx";
+	// 連結してフルパスを得る
+	const string fullpath = directoryPath + fileName;
+
+	// FBXファイルを読み込み、その情報をシーンにインポートする
+	mScene = aiImportFile(fullpath.c_str(), flag);
+
+	// シーンが生成できているかどうか確認
+	if (!mScene) {
+		assert(0);
+	}
+
+	return nullptr;
+}

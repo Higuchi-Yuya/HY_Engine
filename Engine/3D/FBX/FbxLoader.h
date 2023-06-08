@@ -1,6 +1,6 @@
 #pragma once
 
-//#include "FbxModel.h"
+#include "FbxModel.h"
 
 #include <d3d12.h>
 #include <d3dx12.h>
@@ -44,7 +44,7 @@ public:// メンバ関数
 	/// ファイルからFBXモデル読込
 	/// </summary>
 	/// <param name="modelName">モデル名</param>
-	//FbxModel* LoadModelFromFile(const string& modelName);
+	FbxModel* LoadModelFromFile(const string& modelName);
 
 private:// メンバ変数
 

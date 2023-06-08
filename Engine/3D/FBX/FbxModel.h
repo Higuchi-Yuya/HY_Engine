@@ -97,8 +97,8 @@ public:
 	static Microsoft::WRL::ComPtr<ID3D12Resource> constBuffNothing_;
 
 private:
-	static const std::string kBaseDirectory;
-	static const std::string kDefaultModelName;
+	static const std::string kBaseDirectory_;
+	static const std::string kDefaultModelName_;
 
 private: // 静的メンバ変数
 	// デスクリプタサイズ
@@ -110,7 +110,7 @@ private: // 静的メンバ変数
 	// パイプラインステートオブジェクト
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState_;
 	// ライト
-	static std::unique_ptr<LightGroup> lightGroup;
+	static std::unique_ptr<LightGroup> lightGroup_;
 
 
 public: // 静的メンバ関数
@@ -174,9 +174,9 @@ public: // メンバ関数
 
 	bool FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nPosIndex);
 
-	const ConstBufferPolygonExplosion GetPolygonExplosion() { return *constMap; }
+	const ConstBufferPolygonExplosion GetPolygonExplosion() { return *constMap_; }
 
-	const void SetPolygonExplosion(ConstBufferPolygonExplosion polygonExplosion) { *constMap = polygonExplosion; }
+	const void SetPolygonExplosion(ConstBufferPolygonExplosion polygonExplosion) { *constMap_ = polygonExplosion; }
 
 	// メッシュコンテナを取得
 	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
@@ -184,7 +184,7 @@ public: // メンバ関数
 	Matrix4 GetLeftBonePos();
 	Matrix4 GetRightBonePos();
 
-	void SetTextureHandle(uint32_t textureHandle) { modelTextureHandle = textureHandle; }
+	void SetTextureHandle(uint32_t textureHandle) { modelTextureHandle_ = textureHandle; }
 
 private:
 
@@ -192,10 +192,10 @@ private:
 
 
 	// ノード配列
-	std::vector<Node> nodes;
+	std::vector<Node> nodes_;
 
 
-	Matrix4 globalInverseTransform;
+	Matrix4 globalInverseTransform_;
 
 	// 名前
 	std::string name_;
@@ -206,17 +206,17 @@ private:
 	// デフォルトマテリアル
 	Material* defaultMaterial_ = nullptr;
 
-	uint32_t modelTextureHandle = 0;
+	uint32_t modelTextureHandle_ = 0;
 
-	Matrix4 matrixL;
-	Matrix4 matrixR;
+	Matrix4 matrixL_;
+	Matrix4 matrixR_;
 
-	WorldTransform naosi;
+	WorldTransform naosi_;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuff_;
 
-	ConstBufferPolygonExplosion* constMap;
+	ConstBufferPolygonExplosion* constMap_;
 
 };
 

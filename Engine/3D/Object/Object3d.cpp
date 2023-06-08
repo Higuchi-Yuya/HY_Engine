@@ -149,7 +149,7 @@ void Object3d::InitializeGraphicsPipelineNormal()
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = inputLayout.size();
+	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -208,7 +208,7 @@ void Object3d::InitializeGraphicsPipelineADDITION()
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = inputLayout.size();
+	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -266,7 +266,7 @@ void Object3d::InitializeGraphicsPipelineADDITIONALPHA()
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = inputLayout.size();
+	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -324,7 +324,7 @@ void Object3d::InitializeGraphicsPipelineSUBTRACTION()
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = inputLayout.size();
+	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -382,7 +382,7 @@ void Object3d::InitializeGraphicsPipelineSCREEN()
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = inputLayout.size();
+	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

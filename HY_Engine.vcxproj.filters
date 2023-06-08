@@ -103,7 +103,7 @@
     <Filter Include="ヘッダー ファイル\Engine\LevelLoder">
       <UniqueIdentifier>{71e63edb-ec52-44e4-90e4-5f50df354623}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\Camera">
+    <Filter Include="ソース ファイル\Engine\Camera">
       <UniqueIdentifier>{12d77864-4b93-4c53-b115-90d181194d5a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -112,7 +112,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
-      <Filter>ソース ファイル\Engine\3D\Camera</Filter>
+      <Filter>ソース ファイル\Engine\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DirectXBase\DirectXCommon.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>

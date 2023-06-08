@@ -2,16 +2,16 @@
 #include <cassert>
 #include <d3dx12.h>
 // 静的メンバ変数の実体
-ID3D12Device* LightGroup::device = nullptr;
+ID3D12Device* LightGroup::sDevice = nullptr;
 
 void LightGroup::StaticInititalize(ID3D12Device* device)
 {
 	// 再初期化チェック
-	assert(!LightGroup::device);
+	assert(!LightGroup::sDevice);
 	// nullptrチェック
 	assert(device);
 	// 静的メンバ変数のセット
-	LightGroup::device = device;
+	LightGroup::sDevice = device;
 }
 
 LightGroup* LightGroup::Create()
@@ -62,7 +62,7 @@ void LightGroup::TransferConstBuffer()
 	constMap->specularColor = specularColor_;
 
 	// 平行光源
-	for (int i = 0; i < DirLightNum; i++) {
+	for (int i = 0; i < sDirLightNum; i++) {
 		// ライトが有効なら設定を転送
 		if (dirLights_[i].IsActive()) {
 			constMap->dirLights[i].active = 1;
@@ -76,7 +76,7 @@ void LightGroup::TransferConstBuffer()
 	}
 
 	// 点光源
-	for (int i = 0; i < PointLightNum; i++) {
+	for (int i = 0; i < sPointLightNum; i++) {
 		// ライトが有効なら設定を転送
 		if (pointLights_[i].IsActive()) {
 			constMap->pointLights[i].active = 1;
@@ -91,7 +91,7 @@ void LightGroup::TransferConstBuffer()
 	}
 
 	// スポットライト
-	for (int i = 0; i < SpotLightNum; i++) {
+	for (int i = 0; i < sSpotLightNum; i++) {
 		// ライトが有効なら設定を転送
 		if (spotLights_[i].IsActive()) {
 			constMap->spotLights[i].active = 1;
@@ -108,7 +108,7 @@ void LightGroup::TransferConstBuffer()
 	}
 
 	// 丸影
-	for (int i = 0; i < CircleShadowNum; i++) {
+	for (int i = 0; i < sCircleShadowNum; i++) {
 		// 有効なら設定を転送
 		if (circleShadows_[i].IsActive()) {
 			constMap->circleShadows[i].active = 1;
@@ -160,14 +160,14 @@ void LightGroup::SetSpecularColor(const Vector3& color)
 
 void LightGroup::SetDirLightActive(int index, bool active)
 {
-	assert(0 <= index && index < DirLightNum);
+	assert(0 <= index && index < sDirLightNum);
 
 	dirLights_[index].SetActive(active);
 }
 
 void LightGroup::SetDirLightDir(int index, const Vector3& lightdir)
 {
-	assert(0 <= index && index < DirLightNum);
+	assert(0 <= index && index < sDirLightNum);
 
 	dirLights_[index].SetLightDir(lightdir);
 	dirty = true;
@@ -175,7 +175,7 @@ void LightGroup::SetDirLightDir(int index, const Vector3& lightdir)
 
 void LightGroup::SetDirLightColor(int index, const Vector3& lightcolor)
 {
-	assert(0 <= index && index < DirLightNum);
+	assert(0 <= index && index < sDirLightNum);
 
 	dirLights_[index].SetLightColor(lightcolor);
 	dirty = true;
@@ -183,14 +183,14 @@ void LightGroup::SetDirLightColor(int index, const Vector3& lightcolor)
 
 void LightGroup::SetPointLightActive(int index, bool active)
 {
-	assert(0 <= index && index < PointLightNum);
+	assert(0 <= index && index < sPointLightNum);
 
 	pointLights_[index].SetActive(active);
 }
 
 void LightGroup::SetPointLightPos(int index, const Vector3& lightpos)
 {
-	assert(0 <= index && index < PointLightNum);
+	assert(0 <= index && index < sPointLightNum);
 
 	pointLights_[index].SetLightPos(lightpos);
 	dirty = true;
@@ -198,7 +198,7 @@ void LightGroup::SetPointLightPos(int index, const Vector3& lightpos)
 
 void LightGroup::SetPointLightColor(int index, const Vector3& lightcolor)
 {
-	assert(0 <= index && index < PointLightNum);
+	assert(0 <= index && index < sPointLightNum);
 
 	pointLights_[index].SetLightColor(lightcolor);
 	dirty = true;
@@ -206,7 +206,7 @@ void LightGroup::SetPointLightColor(int index, const Vector3& lightcolor)
 
 void LightGroup::SetPointLightAtten(int index, const Vector3& lightAtten)
 {
-	assert(0 <= index && index < PointLightNum);
+	assert(0 <= index && index < sPointLightNum);
 
 	pointLights_[index].SetLightAtten(lightAtten);
 	dirty = true;
@@ -214,14 +214,14 @@ void LightGroup::SetPointLightAtten(int index, const Vector3& lightAtten)
 
 void LightGroup::SetSpotLightActive(int index, bool active)
 {
-	assert(0 <= index && index < SpotLightNum);
+	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetActive(active);
 }
 
 void LightGroup::SetSpotLightDir(int index, const Vector3& lightdir)
 {
-	assert(0 <= index && index < SpotLightNum);
+	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetLightDir(lightdir);
 	dirty = true;
@@ -229,7 +229,7 @@ void LightGroup::SetSpotLightDir(int index, const Vector3& lightdir)
 
 void LightGroup::SetSpotLightPos(int index, const Vector3& lightpos)
 {
-	assert(0 <= index && index < SpotLightNum);
+	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetLightPos(lightpos);
 	dirty = true;
@@ -237,7 +237,7 @@ void LightGroup::SetSpotLightPos(int index, const Vector3& lightpos)
 
 void LightGroup::SetSpotLightColor(int index, const Vector3& lightcolor)
 {
-	assert(0 <= index && index < SpotLightNum);
+	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetLightColor(lightcolor);
 	dirty = true;
@@ -245,7 +245,7 @@ void LightGroup::SetSpotLightColor(int index, const Vector3& lightcolor)
 
 void LightGroup::SetSpotLightAtten(int index, const Vector3& lightAtten)
 {
-	assert(0 <= index && index < SpotLightNum);
+	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetLightAtten(lightAtten);
 	dirty = true;
@@ -253,7 +253,7 @@ void LightGroup::SetSpotLightAtten(int index, const Vector3& lightAtten)
 
 void LightGroup::SetSpotLightFactorAngle(int index, const Vector2& lightFactorAngle)
 {
-	assert(0 <= index && index < SpotLightNum);
+	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetLightFactorAngle(lightFactorAngle);
 	dirty = true;
@@ -261,14 +261,14 @@ void LightGroup::SetSpotLightFactorAngle(int index, const Vector2& lightFactorAn
 
 void LightGroup::SetCircleShadowActive(int index, bool active)
 {
-	assert(0 <= index && index < CircleShadowNum);
+	assert(0 <= index && index < sCircleShadowNum);
 
 	circleShadows_[index].SetActive(active);
 }
 
 void LightGroup::SetCircleShadowCasterPos(int index, const Vector3& casterPos)
 {
-	assert(0 <= index && index < CircleShadowNum);
+	assert(0 <= index && index < sCircleShadowNum);
 
 	circleShadows_[index].SetCasterPos(casterPos);
 	dirty = true;
@@ -276,7 +276,7 @@ void LightGroup::SetCircleShadowCasterPos(int index, const Vector3& casterPos)
 
 void LightGroup::SetCircleShadowDir(int index, const Vector3& lightdir)
 {
-	assert(0 <= index && index < CircleShadowNum);
+	assert(0 <= index && index < sCircleShadowNum);
 
 	circleShadows_[index].SetDir(lightdir);
 	dirty = true;
@@ -284,7 +284,7 @@ void LightGroup::SetCircleShadowDir(int index, const Vector3& lightdir)
 
 void LightGroup::SetCircleShadowDistanceCasterLight(int index, float distanceCasterLight)
 {
-	assert(0 <= index && index < CircleShadowNum);
+	assert(0 <= index && index < sCircleShadowNum);
 
 	circleShadows_[index].SetDistanceCasterLight(distanceCasterLight);
 	dirty = true;
@@ -292,7 +292,7 @@ void LightGroup::SetCircleShadowDistanceCasterLight(int index, float distanceCas
 
 void LightGroup::SetCircleShadowAtten(int index, const Vector3& lightAtten)
 {
-	assert(0 <= index && index < CircleShadowNum);
+	assert(0 <= index && index < sCircleShadowNum);
 
 	circleShadows_[index].SetAtten(lightAtten);
 	dirty = true;
@@ -300,7 +300,7 @@ void LightGroup::SetCircleShadowAtten(int index, const Vector3& lightAtten)
 
 void LightGroup::SetCircleShadowFactorAngle(int index, const Vector2& lightFactorAngle)
 {
-	assert(0 <= index && index < CircleShadowNum);
+	assert(0 <= index && index < sCircleShadowNum);
 
 	circleShadows_[index].SetFactorAngle(lightFactorAngle);
 	dirty = true;
@@ -317,7 +317,7 @@ void LightGroup::CreateConstBuffer()
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
-	result = device->CreateCommittedResource(
+	result = sDevice->CreateCommittedResource(
 		&heapProps, // アップロード可能
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuff));

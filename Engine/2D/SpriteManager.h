@@ -42,11 +42,11 @@ public:// メンバ関数
 	void SetTextureCommands(Texture* index);
 
 public:
-	static DirectXCommon* dxcommon_;
+	static DirectXCommon* sDxcommon_;
 private:
 	
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;		//パイプラインステート
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;		//ルートシグネチャ
 
 	// 結果確認
 	HRESULT result = 0;

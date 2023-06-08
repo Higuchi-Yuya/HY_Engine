@@ -24,28 +24,26 @@ public:// メンバ関数
 	void ClearDepthBuffer();
 
 	// デバイス取得
-	ID3D12Device* GetDevice() const { return device.Get();}
+	ID3D12Device* GetDevice() const { return device_.Get();}
 
 	// コマンドリスト取得
-	ID3D12GraphicsCommandList* GetCommandList()const { return commandList.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList()const { return commandList_.Get(); }
 	
 	// バックバッファの数を取得
-	size_t GetBackBufferCount() const { return backBuffers.size(); }
+	size_t GetBackBufferCount() const { return backBuffers_.size(); }
 
 	// コマンドキュアを取得
-	ID3D12CommandQueue* GetCommandQueue()const { return commandQueue.Get(); }
+	ID3D12CommandQueue* GetCommandQueue()const { return commandQueue_.Get(); }
 
 	// フェンスの量を増やす
-	inline void PreIncrimentFenceValue() { ++fenceVal; }
+	inline void PreIncrimentFenceValue() { ++fenceVal_; }
 
 	// フェンス取得
-	inline ID3D12Fence* GetFence() const { return fence.Get(); }
-	inline UINT64 GetFenceValue() { return fenceVal; }
+	inline ID3D12Fence* GetFence() const { return fence_.Get(); }
+	inline UINT64 GetFenceValue() { return fenceVal_; }
 
 	// コマンドアロケータを取得
-	inline ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator.Get(); }
-
-
+	inline ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator_.Get(); }
 
 private:
 	// デバイスの初期化
@@ -74,38 +72,38 @@ private:
 
 private:
 	// WindowsAPI
-	WinApp* winApp = nullptr;
+	WinApp* winApp_ = nullptr;
 	// DirectX12デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> device;
+	Microsoft::WRL::ComPtr<ID3D12Device> device_;
 	// DXGIファクトリ
-	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
 
 	// コマンド関連
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_ = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_ = nullptr;
 
 	// スワップチェーン関連
-	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain = nullptr;
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_ = nullptr;
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
 
 	// レンダーターゲットビュー関連
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc_{};
 
 	// バックバッファ
-	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
 
 	// 深度バッファ関連
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff_;
 
 	// リソースバリア
-	D3D12_RESOURCE_BARRIER barrierDesc{};
+	D3D12_RESOURCE_BARRIER barrierDesc_{};
 
 	// フェンス
-	Microsoft::WRL::ComPtr<ID3D12Fence> fence = nullptr;
-	UINT64 fenceVal = 0;
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence_ = nullptr;
+	UINT64 fenceVal_ = 0;
 
 	// 結果確認
 	HRESULT result;

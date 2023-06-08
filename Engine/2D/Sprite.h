@@ -86,7 +86,7 @@ public:// メンバ関数
 
 public:// 静的メンバ変数
 
-	static SpriteManager* spriteManager_;
+	static SpriteManager* sSpriteManager_;
 
 private:// プライベートメンバ関数
 	// テクスチャサイズをイメージに合わせる
@@ -94,14 +94,14 @@ private:// プライベートメンバ関数
 
 private:// メンバ変数
 
-	SpriteManager::Vertex vertices[4] = {
+	SpriteManager::Vertex vertices_[4] = {
 	{{  0.0f,100.0f, 0.0f },{0.0f,1.0f}}, // 左下
 	{{  0.0f,  0.0f, 0.0f },{0.0f,0.0f}}, // 左上
 	{{100.0f,100.0f, 0.0f },{1.0f,1.0f}}, // 右下
 	{{100.0f,  0.0f, 0.0f },{1.0f,0.0f}}, // 右上
 	};
 
-	Matrix4 matWorld;	//ワールド変換行列
+	Matrix4 matWorld_;	//ワールド変換行列
 
 	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	    // 回転角
 
@@ -128,19 +128,19 @@ private:// メンバ変数
 	// テクスチャ番号
 	Texture* textureIndex_;
 
-	SpriteManager::ConstBufferData* constMap = nullptr;
+	SpriteManager::ConstBufferData* constMap_ = nullptr;
 
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
 	// 頂点マップ
-	SpriteManager::Vertex* vertMap = nullptr;
+	SpriteManager::Vertex* vertMap_ = nullptr;
 
 	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_ = nullptr;
 
 	// 結果確認
 	HRESULT result;

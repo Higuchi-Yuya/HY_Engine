@@ -196,7 +196,7 @@ void GameScene::Initialize()
 	// ビュープロジェクションの初期化
 	view = new ViewProjection;
 	view->DebugCameraInitialze(input);
-	view->target.y = 1.0f;
+	view->target_.y = 1.0f;
 	view->SetDistance(3.0f);
 
 	spritePos = sprite2->GetPosition();

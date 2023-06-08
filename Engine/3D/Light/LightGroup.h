@@ -13,13 +13,13 @@ private:
 
 public:// 定数
 	// 平行光源の数
-	static const int DirLightNum = 3;
+	static const int sDirLightNum = 3;
 	// 点光源の数
-	static const int PointLightNum = 3;
+	static const int sPointLightNum = 3;
 	// スポットライトの数
-	static const int SpotLightNum = 3;
+	static const int sSpotLightNum = 3;
 	// 丸影の数
-	static const int CircleShadowNum = 1;
+	static const int sCircleShadowNum = 1;
 
 public:// サブクラス
 	struct ConstBufferData
@@ -32,18 +32,18 @@ public:// サブクラス
 		Vector3 specularColor; // スペキュラーカラー
 		float pad3; // パディング
 		// 平行光源用
-		DirectionalLight::ConstBufferData dirLights[DirLightNum];
+		DirectionalLight::ConstBufferData dirLights[sDirLightNum];
 		// 点光源用
-		PointLight::ConstBufferData pointLights[PointLightNum];
+		PointLight::ConstBufferData pointLights[sPointLightNum];
 		// スポットライト用
-		SpotLight::ConstBufferData spotLights[SpotLightNum];
+		SpotLight::ConstBufferData spotLights[sSpotLightNum];
 		// 丸影用
-		CircleShadow::ConstBufferData circleShadows[CircleShadowNum];
+		CircleShadow::ConstBufferData circleShadows[sCircleShadowNum];
 	};
 
 private:// 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* sDevice;
 
 public:// 静的メンバ関数
 	// 静的初期化
@@ -249,16 +249,16 @@ private:// メンバ変数
 	Vector3 specularColor_ = { 1,1,1 };
 
 	// 平行光源の配列
-	DirectionalLight dirLights_[DirLightNum];
+	DirectionalLight dirLights_[sDirLightNum];
 
 	// 点光源の配列
-	PointLight pointLights_[PointLightNum];
+	PointLight pointLights_[sPointLightNum];
 
 	// スポットライトの配列
-	SpotLight spotLights_[SpotLightNum];
+	SpotLight spotLights_[sSpotLightNum];
 
 	// 丸影の配列
-	CircleShadow circleShadows_[CircleShadowNum];
+	CircleShadow circleShadows_[sCircleShadowNum];
 
 	// ダーティフラグ
 	bool dirty = false;

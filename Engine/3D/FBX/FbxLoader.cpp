@@ -1,44 +1,44 @@
 #include "FbxLoader.h"
 #include <cassert>
 
-FbxLoader* FbxLoader::fbxLoader_;
-const std::string FbxLoader::baseDirectory = "Resources/3D_Resources/FBX_File/";
+FbxLoader* FbxLoader::sFbxLoader_;
+const std::string FbxLoader::sBaseDirectory = "Resources/3D_Resources/FBX_File/";
 
 FbxLoader* FbxLoader::GetInstance()
 {
-	if (fbxLoader_ == nullptr)
+	if (sFbxLoader_ == nullptr)
 	{
-		fbxLoader_ = new FbxLoader();
+		sFbxLoader_ = new FbxLoader();
 	}
 
-	return fbxLoader_;
+	return sFbxLoader_;
 }
 
 void FbxLoader::Initialize(ID3D12Device* device)
 {
 	// 引数からメンバ変数に代入
-	this->device = device;
+	device_ = device;
 }
 
 void FbxLoader::Finalize()
 {
-	delete fbxLoader_;
+	delete sFbxLoader_;
 }
 
 FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 {
 	// モデルと同じ名前のフォルダから読み込む
-	const string directoryPath = baseDirectory + modelName + "/";
+	const string directoryPath = sBaseDirectory + modelName + "/";
 	// 拡張子.fbxを付加
 	const string fileName = modelName + ".fbx";
 	// 連結してフルパスを得る
 	const string fullpath = directoryPath + fileName;
 
 	// FBXファイルを読み込み、その情報をシーンにインポートする
-	mScene = aiImportFile(fullpath.c_str(), flag);
+	mScene_ = aiImportFile(fullpath.c_str(), flag_);
 
 	// シーンが生成できているかどうか確認
-	if (!mScene) {
+	if (!mScene_) {
 		assert(0);
 	}
 

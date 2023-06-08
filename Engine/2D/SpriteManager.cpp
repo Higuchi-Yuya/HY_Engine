@@ -3,11 +3,11 @@
 #include <DirectXTex.h>
 using namespace DirectX;
 
-DirectXCommon* SpriteManager::dxcommon_ = nullptr;
+DirectXCommon* SpriteManager::sDxcommon_ = nullptr;
 
 void SpriteManager::Initialize(DirectXCommon* dxcommon)
 {
-	dxcommon_ = dxcommon;
+	sDxcommon_ = dxcommon;
 
 	ID3DBlob* vsBlob = nullptr; // 頂点シェーダオブジェクト
 	ID3DBlob* psBlob = nullptr; // ピクセルシェーダオブジェクト
@@ -186,16 +186,16 @@ void SpriteManager::Initialize(DirectXCommon* dxcommon)
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, &errorBlob);
 	assert(SUCCEEDED(result));
-	result = dxcommon_->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(&rootSignature));
+	result = sDxcommon_->GetDevice()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+		IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(result));
 	rootSigBlob->Release();
 	// パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature.Get();
+	pipelineDesc.pRootSignature = rootSignature_.Get();
 
 	// パイプランステートの生成
 	
-	result = dxcommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+	result = sDxcommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState_));
 	assert(SUCCEEDED(result));
 
 	
@@ -211,14 +211,14 @@ void SpriteManager::Initialize(DirectXCommon* dxcommon)
 void SpriteManager::PreDraw()
 {
 	// パイプラインステートとルートシグネチャの設定コマンド
-	dxcommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
-	dxcommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	sDxcommon_->GetCommandList()->SetPipelineState(pipelineState_.Get());
+	sDxcommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
 	// プリミティブ形状の設定コマンド
-	dxcommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
+	sDxcommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	// SRVヒープの設定コマンド
 	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::srvHeap.Get() };
-	dxcommon_->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	sDxcommon_->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
 void SpriteManager::PostDraw()
@@ -228,5 +228,5 @@ void SpriteManager::PostDraw()
 void SpriteManager::SetTextureCommands(Texture* index)
 {
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, index->GetGpuHandle());
+	sDxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, index->GetGpuHandle());
 }

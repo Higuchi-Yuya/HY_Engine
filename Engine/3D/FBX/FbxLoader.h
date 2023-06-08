@@ -19,7 +19,7 @@ private: // エイリアス
 
 public: // 定数
 	// モデル格納ルートパス
-	static const string baseDirectory;
+	static const string sBaseDirectory;
 
 public:// メンバ関数
 
@@ -58,13 +58,13 @@ private:// メンバ変数
 	void operator=(const FbxLoader & obj) = delete;
 
 	// インスタンス用のローダー
-	static FbxLoader* fbxLoader_;
+	static FbxLoader* sFbxLoader_;
 
 	// D3D12デバイス（借りて来るものの入れ物）
-	ID3D12Device* device = nullptr;
+	ID3D12Device* device_ = nullptr;
 
 	// 設定の状態を表すフラグ
-	const UINT flag =
+	const uint32_t flag_ =
 		aiProcess_Triangulate | //三角面化
 		aiProcess_CalcTangentSpace | //接線ベクトル生成
 		aiProcess_GenSmoothNormals | //スムージングベクトル生成
@@ -77,6 +77,6 @@ private:// メンバ変数
 		aiProcess_LimitBoneWeights;//各頂点が影響を受けるボーンを4に制限
 
 	// シーン
-	const aiScene* mScene;
+	const aiScene* mScene_;
 };
 

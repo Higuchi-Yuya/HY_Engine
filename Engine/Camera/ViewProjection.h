@@ -31,7 +31,7 @@ public:// メンバ関数
 	void UpdateMatrix();
 
 	// バッファのゲッター
-	ID3D12Resource* GetBuff() { return constBuff.Get(); }
+	ID3D12Resource* GetBuff() { return constBuff_.Get(); }
 
 	// デバッグカメラの初期化
 	void DebugCameraInitialze(Input* input);
@@ -41,7 +41,7 @@ public:// メンバ関数
 
 	// カメラ注視点までの距離のセット
 	void SetDistance(float distance) {
-		this->distance = distance;
+		this->distance_ = distance;
 	}
 
 private:// プライベート関数
@@ -72,51 +72,51 @@ private:// プライベート関数
 public:// パブリック変数
 #pragma region ビュー行列の設定
 	// 視点座標
-	Vector3 eye = { 0, 0, -20.0f };
+	Vector3 eye_ = { 0, 0, -20.0f };
 	// 注視点座標
-	Vector3 target = { 0, 0, 0 };
+	Vector3 target_ = { 0, 0, 0 };
 	// 上方向ベクトル
-	Vector3 up = { 0, 1, 0 };
+	Vector3 up_ = { 0, 1, 0 };
 #pragma endregion
 
 #pragma region 射影行列の設定
 	// 垂直方向視野角
-	float fovAngleY = ToRadian(45.0f);
+	float fovAngleY_ = ToRadian(45.0f);
 	// ビューポートのアスペクト比
-	float aspectRatio = (float)WinApp::window_width / WinApp::window_height;
+	float aspectRatio_ = (float)WinApp::window_width / WinApp::window_height;
 	// 深度限界（手前側）
-	float nearZ = 0.1f;
+	float nearZ_ = 0.1f;
 	// 深度限界（奥側）
-	float farZ = 1000.0f;
+	float farZ_ = 1000.0f;
 #pragma endregion
 
 	// ビュー行列
-	Matrix4 matView;
+	Matrix4 matView_;
 	// 射影行列
-	Matrix4 matProjection;
+	Matrix4 matProjection_;
 
 private:// メンバ変数
 
 	// デバイス（借りてくる）
-	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	static Microsoft::WRL::ComPtr<ID3D12Device> sDevice_;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
 	// マッピング済みアドレス
-	ConstBufferDataViewProjection* constMap = nullptr;
+	ConstBufferDataViewProjection* constMap_ = nullptr;
 
 	// デバッグカメラに必要な変数
 #pragma region デバッグカメラ
 	// 入力クラスのポインタ
-	Input* input;
+	Input* input_;
 	// カメラ注視点までの距離
-	float distance = 3;
+	float distance_ = 3;
 	// スケーリング
-	float scaleX = 1.0f;
-	float scaleY = 1.0f;
+	float scaleX_ = 1.0f;
+	float scaleY_ = 1.0f;
 	// 回転行列
-	Matrix4 matRot;
+	Matrix4 matRot_;
 #pragma endregion
 
 };

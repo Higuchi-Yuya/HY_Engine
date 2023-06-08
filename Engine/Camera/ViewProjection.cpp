@@ -3,12 +3,12 @@
 #include <cassert>
 #include "WinApp.h"
 
-Microsoft::WRL::ComPtr<ID3D12Device> ViewProjection::device_ = nullptr;
+Microsoft::WRL::ComPtr<ID3D12Device> ViewProjection::sDevice_ = nullptr;
 
 void ViewProjection::StaticInitialize(ID3D12Device* device)
 {
 	assert(device);
-	device_ = device;
+	sDevice_ = device;
 }
 
 void ViewProjection::Initialize()
@@ -29,37 +29,37 @@ void ViewProjection::CreateConstBuffer()
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataViewProjection) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
-	result = device_->CreateCommittedResource(
+	result = sDevice_->CreateCommittedResource(
 		&heapProps, // アップロード可能
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 }
 
 void ViewProjection::Map()
 {
 	// 定数バッファとのデータリンク
-	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }
 
 void ViewProjection::MoveEyeVector(const Vector3& move)
 {
 	// 視点座標を移動し、反映
-	Vector3 eye_moved = eye;
+	Vector3 eye_moved = eye_;
 
 	eye_moved.x += move.x;
 	eye_moved.y += move.y;
 	eye_moved.z += move.z;
 
-	eye = eye_moved;
+	eye_ = eye_moved;
 }
 
 void ViewProjection::MoveVector(const Vector3& move)
 {
 	// 視点と注視点座標を移動し、反映
-	Vector3 eye_moved = eye;
-	Vector3 target_moved = target;
+	Vector3 eye_moved = eye_;
+	Vector3 target_moved = target_;
 
 	eye_moved.x += move.x;
 	eye_moved.y += move.y;
@@ -69,31 +69,31 @@ void ViewProjection::MoveVector(const Vector3& move)
 	target_moved.y += move.y;
 	target_moved.z += move.z;
 
-	eye = eye_moved;
-	target = target_moved;
+	eye_ = eye_moved;
+	target_ = target_moved;
 }
 
 void ViewProjection::UpdateMatrix()
 {
 	// ビュー行列の作成
-	matView.ViewMat(eye, target, up);
+	matView_.ViewMat(eye_, target_, up_);
 	// 射影行列の作成
-	matProjection.ProjectionMat(fovAngleY, aspectRatio, nearZ, farZ);
+	matProjection_.ProjectionMat(fovAngleY_, aspectRatio_, nearZ_, farZ_);
 
 	// 定数バッファへの書き込み
-	constMap->view = matView;
-	constMap->projection = matProjection;
-	constMap->cameraPos = eye;
+	constMap_->view = matView_;
+	constMap_->projection = matProjection_;
+	constMap_->cameraPos = eye_;
 }
 
 void ViewProjection::DebugCameraInitialze(Input* input)
 {
 	Initialize();
 	assert(input);
-	this->input = input;
+	this->input_ = input;
 	// 画面サイズに対する相対的なスケールに調整
-	scaleX = 1.0f / (float)WinApp::window_width;
-	scaleY = 1.0f / (float)WinApp::window_height;
+	scaleX_ = 1.0f / (float)WinApp::window_width;
+	scaleY_ = 1.0f / (float)WinApp::window_height;
 
 }
 
@@ -104,12 +104,12 @@ void ViewProjection::DebugCameraUpdate()
 	float angleY = 0;
 
 	// マウスの入力を取得
-	Input::MouseMove mouseMove = input->GetMouseMove();
+	Input::MouseMove mouseMove = input_->GetMouseMove();
 
 	// マウスの左ボタンが押されていたらカメラを回転させる
-	if (input->PushMouseLeft()) {
-		float dy = mouseMove.lX * scaleY;
-		float dx = mouseMove.lY * scaleX;
+	if (input_->PushMouseLeft()) {
+		float dy = mouseMove.lX * scaleY_;
+		float dx = mouseMove.lY * scaleX_;
 
 		angleX = -dx * PI;
 		angleY = -dy * PI;
@@ -117,12 +117,12 @@ void ViewProjection::DebugCameraUpdate()
 	}
 
 	// マウスの中ボタンが押されていたらカメラを並行移動させる
-	if (input->PushMouseMiddle()) {
+	if (input_->PushMouseMiddle()) {
 		float dx = mouseMove.lX / 100.0f;
 		float dy = mouseMove.lY / 100.0f;
 
 		Vector3 move = { -dx, +dy,  0 };
-		move = matRot.transform(move, matRot);
+		move = matRot_.transform(move, matRot_);
 
 		MoveVector(move);
 		dirty = true;
@@ -130,8 +130,8 @@ void ViewProjection::DebugCameraUpdate()
 
 	// ホイール入力で距離を変更
 	if (mouseMove.lZ != 0) {
-		distance -= mouseMove.lZ / 100.0f;
-		distance = max(distance, 1.0f);
+		distance_ -= mouseMove.lZ / 100.0f;
+		distance_ = max(distance_, 1.0f);
 		dirty = true;
 	}
 
@@ -145,20 +145,20 @@ void ViewProjection::DebugCameraUpdate()
 		// 累積の回転行列を合成
 		// ※回転行列を累積していくと、誤差でスケーリングがかかる危険がある為
 		// クォータニオンを使用する方が望ましい
-		matRot = matRotNew * matRot;
+		matRot_ = matRotNew * matRot_;
 
 		// 注視点から視点へのベクトルと、上方向ベクトル
-		Vector3 vTargetEye = { 0.0f, 0.0f, -distance};
+		Vector3 vTargetEye = { 0.0f, 0.0f, -distance_};
 		Vector3 vUp = { 0.0f, 1.0f, 0.0f };
 
 		// ベクトルを回転
-		vTargetEye = matRot.transform(vTargetEye, matRot);
-		vUp = matRot.transformNotW(vUp, matRot);
+		vTargetEye = matRot_.transform(vTargetEye, matRot_);
+		vUp = matRot_.transformNotW(vUp, matRot_);
 
 		// 注視点からずらした位置に視点座標を決定
-		const Vector3& target = this->target;
-		this->eye = { target.x + vTargetEye.x, target.y + vTargetEye.y,target.z + vTargetEye.z };
-		this->up={ vUp.x, vUp.y, vUp.z };
+		const Vector3& target = this->target_;
+		this->eye_ = { target.x + vTargetEye.x, target.y + vTargetEye.y,target.z + vTargetEye.z };
+		this->up_={ vUp.x, vUp.y, vUp.z };
 	}
 
 	UpdateMatrix();

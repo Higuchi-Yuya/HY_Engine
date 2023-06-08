@@ -51,7 +51,7 @@ public: // サブクラス
 		DirectX::XMFLOAT3 normal; // 法線ベクトル
 		DirectX::XMFLOAT2 uv;  // uv座標
 
-		UINT boneIndex[MAX_BONE_INDICES];
+		uint32_t boneIndex[MAX_BONE_INDICES];
 		float boneWeight[MAX_BONE_INDICES];
 	};
 	// 定数バッファ用データ構造体
@@ -102,7 +102,7 @@ private:
 
 private: // 静的メンバ変数
 	// デスクリプタサイズ
-	static UINT sDescriptorHandleIncrementSize_;
+	static uint32_t sDescriptorHandleIncrementSize_;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCommandList_;
 	// ルートシグネチャ
@@ -188,7 +188,7 @@ public: // メンバ関数
 
 private:
 
-	Matrix4 Test;
+	Matrix4 Test_;
 
 
 	// ノード配列

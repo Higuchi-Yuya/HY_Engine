@@ -150,25 +150,25 @@ void Sound::SoundPlayWave(bool loop, float volume) {
 	HRESULT result;
 
 	//波形フォーマットを元にSourceVoiceの生成
-	result = xAudio2_->CreateSourceVoice(&pSourceVoice, &soundData_.wfex);
+	result = xAudio2_->CreateSourceVoice(&pSourceVoice_, &soundData_.wfex);
 	assert(SUCCEEDED(result));
 
 	//再生する波形データの設定
-	buf.pAudioData = soundData_.pBuffer;
-	buf.AudioBytes = soundData_.bufferSize;
+	buf_.pAudioData = soundData_.pBuffer;
+	buf_.AudioBytes = soundData_.bufferSize;
 
-	pSourceVoice->SetVolume(volume);
+	pSourceVoice_->SetVolume(volume);
 
 	if (loop)
 	{
-		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
+		buf_.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
-	buf.Flags = XAUDIO2_END_OF_STREAM;
+	buf_.Flags = XAUDIO2_END_OF_STREAM;
 
 
 	//波形データの再生
-	result = pSourceVoice->SubmitSourceBuffer(&buf);
-	result = pSourceVoice->Start();
+	result = pSourceVoice_->SubmitSourceBuffer(&buf_);
+	result = pSourceVoice_->Start();
 
 }
 
@@ -176,10 +176,10 @@ void Sound::SoundPlayWave(bool loop, float volume) {
 void Sound::StopWave()
 {
 	HRESULT result;
-	if (pSourceVoice != nullptr)
+	if (pSourceVoice_ != nullptr)
 	{
-		result = pSourceVoice->Stop();
-		result = pSourceVoice->FlushSourceBuffers();
-		result = pSourceVoice->SubmitSourceBuffer(&buf);
+		result = pSourceVoice_->Stop();
+		result = pSourceVoice_->FlushSourceBuffers();
+		result = pSourceVoice_->SubmitSourceBuffer(&buf_);
 	}
 }

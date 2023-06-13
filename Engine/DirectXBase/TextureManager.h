@@ -27,22 +27,22 @@ public:// メンバ関数
 	static void StaticInitialize(DirectXCommon* dxcommon);
 
 public:// 静的メンバ変数
-	static UINT srvIncrementIndex;
+	static uint32_t sSrvIncrementIndex;
 
 	// SRVの最大個数
-	static const size_t kMaxSRVCount = 2056;
+	static const size_t sMaxSRVCount = 2056;
 
 	// デフォルトテクスチャ2D格納ディレクトリ
-	static std::string kDefault2DTextureDirectoryPath;
+	static std::string sDefault2DTextureDirectoryPath;
 
 	// デフォルトテクスチャ格納ディレクトリ
-	static std::string kDefaultTextureDirectoryPath;
+	static std::string sDefaultTextureDirectoryPath;
 
 	// DirextXの基盤を借りてくる
-	static DirectXCommon* dxcommon_;
+	static DirectXCommon* sDxcommon_;
 
 	// SRVヒープ
-	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
+	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> sSrvHeap;
 
 private:// プライベート関数
 	// シェーダリソースビューの作成
@@ -53,6 +53,6 @@ private:// プライベート関数
 
 private:// メンバ変数
 	// テクスチャリソースデスク
-	static D3D12_RESOURCE_DESC textureResourceDesc;
+	static D3D12_RESOURCE_DESC sTextureResourceDesc;
 };
 

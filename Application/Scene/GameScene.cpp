@@ -12,14 +12,12 @@
 GameScene::~GameScene()
 {
 	// 入力解放
-	delete input;
+
 	// スプライトの解放
 	//delete sprite;
-	delete sprite2;
+
 	// オブジェクトの解放
 	//delete object3d;
-
-	delete objMedama;
 
 	//delete groundObj;
 	//delete groundObj2;
@@ -34,7 +32,6 @@ GameScene::~GameScene()
 
 	// モデルの解放
 	//delete model;
-	delete model_2;
 	//delete groundModel;
 	//delete modelPlane;
 	//delete modelBox;
@@ -43,7 +40,7 @@ GameScene::~GameScene()
 	// ビューの解放
 	delete view;
 	// ライトの解放
-	delete light;
+
 	// フォグの解放
 	delete fog;
 
@@ -52,7 +49,7 @@ GameScene::~GameScene()
 
 	//delete levelData;
 	//delete modelSkydome;
-	delete 	modelGround;
+	//delete 	modelGround;
 	//delete modelFighter;
 	//delete modelSphere;
 	//delete objSkydome;
@@ -74,11 +71,11 @@ void GameScene::Initialize()
 {
 	srand((unsigned int)time(NULL));
 	// 入力の初期化
-	input = new Input();
-	input->Initialize();
+	input_ = std::make_unique<Input>();
+	input_->Initialize();
 
 	// ライトの生成
-	light = LightGroup::Create();
+	light.reset(LightGroup::Create());
 	// ライト設定
 	light->SetDirLightActive(0, true);
 	light->SetDirLightActive(1, false);
@@ -99,7 +96,7 @@ void GameScene::Initialize()
 	
 
 	// 3Dオブジェクトにライトをセット
-	Object3d::SetLight(light);
+	Object3d::SetLight(light.get());
 
 	fog = Fog::Create();
 	fog->nearFog = 10;
@@ -113,14 +110,14 @@ void GameScene::Initialize()
 
 	// スプライトの初期化
 	//sprite = new Sprite();
-	sprite2 = new Sprite();
+	sprite2 = std::make_unique<Sprite>();
 
 	//sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 	sprite2->Initialize(textureHandle2.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,0.5f});
 
 	// モデルの読み込み
 	//model = Model::LoadFromOBJ("skydome", true);
-	model_2 = Model::LoadFromOBJ("doragon", true);
+	model_2.reset(Model::LoadFromOBJ("doragon", true));
 	//groundModel = Model::LoadFromOBJ("ground2");
 	////modelFighter = Model::LoadFromOBJ("sphere");
 	//modelPlane = Model::LoadFromOBJ("plane1x1");
@@ -160,8 +157,8 @@ void GameScene::Initialize()
 	//object3d = Object3d::Create();
 
 
-	objMedama = Object3d::Create();
-	objMedama->SetModel(model_2);
+	objMedama.reset(Object3d::Create());
+	objMedama.get()->SetModel(model_2.get());
 	//objMedama->worldTransform_.position_ = { -1,1,0 };
 	//objMedama->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 	//objMedama->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -195,8 +192,8 @@ void GameScene::Initialize()
 
 	// ビュープロジェクションの初期化
 	view = new ViewProjection;
-	view->DebugCameraInitialze(input);
-	view->target_.y = 1.0f;
+	view->DebugCameraInitialze(input_.get());
+	view->target.y = 1.0f;
 	view->SetDistance(3.0f);
 
 	spritePos = sprite2->GetPosition();
@@ -258,7 +255,7 @@ void GameScene::Initialize()
 
 	// モデル読み込み
 	//modelSkydome = Model::LoadFromOBJ("skydome");
-	modelGround = Model::LoadFromOBJ("ground");
+	//modelGround = Model::LoadFromOBJ("ground");
 	//modelFighter = Model::LoadFromOBJ("chr_sword", true);
 	//modelSphere = Model::LoadFromOBJ("sphere", true);
 
@@ -309,14 +306,14 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 	// 入力の更新
-	input->Update();
+	input_->Update();
 
 	// 数字の0キーが押されていたら
-	if (input->PushKey(DIK_0))
+	if (input_->PushKey(DIK_0))
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
-	if (input->TriggerKey(DIK_R)) {
+	if (input_->TriggerKey(DIK_R)) {
 		//objFighter->worldTransform_.position_ = { 1.0f, 10.0f,0.0f };
 		//objFighter->UpdateWorldMatrix();
 	}
@@ -361,7 +358,7 @@ void GameScene::Update()
 	sprite2->SetPosition(spritePos);
 
 
-	objMedama->worldTransform_.rotation_.y += 0.01f;
+	objMedama->worldTransform_.rotation.y += 0.01f;
 	objMedama->Update();
 
 
@@ -375,23 +372,23 @@ void GameScene::Update()
 	// 球移動
 	{
 		Vector3 moveY = { 0,0.01f,0 };
-		if (input->PushKey(DIK_8)) { sphere.center += moveY; }
-		else if (input->PushKey(DIK_2)) { sphere.center -= moveY; }
+		if (input_->PushKey(DIK_8)) { sphere.center += moveY; }
+		else if (input_->PushKey(DIK_2)) { sphere.center -= moveY; }
 
 		Vector3 moveX = { 0.01f,0,0 };
-		if (input->PushKey(DIK_6)) { sphere.center += moveX; }
-		else if (input->PushKey(DIK_4)) { sphere.center -= moveX; }
+		if (input_->PushKey(DIK_6)) { sphere.center += moveX; }
+		else if (input_->PushKey(DIK_4)) { sphere.center -= moveX; }
 
 	}
 	// レイ操作
 	{
 		Vector3 moveZ = { 0,0,0.01f };
-		if (input->PushKey(DIK_UP)) { ray.start += moveZ; }
-		else if (input->PushKey(DIK_DOWN)) { ray.start -= moveZ; }
+		if (input_->PushKey(DIK_UP)) { ray.start += moveZ; }
+		else if (input_->PushKey(DIK_DOWN)) { ray.start -= moveZ; }
 
 		Vector3 moveX = { 0.01f,0,0 };
-		if (input->PushKey(DIK_RIGHT)) { ray.start += moveX; }
-		else if (input->PushKey(DIK_LEFT)) { ray.start -= moveX; }
+		if (input_->PushKey(DIK_RIGHT)) { ray.start += moveX; }
+		else if (input_->PushKey(DIK_LEFT)) { ray.start -= moveX; }
 	}
 
 	//point1->Update();

@@ -46,20 +46,20 @@ void ViewProjection::Map()
 void ViewProjection::MoveEyeVector(const Vector3& move)
 {
 	// 視点座標を移動し、反映
-	Vector3 eye_moved = eye_;
+	Vector3 eye_moved = eye;
 
 	eye_moved.x += move.x;
 	eye_moved.y += move.y;
 	eye_moved.z += move.z;
 
-	eye_ = eye_moved;
+	eye = eye_moved;
 }
 
 void ViewProjection::MoveVector(const Vector3& move)
 {
 	// 視点と注視点座標を移動し、反映
-	Vector3 eye_moved = eye_;
-	Vector3 target_moved = target_;
+	Vector3 eye_moved = eye;
+	Vector3 target_moved = target;
 
 	eye_moved.x += move.x;
 	eye_moved.y += move.y;
@@ -69,21 +69,21 @@ void ViewProjection::MoveVector(const Vector3& move)
 	target_moved.y += move.y;
 	target_moved.z += move.z;
 
-	eye_ = eye_moved;
-	target_ = target_moved;
+	eye = eye_moved;
+	target = target_moved;
 }
 
 void ViewProjection::UpdateMatrix()
 {
 	// ビュー行列の作成
-	matView_.ViewMat(eye_, target_, up_);
+	matView_.ViewMat(eye, target, up);
 	// 射影行列の作成
-	matProjection_.ProjectionMat(fovAngleY_, aspectRatio_, nearZ_, farZ_);
+	matProjection_.ProjectionMat(fovAngleY, aspectRatio, nearZ, farZ);
 
 	// 定数バッファへの書き込み
 	constMap_->view = matView_;
 	constMap_->projection = matProjection_;
-	constMap_->cameraPos = eye_;
+	constMap_->cameraPos = eye;
 }
 
 void ViewProjection::DebugCameraInitialze(Input* input)
@@ -156,9 +156,9 @@ void ViewProjection::DebugCameraUpdate()
 		vUp = matRot_.transformNotW(vUp, matRot_);
 
 		// 注視点からずらした位置に視点座標を決定
-		const Vector3& target = this->target_;
-		this->eye_ = { target.x + vTargetEye.x, target.y + vTargetEye.y,target.z + vTargetEye.z };
-		this->up_={ vUp.x, vUp.y, vUp.z };
+		const Vector3& target = this->target;
+		this->eye = { target.x + vTargetEye.x, target.y + vTargetEye.y,target.z + vTargetEye.z };
+		this->up={ vUp.x, vUp.y, vUp.z };
 	}
 
 	UpdateMatrix();

@@ -34,12 +34,12 @@ void Material::LoadTexture(const std::string& directoryPath, const std::string& 
 
 void Material::Update()
 {
-	constMap->ambient = ambient;
-	constMap->diffuse = diffuse;
-	constMap->specular = specular;
+	constMap_->ambient = ambient;
+	constMap_->diffuse = diffuse;
+	constMap_->specular = specular;
 
-	constMap->alpha = alpha;
-	constBuff->Unmap(0, nullptr);
+	constMap_->alpha = alpha;
+	constBuff_->Unmap(0, nullptr);
 }
 
 void Material::Initialize()
@@ -65,11 +65,11 @@ void Material::CreateConstantBuffer()
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 
 	assert(SUCCEEDED(result));
 
 	// マテリアル用定数バッファへデータ転送
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }

@@ -40,7 +40,7 @@ public:// メンバ関数
 
 	// フェンス取得
 	inline ID3D12Fence* GetFence() const { return fence_.Get(); }
-	inline UINT64 GetFenceValue() { return fenceVal_; }
+	inline uint64_t GetFenceValue() { return fenceVal_; }
 
 	// コマンドアロケータを取得
 	inline ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator_.Get(); }
@@ -103,7 +103,7 @@ private:
 
 	// フェンス
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_ = nullptr;
-	UINT64 fenceVal_ = 0;
+	uint64_t fenceVal_ = 0;
 
 	// 結果確認
 	HRESULT result;

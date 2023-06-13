@@ -54,13 +54,13 @@ public:
 	void AddIndex(unsigned short index);
 
 	// 頂点データの数を取得
-	inline size_t GetVertexCount() { return vertices.size(); }
+	inline size_t GetVertexCount() { return vertices_.size(); }
 
 	/// <summary>
 	/// マテリアルの取得
 	/// </summary>
 	/// <returns>マテリアル</returns>
-	Material* GetMaterial() { return material; }
+	Material* GetMaterial() { return material_; }
 
 	/// <summary>
 	/// マテリアルの割り当て
@@ -77,56 +77,56 @@ public:
 	/// 頂点バッファ取得
 	/// </summary>
 	/// <returns>頂点バッファ</returns>
-	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView; }
+	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView_; }
 
 	/// <summary>
 	/// インデックスバッファ取得
 	/// </summary>
 	/// <returns>インデックスバッファ</returns>
-	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView; }
+	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView_; }
 
 	/// <summary>
 	/// 頂点配列を取得
 	/// </summary>
 	/// <returns>頂点配列</returns>
-	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices; }
+	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices_; }
 
 	/// <summary>
 	/// インデックス配列を取得
 	/// </summary>
 	/// <returns>インデックス配列</returns>
-	inline const std::vector<unsigned short>& GetIndices() { return indices; }
+	inline const std::vector<unsigned short>& GetIndices() { return indices_; }
 
 private:
 
 	// デバイス（借りてくる）
-	static ID3D12Device* device;
+	static ID3D12Device* sDevice_;
 
 	// 名前
 	std::string name_;
 
 	// 頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUv> vertices_;
 
 	// 頂点インデックス配列
-	std::vector<unsigned short> indices;
+	std::vector<unsigned short> indices_;
 
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 
 	// インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff;
+	ComPtr<ID3D12Resource> indexBuff_;
 
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
 
 	// 頂点法線スムージング用データ
-	std::unordered_map<unsigned short, std::vector<unsigned short>>smoothData;
+	std::unordered_map<unsigned short, std::vector<unsigned short>>smoothData_;
 
 	// マテリアル
-	Material* material = nullptr;
+	Material* material_ = nullptr;
 };
 

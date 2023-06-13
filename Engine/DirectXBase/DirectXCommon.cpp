@@ -36,7 +36,7 @@ void DirectXCommon::PreDraw()
 {
 #pragma region バックバッファの番号取得
 	//バックバッファの番号を取得(2つなので0番か1番)
-	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
+	uint32_t bbIndex = swapChain_->GetCurrentBackBufferIndex();
 #pragma endregion
 
 #pragma region リソースバリアで書き込み可能に変更
@@ -100,7 +100,7 @@ void DirectXCommon::PostDraw()
 {
 #pragma region バックバッファの番号を取得
 	//バックバッファの番号を取得(2つなので0番か1番)
-	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
+	uint32_t bbIndex = swapChain_->GetCurrentBackBufferIndex();
 #pragma endregion
 
 #pragma region リソースバリアで表示状態に変更
@@ -193,7 +193,7 @@ void DirectXCommon::InitalizeDevice()
 	IDXGIAdapter4* tmpAdapter = nullptr;
 
 	//パフォーマンスが高い物から順に、全てのアダプターを列挙する
-	for (UINT i = 0; dxgiFactory_->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++) {
+	for (uint32_t i = 0; dxgiFactory_->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND; i++) {
 		//動的配列に追加する
 		adapters.push_back(tmpAdapter);
 	}

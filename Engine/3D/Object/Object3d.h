@@ -68,12 +68,12 @@ public: // 静的メンバ関数
 	/// <summary>
 	/// ライトのセット
 	/// </summary>
-	static void SetLight(LightGroup* light) {Object3d::light = light;}
+	static void SetLight(LightGroup* light) {Object3d::sLight_ = light;}
 
 	/// <summary>
 	/// フォグのセット
 	/// </summary>
-	static void SetFog(Fog* fog) { Object3d::fog = fog; }
+	static void SetFog(Fog* fog) { Object3d::sFog_ = fog; }
 
 	/// <summary>
 	/// ルートシグネチャの生成
@@ -112,35 +112,35 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	static ComPtr<ID3D12Device> device;
+	static ComPtr<ID3D12Device> sDevice_;
 
 	// ライト
-	static LightGroup* light;
+	static LightGroup* sLight_;
 
 	// フォグ
-	static Fog* fog;
+	static Fog* sFog_;
 
 	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static ID3D12GraphicsCommandList* sCmdList_;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> sRootsignature_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateNormal;
+	static ComPtr<ID3D12PipelineState> sPipelinestateNormal_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateADDITION;
+	static ComPtr<ID3D12PipelineState> sPipelinestateADDITION_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateADDITIONALPHA;
+	static ComPtr<ID3D12PipelineState> sPipelinestateADDITIONALPHA_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateSUBTRACTION;
+	static ComPtr<ID3D12PipelineState> sPipelinestateSUBTRACTION_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateSCREEN;
+	static ComPtr<ID3D12PipelineState> sPipelinestateSCREEN_;
 
 	// インプットレイアウト
-	static std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
 
-	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
-	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+	static ComPtr<ID3DBlob> sVsBlob_; // 頂点シェーダオブジェクト
+	static ComPtr<ID3DBlob> sPsBlob_;	// ピクセルシェーダオブジェクト
+	static ComPtr<ID3DBlob> sErrorBlob_; // エラーオブジェクト
 
 private:// 静的メンバ関数
 
@@ -180,7 +180,7 @@ public: // メンバ関数
 	/// <summary>
 	/// モデルの設定
 	/// </summary>
-	void SetModel(Model* model) { this->model = model; }
+	void SetModel(Model* model) { model_ = model; }
 
 	/// <summary>
 	/// コライダーのセット
@@ -200,14 +200,14 @@ public:// パブリック変数
 
 private: // メンバ変数
 	// モデル
-	Model* model = nullptr;
+	Model* model_ = nullptr;
 
 protected:// メンバ変数
 	// クラス名（デバッグ用）
-	const char* name = nullptr;
+	const char* name_ = nullptr;
 
 	// コライダー
-	BaseCollider* collider = nullptr;
+	BaseCollider* collider_ = nullptr;
 
 };
 

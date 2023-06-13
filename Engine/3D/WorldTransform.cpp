@@ -57,13 +57,13 @@ void WorldTransform::UpdateMatrix()
 	matTrans.identity();
 
 	//各行列計算
-	matScale.scale(scale_);
+	matScale.scale(scale);
 	matRot.identity();
-	matRotZ.rotateZ(rotation_.z);
-	matRotX.rotateX(rotation_.x);
-	matRotY.rotateY(rotation_.y);
+	matRotZ.rotateZ(rotation.z);
+	matRotX.rotateX(rotation.x);
+	matRotY.rotateY(rotation.y);
 	matRot = matRotZ * matRotX * matRotY;
-	matTrans.translate(position_);
+	matTrans.translate(translation);
 
 	matWorld_.identity();
 	matWorld_ *= matScale;
@@ -75,6 +75,6 @@ void WorldTransform::UpdateMatrix()
 	}
 
 	//定数バッファに転送
-	constMap->color = color_;
+	constMap->color = color;
 	constMap->matWorld = matWorld_;
 }

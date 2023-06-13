@@ -12,7 +12,7 @@ class MeshCollider:public BaseCollider
 public:
 	MeshCollider() {
 		// メッシュ形状をセット
-		shapeType = COLLISIONSHAPE_MESH;
+		shapeType_ = COLLISIONSHAPE_MESH;
 	}
 
 	/// <summary>

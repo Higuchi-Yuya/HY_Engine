@@ -22,7 +22,7 @@ void Sprite::Initialize(Texture* textureNum, Vector2 position, Vector2 size, Vec
 	// 頂点データ
 
 	// 頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-	UINT sizeVB = static_cast<UINT>(sizeof(vertices_[0]) * _countof(vertices_));
+	uint32_t sizeVB = static_cast<UINT>(sizeof(vertices_[0]) * _countof(vertices_));
 
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapProp{}; // ヒープ設定

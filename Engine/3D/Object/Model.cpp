@@ -10,7 +10,7 @@
 using namespace DirectX;
 using namespace std;
 
-ID3D12Device* Model::device = nullptr;
+ID3D12Device* Model::sDevice_ = nullptr;
 
 Model::Model()
 {
@@ -19,14 +19,14 @@ Model::Model()
 Model::~Model()
 {
 	
-	for (auto m : materials) {
+	for (auto m : materials_) {
 		delete m.second;
 	}
 	// 全メッシュを削除
-	for (auto mesh : meshes) {
+	for (auto mesh : meshes_) {
 		delete mesh;
 	}
-	materials.clear();
+	materials_.clear();
 }
 
 Model* Model::LoadFromOBJ(const std::string& modelname, bool smoothing)
@@ -123,14 +123,14 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 	}
 }
 
-void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial)
+void Model::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParamIndexMaterial)
 {
 	// nullptrチェック
-	assert(device);
+	assert(sDevice_);
 	assert(cmdList);
 
 	// 全メッシュを描画
-	for (auto& mesh : meshes) {
+	for (auto& mesh : meshes_) {
 		mesh->Draw(cmdList);
 	}
 }
@@ -155,8 +155,8 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 	name_ = modelname;
 
 	// メッシュ生成
-	meshes.emplace_back(new Mesh);
-	Mesh* mesh = meshes.back();
+	meshes_.emplace_back(new Mesh);
+	Mesh* mesh = meshes_.back();
 	int indexCountTex = 0;
 	int indexCountNoTex = 0;
 
@@ -193,8 +193,8 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 					mesh->CalculateSmoothedVertexNormals();
 				}
 				// 次のメッシュ生成
-				meshes.emplace_back(new Mesh);
-				mesh = meshes.back();
+				meshes_.emplace_back(new Mesh);
+				mesh = meshes_.back();
 				indexCountTex = 0;
 			}
 
@@ -249,8 +249,8 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 				line_stream >> materialName;
 
 				// マテリアル名で検索し、マテリアルを割り当てる
-				auto itr = materials.find(materialName);
-				if (itr != materials.end()) {
+				auto itr = materials_.find(materialName);
+				if (itr != materials_.end()) {
 					mesh->SetMaterial(itr->second);
 				}
 			}
@@ -270,7 +270,7 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 				Material* material = mesh->GetMaterial();
 				index_stream.seekg(1, ios_base::cur);// スラッシュを飛ばす
 				// マテリアル、テクスチャがある場合
-				if (materials.size() > 0) {
+				if (materials_.size() > 0) {
 					index_stream >> indexTexcoord;
 					index_stream.seekg(1, ios_base::cur);// スラッシュを飛ばす
 					index_stream >> indexNormal;
@@ -354,12 +354,12 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 void Model::CreateBuffers()
 {
 	// メッシュのバッファ生成
-	for (auto& m : meshes) {
+	for (auto& m : meshes_) {
 		m->CreateBuffers();
 	}
 
 	// マテリアルの数値を定数バッファに反映
-	for (auto& m : materials) {
+	for (auto& m : materials_) {
 		m.second->Update();
 	}
 
@@ -368,12 +368,12 @@ void Model::CreateBuffers()
 void Model::AddMaterial(Material* material)
 {
 	// コンテナに登録
-	materials.emplace(material->name, material);
+	materials_.emplace(material->name, material);
 }
 
 void Model::SetDevice(ID3D12Device* device)
 {
-	Model::device = device;
+	Model::sDevice_ = device;
 	Mesh::SetDevice(device);
 	Material::StaticInitialize(device);
 }

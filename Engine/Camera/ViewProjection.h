@@ -72,22 +72,22 @@ private:// プライベート関数
 public:// パブリック変数
 #pragma region ビュー行列の設定
 	// 視点座標
-	Vector3 eye_ = { 0, 0, -20.0f };
+	Vector3 eye = { 0, 0, -20.0f };
 	// 注視点座標
-	Vector3 target_ = { 0, 0, 0 };
+	Vector3 target = { 0, 0, 0 };
 	// 上方向ベクトル
-	Vector3 up_ = { 0, 1, 0 };
+	Vector3 up = { 0, 1, 0 };
 #pragma endregion
 
 #pragma region 射影行列の設定
 	// 垂直方向視野角
-	float fovAngleY_ = ToRadian(45.0f);
+	float fovAngleY = ToRadian(45.0f);
 	// ビューポートのアスペクト比
-	float aspectRatio_ = (float)WinApp::window_width / WinApp::window_height;
+	float aspectRatio = (float)WinApp::window_width / WinApp::window_height;
 	// 深度限界（手前側）
-	float nearZ_ = 0.1f;
+	float nearZ = 0.1f;
 	// 深度限界（奥側）
-	float farZ_ = 1000.0f;
+	float farZ = 1000.0f;
 #pragma endregion
 
 	// ビュー行列

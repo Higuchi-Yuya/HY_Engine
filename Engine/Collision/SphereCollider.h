@@ -12,7 +12,7 @@ private:// エイリアス
 public:
 	SphereCollider(Vector3 offset = { 0,0,0 }, float radius = 1.0f) :offset(offset), radius(radius) {
 		// 球形状をセット
-		shapeType = COLLISIONSHAPE_SPHERE;
+		shapeType_ = COLLISIONSHAPE_SPHERE;
 	}
 
 	// 更新
@@ -28,8 +28,8 @@ public:
 
 private:
 	// オブジェクト中心からのオフセット
-	Vector3 offset;
+	Vector3 offset_;
 	// 半径
-	float radius;
+	float radius_;
 };
 

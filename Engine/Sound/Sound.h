@@ -69,10 +69,10 @@ private:
 
 	SoundData soundData_;
 
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	IXAudio2SourceVoice* pSourceVoice_ = nullptr;
 
 	//再生する波形データの設定
-	XAUDIO2_BUFFER buf{};
+	XAUDIO2_BUFFER buf_{};
 
 
 };

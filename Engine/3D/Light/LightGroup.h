@@ -234,10 +234,10 @@ private:// プライベートメンバ関数
 private:// メンバ変数
 
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 
 	// 定数バッファのマップ
-	ConstBufferData* constMap = nullptr;
+	ConstBufferData* constMap_ = nullptr;
 
 	// 環境光の色
 	Vector3 ambientColor_ = { 1,1,1 };
@@ -261,7 +261,7 @@ private:// メンバ変数
 	CircleShadow circleShadows_[sCircleShadowNum];
 
 	// ダーティフラグ
-	bool dirty = false;
+	bool dirty_ = false;
 
 };
 

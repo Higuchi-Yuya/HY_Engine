@@ -20,7 +20,7 @@ public:// メンバ関数
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial);
+	void Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParamIndexMaterial);
 
 
 	// デバイスのセッター
@@ -30,7 +30,7 @@ public:// メンバ関数
 	/// メッシュコンテナを取得
 	/// </summary>
 	/// <returns>メッシュコンテナ</returns>
-	inline const std::vector<Mesh*>& GetMeshes() { return meshes; }
+	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
 	
 
 private:
@@ -55,16 +55,16 @@ private:// メンバ変数
 	std::string name_;
 
 	// メッシュコンテナ
-	std::vector<Mesh*> meshes;
+	std::vector<Mesh*> meshes_;
 
 	// マテリアルコンテナ
-	std::unordered_map<std::string, Material*> materials;
+	std::unordered_map<std::string, Material*> materials_;
 
 	// デフォルトマテリアル
 	Material* defaultMaterial_ = nullptr;
 
 	// デバイス（借りてくる）
-	static ID3D12Device* device;
+	static ID3D12Device* sDevice_;
 
 
 

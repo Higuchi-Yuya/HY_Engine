@@ -27,12 +27,12 @@ bool CollisionManager::Raycast(const Ray& ray, unsigned short attribute, Raycast
 	// 今までで最も近いコライダーとの交点を記録する変数
 	Vector3 inter;
 
-	it = colliders.begin();
-	for (; it != colliders.end(); ++it) {
+	it = colliders_.begin();
+	for (; it != colliders_.end(); ++it) {
 		BaseCollider* colA = *it;
 
 		// 属性が合わなければスキップ
-		if (!(colA->attribute & attribute)) {
+		if (!(colA->attribute_ & attribute)) {
 			continue;
 		}
 
@@ -84,12 +84,12 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 	std::forward_list<BaseCollider*>::iterator it;
 
 	// 全てのコライダーと総当りチェック
-	it = colliders.begin();
-	for (; it != colliders.end(); ++it) {
+	it = colliders_.begin();
+	for (; it != colliders_.end(); ++it) {
 		BaseCollider* col = *it;
 
 		// 属性が合わなければスキップ
-		if (!(col->attribute & attribute)) {
+		if (!(col->attribute_ & attribute)) {
 			continue;
 		}
 
@@ -144,11 +144,11 @@ void CollisionManager::CheckAllCollisions()
 	std::forward_list<BaseCollider*>::iterator itB;
 
 	// 全ての組み合わせについて総当たりチェック
-	itA = colliders.begin();
-	for (; itA != colliders.end(); ++itA) {
+	itA = colliders_.begin();
+	for (; itA != colliders_.end(); ++itA) {
 		itB = itA;
 		++itB;
-		for (; itB != colliders.end(); ++itB) {
+		for (; itB != colliders_.end(); ++itB) {
 			BaseCollider* colA = *itA;
 			BaseCollider* colB = *itB;
 

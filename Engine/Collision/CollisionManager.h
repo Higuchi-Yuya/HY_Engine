@@ -15,12 +15,12 @@ public:// 静的メンバ関数
 public:// メンバ関数
 	// コライダーの追加
 	inline void AddCollider(BaseCollider* collider) {
-		colliders.push_front(collider);
+		colliders_.push_front(collider);
 	}
 
 	// コライダーの削除
 	inline void RemoveCollider(BaseCollider* collider) {
-		colliders.remove(collider);
+		colliders_.remove(collider);
 	}
 
 
@@ -51,6 +51,6 @@ private:
 	CollisionManager& operator=(const CollisionManager&) = delete;
 
 	// コライダーのリスト
-	std::forward_list<BaseCollider*>colliders;
+	std::forward_list<BaseCollider*>colliders_;
 };
 

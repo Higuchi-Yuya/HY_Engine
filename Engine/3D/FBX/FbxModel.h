@@ -164,15 +164,15 @@ public: // ÉÅÉìÉoä÷êî
 
 	void CalcInterpolatedScaling(Vector3& mxOut, float AnimationTime, const aiNodeAnim* pNodeAnim);
 
-	bool FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nScalingIndex);
+	bool FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim, uint32_t& nScalingIndex);
 
 	void CalcInterpolatedRotation(Vector4& mxOut, float AnimationTime, const aiNodeAnim* pNodeAnim);
 
-	bool FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nRotationIndex);
+	bool FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim, uint32_t& nRotationIndex);
 
 	void CalcInterpolatedPosition(Vector3& mxOut, float AnimationTime, const aiNodeAnim* pNodeAnim);
 
-	bool FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nPosIndex);
+	bool FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, uint32_t& nPosIndex);
 
 	const ConstBufferPolygonExplosion GetPolygonExplosion() { return *constMap_; }
 

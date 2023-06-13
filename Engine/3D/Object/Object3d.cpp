@@ -10,38 +10,38 @@ using namespace std;
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
-ComPtr<ID3D12Device> Object3d::device = nullptr;
-LightGroup* Object3d::light = nullptr;
-Fog* Object3d::fog = nullptr;
+ComPtr<ID3D12Device> Object3d::sDevice_ = nullptr;
+LightGroup* Object3d::sLight_ = nullptr;
+Fog* Object3d::sFog_ = nullptr;
 
-ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
-ComPtr<ID3D12RootSignature> Object3d::rootsignature;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestateNormal = nullptr;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestateADDITION = nullptr;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestateADDITIONALPHA = nullptr;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestateSUBTRACTION = nullptr;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestateSCREEN = nullptr;
+ID3D12GraphicsCommandList* Object3d::sCmdList_ = nullptr;
+ComPtr<ID3D12RootSignature> Object3d::sRootsignature_;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateNormal_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateADDITION_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateADDITIONALPHA_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSUBTRACTION_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSCREEN_ = nullptr;
 
-std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::inputLayout;
+std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 
-ComPtr<ID3DBlob> Object3d::vsBlob; 
-ComPtr<ID3DBlob> Object3d::psBlob;	
-ComPtr<ID3DBlob> Object3d::errorBlob;
+ComPtr<ID3DBlob> Object3d::sVsBlob_; 
+ComPtr<ID3DBlob> Object3d::sPsBlob_;	
+ComPtr<ID3DBlob> Object3d::sErrorBlob_;
 
 //Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
 
-void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
+void Object3d::StaticInitialize(ID3D12Device* sDevice_, int window_width, int window_height)
 {
 	// nullptrチェック
-	assert(device);
+	assert(sDevice_);
 
-	Object3d::device = device;
+	Object3d::sDevice_ = sDevice_;
 
 	// モデルのデバイスを生成
-	Model::SetDevice(device);
+	Model::SetDevice(sDevice_);
 
 	// ワールドトランスフォームにデバイスを貸す
-	WorldTransform::StaticInitialize(device);
+	WorldTransform::StaticInitialize(sDevice_);
 
 	// シェーダーファイルの読み込みと初期化
 	InitializeShader();
@@ -69,26 +69,26 @@ void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int wind
 
 }
 
-void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
+void Object3d::PreDraw(ID3D12GraphicsCommandList* sCmdList_)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::cmdList == nullptr);
+	assert(Object3d::sCmdList_ == nullptr);
 
 	// コマンドリストをセット
-	Object3d::cmdList = cmdList;
+	Object3d::sCmdList_ = sCmdList_;
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestateNormal.Get());
+	sCmdList_->SetPipelineState(sPipelinestateNormal_.Get());
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	sCmdList_->SetGraphicsRootSignature(sRootsignature_.Get());
 	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	sCmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Object3d::PostDraw()
 {
 	// コマンドリストを解除
-	Object3d::cmdList = nullptr;
+	Object3d::sCmdList_ = nullptr;
 }
 
 Object3d* Object3d::Create()
@@ -115,8 +115,8 @@ void Object3d::InitializeGraphicsPipelineNormal()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -148,8 +148,8 @@ void Object3d::InitializeGraphicsPipelineNormal()
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -160,10 +160,10 @@ void Object3d::InitializeGraphicsPipelineNormal()
 
 	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = sRootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateNormal));
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateNormal_));
 	assert(SUCCEEDED(result));
 
 }
@@ -174,8 +174,8 @@ void Object3d::InitializeGraphicsPipelineADDITION()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -207,8 +207,8 @@ void Object3d::InitializeGraphicsPipelineADDITION()
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -219,10 +219,10 @@ void Object3d::InitializeGraphicsPipelineADDITION()
 
 	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = sRootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateADDITION));
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateADDITION_));
 	assert(SUCCEEDED(result));
 }
 
@@ -232,8 +232,8 @@ void Object3d::InitializeGraphicsPipelineADDITIONALPHA()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -265,8 +265,8 @@ void Object3d::InitializeGraphicsPipelineADDITIONALPHA()
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -277,10 +277,10 @@ void Object3d::InitializeGraphicsPipelineADDITIONALPHA()
 
 	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = sRootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateADDITIONALPHA));
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateADDITIONALPHA_));
 	assert(SUCCEEDED(result));
 }
 
@@ -290,8 +290,8 @@ void Object3d::InitializeGraphicsPipelineSUBTRACTION()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -323,8 +323,8 @@ void Object3d::InitializeGraphicsPipelineSUBTRACTION()
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -335,10 +335,10 @@ void Object3d::InitializeGraphicsPipelineSUBTRACTION()
 
 	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = sRootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateSUBTRACTION));
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateSUBTRACTION_));
 	assert(SUCCEEDED(result));
 }
 
@@ -348,8 +348,8 @@ void Object3d::InitializeGraphicsPipelineSCREEN()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -381,8 +381,8 @@ void Object3d::InitializeGraphicsPipelineSCREEN()
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// 頂点レイアウトの設定
-	gpipeline.InputLayout.pInputElementDescs = inputLayout.data();
-	gpipeline.InputLayout.NumElements = (UINT)inputLayout.size();
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -393,10 +393,10 @@ void Object3d::InitializeGraphicsPipelineSCREEN()
 
 	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = sRootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestateSCREEN));
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateSCREEN_));
 	assert(SUCCEEDED(result));
 }
 
@@ -455,9 +455,9 @@ void Object3d::InitializeRootSignature()
 
 	ComPtr<ID3DBlob> rootSigBlob;
 	// バージョン自動判定のシリアライズ
-	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &sErrorBlob_);
 	// ルートシグネチャの生成
-	result = device->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
+	result = sDevice_->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&sRootsignature_));
 	assert(SUCCEEDED(result));
 }
 
@@ -473,14 +473,14 @@ void Object3d::InitializeShader()
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
 		0,
-		&vsBlob, &errorBlob);
+		&sVsBlob_, &sErrorBlob_);
 	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
+		// sErrorBlob_からエラー内容をstring型にコピー
 		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
+		errstr.resize(sErrorBlob_->GetBufferSize());
 
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
+		std::copy_n((char*)sErrorBlob_->GetBufferPointer(),
+			sErrorBlob_->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
@@ -496,14 +496,14 @@ void Object3d::InitializeShader()
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
 		0,
-		&psBlob, &errorBlob);
+		&sPsBlob_, &sErrorBlob_);
 	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
+		// sErrorBlob_からエラー内容をstring型にコピー
 		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
+		errstr.resize(sErrorBlob_->GetBufferSize());
 
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
+		std::copy_n((char*)sErrorBlob_->GetBufferPointer(),
+			sErrorBlob_->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
@@ -512,14 +512,14 @@ void Object3d::InitializeShader()
 	}
 
 	// 頂点レイアウト
-	inputLayout.push_back
+	sInputLayout_.push_back
 	({
 		// xy座標(1行で書いたほうが見やすい)
 		   "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
 		   D3D12_APPEND_ALIGNED_ELEMENT,
 		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 	});
-	inputLayout.push_back
+	sInputLayout_.push_back
 	({
 		// 法線ベクトル(1行で書いたほうが見やすい)
 		   "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
@@ -527,7 +527,7 @@ void Object3d::InitializeShader()
 		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 
 	});
-	inputLayout.push_back
+	sInputLayout_.push_back
 	({
 		// uv座標(1行で書いたほうが見やすい)
 		   "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
@@ -538,22 +538,22 @@ void Object3d::InitializeShader()
 
 Object3d::~Object3d()
 {
-	if (collider) {
+	if (collider_) {
 		// 子リジョンマネージャから登録を解除する
-		CollisionManager::GetInstance()->RemoveCollider(collider);
-		delete collider;
+		CollisionManager::GetInstance()->RemoveCollider(collider_);
+		delete collider_;
 	}
 }
 
 bool Object3d::Initialize()
 {
 	// クラス名の文字列を取得
-	name = typeid(*this).name();
+	name_ = typeid(*this).name();
 
 	// nullptrチェック
 	worldTransform_.Initialize();
 
-	fog->Initialize();
+	sFog_->Initialize();
 
 	return true;
 }
@@ -562,11 +562,11 @@ void Object3d::Update()
 {
 	// ワールドトランスフォームの行列更新と転送
 	UpdateWorldMatrix();
-	fog->UpdateMatrix();
+	sFog_->UpdateMatrix();
 
 	// 末尾に当たり判定更新
-	if (collider) {
-		collider->Update();
+	if (collider_) {
+		collider_->Update();
 	}
 }
 
@@ -578,44 +578,44 @@ void Object3d::UpdateWorldMatrix()
 void Object3d::Draw(ViewProjection* viewProjection)
 {
 	// nullptrチェック
-	assert(device);
-	assert(Object3d::cmdList);
+	assert(sDevice_);
+	assert(Object3d::sCmdList_);
 
 	// モデルがセットされていなければ描画をスキップ
-	if (model == nullptr)return;
+	if (model_ == nullptr)return;
 
 	// ワールド変換データ定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(1, worldTransform_.GetBuff()->GetGPUVirtualAddress());
+	sCmdList_->SetGraphicsRootConstantBufferView(1, worldTransform_.GetBuff()->GetGPUVirtualAddress());
 
 	// ビュープロジェクション変換データ定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
+	sCmdList_->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
 
 	// フォグの描画
-	fog->Draw(cmdList);
+	sFog_->Draw(sCmdList_);
 
 	// ライトの描画
-	light->Draw(cmdList);
+	sLight_->Draw(sCmdList_);
 
 	// モデルを描画
-	model->Draw(cmdList, 1);
+	model_->Draw(sCmdList_, 1);
 
 }
 
-void Object3d::SetCollider(BaseCollider* collider)
+void Object3d::SetCollider(BaseCollider* collider_)
 {
-	collider->SetObject(this);
-	this->collider = collider;
+	collider_->SetObject(this);
+	this->collider_ = collider_;
 
 	// ワールド行列を更新しおく
 	worldTransform_.UpdateMatrix();
 
 	// コリジョンマネージャに登録
-	CollisionManager::GetInstance()->AddCollider(collider);
+	CollisionManager::GetInstance()->AddCollider(collider_);
 
 	
 
 	// コライダーを更新しておく
-	collider->Update();
+	collider_->Update();
 
 }
 
@@ -624,19 +624,19 @@ void Object3d::SetBlendMode(BlendMode mode)
 	switch (mode)
 	{
 	case Object3d::NORMAL:// ノーマルブレンド
-		cmdList->SetPipelineState(pipelinestateNormal.Get());
+		sCmdList_->SetPipelineState(sPipelinestateNormal_.Get());
 		break;
 	case Object3d::ADDITION:// 加算ブレンド
-		cmdList->SetPipelineState(pipelinestateADDITION.Get());
+		sCmdList_->SetPipelineState(sPipelinestateADDITION_.Get());
 		break;
 	case Object3d::ADDITIONALPHA:// 加算ブレンド（透過あり）
-		cmdList->SetPipelineState(pipelinestateADDITIONALPHA.Get());
+		sCmdList_->SetPipelineState(sPipelinestateADDITIONALPHA_.Get());
 		break;
 	case Object3d::SUBTRACTION:// 減算ブレンド
-		cmdList->SetPipelineState(pipelinestateSUBTRACTION.Get());
+		sCmdList_->SetPipelineState(sPipelinestateSUBTRACTION_.Get());
 		break;
 	case Object3d::SCREEN:// スクリーン
-		cmdList->SetPipelineState(pipelinestateSCREEN.Get());
+		sCmdList_->SetPipelineState(sPipelinestateSCREEN_.Get());
 		break;
 
 	default:

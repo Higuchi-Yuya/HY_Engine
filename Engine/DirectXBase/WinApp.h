@@ -1,10 +1,11 @@
 #pragma once
 #include<Windows.h>
+#include <cstdint>
 // WindouwsAPI
 class WinApp
 {
 public: // 静的メンバ関数
-	static LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	static LRESULT WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam);
 public: // メンバ関数
 	// 初期化
 	void Initialize();
@@ -15,9 +16,9 @@ public: // メンバ関数
 	void Finalize();
 
 	// getter
-	HWND GetHwnd() const { return hwnd; }
+	HWND GetHwnd() const { return hwnd_; }
 
-	HINSTANCE GetHInstance() const { return w.hInstance; }
+	HINSTANCE GetHInstance() const { return w_.hInstance; }
 
 	// メッセージの処理
 	bool ProcessMessage();
@@ -30,9 +31,9 @@ public: // 定数
 
 private:
 	// ウィンドウハンドル
-	HWND hwnd = nullptr;
+	HWND hwnd_ = nullptr;
 
 	// ウィンドウクラスの設定
-	WNDCLASSEX w{};
+	WNDCLASSEX w_{};
 };
 

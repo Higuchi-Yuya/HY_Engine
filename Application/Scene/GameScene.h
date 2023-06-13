@@ -44,10 +44,10 @@ public:// メンバ関数
 private:// メンバ変数
 
 	// 入力
-	Input* input = nullptr;
+	std::unique_ptr<Input> input_ = nullptr;
 
 	// オブジェクト共通のライトの初期化
-	LightGroup* light = nullptr;
+	std::unique_ptr<LightGroup> light = nullptr;
 	
 	// 平行光源
 	bool isActiveDirectional = true;
@@ -84,11 +84,11 @@ private:// メンバ変数
 
 	// スプライト
 	//Sprite* sprite = nullptr;
-	Sprite* sprite2 = nullptr;
+	std::unique_ptr<Sprite> sprite2 = nullptr;
 
 	// モデル
 	//Model* model = nullptr;
-	Model* model_2 = nullptr;
+	std::unique_ptr<Model> model_2 = nullptr;
 	////Model* modelFighter = nullptr;
 	//Model* groundModel = nullptr;
 
@@ -98,7 +98,7 @@ private:// メンバ変数
 
 	// オブジェクト
 	//Object3d* object3d = nullptr;
-	Object3d* objMedama = nullptr;
+	std::unique_ptr<Object3d> objMedama = nullptr;
 
 	//Object3d* point1 = nullptr;
 	//Object3d* point2 = nullptr;
@@ -163,7 +163,7 @@ private:// メンバ変数
 	LevelData* levelData = nullptr;
 
 	//Model* modelSkydome = nullptr;
-	Model* modelGround = nullptr;
+	//Model* modelGround = nullptr;
 	//Model* modelFighter = nullptr;
 	//Model* modelSphere = nullptr;
 

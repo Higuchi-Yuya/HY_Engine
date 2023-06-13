@@ -61,7 +61,7 @@ public:
 	/// 定数バッファの取得
 	/// </summary>
 	/// <returns></returns>
-	ID3D12Resource* GetConstantBuffer() { return constBuff.Get(); }
+	ID3D12Resource* GetConstantBuffer() { return constBuff_.Get(); }
 
 	/// テクスチャ読み込み
 	/// </summary>
@@ -77,9 +77,9 @@ public:
 private:
 
 	// マテリアル用定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 
-	ConstBufferDataB1* constMap = nullptr;
+	ConstBufferDataB1* constMap_ = nullptr;
 
 private:
 	// コンストラクタ

@@ -217,7 +217,7 @@ void SpriteManager::PreDraw()
 	sDxcommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	// SRVヒープの設定コマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
 	sDxcommon_->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 

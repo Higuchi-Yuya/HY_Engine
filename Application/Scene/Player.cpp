@@ -43,7 +43,7 @@ bool Player::Initialize()
 	//worldTransform_.position_.y += 100;
 	// 半径分だけ足元から浮いた座標を球の中心にする
 	SetCollider(new SphereCollider(Vector3(0, radius, 0), radius));
-	collider->SetAttribute(COLLISION_ATTR_ALLIES);
+	collider_->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	atariModel = new Model;
 	atariModel = Model::LoadFromOBJ("sphere");
@@ -61,24 +61,24 @@ void Player::Update()
 	atari->Update();
 	// A,Dで旋回
 	if (input->PushKey(DIK_A)) {
-		worldTransform_.rotation_.y -= 0.2f;
+		worldTransform_.rotation.y -= 0.2f;
 	}
 	else if (input->PushKey(DIK_D)) {
-		worldTransform_.rotation_.y += 0.2f;
+		worldTransform_.rotation.y += 0.2f;
 	}
 
 	// 移動ベクトルをY軸周りの角度で回転
 	Vector3 move = { 0,0,0.1f };
 	Matrix4 matRot;
-	matRot.rotateY(worldTransform_.rotation_.y);
+	matRot.rotateY(worldTransform_.rotation.y);
 	move = matRot.transformNotW(move, matRot);
 
 	// 向いてる方向に移動
 	if (input->PushKey(DIK_S)) {
-		worldTransform_.position_ -= move;
+		worldTransform_.translation -= move;
 	}
 	else if (input->PushKey(DIK_W)) {
-		worldTransform_.position_ += move;
+		worldTransform_.translation += move;
 	}
 
 	// ワールド行列更新
@@ -92,9 +92,9 @@ void Player::Update()
 		// 加速
 		fallV.y = max(fallV.y + fallAcc, fallVYMin);
 		// 移動
-		worldTransform_.position_.x += fallV.x;
-		worldTransform_.position_.y += fallV.y;
-		worldTransform_.position_.z += fallV.z;
+		worldTransform_.translation.x += fallV.x;
+		worldTransform_.translation.y += fallV.y;
+		worldTransform_.translation.z += fallV.z;
 	}
 	// ジャンプ操作
 	else if (input->TriggerKey(DIK_SPACE)) {
@@ -105,10 +105,10 @@ void Player::Update()
 
 	// ワールド行列更新
 	UpdateWorldMatrix();
-	collider->Update();
+	collider_->Update();
 
 	// 球コライダーを取得
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
 	// クエリーコールバッククラス
@@ -146,12 +146,12 @@ void Player::Update()
 	CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
 
 	// 交差による排斥分動かす
-	worldTransform_.position_ += callback.move;
+	worldTransform_.translation += callback.move;
 
 
 	// ワールド行列更新
 	UpdateWorldMatrix();
-	collider->Update();
+	collider_->Update();
 
 	// 球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -167,7 +167,7 @@ void Player::Update()
 		// 接地を維持
 		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
 			onGround = true;
-			worldTransform_.position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();
 		}
@@ -182,7 +182,7 @@ void Player::Update()
 		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
 			// 着地
 			onGround = true;
-			worldTransform_.position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 
 		}
 	}
@@ -200,7 +200,7 @@ void Player::Draw(ViewProjection* view)
 void Player::OnCollision(const CollisionInfo& info)
 {
 	// 衝突したらカラーを変える
-	atari->worldTransform_.position_ = this->worldTransform_.position_;
+	atari->worldTransform_.translation = this->worldTransform_.translation;
 	//worldTransform_.color_ = { 0.1f,1.0f,0.1f,1.0f };
 	//worldTransform_.UpdateMatrix();
 }

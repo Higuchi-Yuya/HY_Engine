@@ -23,7 +23,7 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetIndexBuffer(&ibView_);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// マテリアル用定数バッファビューをセット

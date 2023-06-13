@@ -10,7 +10,7 @@ class SphereCollider:public BaseCollider,public Sphere
 {
 private:// エイリアス
 public:
-	SphereCollider(Vector3 offset = { 0,0,0 }, float radius = 1.0f) :offset(offset), radius(radius) {
+	SphereCollider(Vector3 offset = { 0,0,0 }, float radius = 1.0f) :offset_(offset), radius_(radius) {
 		// 球形状をセット
 		shapeType_ = COLLISIONSHAPE_SPHERE;
 	}
@@ -18,13 +18,13 @@ public:
 	// 更新
 	void Update()override;
 	
-	inline const Vector3& GetOffset() { return offset; }
+	inline const Vector3& GetOffset() { return offset_; }
 
-	inline void SetOffset(const Vector3& offset) { this->offset = offset; }
+	inline void SetOffset(const Vector3& offset) { this->offset_ = offset; }
 
-	inline float GetRadius() { return radius; }
+	inline float GetRadius() { return radius_; }
 
-	inline void SetRadius(float radius) { this->radius = radius; }
+	inline void SetRadius(float radius) { this->radius_ = radius; }
 
 private:
 	// オブジェクト中心からのオフセット

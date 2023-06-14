@@ -5,7 +5,6 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 
 std::string TextureManager::sDefault2DTextureDirectoryPath = "Resources/2D_Resources/";
-std::string TextureManager::sDefaultTextureDirectoryPath = "Resources/";
 DirectXCommon* TextureManager::sDxcommon_ = nullptr;
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> TextureManager::sSrvHeap = nullptr;
 D3D12_RESOURCE_DESC TextureManager::sTextureResourceDesc{};

@@ -41,7 +41,7 @@ public:// メンバ関数
 
 	// カメラ注視点までの距離のセット
 	void SetDistance(float distance) {
-		this->distance_ = distance;
+		distance_ = distance;
 	}
 
 private:// プライベート関数

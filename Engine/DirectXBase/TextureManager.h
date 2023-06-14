@@ -35,9 +35,6 @@ public:// 静的メンバ変数
 	// デフォルトテクスチャ2D格納ディレクトリ
 	static std::string sDefault2DTextureDirectoryPath;
 
-	// デフォルトテクスチャ格納ディレクトリ
-	static std::string sDefaultTextureDirectoryPath;
-
 	// DirextXの基盤を借りてくる
 	static DirectXCommon* sDxcommon_;
 

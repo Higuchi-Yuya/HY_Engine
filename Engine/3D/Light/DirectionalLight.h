@@ -22,7 +22,7 @@ public:
 	/// ライト方向をセット
 	/// </summary>
 	/// <param name="lightdir">ライト方向</param>
-	inline void SetLightDir(const Vector3& lightdir){this->lightdir_ = lightdir;this->lightdir_.normalize();};
+	inline void SetLightDir(const Vector3& lightdir){lightdir_ = lightdir;lightdir_.normalize();};
 
 	/// <summary>
 	/// ライト方向を取得
@@ -34,7 +34,7 @@ public:
 	/// ライト色をセット
 	/// </summary>
 	/// <param name="lightcolor">ライト色</param>
-	inline void SetLightColor(const Vector3& lightcolor) { this->lightcolor_ = lightcolor; }
+	inline void SetLightColor(const Vector3& lightcolor) { lightcolor_ = lightcolor; }
 
 	/// <summary>
 	/// ライト色を取得
@@ -46,7 +46,7 @@ public:
 	/// 有効フラグをセット
 	/// </summary>
 	/// <param name="active">有効フラグ</param>
-	inline void SetActive(bool active) { this->active_ = active; }
+	inline void SetActive(bool active) { active_ = active; }
 
 	/// <summary>
 	/// 有効チェック

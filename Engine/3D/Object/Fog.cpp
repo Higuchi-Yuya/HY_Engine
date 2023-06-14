@@ -30,10 +30,10 @@ void Fog::Initialize()
 void Fog::UpdateMatrix()
 {
 	//定数バッファに転送
-	constMap_->isActiveFog = this->isActiveFog;
-	constMap_->fogColor = this->fogColor;
-	constMap_->nearFog = this->nearFog;
-	constMap_->farFog = this->farFog;
+	constMap_->isActiveFog = isActiveFog;
+	constMap_->fogColor = fogColor;
+	constMap_->nearFog = nearFog;
+	constMap_->farFog = farFog;
 }
 
 void Fog::Draw(ID3D12GraphicsCommandList* cmdList)

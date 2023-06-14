@@ -90,7 +90,7 @@ void ViewProjection::DebugCameraInitialze(Input* input)
 {
 	Initialize();
 	assert(input);
-	this->input_ = input;
+	input_ = input;
 	// 画面サイズに対する相対的なスケールに調整
 	scaleX_ = 1.0f / (float)WinApp::window_width;
 	scaleY_ = 1.0f / (float)WinApp::window_height;

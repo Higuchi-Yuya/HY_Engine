@@ -601,10 +601,10 @@ void Object3d::Draw(ViewProjection* viewProjection)
 
 }
 
-void Object3d::SetCollider(BaseCollider* collider_)
+void Object3d::SetCollider(BaseCollider* collider)
 {
 	collider_->SetObject(this);
-	this->collider_ = collider_;
+	collider_ = collider;
 
 	// ワールド行列を更新しおく
 	worldTransform_.UpdateMatrix();

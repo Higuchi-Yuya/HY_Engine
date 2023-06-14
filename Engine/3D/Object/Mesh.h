@@ -39,7 +39,7 @@ public:
 	/// 名前をセット
 	/// </summary>
 	/// <param name="name">名前</param>
-	void SetName(const std::string& name_);
+	void SetName(const std::string& name);
 
 	/// <summary>
 	/// 頂点データの追加

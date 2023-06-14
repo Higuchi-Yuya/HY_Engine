@@ -15,7 +15,7 @@ ImGuiManager::~ImGuiManager()
 
 void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 {
-	this->sDxCommon = dxCommon;
+	sDxCommon = dxCommon;
 
 	// ImGuiのコンテキストを生成
 	ImGui::CreateContext();
@@ -41,7 +41,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 
 	// DirectX12用初期化
 	ImGui_ImplDX12_Init(
-		this->sDxCommon->GetDevice(),
+		sDxCommon->GetDevice(),
 		static_cast<int>(sDxCommon->GetBackBufferCount()),
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, srvHeap_.Get(),
 		srvHeap_->GetCPUDescriptorHandleForHeapStart(),

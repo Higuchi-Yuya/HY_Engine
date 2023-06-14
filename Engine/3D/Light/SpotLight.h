@@ -30,7 +30,7 @@ public: // メンバ関数
 	/// ライト方向をセット
 	/// </summary>
 	/// <param name="lightdir">ライト方向</param>
-	inline void SetLightDir(const Vector3& lightdir) { this->lightdir_ = lightdir; this->lightdir_.normalize(); }
+	inline void SetLightDir(const Vector3& lightdir) { lightdir_ = lightdir; lightdir_.normalize(); }
 
 	/// <summary>
 	/// ライト方向を取得
@@ -42,7 +42,7 @@ public: // メンバ関数
 	/// ライト座標をセット
 	/// </summary>
 	/// <param name="lightpos">ライト座標</param>
-	inline void SetLightPos(const Vector3& lightpos) { this->lightpos_ = lightpos; }
+	inline void SetLightPos(const Vector3& lightpos) { lightpos_ = lightpos; }
 
 	/// <summary>
 	/// ライト座標を取得
@@ -54,7 +54,7 @@ public: // メンバ関数
 	/// ライト色をセット
 	/// </summary>
 	/// <param name="lightcolor">ライト色</param>
-	inline void SetLightColor(const Vector3& lightcolor) { this->lightcolor_ = lightcolor; }
+	inline void SetLightColor(const Vector3& lightcolor) { lightcolor_ = lightcolor; }
 
 	/// <summary>
 	/// ライト色を取得
@@ -66,7 +66,7 @@ public: // メンバ関数
 	/// ライト距離減衰係数をセット
 	/// </summary>
 	/// <param name="lightatten">ライト距離減衰係数</param>
-	inline void SetLightAtten(const Vector3& lightAtten) { this->lightAtten_ = lightAtten; }
+	inline void SetLightAtten(const Vector3& lightAtten) { lightAtten_ = lightAtten; }
 
 	/// <summary>
 	/// ライト距離減衰係数を取得
@@ -79,8 +79,8 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="lightFactorAngle">x:減衰開始角度 y:減衰終了角度[degree]</param>
 	inline void SetLightFactorAngle(const Vector2& lightFactorAngle) {
-		this->lightFactorAngleCos_.x = cosf(DirectX::XMConvertToRadians(lightFactorAngle.x));
-		this->lightFactorAngleCos_.y = cosf(DirectX::XMConvertToRadians(lightFactorAngle.y));
+		lightFactorAngleCos_.x = cosf(DirectX::XMConvertToRadians(lightFactorAngle.x));
+		lightFactorAngleCos_.y = cosf(DirectX::XMConvertToRadians(lightFactorAngle.y));
 	}
 
 	/// <summary>
@@ -93,7 +93,7 @@ public: // メンバ関数
 	/// 有効フラグをセット
 	/// </summary>
 	/// <param name="active">有効フラグ</param>
-	inline void SetActive(bool active) { this->active_ = active; }
+	inline void SetActive(bool active) { active_ = active; }
 
 	/// <summary>
 	/// 有効チェック

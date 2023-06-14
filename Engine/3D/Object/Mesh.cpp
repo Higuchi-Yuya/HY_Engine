@@ -62,9 +62,9 @@ void Mesh::CalculateSmoothedVertexNormals()
 	}
 }
 
-void Mesh::SetName(const std::string& name_)
+void Mesh::SetName(const std::string& name)
 {
-	this->name_ = name_;
+	name_ = name;
 }
 
 void Mesh::AddVertex(const VertexPosNormalUv& vertex)
@@ -77,9 +77,9 @@ void Mesh::AddIndex(unsigned short index)
 	indices_.emplace_back(index);
 }
 
-void Mesh::SetMaterial(Material* material_)
+void Mesh::SetMaterial(Material* material)
 {
-	this->material_ = material_;
+	material_ = material;
 }
 
 void Mesh::CreateBuffers()

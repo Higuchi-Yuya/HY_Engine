@@ -14,7 +14,7 @@ public:
 	// 仮想デストラクタ
 	virtual ~BaseCollider() = default;
 
-	inline void SetObject(Object3d* object) {this->object3d_ = object;}
+	inline void SetObject(Object3d* object) {object3d_ = object;}
 
 	inline Object3d* GetObject3d() { return object3d_; }
 
@@ -36,7 +36,7 @@ public:
 	/// </summary>
 	/// <param name="attribute">当たり判定属性</param>
 	inline void SetAttribute(unsigned short attribute) {
-		this->attribute_ = attribute;
+		attribute_ = attribute;
 	}
 
 	/// <summary>
@@ -44,7 +44,7 @@ public:
 	/// </summary>
 	/// <param name="attribute">当たり判定属性</param>
 	inline void AddAttribute(unsigned short attribute) {
-		this->attribute_ |= attribute;
+		attribute_ |= attribute;
 	}
 
 	/// <summary>
@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	/// <param name="attribute">当たり判定属性</param>
 	inline void RemoveAttribute(unsigned short attribute) {
-		this->attribute_ &= !attribute;
+		attribute_ &= !attribute;
 	}
 
 protected:

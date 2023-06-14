@@ -13,7 +13,7 @@ void DirectXCommon::Initalize(WinApp* winApp)
 	assert(winApp);
 
 	// ƒƒ“ƒo•Ï”‚É‹L˜^
-	this->winApp_ = winApp;
+	winApp_ = winApp;
 
 	// FPSŒÅ’è‰Šú‰»
 	InitializeFixFPS();

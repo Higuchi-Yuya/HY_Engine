@@ -113,7 +113,7 @@ private:// メンバ変数
 	//std::vector<Object3d*>objects;
 	
 	// ビュープロジェクション
-	ViewProjection* view = nullptr;
+	std::unique_ptr<ViewProjection> view = nullptr;
 
 	// Quaternion確認
 	Quaternion keisan;
@@ -143,7 +143,7 @@ private:// メンバ変数
 	char buf[256] = "";
 	float f = 0.0f;
 
-	Fog* fog = nullptr;
+	std::unique_ptr<Fog> fog = nullptr;
 	bool isFogActive = true;
 
 	Sound sound;

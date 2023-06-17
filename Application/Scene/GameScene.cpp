@@ -38,11 +38,11 @@ GameScene::~GameScene()
 	//delete modelPyramid;
 
 	// ビューの解放
-	delete view;
+
 	// ライトの解放
 
 	// フォグの解放
-	delete fog;
+
 
 	//delete atariModel;
 	//delete atariObj;
@@ -98,11 +98,11 @@ void GameScene::Initialize()
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light.get());
 
-	fog = Fog::Create();
+	fog.reset(Fog::Create());
 	fog->nearFog = 10;
 	fog->farFog = 100;
 	fog->isActiveFog = false;
-	Object3d::SetFog(fog);
+	Object3d::SetFog(fog.get());
 
 	// テクスチャハンドルの読み込み
 	//textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
@@ -191,7 +191,7 @@ void GameScene::Initialize()
 	//groundObj->SetModel(groundModel);
 
 	// ビュープロジェクションの初期化
-	view = new ViewProjection;
+	view = std::make_unique<ViewProjection>();
 	view->DebugCameraInitialze(input_.get());
 	view->target.y = 1.0f;
 	view->SetDistance(3.0f);
@@ -403,7 +403,7 @@ void GameScene::Update()
 	hitRay = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
 
 	fog->UpdateMatrix();
-	Object3d::SetFog(fog);
+	Object3d::SetFog(fog.get());
 
 	if (isActiveSound == true) {
 		sound.SoundPlayWave(true, 0.01f);
@@ -581,7 +581,7 @@ void GameScene::Draw3D()
 	//	object->Draw(view);
 	//}
 
-	objMedama->Draw(view);
+	objMedama->Draw(view.get());
 	
 
 	//objFighter->Draw(view);

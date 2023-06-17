@@ -300,7 +300,7 @@ void GameScene::Initialize()
 	
 
 	// モデル名を指定してファイルを読み込み
-	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	FbxLoader::GetInstance()->LoadModelFromFile("cube");
 }
 
 void GameScene::Update()

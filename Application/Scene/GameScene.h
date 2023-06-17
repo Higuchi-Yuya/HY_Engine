@@ -89,6 +89,7 @@ private:// ƒƒ“ƒo•Ï”
 	// ƒ‚ƒfƒ‹
 	//Model* model = nullptr;
 	std::unique_ptr<Model> model_2 = nullptr;
+	
 	////Model* modelFighter = nullptr;
 	//Model* groundModel = nullptr;
 

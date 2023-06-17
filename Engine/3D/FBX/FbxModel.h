@@ -9,6 +9,7 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 
+#include "Texture.h"
 #include <Mesh.h>
 #include "Material.h"
 #include <LightGroup.h>
@@ -57,10 +58,10 @@ public: // サブクラス
 	// 定数バッファ用データ構造体
 	struct ConstBufferPolygonExplosion
 	{
-		float _Destruction = 0.0f;
-		float _ScaleFactor = 1.0f;
-		float _RotationFactor = 0.0f;
-		float _PositionFactor = 0.0f;
+		float Destruction = 0.0f;
+		float ScaleFactor = 1.0f;
+		float RotationFactor = 0.0f;
+		float PositionFactor = 0.0f;
 	};
 
 private:
@@ -111,7 +112,8 @@ private: // 静的メンバ変数
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState_;
 	// ライト
 	static std::unique_ptr<LightGroup> lightGroup_;
-
+	// 借りてくるデバイス
+	static ID3D12Device* device_;
 
 public: // 静的メンバ関数
 
@@ -130,6 +132,9 @@ public: // 静的メンバ関数
 
 	// OBJファイルからメッシュ生成
 	static FbxModel* CreateFromFbx(const std::string& modelname, bool smoothing = false);
+
+	// 借りてくるデバイスをセット
+	static void SetDevice(ID3D12Device* device) { device_ = device; }
 
 	// 描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
@@ -184,16 +189,14 @@ public: // メンバ関数
 	Matrix4 GetLeftBonePos();
 	Matrix4 GetRightBonePos();
 
-	void SetTextureHandle(uint32_t textureHandle) { modelTextureHandle_ = textureHandle; }
+	void SetTextureHandle(Texture textureHandle) { modelTextureHandle_ = textureHandle; }
+
+	
 
 private:
 
-	Matrix4 Test_;
-
-
 	// ノード配列
 	std::vector<Node> nodes_;
-
 
 	Matrix4 globalInverseTransform_;
 
@@ -206,7 +209,7 @@ private:
 	// デフォルトマテリアル
 	Material* defaultMaterial_ = nullptr;
 
-	uint32_t modelTextureHandle_ = 0;
+	Texture modelTextureHandle_;
 
 	Matrix4 matrixL_;
 	Matrix4 matrixR_;

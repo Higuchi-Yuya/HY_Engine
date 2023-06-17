@@ -70,7 +70,7 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName) {
 			objectData.rotation.x = -(float)transform["rotation"][1];
 			objectData.rotation.y = -(float)transform["rotation"][2];
 			objectData.rotation.z = (float)transform["rotation"][0];
-	
+
 			// スケーリング
 			objectData.scaling.x = (float)transform["scaling"][1];
 			objectData.scaling.y = (float)transform["scaling"][2];

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FbxModel.h"
+#include "Texture.h"
 
 #include <d3d12.h>
 #include <d3dx12.h>
@@ -46,6 +47,41 @@ public:// メンバ関数
 	/// <param name="modelName">モデル名</param>
 	FbxModel* LoadModelFromFile(const string& modelName);
 
+	void ParseSkin(FbxModel* model, aiMesh* fbxMesh);
+
+	void GetNodeNum(const aiNode* node, UINT32& num);
+
+private:// プライベート関数
+	
+	/// <summary>
+	/// 再帰的にノード構成を解析
+	/// </summary>
+	/// <param name="model">読み込み先モデルオブジェクト</param>
+	/// <param name="fbxNode">解析対象のノード</param>
+	/// <param name="parent">親ノード</param>
+	void ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* parent = nullptr);
+
+	/// <summary>
+	/// メッシュ読み取り
+	/// </summary>
+	/// <param name="model">読み込み先モデルオブジェクト</param>
+	/// <param name="fbxNode">解析対象のノード</param>
+	void ParseMesh(FbxModel* model, aiMesh* fbxNode);
+	
+	// 頂点座標読み取り
+	void ParseMeshVertices(FbxModel* model, aiMesh* fbxMesh);
+	
+	// 面情報読み取り
+	void ParseMeshFaces(FbxModel* model, aiMesh* fbxMesh);
+	
+	// マテリアル読み取り
+	void ParseMaterial(FbxModel* model, aiMesh* fbxMesh, aiMaterial* aimaterial);
+
+	// ディレクトリを含んだファイルパスからファイル名を抽出する
+	std::string ExtractFileName(const std::string& path);
+
+	Texture LoadMatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene_, const std::string& modelName);
+
 private:// メンバ変数
 
 	// privateなコンストラクタ（シングルトンパターン）
@@ -78,5 +114,8 @@ private:// メンバ変数
 
 	// シーン
 	const aiScene* mScene_;
+
+	// テクスチャ
+	Texture textureHandle_;
 };
 

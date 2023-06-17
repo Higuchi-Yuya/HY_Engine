@@ -134,6 +134,19 @@ void Mesh::CreateBuffers()
 	ibView_.Format = DXGI_FORMAT_R16_UINT;
 	ibView_.SizeInBytes = sizeIB;
 
+	// リソース設定
+	CD3DX12_RESOURCE_DESC BoneResourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(Bone) + 0xff) & ~0xff);
+
+	// 定数バッファの生成
+	result = sDevice_->CreateCommittedResource(
+		&heapProps, // アップロード可能
+		D3D12_HEAP_FLAG_NONE, &BoneResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&BoneBuff_));
+
+	// 定数バッファとのデータリンク
+	result = BoneBuff_->Map(0, nullptr, (void**)&constMap);
+	assert(SUCCEEDED(result));
+
 	//// リソースデスクをマテリアル用バッファにリサイズ
 	//resourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
 }

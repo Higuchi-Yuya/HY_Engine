@@ -2,19 +2,59 @@
 #include <vector>
 #include <unordered_map>
 #include "Material.h"
+
+// ノード
+struct Node
+{
+	//名前
+	std::string name;
+	//ローカル変形行列
+	Matrix4 transform;
+	//グローバル変形行列
+	Matrix4 globalTransform;
+	//親ノード
+	Node* parent = nullptr;
+	//子ノード
+	std::vector<Node*>childrens;
+
+};
+
 class Mesh
 {
 private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:// サブクラス
+	friend class FbxLoader;
+	friend class FbxModel;
+	static const int sMAX_BONE_INDICES = 4;
+
+	// 骨
+	struct Bone
+	{
+		//名前
+		std::string name;
+
+		Matrix4 matrix;
+		Matrix4 animationMatrix;
+		Matrix4 offsetMatirx;
+
+		UINT index;
+
+	};
+
 	// 頂点データ構造体
 	struct VertexPosNormalUv
 	{
 		Vector3 pos; // xyz座標
 		Vector3 normal; // 法線ベクトル
 		Vector2 uv;  // uv座標
+
+		uint32_t boneIndex[sMAX_BONE_INDICES];
+		float boneWeight[sMAX_BONE_INDICES];
 	};
+
+
 
 public:
 	// デバイスのセッター
@@ -117,6 +157,9 @@ private:
 	// インデックスバッファ
 	ComPtr<ID3D12Resource> indexBuff_;
 
+	//ボーンバッファ
+	ComPtr<ID3D12Resource> BoneBuff_;
+
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 
@@ -128,5 +171,16 @@ private:
 
 	// マテリアル
 	Material* material_ = nullptr;
+
+	// ボーン
+	std::unordered_map<std::string, Bone*> bones;
+
+	std::vector<Bone> vecBones;
+
+	// ノード
+	Node* node = nullptr;
+
+	// マッピング済みアドレス
+	Bone* constMap = nullptr;
 };
 

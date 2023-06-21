@@ -12,7 +12,7 @@ float4 main(GSOutput input) : SV_TARGET
 	float diffuse = saturate(dot(-light, input.normal));
 	//float brightness = diffuse + 0.3f;
 	float brightness = 1;
-	float4 shadecolor = float4(brightness, brightness, brightness, m_alpha);
+	float4 shadecolor = float4(brightness, brightness, brightness, color.a);
 	// 陰影とテクスチャの色を合成
 	//float4 test = (1, 1, 1, 1);
 	//return test;

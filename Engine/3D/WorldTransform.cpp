@@ -36,7 +36,7 @@ void WorldTransform::CreateConstBuffer()
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 
 	assert(SUCCEEDED(result));
 }
@@ -44,7 +44,7 @@ void WorldTransform::CreateConstBuffer()
 void WorldTransform::Map()
 {
 	//定数バッファのマッピング
-	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);//マッピング
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
 	assert(SUCCEEDED(result));
 }
 
@@ -75,6 +75,6 @@ void WorldTransform::UpdateMatrix()
 	}
 
 	//定数バッファに転送
-	constMap->color = color;
-	constMap->matWorld = matWorld_;
+	constMap_->color = color;
+	constMap_->matWorld = matWorld_;
 }

@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include<atldef.h>
+#include <MathUtil.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -200,7 +201,7 @@ void FbxModel::InitializeGraphicsPipeline() {
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	gpipeline.NumRenderTargets = 1;                       // 描画対象は1つ
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT; // 0～255指定のRGBA
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
@@ -209,10 +210,10 @@ void FbxModel::InitializeGraphicsPipeline() {
 
 	// ルートパラメータ
 	CD3DX12_ROOT_PARAMETER rootparams[7];
-	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[2].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[3].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[0].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[1].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[2].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[3].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[4].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[5].InitAsConstantBufferView(4, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[6].InitAsConstantBufferView(5, 0, D3D12_SHADER_VISIBILITY_ALL);
@@ -318,11 +319,6 @@ FbxModel::~FbxModel() {
 	}
 	meshes_.clear();
 
-	for (auto m : materials_) {
-		delete m.second;
-	}
-	materials_.clear();
-
 	delete defaultMaterial_;
 }
 
@@ -347,7 +343,7 @@ void FbxModel::Initialize() {
 
 	// メッシュのバッファ生成
 	for (auto& m : meshes_) {
-
+		
 		Vector3 ambient_ = { 1.0f, 1.0f, 1.0f };
 		Vector3 diffuse_ = { 0.0f, 0.0f, 0.0f };
 		Vector3 specular_ = { 0.0f, 0.0f, 0.0f };
@@ -359,13 +355,13 @@ void FbxModel::Initialize() {
 	}
 
 	// マテリアルの数値を定数バッファに反映
-	for (auto& m : materials_) {
+	for (auto& m : meshes_) {
 
-		m.second->Update();
+		m->material_->Update();
 	}
 
 	for (auto& m : meshes_) {
-		for (auto& b : m->) {
+		for (auto& b : m->vecBones) {
 
 			m->bones[b.name] = &b;
 
@@ -378,7 +374,7 @@ void FbxModel::Initialize() {
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
 	CD3DX12_RESOURCE_DESC resourceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataWorldTransform) + 0xff) & ~0xff);
+		CD3DX12_RESOURCE_DESC::Buffer((sizeof(WorldTransform::ConstBufferDataWorldTransform) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
 	HRESULT result = device_->CreateCommittedResource(
@@ -420,20 +416,19 @@ void FbxModel::FbxUpdate(float frem)
 
 }
 
-
 void FbxModel::Draw(
-	const WorldTransform& worldTransform, const ViewProjection& viewProjection) {
+	WorldTransform* worldTransform, ViewProjection* viewProjection) {
 
 	for (int i = 0; i < meshes_.size(); i++) {
 
 		// ライトの描画
-		lightGroup_->Draw(sCommandList_);
+		lightGroup_->Draw(sCommandList_,4);
 
 		// CBVをセット（ワールド行列）
-		sCommandList_->SetGraphicsRootConstantBufferView(0, worldTransform.GetGPUVirtualAddress());
+		sCommandList_->SetGraphicsRootConstantBufferView(1, worldTransform->GetBuff()->GetGPUVirtualAddress());
 
 		// CBVをセット（ビュープロジェクション行列）
-		sCommandList_->SetGraphicsRootConstantBufferView(1, viewProjection.constBuff_->GetGPUVirtualAddress());
+		sCommandList_->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
 
 		if (meshes_[i]->node) {
 
@@ -442,7 +437,7 @@ void FbxModel::Draw(
 			//定数バッファへデータ転送
 			ConstBufferDataInitialMatrix* constMapSkin = nullptr;
 			result = constBuffNothing_->Map(0, nullptr, (void**)&constMapSkin);
-			constMapSkin->InitialMatrix = meshes_[i]->node_->globalTransform;
+			constMapSkin->InitialMatrix = meshes_[i]->node->globalTransform;
 
 			constBuffNothing_->Unmap(0, nullptr);
 
@@ -458,24 +453,23 @@ void FbxModel::Draw(
 		sCommandList_->SetGraphicsRootConstantBufferView(6, constBuff_->GetGPUVirtualAddress());
 
 		// 全メッシュを描画
-		meshes_[i]->Draw(sCommandList_, 2, 3, modelTextureHandle);
+		meshes_[i]->Draw(sCommandList_);
 	}
 }
 
-
-void FbxModel::Draw(const WorldTransform& worldTransform, const ViewProjection& viewProjection, uint32_t textureHadle) {
+void FbxModel::Draw(WorldTransform* worldTransform, ViewProjection* viewProjection, Texture textureHadle) {
 
 	// 全メッシュを描画
 	for (auto& mesh : meshes_) {
 
 		// ライトの描画
-		lightGroup_->Draw(sCommandList_);
+		lightGroup_->Draw(sCommandList_,4);
 
 		// CBVをセット（ワールド行列）
-		sCommandList_->SetGraphicsRootConstantBufferView(0, worldTransform.constBuff_->GetGPUVirtualAddress());
+		sCommandList_->SetGraphicsRootConstantBufferView(0, worldTransform->GetBuff()->GetGPUVirtualAddress());
 
 		// CBVをセット（ビュープロジェクション行列）
-		sCommandList_->SetGraphicsRootConstantBufferView(1, viewProjection.constBuff_->GetGPUVirtualAddress());
+		sCommandList_->SetGraphicsRootConstantBufferView(1, viewProjection->GetBuff()->GetGPUVirtualAddress());
 
 		if (mesh->node) {
 
@@ -500,7 +494,7 @@ void FbxModel::Draw(const WorldTransform& worldTransform, const ViewProjection& 
 		sCommandList_->SetGraphicsRootConstantBufferView(6, constBuff_->GetGPUVirtualAddress());
 
 
-		mesh->Draw(sCommandList_, 2, 3, textureHadle);
+		mesh->DrawFBX(sCommandList_, textureHadle);
 	}
 }
 
@@ -508,11 +502,12 @@ void FbxModel::Draw(const WorldTransform& worldTransform, const ViewProjection& 
 void FbxModel::ModelAnimation(float frame, aiAnimation* Animation, int BoneNum) {
 
 	HRESULT result = S_FALSE;
+	Matrix4 mathMat;
 
-	Matrix4 mxIdentity = MyMath::MakeIdentity();
-	Node* pNode = &nodes[0];
+	Matrix4 mxIdentity = mathMat.identity();
+	Node* pNode = &nodes_[0];
 
-	naosi.Initialize();
+	naosi_.Initialize();
 
 	FLOAT TicksPerSecond = (FLOAT)(Animation->mTicksPerSecond != 0 ? Animation->mTicksPerSecond : 25.0f);
 
@@ -539,21 +534,19 @@ void FbxModel::ModelAnimation(float frame, aiAnimation* Animation, int BoneNum) 
 
 	for (Mesh* mesh : meshes_)
 	{
-		/*naosi.translation_ = MyMath::GetWorldTransform();
-		naosi.translation_ = naosi.translation_;
-		naosi.TransferMatrix();*/
 
-		matrixL_ = mesh->bones[mesh->vecBones[16].name]->matrix;
-		matrixR_ = mesh->bones[mesh->vecBones[40].name]->matrix;
 
 	}
 	constBuffSkin_->Unmap(0, nullptr);
 }
 
 
-void FbxModel::ReadNodeHeirarchy(Mesh* mesh, aiAnimation* pAnimation, FLOAT AnimationTime, Node* pNode, Matrix4& mxParentTransform) {
+void FbxModel::ReadNodeHeirarchy(Mesh* mesh, aiAnimation* pAnimation, FLOAT AnimationTime, Node* pNode, Matrix4& mxParentTransform) 
+{
+	Matrix4 mathMat;
 
-	Matrix4 mxNodeTransformation = MyMath::MakeIdentity();
+
+	Matrix4 mxNodeTransformation = mathMat.identity();
 	mxNodeTransformation = pNode->transform;
 
 	Matrix4 mxThisTrans = mxNodeTransformation;
@@ -568,20 +561,21 @@ void FbxModel::ReadNodeHeirarchy(Mesh* mesh, aiAnimation* pAnimation, FLOAT Anim
 		Vector3 vScaling = {};
 		CalcInterpolatedScaling(vScaling, AnimationTime, pNodeAnim);
 		Matrix4 mxScaling;
-		mxScaling = MyMath::Scale(vScaling);
+		mxScaling = mathMat.scale(vScaling);
 
 		//回転角
 		Vector4 vRotationQ = {};
 		CalcInterpolatedRotation(vRotationQ, AnimationTime, pNodeAnim);
-		Matrix4 mxRotationM = Quaternion(vRotationQ).Rotate();
+		Quaternion qRota(vRotationQ.x, vRotationQ.y, vRotationQ.z, vRotationQ.w);
+		Matrix4 mxRotationM = qRota.MakeRotateMatrix(qRota);
 
 		//移動
 		Vector3 vTranslation = {};
 		CalcInterpolatedPosition(vTranslation, AnimationTime, pNodeAnim);
 		Matrix4 mxTranslationM;
-		mxTranslationM = MyMath::Translation(vTranslation);
+		mxTranslationM = mathMat.translate(vTranslation);
 
-		Matrix4 affin = MyMath::Initialize();
+		Matrix4 affin = mathMat.identity();
 		/*affin *= mxScaling;
 		affin *= mxRotationM;
 		affin *= mxTranslationM;*/
@@ -600,7 +594,7 @@ void FbxModel::ReadNodeHeirarchy(Mesh* mesh, aiAnimation* pAnimation, FLOAT Anim
 	{
 		offsetMatirx = mesh->bones[strNodeName]->offsetMatirx;
 
-		matirx = offsetMatirx * mxGlobalTransformation * globalInverseTransform;
+		matirx = offsetMatirx * mxGlobalTransformation * globalInverseTransform_;
 
 		mesh->bones[strNodeName]->matrix = matirx;
 
@@ -635,9 +629,10 @@ aiNodeAnim* FbxModel::FindNodeAnim(const aiAnimation* pAnimation, const std::str
 
 void FbxModel::CalcInterpolatedScaling(Vector3& mxOut, float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
+	Vector3 mathVec3;
 	if (pNodeAnim->mNumScalingKeys == 1)
 	{
-		mxOut = MyMath::AssimpVector3(pNodeAnim->mScalingKeys[0].mValue);
+		mxOut = MathUtil::AssimpVec3ToVector3(pNodeAnim->mScalingKeys[0].mValue);
 		return;
 	}
 
@@ -654,15 +649,16 @@ void FbxModel::CalcInterpolatedScaling(Vector3& mxOut, float AnimationTime, cons
 	float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
 	ATLASSERT(Factor >= 0.0f && Factor <= 1.0f);
 
-	mxOut = lerp(MyMath::AssimpVector3(pNodeAnim->mScalingKeys[ScalingIndex].mValue), MyMath::AssimpVector3(pNodeAnim->mScalingKeys[NextScalingIndex].mValue), Factor);
+	mxOut = mathVec3.lerp(MathUtil::AssimpVec3ToVector3(pNodeAnim->mScalingKeys[ScalingIndex].mValue), MathUtil::AssimpVec3ToVector3(pNodeAnim->mScalingKeys[NextScalingIndex].mValue), Factor);
 
 }
 
 void FbxModel::CalcInterpolatedRotation(Vector4& mxOut, float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
+	Vector4 mathVec4;
 	if (pNodeAnim->mNumRotationKeys == 1)
 	{
-		mxOut = MyMath::AssimpQuaternionVec4(pNodeAnim->mRotationKeys[0].mValue);
+		mxOut = MathUtil::AssimpQuaternionToVec4(pNodeAnim->mRotationKeys[0].mValue);
 		return;
 	}
 
@@ -680,7 +676,7 @@ void FbxModel::CalcInterpolatedRotation(Vector4& mxOut, float AnimationTime, con
 	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
 	ATLASSERT(Factor >= 0.0f && Factor <= 1.0f);
 
-	mxOut = MyMath::QuaternionSlerp(
+	mxOut = MathUtil::AssimpQuaternionSlerp(
 		pNodeAnim->mRotationKeys[RotationIndex].mValue
 		, pNodeAnim->mRotationKeys[NextRotationIndex].mValue
 		, Factor);
@@ -689,9 +685,10 @@ void FbxModel::CalcInterpolatedRotation(Vector4& mxOut, float AnimationTime, con
 
 void FbxModel::CalcInterpolatedPosition(Vector3& mxOut, float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
+	Vector3 mathVec3;
 	if (pNodeAnim->mNumPositionKeys == 1)
 	{
-		mxOut = MyMath::AssimpVector3(pNodeAnim->mPositionKeys[0].mValue);
+		mxOut = MathUtil::AssimpVec3ToVector3(pNodeAnim->mPositionKeys[0].mValue);
 		return;
 	}
 
@@ -709,7 +706,7 @@ void FbxModel::CalcInterpolatedPosition(Vector3& mxOut, float AnimationTime, con
 	float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
 	ATLASSERT(Factor >= 0.0f && Factor <= 1.0f);
 
-	mxOut = lerp(MyMath::AssimpVector3(pNodeAnim->mPositionKeys[PositionIndex].mValue), MyMath::AssimpVector3(pNodeAnim->mPositionKeys[NextPositionIndex].mValue), Factor);
+	mxOut = mathVec3.lerp(MathUtil::AssimpVec3ToVector3(pNodeAnim->mPositionKeys[PositionIndex].mValue), MathUtil::AssimpVec3ToVector3(pNodeAnim->mPositionKeys[NextPositionIndex].mValue), Factor);
 }
 
 bool FbxModel::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nPosIndex)

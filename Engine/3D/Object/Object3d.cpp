@@ -594,7 +594,7 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	sFog_->Draw(sCmdList_);
 
 	// ライトの描画
-	sLight_->Draw(sCmdList_);
+	sLight_->Draw(sCmdList_,4);
 
 	// モデルを描画
 	model_->Draw(sCmdList_, 1);

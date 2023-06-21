@@ -9,30 +9,15 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 
+#include "Quaternion.h"
 #include "Texture.h"
 #include <Mesh.h>
 #include "Material.h"
 #include <LightGroup.h>
-#include <WorldTransform.h>
+#include "WorldTransform.h"
 #include <ViewProjection.h>
 #include <assimp/anim.h>
 
-
-// ノード
-struct Node
-{
-	//名前
-	std::string name;
-	//ローカル変形行列
-	Matrix4 transform;
-	//グローバル変形行列
-	Matrix4 globalTransform;
-	//親ノード
-	Node* parent = nullptr;
-	//子ノード
-	std::vector<Node*>childrens;
-
-};
 
 class FbxModel
 {
@@ -156,12 +141,12 @@ public: // メンバ関数
 	//void Draw(
 	//	const WorldTransform& worldTransform, const ViewProjection& viewProjection);
 
-	void Draw(const WorldTransform& worldTransform, const ViewProjection& viewProjection);
+	void Draw(WorldTransform* worldTransform, ViewProjection* viewProjection);
 
-	void Draw(const WorldTransform& worldTransform, const ViewProjection& viewProjection, uint32_t textureHadle);
+	void Draw(WorldTransform* worldTransform, ViewProjection* viewProjection, Texture textureHadle);
 
 
-	void ModelAnimation(float frame, aiAnimation* Animation);
+	void ModelAnimation(float frame, aiAnimation* Animation, int BoneNum);
 
 	void ReadNodeHeirarchy(Mesh* mesh, aiAnimation* Animation, FLOAT AnimationTime, Node* pNode, Matrix4& mxIdentity);
 

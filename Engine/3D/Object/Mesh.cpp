@@ -30,7 +30,35 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetGraphicsRootConstantBufferView(3, material_->GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(0, material_->textureIndex.GetGpuHandle());
+	cmdList->SetGraphicsRootDescriptorTable(0, material_->textureIndex_.GetGpuHandle());
+
+	// 描画コマンド
+	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);
+}
+
+void Mesh::DrawFBX(ID3D12GraphicsCommandList* cmdList, Texture texHandle)
+{
+	// nullptrチェック
+	assert(sDevice_);
+	assert(cmdList);
+
+	// 頂点バッファの設定
+	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+	// インデックスバッファの設定
+	cmdList->IASetIndexBuffer(&ibView_);
+
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// マテリアル用定数バッファビューをセット
+	cmdList->SetGraphicsRootConstantBufferView(3, material_->GetConstantBuffer()->GetGPUVirtualAddress());
+
+	// マテリアルのテクスチャをセット
+	material_->SetTexture(texHandle);
+
+	// シェーダリソースビューをセット
+	cmdList->SetGraphicsRootDescriptorTable(0, material_->textureIndex_.GetGpuHandle());
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);
@@ -87,13 +115,12 @@ void Mesh::CreateBuffers()
 	HRESULT result = S_FALSE;
 
 	uint32_t sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices_.size());//vertices_
-	uint32_t sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices_.size());
+	
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
 	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
-	CD3DX12_RESOURCE_DESC resourceDesc2 = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
 	// 頂点バッファ生成
 	result = sDevice_->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
@@ -114,11 +141,12 @@ void Mesh::CreateBuffers()
 	vbView_.StrideInBytes = sizeof(vertices_[0]);
 
 	// リソース設定
+	uint32_t sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices_.size());
 	resourceDesc.Width = sizeIB;
 
 	// インデックスバッファ生成
 	result = sDevice_->CreateCommittedResource(
-		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc2, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&indexBuff_));
 
 	// インデックスバッファへのデータ転送

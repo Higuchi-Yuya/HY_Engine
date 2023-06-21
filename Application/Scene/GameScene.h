@@ -9,6 +9,7 @@
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
 #include "FbxLoader.h"
+#include "FbxAnimetion.h"
 #include "LevelLoder.h"
 #include "TextureManager.h"
 
@@ -33,6 +34,8 @@ public:// メンバ関数
 
 	// Imguiの更新処理
 	void ImguiUpdate();
+
+	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
 
 	// 描画処理
 	void Draw2DBack();
@@ -175,6 +178,16 @@ private:// メンバ変数
 
 	//std::map<std::string, Model*> models;
 	//std::vector<Object3d*> objects;
+#pragma endregion
+
+#pragma region FBXモデルの確認
+	std::unique_ptr<FbxModel> fbxmodel_;
+	WorldTransform fbxTrans_;
+	std::unique_ptr<FbxAnimetion> modelAnim_;
+	DirectXCommon* dxCommon_ = nullptr;
+
+	float frem = 0;
+	uint32_t BoneNum = 0;
 #pragma endregion
 
 };

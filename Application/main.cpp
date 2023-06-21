@@ -78,9 +78,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// オブジェクトの初期化
 	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
 
-	// FBXのローダーの初期化
-	//FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
-
 	// ビュープロジェクションの初期化
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
 
@@ -93,6 +90,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// フォグの静的初期化
 	Fog::StaticInitialize(dxCommon->GetDevice());
 
+	// FBXの初期化
+	FbxModel::SetDevice(dxCommon->GetDevice());
+	FbxModel::StaticInitialize();
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////
@@ -101,7 +102,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region シーンに使う変数の初期化
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize();
-
+	gameScene->SetDxComon(dxCommon);
 #pragma endregion
 
 	//ゲームループ

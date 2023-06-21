@@ -62,6 +62,7 @@ public:
 
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void DrawFBX(ID3D12GraphicsCommandList* cmdList,Texture texHandle);
 
 	// エッジ平滑化データの追加
 	void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex);

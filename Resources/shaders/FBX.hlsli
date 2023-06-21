@@ -1,6 +1,6 @@
 cbuffer WorldTransform : register(b0) {
+    float4 color; // 色（RGBA）
 	matrix world; // ワールド行列
-	float m_alpha;	// アルファ
 };
 
 cbuffer ViewProjection : register(b1) {

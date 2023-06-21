@@ -1,5 +1,7 @@
 #include "FbxLoader.h"
 #include <cassert>
+#include "MathUtil.h"
+
 
 FbxLoader* FbxLoader::sFbxLoader_;
 const std::string FbxLoader::sBaseDirectory = "Resources/3D_Resources/FBX_File/";
@@ -59,7 +61,7 @@ FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 	// あらかじめ必要数分のメモリを確保することで、アドレスがずれるのを予防
 	model->nodes_.reserve(nodeCount);
 
-	model->globalInverseTransform_ = mathMat.AssimpMatToMat4(mScene_->mRootNode->mTransformation);
+	model->globalInverseTransform_ = MathUtil::AssimpMatToMat4(mScene_->mRootNode->mTransformation);
 
 	// ルートノードから順に解析してモデルに流し込む
 	ParseNodeRecursive(model, mScene_->mRootNode);
@@ -82,7 +84,7 @@ FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 
 	model->SetTextureHandle(textureHandle_);
 
-	return nullptr;
+	return model;
 }
 
 void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
@@ -103,7 +105,7 @@ void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 		return;
 	}
 
-	for (int i = 0; i < fbxMesh->mNumBones; i++) {
+	for (uint32_t i = 0; i < fbxMesh->mNumBones; i++) {
 
 		auto& meshBone = fbxMesh->mBones[i];
 
@@ -118,7 +120,7 @@ void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 		//FBXから初期姿勢行列を取得する
 
 		//初期姿勢行列の逆行列を得る
-		bone.offsetMatirx = mathMat.AssimpMatToMat4(meshBone->mOffsetMatrix.Transpose());
+		bone.offsetMatirx = MathUtil::AssimpMatToMat4(meshBone->mOffsetMatrix.Transpose());
 
 
 
@@ -127,7 +129,7 @@ void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 		model->meshes_.back()->vecBones.push_back(bone);
 		//model->meshes_.back()->bones[bone.name] = &model->meshes_.back()->vecBones.back();
 
-		for (int j = 0; j < meshBone->mNumWeights; j++) {
+		for (uint64_t j = 0; j < meshBone->mNumWeights; j++) {
 			int vertIndex = meshBone->mWeights[j].mVertexId;
 
 			float weight = (float)meshBone->mWeights[j].mWeight;
@@ -216,7 +218,7 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* paren
 	}
 
 	// 子ノードに対して再帰呼び出し
-	for (int i = 0; i < fbxNode->mNumChildren; i++) {
+	for (uint32_t i = 0; i < fbxNode->mNumChildren; i++) {
 		ParseNodeRecursive(model, fbxNode->mChildren[i], &node);
 	}
 }
@@ -320,7 +322,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, aiMesh* fbxMesh, aiMaterial* aima
 
 	Texture deffuseMap = LoadMatrixerialTextures(aimaterial, aiTextureType_DIFFUSE, "Diffuse", mScene_, model->name_);
 
-	material->textureIndex = deffuseMap;
+	material->textureIndex_ = deffuseMap;
 }
 
 std::string FbxLoader::ExtractFileName(const std::string& path)
@@ -351,7 +353,7 @@ Texture FbxLoader::LoadMatrixerialTextures(aiMaterial* cmatrix, aiTextureType ty
 		Texture texture;
 		{
 			std::string filename = ExtractFileName(std::string(str.C_Str()));
-			filename = modelName + '\\' + filename;
+			filename = sBaseDirectory + modelName + "/" + filename;
 			texture = TextureManager::LoadTexture(filename);
 			textureHandle_ = texture;
 		}

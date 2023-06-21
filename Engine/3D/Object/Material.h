@@ -55,7 +55,7 @@ public:
 	std::string textureFilename; // テクスチャファイル名
 
 	// テクスチャ番号
-	Texture textureIndex;
+	Texture textureIndex_;
 public:
 	/// <summary>
 	/// 定数バッファの取得
@@ -73,6 +73,9 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	// テクスチャのセット
+	void SetTexture(Texture textureIndex) { textureIndex_ = textureIndex; }
 
 private:
 

@@ -29,7 +29,7 @@ public:// メンバ関数
 	void UpdateMatrix();
 
 	// バッファのゲッター
-	ID3D12Resource *GetBuff() { return constBuff.Get(); }
+	ID3D12Resource *GetBuff() { return constBuff_.Get(); }
 
 private:// プライベート関数
 	/// <summary>
@@ -66,9 +66,9 @@ private:// メンバ変数
 	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
 	// マッピング済みアドレス
-	ConstBufferDataWorldTransform* constMap = nullptr;
+	ConstBufferDataWorldTransform* constMap_ = nullptr;
 };
 

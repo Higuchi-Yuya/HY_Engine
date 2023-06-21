@@ -1,6 +1,9 @@
 #include "FbxAnimetion.h"
 #include <cassert>
 
+const std::string FbxAnimetion::baseDirectory = "Resources/3D_Resources/FBX_File/";
+const std::string FbxAnimetion::defaultTextureFileName = "white1x1.png";
+
 FbxAnimetion::FbxAnimetion()
 {
 }

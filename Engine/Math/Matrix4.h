@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include<assimp/scene.h>
+#include <Vector4.h>
 
 class Matrix4
 {
@@ -49,8 +50,14 @@ public:
 	// 射影行列作成
 	Matrix4 ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ);
 
-	// アシンプのマトリックスを自作のものに変換
-	Matrix4 AssimpMatToMat4(aiMatrix4x4 mat4);
+	// マットリックスの掛け算を返す
+	Matrix4 MatMul(const Matrix4& Mat);
+
+	// Vec4の掛け
+	Vector4 Vec4MulPs(const Vector4& v4_1, const Vector4& v4_2);
+
+	// Vec4の足し
+	Vector4 Vec4AddPs(const Vector4& v4_1, const Vector4& v4_2);
 
 	// 代入演算子オーバーロード
 	Matrix4 operator - () const;

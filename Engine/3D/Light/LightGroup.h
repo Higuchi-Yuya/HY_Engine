@@ -61,7 +61,7 @@ public:// メンバ関数
 	void Update();
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
 
 	/// <summary>
 	/// 環境光のライト色をセット

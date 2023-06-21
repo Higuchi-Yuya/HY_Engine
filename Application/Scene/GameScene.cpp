@@ -300,7 +300,16 @@ void GameScene::Initialize()
 	
 
 	// モデル名を指定してファイルを読み込み
-	FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	fbxmodel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("3dKyaraFixUlt"));
+	fbxmodel_->Initialize();
+	fbxTrans_.Initialize();
+	fbxTrans_.scale = { 0.03f,0.03f, 0.03f };
+	fbxTrans_.UpdateMatrix();
+
+	modelAnim_ = std::make_unique<FbxAnimetion>();
+	modelAnim_->Load("3dKyaraFixUlt");
+	
 }
 
 void GameScene::Update()
@@ -423,6 +432,8 @@ void GameScene::Update()
 	//for (auto& object : objects) {
 	//	object->Update();
 	//}
+	frem += 0.01f;
+	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(10)), BoneNum);
 }
 
 void GameScene::ImguiUpdate()
@@ -575,13 +586,13 @@ void GameScene::Draw2DBack()
 
 void GameScene::Draw3D()
 {
-
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 	//object3d->Draw(view);
 	//for (auto& object : objects) {
 	//	object->Draw(view);
 	//}
 
-	objMedama->Draw(view);
+	//objMedama->Draw(view);
 	
 
 	//objFighter->Draw(view);
@@ -593,6 +604,13 @@ void GameScene::Draw3D()
 	//atariObj->Draw(view);
 	
 	//groundObj->Draw(view);
+
+	// FBXモデルの描画
+	FbxModel::PreDraw(commandList);
+
+	fbxmodel_->Draw(&fbxTrans_, view);
+
+	FbxModel::PostDraw();
 }
 
 void GameScene::Draw2DFront()

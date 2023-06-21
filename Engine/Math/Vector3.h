@@ -1,4 +1,5 @@
 #pragma once
+#include <assimp/vector3.h>
 
 class Vector3
 {

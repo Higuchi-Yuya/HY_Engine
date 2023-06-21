@@ -243,6 +243,9 @@
     <ClCompile Include="Engine\DirectXBase\TextureManager.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Math\MathUtil.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -376,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="Engine\DirectXBase\TextureManager.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\MathUtil.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/LevelLoder</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/PostEffect</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/LevelLoder</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/PostEffect</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -142,6 +142,7 @@
     <ClCompile Include="Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="Engine\3D\FBX\FbxModel.cpp" />
     <ClCompile Include="Engine\3D\FBX\FbxAnimetion.cpp" />
+    <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Engine\3D\FBX\FbxLoader.h" />
     <ClInclude Include="Engine\3D\FBX\FbxModel.h" />
     <ClInclude Include="Engine\3D\FBX\FbxAnimetion.h" />
+    <ClInclude Include="Engine\PostEffect\PostEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -202,6 +204,7 @@
     <None Include="Resources\shaders\Basic.hlsli" />
     <None Include="Resources\shaders\FBX.hlsli" />
     <None Include="Resources\shaders\OBJShaderHeader.hlsli" />
+    <None Include="Resources\shaders\PostEffectHeader.hlsli" />
     <None Include="Resources\shaders\SpriteShaderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +245,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shaders\OBJVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectPS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>

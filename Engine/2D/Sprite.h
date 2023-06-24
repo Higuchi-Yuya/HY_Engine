@@ -17,6 +17,10 @@ public:// サブクラス
 	};
 
 public:// メンバ関数
+	// コンストラクタ
+	Sprite();
+	Sprite(Texture textureNum, Vector2 position, Vector2 size, Vector4 color, Vector2 anchorPoint, bool isFlipX, bool isFlipY);
+
 	// スプライトマネージャーを借りる
 	static void StaticInitialize(SpriteManager* spriteManager);
 
@@ -92,7 +96,7 @@ private:// プライベートメンバ関数
 	// テクスチャサイズをイメージに合わせる
 	void AbjustTextureSize();
 
-private:// メンバ変数
+protected:// メンバ変数
 
 	SpriteManager::Vertex vertices_[4] = {
 	{{  0.0f,100.0f, 0.0f },{0.0f,1.0f}}, // 左下
@@ -100,6 +104,9 @@ private:// メンバ変数
 	{{100.0f,100.0f, 0.0f },{1.0f,1.0f}}, // 右下
 	{{100.0f,  0.0f, 0.0f },{1.0f,0.0f}}, // 右上
 	};
+
+	// 頂点数
+	static const int kVertNum = 4;
 
 	Matrix4 matWorld_;	//ワールド変換行列
 

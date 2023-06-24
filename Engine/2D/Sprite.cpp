@@ -106,6 +106,22 @@ void Sprite::Initialize(Texture* textureNum, Vector2 position, Vector2 size, Vec
 	constMap_->mat.m[3][1] = 1.0f;
 }
 
+Sprite::Sprite()
+{
+
+}
+
+Sprite::Sprite(Texture textureNum, Vector2 position, Vector2 size, Vector4 color, Vector2 anchorPoint, bool isFlipX, bool isFlipY)
+{
+	textureIndex_ = &textureNum;
+	position_ = position;
+	size_ = size;
+	color_ = color;
+	anchorPoint_ = anchorPoint;
+	isFlipX_ = isFlipX;
+	isFlipY_ = isFlipY;
+}
+
 void Sprite::StaticInitialize(SpriteManager* spriteManager)
 {
 	sSpriteManager_ = spriteManager;

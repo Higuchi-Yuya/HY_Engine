@@ -41,6 +41,12 @@ public:// メンバ関数
 	// テクスチャに必要なコマンド設定
 	void SetTextureCommands(Texture* index);
 
+	// パイプラインのアクセス
+	ID3D12PipelineState *GetPipelineState() { return pipelineState_.Get(); }
+
+	// ルートシグネチャのアクセス
+	ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
+
 public:
 	static DirectXCommon* sDxcommon_;
 private:

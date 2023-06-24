@@ -194,7 +194,7 @@ void GameScene::Initialize()
 	view = new ViewProjection;
 	view->DebugCameraInitialze(input_.get());
 	view->target.y = 1.0f;
-	view->SetDistance(3.0f);
+	view->SetDistance(8.0f);
 
 	spritePos = sprite2->GetPosition();
 
@@ -301,14 +301,14 @@ void GameScene::Initialize()
 
 	// モデル名を指定してファイルを読み込み
 	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	fbxmodel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("3dKyaraFixUlt"));
+	fbxmodel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("boneTest"));
 	fbxmodel_->Initialize();
 	fbxTrans_.Initialize();
-	fbxTrans_.scale = { 0.03f,0.03f, 0.03f };
+	fbxTrans_.scale = { 0.01f,0.01f, 0.01f };
 	fbxTrans_.UpdateMatrix();
 
 	modelAnim_ = std::make_unique<FbxAnimetion>();
-	modelAnim_->Load("3dKyaraFixUlt");
+	modelAnim_->Load("boneTest");
 	
 }
 
@@ -433,7 +433,7 @@ void GameScene::Update()
 	//	object->Update();
 	//}
 	frem += 0.01f;
-	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(10)), BoneNum);
+	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
 }
 
 void GameScene::ImguiUpdate()

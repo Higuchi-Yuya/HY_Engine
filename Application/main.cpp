@@ -12,7 +12,7 @@
 #include "SpriteManager.h"
 #include "LightGroup.h"
 #include "GameScene.h"
-
+#include "PostEffect.h"
 #pragma endregion
 
 #pragma region ‚¨‚Ü‚¶‚È‚¢
@@ -94,6 +94,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	FbxModel::SetDevice(dxCommon->GetDevice());
 	FbxModel::StaticInitialize();
 
+	// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚Ì‰Šú‰»
+	PostEffect::SetDevice(dxCommon->GetDevice());
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12‰Šú‰»ˆ—@‚±‚±‚Ü‚Å-------------//
 	///////////////////////////////////////////////////////
@@ -103,6 +106,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize();
 	gameScene->SetDxComon(dxCommon);
+
+	PostEffect* postEffect = nullptr;
+	Texture tex = TextureManager::Load2DTexture("risu.jpg");
+
+	postEffect = new PostEffect();
+	postEffect->Initialize();
+
 #pragma endregion
 
 	//ƒQ[ƒ€ƒ‹[ƒv
@@ -139,6 +149,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma endregion
 
+		postEffect->PreDrawScene(dxCommon->GetCommandList());
+		gameScene->Draw3D();
+		postEffect->PostDrawScene(dxCommon->GetCommandList());
+
 #pragma region •`‰æˆ—
 
 		//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
@@ -149,7 +163,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		spriteManager->PreDraw();
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		gameScene->Draw2DBack();
-
+		postEffect->Draw(dxCommon->GetCommandList());
 
 
 		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
@@ -161,7 +175,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region ‚R‚cƒ‚ƒfƒ‹•`‰æ
 		Object3d::PreDraw(dxCommon->GetCommandList());
 		//-----‚±‚±‚©‚ç 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
-		gameScene->Draw3D();
+
 
 		
 		//-----‚±‚±‚Ü‚Å 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
@@ -173,7 +187,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		spriteManager->PreDraw();
 		//-----‚±‚±‚©‚ç 2D•`‰æ -------//
 		gameScene->Draw2DFront();
-
+		
 
 
 		//-----‚±‚±‚Ü‚Å 2D•`‰æ -------//
@@ -205,7 +219,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	delete spriteManager;
 	// FBXƒ[ƒ_[‚Ì‰ð•ú
 	//FbxLoader::GetInstance()->Finalize();
-
+	delete postEffect;
 
 	// WindouwsAPI‚ÌI—¹ˆ—
 	winApp->Finalize();

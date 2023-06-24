@@ -1,11 +1,25 @@
 #include "DirectXCommon.h"
 #include <cassert>
+#include <algorithm>
 #include <d3dx12.h>
+#include <dxgidebug.h>
 #include <thread>
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+#pragma comment(lib, "dxguid.lib")
 
 using namespace Microsoft::WRL;
+
+DirectXCommon::~DirectXCommon()
+{
+	//ID3D12DebugDevice* debugInterface;
+
+	//if (SUCCEEDED(device_->QueryInterface(&debugInterface))) {
+	//	debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
+	//	debugInterface->Release();
+	//}
+	device_.Reset();
+}
 
 void DirectXCommon::Initalize(WinApp* winApp)
 {
@@ -30,6 +44,8 @@ void DirectXCommon::Initalize(WinApp* winApp)
 	InitializeDepthBuffer();
 	// フェンスの初期化
 	InitializeFence();
+
+
 }
 
 void DirectXCommon::PreDraw()
@@ -176,10 +192,13 @@ void DirectXCommon::InitalizeDevice()
 	
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
-	ComPtr<ID3D12Debug> debugController;
+	ComPtr<ID3D12Debug1> debugController;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		debugController->EnableDebugLayer();
+		debugController->SetEnableGPUBasedValidation(TRUE);
 	}
+	
+
 #endif
 
 #pragma region アダプターの列挙

@@ -1,14 +1,17 @@
 #pragma once
 #include <d3d12.h>
-#include<dxgi1_6.h>
+#include <dxgi1_6.h>
 #include <wrl.h>
 #include <vector>
 #include <chrono>
+#include <cstdlib>
 #include "WinApp.h"
 
 class DirectXCommon
 {
 public:// ƒƒ“ƒoŠÖ”
+	~DirectXCommon();
+
 	// ‰Šú‰»
 	void Initalize(WinApp* winApp);
 

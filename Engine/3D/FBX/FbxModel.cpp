@@ -314,10 +314,17 @@ void FbxModel::PostDraw() {
 }
 
 FbxModel::~FbxModel() {
+	nodes_.clear();
+
 	for (auto m : meshes_) {
 		delete m;
 	}
 	meshes_.clear();
+
+	for (auto m : materials_) {
+		delete m.second;
+	}
+	materials_.clear();
 
 	delete defaultMaterial_;
 }

@@ -6,6 +6,18 @@ using namespace DirectX;
 
 ID3D12Device* Mesh::sDevice_ = nullptr;
 
+Mesh::~Mesh()
+{
+	
+	
+	vecBones.clear();
+
+	//for (auto m : bones) {
+	//	delete m.second;
+	//}
+	bones.clear();
+}
+
 void Mesh::SetDevice(ID3D12Device* device)
 {
 	Mesh::sDevice_ = device;

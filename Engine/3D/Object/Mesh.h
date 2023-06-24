@@ -57,6 +57,8 @@ public:// サブクラス
 
 
 public:
+	~Mesh();
+
 	// デバイスのセッター
 	static void SetDevice(ID3D12Device* device);
 

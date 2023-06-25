@@ -1,11 +1,27 @@
 #include "PostEffectHeader.hlsli"
 
-Texture2D<float4> tex : register(t0);  // 0番スロットに設定されたテクスチャ
+Texture2D<float4> tex0 : register(t0);  // 0番スロットに設定されたテクスチャ
+Texture2D<float4> tex1 : register(t1); // 0番スロットに設定されたテクスチャ
 SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
+
+float Gaussian(float2 drawUV, float2 pickUV, float sigma)
+{
+    float d = distance(drawUV, pickUV);
+    return exp(-(d * d) / (2 * sigma * sigma));
+}
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 texColor = tex.Sample(smp, input.uv);
+    float2 offset = { 0.5f, 0.0f };
     
-    return float4(texColor.rgb, 1);
+    float4 colorTex0 = tex0.Sample(smp, input.uv);
+    float4 colorTex1 = tex1.Sample(smp, input.uv);
+    
+    float4 color = colorTex0;
+    if (fmod(input.uv.y, 0.1f) < 0.05f)
+    {
+        color = colorTex1;
+    }
+    
+    return float4(color.rgb, 1);
 }

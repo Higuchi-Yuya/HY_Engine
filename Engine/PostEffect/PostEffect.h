@@ -1,5 +1,7 @@
 #pragma once
 #include "Sprite.h"
+#include "Input.h"
+
 class PostEffect
 {
 public:
@@ -64,7 +66,7 @@ private:
 
 private:
     // テクスチャバッファ
-    //Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_[2];
     
     // デバイス（借りてくる）
     static ID3D12Device* sDevice_;
@@ -109,7 +111,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 
     // テクスチャ
-    Texture texHandle_;
+    //Texture texHandle_;
+
+    // 確認用Input
+    Input input;
 
     // 画面クリアカラー
     static const float clearColor_[4];

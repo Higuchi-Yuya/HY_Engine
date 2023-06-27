@@ -143,6 +143,7 @@
     <ClCompile Include="Engine\3D\FBX\FbxModel.cpp" />
     <ClCompile Include="Engine\3D\FBX\FbxAnimetion.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="Engine\Input\JoyPadInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Engine\DirectXBase\TextureManager.h" />
     <ClInclude Include="Engine\DirectXBase\WinApp.h" />
     <ClInclude Include="Engine\Input\Input.h" />
+    <ClInclude Include="Engine\Input\Singleton.h" />
     <ClInclude Include="Engine\LevelLoder\LevelLoder.h" />
     <ClInclude Include="Engine\Math\MathUtil.h" />
     <ClInclude Include="Engine\Math\Matrix4.h" />
@@ -191,6 +193,7 @@
     <ClInclude Include="Engine\3D\FBX\FbxModel.h" />
     <ClInclude Include="Engine\3D\FBX\FbxAnimetion.h" />
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
+    <ClInclude Include="Engine\Input\JoyPadInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

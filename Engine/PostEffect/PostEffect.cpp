@@ -32,14 +32,6 @@ void PostEffect::Initialize()
 	CreateDSV();
 
 	CreateGraphicsPipelineState();
-
-	//textureIndex_ = &texHandle_;
-	//position_ = { 0,0 };
-	//size_ = { 500,500 };
-	//color_ = { 1,1,1,1 };
-	//anchorPoint_ = { 0,0 };
-	//isFlipX_ = false;
-	//isFlipY_ = false;
 }
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -269,26 +261,6 @@ void PostEffect::CreateTex()
 		assert(SUCCEEDED(result));
 	}
 
-
-	//// テクスチャを赤クリア
-	//{
-	//	// 画素数(1280x720=921600ピクセル)
-	//	const uint32_t pixelCount = WinApp::window_width * WinApp::window_height;
-	//	// 画像1行分のデータサイズ
-	//	const uint32_t rowPitch = sizeof(uint32_t) * WinApp::window_width;
-	//	// 画像全体のデータサイズ
-	//	const uint32_t depthPitch = rowPitch * WinApp::window_height;
-
-	//	// 画像イメージ
-	//	uint32_t* img = new uint32_t[pixelCount];
-	//	for (int i = 0; i < pixelCount; i++) { img[i] = 0xff0000ff; }
-	//
-	//	// テクスチャバッファにデータ転送
-	//	result = texHandle_.buffer->WriteToSubresource(0, nullptr, img, rowPitch, depthPitch);
-
-	//	assert(SUCCEEDED(result));
-	//	delete[]img;
-	//}
 }
 
 void PostEffect::CreateSRV()

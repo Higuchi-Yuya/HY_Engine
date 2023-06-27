@@ -108,10 +108,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	gameScene->SetDxComon(dxCommon);
 
 	PostEffect* postEffect = nullptr;
+	PostEffect* postEffect2 = nullptr;
 	Texture tex = TextureManager::Load2DTexture("risu.jpg");
 
 	postEffect = new PostEffect();
 	postEffect->Initialize();
+
+	postEffect2 = new PostEffect();
+	postEffect2->Initialize();
+
 
 #pragma endregion
 
@@ -153,6 +158,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		gameScene->Draw3D();
 		postEffect->PostDrawScene(dxCommon->GetCommandList());
 
+		postEffect2->PreDrawScene(dxCommon->GetCommandList());
+		gameScene->Draw3D();
+		postEffect2->PostDrawScene(dxCommon->GetCommandList());
+
 #pragma region •`‰æˆ—
 
 		//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
@@ -164,7 +173,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		gameScene->Draw2DBack();
 		postEffect->Draw(dxCommon->GetCommandList());
-
+		postEffect2->Draw(dxCommon->GetCommandList());
 
 		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		spriteManager->PostDraw();

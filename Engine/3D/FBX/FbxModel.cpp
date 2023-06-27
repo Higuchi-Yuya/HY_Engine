@@ -527,9 +527,9 @@ void FbxModel::ModelAnimation(float frame, aiAnimation* Animation, int BoneNum) 
 
 		for (UINT i = 0; i < nNumBones; i++)
 		{
-			mesh->vecBones[i].matrix = mesh->bones[mesh->vecBones[i].name]->matrix;
+			//mesh->vecBones[i].matrix = mesh->bones[mesh->vecBones[i].name]->matrix;
 
-			constMapSkin->bones[i] = mesh->vecBones[i].matrix;
+			constMapSkin->bones[i] = mesh->bones[mesh->vecBones[i].name]->matrix; //mesh->vecBones[i].matrix;
 		}
 	}
 

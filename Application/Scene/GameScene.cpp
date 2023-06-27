@@ -432,7 +432,7 @@ void GameScene::Update()
 	//for (auto& object : objects) {
 	//	object->Update();
 	//}
-	frem += 0.01f;
+	//frem += 0.01f;
 	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
 }
 

@@ -105,14 +105,14 @@ void GameScene::Initialize()
 	Object3d::SetFog(fog);
 
 	// テクスチャハンドルの読み込み
-	//textureHandle = Texture::LoadTexture("skydome/Nebura.jpg");
+	textureHandle.reset(TextureManager::Load2DTextureP("whiteTex_1024x1024.png"));
 	textureHandle2.reset(TextureManager::Load2DTextureP("texture.png"));
 
 	// スプライトの初期化
-	//sprite = new Sprite();
+	spriteBack_ = std::make_unique<Sprite>();
 	sprite2 = std::make_unique<Sprite>();
 
-	//sprite->Initialize(textureHandle, { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
+	spriteBack_->Initialize(textureHandle.get(), {0,0}, {1280,720});
 	sprite2->Initialize(textureHandle2.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,0.5f});
 
 	// モデルの読み込み
@@ -581,7 +581,7 @@ void GameScene::ImguiUpdate()
 
 void GameScene::Draw2DBack()
 {
-	//sprite->Draw();
+	//spriteBack_->Draw();
 }
 
 void GameScene::Draw3D()

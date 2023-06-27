@@ -82,11 +82,11 @@ private:// メンバ変数
 	Vector3 SpColor={ 0,0,1 };
 
 	// テクスチャハンドル
-	int textureHandle;
+	std::unique_ptr<Texture> textureHandle;
 	std::unique_ptr<Texture> textureHandle2;
 
 	// スプライト
-	//Sprite* sprite = nullptr;
+	std::unique_ptr<Sprite> spriteBack_ = nullptr;
 	std::unique_ptr<Sprite> sprite2 = nullptr;
 
 	// モデル

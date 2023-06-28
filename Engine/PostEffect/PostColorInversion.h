@@ -1,18 +1,18 @@
+
 #pragma once
 #include "Sprite.h"
-#include "PostColorInversion.h"
-class PostEffect
+
+class PostColorInversion
 {
 public:
     // コンストラクタ
-    PostEffect();
+    PostColorInversion();
 
     // 初期化
     void Initialize();
 
     // 描画コマンドの発行
     void Draw(ID3D12GraphicsCommandList* cmdList);
-    void Draw2(ID3D12GraphicsCommandList* cmdList);
 
     /// <summary>
     /// シーン描画前処理
@@ -66,7 +66,7 @@ private:
 
 private:
     // テクスチャバッファ
-    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_[2];
 
     // デバイス（借りてくる）
     static ID3D12Device* sDevice_;
@@ -117,7 +117,5 @@ private:
     static const float clearColor_[4];
 
     HRESULT result;
-
-    // かりに持たせるやつ
-    PostColorInversion post;
 };
+

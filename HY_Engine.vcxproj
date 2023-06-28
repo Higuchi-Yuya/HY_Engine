@@ -147,6 +147,7 @@
     <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\Input\JoyPadInput.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
+    <ClCompile Include="Engine\PostEffect\PostColorInversion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\Input\JoyPadInput.h" />
     <ClInclude Include="Engine\Input\InputManager.h" />
+    <ClInclude Include="Engine\PostEffect\PostColorInversion.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -211,6 +213,7 @@
     <None Include="Resources\shaders\Basic.hlsli" />
     <None Include="Resources\shaders\FBX.hlsli" />
     <None Include="Resources\shaders\OBJShaderHeader.hlsli" />
+    <None Include="Resources\shaders\PostEffectHeader (2).hlsli" />
     <None Include="Resources\shaders\PostEffectHeader.hlsli" />
     <None Include="Resources\shaders\SpriteShaderHeader.hlsli" />
   </ItemGroup>
@@ -257,11 +260,19 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectPS (2).hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffectPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectVS (2).hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffectVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

@@ -163,22 +163,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		gameScene->Draw3D();
 		postEffect->PostDrawScene(dxCommon->GetCommandList());
 
-		postEffect2->PreDrawScene(dxCommon->GetCommandList());
-		gameScene->Draw3D();
-		postEffect2->PostDrawScene(dxCommon->GetCommandList());
 
 #pragma region •`‰æˆ—
+
+		postEffect->Draw2(dxCommon->GetCommandList());
 
 		//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
 		dxCommon->PreDraw();
 		
 #pragma region ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
 		// ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
+
 		spriteManager->PreDraw();
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		gameScene->Draw2DBack();
+
 		postEffect->Draw(dxCommon->GetCommandList());
-		postEffect2->Draw(dxCommon->GetCommandList());
 
 		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		spriteManager->PostDraw();

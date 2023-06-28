@@ -6,7 +6,7 @@
 #include "MeshCollider.h"
 #include "TouchableObject.h"
 #include <time.h>
-
+#include "InputManager.h"
 #include "FbxLoader.h"
 
 GameScene::~GameScene()
@@ -364,6 +364,12 @@ void GameScene::Update()
 
 	//objFighter->Update();
 	//spritePos = sprite2->GetPosition();
+	Vector2 move = { 2,2 };
+	
+	//if (Pad::GetButton(PadCode::ButtonA)) {
+	//	spritePos = { 100,100 };
+	//}
+	spritePos = Pad::GetStick(PadCode::RightStick);
 	sprite2->SetPosition(spritePos);
 
 

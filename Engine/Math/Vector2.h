@@ -10,6 +10,8 @@ public:
 	Vector2();							//零ベクトルとして生成
 	Vector2(float x, float y);			//x成分,y成分を指定して生成
 
+	constexpr Vector2(const float num) : x(num), y(num) {};
+
 	//メンバ関数
 	float length() const;				//ノルム(長さ)を求める
 	Vector2& normalize();				//正規化する

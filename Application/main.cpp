@@ -13,6 +13,7 @@
 #include "LightGroup.h"
 #include "GameScene.h"
 #include "PostEffect.h"
+#include "InputManager.h"
 #pragma endregion
 
 #pragma region おまじない
@@ -63,6 +64,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	// 入力の初期化
 	Input::StaticInitialize(winApp);
+
+	InputManager* inputManager = InputManager::GetInstance().get();
+	inputManager->SetWinApp(winApp);
+	inputManager->Init();
 
 	// スプライトの初期化
 	SpriteManager* spriteManager = nullptr;
@@ -137,7 +142,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//----------DireceX毎フレーム処理　ここから------------//
 		///////////////////////////////////////////////////
 
-
+		InputManager::GetInstance()->Update();
 		gameScene->Update();
 
 
@@ -220,7 +225,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	// ゲームシーンの解放
 	delete gameScene;
-
 	// ImGuiのマネージャーを解放
 	imguiManager->Finalize();
 	delete imguiManager;

@@ -25,6 +25,19 @@ namespace MathUtil
 	// アシンプのQuaternionをSlerpする
 	Vector4 AssimpQuaternionSlerp(aiQuaternion& assimpaiQuaternion, aiQuaternion& assimpaiQuaternion2, float t);
 
-
+	// 値をMinとMaxの間に制限する関数
+	template<typename T>
+	T Clamp(const T value, const T min = 0, const T max = 1)
+	{
+		if (value < min)
+		{
+			return min;
+		}
+		if (value > max)
+		{
+			return max;
+		}
+		return value;
+	}
 };
 

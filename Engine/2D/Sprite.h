@@ -55,7 +55,7 @@ public:// メンバ関数
 	void SetSize(const Vector2& size) { size_ = size; }
 
 	// サイズの取得
-	const Vector2& GetSize()const { return size_; }
+	const Vector2& GetSize() const { return size_; }
 
 	// アンカーポイントの設定
 	void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint;}

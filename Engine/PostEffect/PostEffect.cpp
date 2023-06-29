@@ -41,18 +41,52 @@ void PostEffect::Initialize()
 	//isFlipX_ = false;
 	//isFlipY_ = false;
 	PostColorInversion::SetDevice(sDevice_);
-	post.Initialize();
 }
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+	// ワールド行列の更新
+	// 定数バッファにデータ転送
+	//Updata();
 
-	post.Draw(cmdList);
+	// 定数バッファにデータ転送
+	SpriteManager::ConstBufferData* constMap = nullptr;
+	Matrix4 mathMat;
+
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);
+	if (SUCCEEDED(result)) {
+		constMap->color = { 1,1,1,1 };
+		constMap->mat = mathMat.identity();
+		constBuff_->Unmap(0, nullptr);
+	}
+
+	// パイプラインステートの設定
+	// パイプラインステートとルートシグネチャの設定コマンド
+	cmdList->SetPipelineState(pipelineState_.Get());
+	cmdList->SetGraphicsRootSignature(rootSignature_.Get());
+
+	// プリミティブ形状の設定コマンド
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
+
+	// SRVヒープ
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV_.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
+	cmdList->SetGraphicsRootDescriptorTable(1, descHeapSRV_->GetGPUDescriptorHandleForHeapStart());
+
+	// 頂点バッファビューの設定コマンド
+	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+
+	// 定数バッファビュー(CBV)の設定コマンド
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+
+	// 描画コマンド
+	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0); // 全ての頂点を使って描画
 }
 
 void PostEffect::Draw2(ID3D12GraphicsCommandList* cmdList)
 {
-	post.PreDrawScene(cmdList);
 	// ワールド行列の更新
 	// 定数バッファにデータ転送
 	//Updata();
@@ -92,7 +126,6 @@ void PostEffect::Draw2(ID3D12GraphicsCommandList* cmdList)
 	// 描画コマンド
 	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0); // 全ての頂点を使って描画
 
-	post.PostDrawScene(cmdList);
 }
 
 void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdList)

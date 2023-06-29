@@ -118,6 +118,5 @@ private:
 
     HRESULT result;
 
-    // ‚©‚è‚É‚½‚¹‚é‚â‚Â
-    PostColorInversion post;
+
 };

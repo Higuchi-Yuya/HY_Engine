@@ -113,14 +113,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	gameScene->SetDxComon(dxCommon);
 
 	PostEffect* postEffect = nullptr;
-	PostEffect* postEffect2 = nullptr;
+	// ‚©‚è‚ÉŽ‚½‚¹‚é‚â‚Â
+	PostColorInversion* post = nullptr;
 	Texture tex = TextureManager::Load2DTexture("risu.jpg");
 
 	postEffect = new PostEffect();
 	postEffect->Initialize();
 
-	postEffect2 = new PostEffect();
-	postEffect2->Initialize();
+	post = new PostColorInversion();
+	post->Initialize();
 
 
 #pragma endregion
@@ -163,10 +164,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		gameScene->Draw3D();
 		postEffect->PostDrawScene(dxCommon->GetCommandList());
 
+		post->PreDrawScene(dxCommon->GetCommandList());
+		
+		postEffect->Draw(dxCommon->GetCommandList());
+
+		post->PostDrawScene(dxCommon->GetCommandList());
 
 #pragma region •`‰æˆ—
 
-		postEffect->Draw2(dxCommon->GetCommandList());
+
 
 		//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
 		dxCommon->PreDraw();
@@ -178,7 +184,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		gameScene->Draw2DBack();
 
-		postEffect->Draw(dxCommon->GetCommandList());
+		post->Draw(dxCommon->GetCommandList());
 
 		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		spriteManager->PostDraw();

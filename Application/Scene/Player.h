@@ -1,5 +1,6 @@
 #pragma once
 #include "Object3d.h"
+#include "ImGuiManager.h"
 class Player:public Object3d
 {
 public:
@@ -18,11 +19,21 @@ public:
 	void Draw(ViewProjection* view)override;
 
 	// 衝突時コールバック関数
-	void OnCollision(const CollisionInfo& info)override;
+	void OnCollision(const CollisionInfo& info);
+
 
 private:
-	Model* atariModel = nullptr;
-	Object3d* atari = nullptr;
+	/// <summary>
+	/// 移動の更新処理
+	/// </summary>
+	void MoveUpdate();
+
+private:
+	bool IsStickOn = false;
+
+	float deadZone = 450;
+	Vector3 moveValue = { 1,0,1 };
+
 
 	Input* input = new Input;
 

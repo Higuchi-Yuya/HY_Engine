@@ -112,16 +112,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	gameScene->Initialize();
 	gameScene->SetDxComon(dxCommon);
 
-	PostEffect* postEffect = nullptr;
-	// ‚©‚è‚ÉŽ‚½‚¹‚é‚â‚Â
-	PostColorInversion* post = nullptr;
-	Texture tex = TextureManager::Load2DTexture("risu.jpg");
+	//PostEffect* postEffect = nullptr;
+	//// ‚©‚è‚ÉŽ‚½‚¹‚é‚â‚Â
+	//PostColorInversion* post = nullptr;
+	//Texture tex = TextureManager::Load2DTexture("risu.jpg");
 
-	postEffect = new PostEffect();
-	postEffect->Initialize();
+	//postEffect = new PostEffect();
+	//postEffect->Initialize();
 
-	post = new PostColorInversion();
-	post->Initialize();
+	//post = new PostColorInversion();
+	//post->Initialize();
 
 
 #pragma endregion
@@ -144,7 +144,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		///////////////////////////////////////////////////
 
 		InputManager::GetInstance()->Update();
-		gameScene->Update();
+		
 
 
 		//////////////////////////////////////////////
@@ -153,6 +153,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region IMGUI‚ÌXVˆ—
 	// ImGui‚ÌXVˆ—
 		imguiManager->Begin();
+		gameScene->Update();
 		gameScene->ImguiUpdate();
 		
 		imguiManager->End();
@@ -160,15 +161,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma endregion
 
-		postEffect->PreDrawScene(dxCommon->GetCommandList());
-		gameScene->Draw3D();
-		postEffect->PostDrawScene(dxCommon->GetCommandList());
+		//postEffect->PreDrawScene(dxCommon->GetCommandList());
 
-		post->PreDrawScene(dxCommon->GetCommandList());
-		
-		postEffect->Draw(dxCommon->GetCommandList());
+		//postEffect->PostDrawScene(dxCommon->GetCommandList());
 
-		post->PostDrawScene(dxCommon->GetCommandList());
+		//post->PreDrawScene(dxCommon->GetCommandList());
+		//
+		//postEffect->Draw(dxCommon->GetCommandList());
+
+		//post->PostDrawScene(dxCommon->GetCommandList());
 
 #pragma region •`‰æˆ—
 
@@ -184,7 +185,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		gameScene->Draw2DBack();
 
-		post->Draw(dxCommon->GetCommandList());
+		//post->Draw(dxCommon->GetCommandList());
 
 		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
 		spriteManager->PostDraw();
@@ -195,7 +196,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region ‚R‚cƒ‚ƒfƒ‹•`‰æ
 		Object3d::PreDraw(dxCommon->GetCommandList());
 		//-----‚±‚±‚©‚ç 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
-
+		gameScene->Draw3D();
 
 		
 		//-----‚±‚±‚Ü‚Å 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
@@ -238,7 +239,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	delete spriteManager;
 	// FBXƒ[ƒ_[‚Ì‰ð•ú
 	//FbxLoader::GetInstance()->Finalize();
-	delete postEffect;
 
 	// WindouwsAPI‚ÌI—¹ˆ—
 	winApp->Finalize();

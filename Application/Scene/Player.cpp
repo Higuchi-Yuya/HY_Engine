@@ -3,6 +3,7 @@
 #include "SphereCollider.h"
 #include "CollisionManager.h"
 #include "CollisionAttribute.h"
+#include "JoyPadInput.h"
 
 Player* Player::Create(Model* model)
 {
@@ -27,8 +28,7 @@ Player* Player::Create(Model* model)
 
 Player::~Player()
 {
-	delete atariModel;
-	delete atari;
+
 
 }
 
@@ -45,147 +45,116 @@ bool Player::Initialize()
 	SetCollider(new SphereCollider(Vector3(0, radius, 0), radius));
 	collider_->SetAttribute(COLLISION_ATTR_ALLIES);
 
-	atariModel = new Model;
-	atariModel = Model::LoadFromOBJ("sphere");
-
-	atari = Object3d::Create();
-	atari->SetModel(atariModel);
-	//atari->worldTransform_.position_.y -= 8.0f;
 	return true;
 }
 
 void Player::Update()
 {
-	
-	input->Update();
-	atari->Update();
-	// A,Dで旋回
-	if (input->PushKey(DIK_A)) {
-		worldTransform_.rotation.y -= 0.2f;
-	}
-	else if (input->PushKey(DIK_D)) {
-		worldTransform_.rotation.y += 0.2f;
-	}
 
-	// 移動ベクトルをY軸周りの角度で回転
-	Vector3 move = { 0,0,0.1f };
-	Matrix4 matRot;
-	matRot.rotateY(worldTransform_.rotation.y);
-	move = matRot.transformNotW(move, matRot);
+	MoveUpdate();
 
-	// 向いてる方向に移動
-	if (input->PushKey(DIK_S)) {
-		worldTransform_.translation -= move;
-	}
-	else if (input->PushKey(DIK_W)) {
-		worldTransform_.translation += move;
-	}
+	//// 落下処理
+	//if (!onGround) {
+	//	// 下向き加速度
+	//	const float fallAcc = -0.01f;
+	//	const float fallVYMin = -0.5f;
+	//	// 加速
+	//	fallV.y = max(fallV.y + fallAcc, fallVYMin);
+	//	// 移動
+	//	worldTransform_.translation.x += fallV.x;
+	//	worldTransform_.translation.y += fallV.y;
+	//	worldTransform_.translation.z += fallV.z;
+	//}
+	//// ジャンプ操作
+	//else if (input->TriggerKey(DIK_SPACE)) {
+	//	onGround = false;
+	//	const float jumpVYFist = 0.2f;
+	//	fallV = { 0, jumpVYFist, 0 };
+	//}
 
-	// ワールド行列更新
-	UpdateWorldMatrix();
+	//// ワールド行列更新
+	//UpdateWorldMatrix();
+	//collider_->Update(worldTransform_.matWorld_);
 
-	// 落下処理
-	if (!onGround) {
-		// 下向き加速度
-		const float fallAcc = -0.01f;
-		const float fallVYMin = -0.5f;
-		// 加速
-		fallV.y = max(fallV.y + fallAcc, fallVYMin);
-		// 移動
-		worldTransform_.translation.x += fallV.x;
-		worldTransform_.translation.y += fallV.y;
-		worldTransform_.translation.z += fallV.z;
-	}
-	// ジャンプ操作
-	else if (input->TriggerKey(DIK_SPACE)) {
-		onGround = false;
-		const float jumpVYFist = 0.2f;
-		fallV = { 0, jumpVYFist, 0 };
-	}
+	//// 球コライダーを取得
+	//SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
+	//assert(sphereCollider);
 
-	// ワールド行列更新
-	UpdateWorldMatrix();
-	collider_->Update();
+	//// クエリーコールバッククラス
+	//class PlayerQueryCallback : public QueryCallback
+	//{
+	//public:
+	//	PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
 
-	// 球コライダーを取得
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
-	assert(sphereCollider);
+	//	// 衝突時コールバック関数
+	//	bool OnQueryHit(const QueryHit& info) {
 
-	// クエリーコールバッククラス
-	class PlayerQueryCallback : public QueryCallback
-	{
-	public:
-		PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
+	//		const Vector3 up = { 0,1,0 };
+	//		Vector3 info_ = info.reject;
+	//		Vector3 rejectDir = info_.normalize();
+	//		float cos = Vector3::dot(rejectDir, up);
 
-		// 衝突時コールバック関数
-		bool OnQueryHit(const QueryHit& info) {
+	//		// 地面判定しきい値
+	//		const float threshold = cosf(Vector3::Deg2Rad(30.0f));
 
-			const Vector3 up = { 0,1,0 };
-			Vector3 info_ = info.reject;
-			Vector3 rejectDir = info_.normalize();
-			float cos = Vector3::dot(rejectDir, up);
+	//		if (-threshold < cos && cos < threshold) {
+	//			sphere->center += info.reject;
+	//			move += info.reject;
+	//		}
 
-			// 地面判定しきい値
-			const float threshold = cosf(Vector3::Deg2Rad(30.0f));
+	//		return true;
+	//	}
 
-			if (-threshold < cos && cos < threshold) {
-				sphere->center += info.reject;
-				move += info.reject;
-			}
+	//	Sphere* sphere = nullptr;
+	//	Vector3 move = {};
+	//};
 
-			return true;
-		}
+	//PlayerQueryCallback callback(sphereCollider);
 
-		Sphere* sphere = nullptr;
-		Vector3 move = {};
-	};
+	//// 球と地形の交差を全検索
+	//CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
 
-	PlayerQueryCallback callback(sphereCollider);
-
-	// 球と地形の交差を全検索
-	CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
-
-	// 交差による排斥分動かす
-	worldTransform_.translation += callback.move;
+	//// 交差による排斥分動かす
+	//worldTransform_.translation += callback.move;
 
 
-	// ワールド行列更新
-	UpdateWorldMatrix();
-	collider_->Update();
+	//// ワールド行列更新
+	//UpdateWorldMatrix();
+	//collider_->Update(worldTransform_.matWorld_);
 
-	// 球の上端から球の下端までのレイキャスト用レイを準備
-	Ray ray;
-	ray.start = sphereCollider->center;
-	ray.start.y += sphereCollider->GetRadius();
-	ray.dir = { 0,-1,0 };
-	RaycastHit raycastHit;
+	//// 球の上端から球の下端までのレイキャスト用レイを準備
+	//Ray ray;
+	//ray.start = sphereCollider->center;
+	//ray.start.y += sphereCollider->GetRadius();
+	//ray.dir = { 0,-1,0 };
+	//RaycastHit raycastHit;
 
-	// 接地状態
-	if (onGround) {
-		// スムーズに坂を下る為の吸着距離
-		const float adsDistance = 0.2f;
-		// 接地を維持
-		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
-			onGround = true;
-			worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-			// 行列の更新など
-			Object3d::Update();
-		}
-		// 地面がないので落下
-		else {
-			onGround = false;
-			fallV = {0,0,0};
-		}
-	}
-	// 落下状態
-	else if (fallV.y <= 0.0f) {
-		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
-			// 着地
-			onGround = true;
-			worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+	//// 接地状態
+	//if (onGround) {
+	//	// スムーズに坂を下る為の吸着距離
+	//	const float adsDistance = 0.2f;
+	//	// 接地を維持
+	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
+	//		onGround = true;
+	//		worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+	//		// 行列の更新など
+	//		Object3d::Update();
+	//	}
+	//	// 地面がないので落下
+	//	else {
+	//		onGround = false;
+	//		fallV = {0,0,0};
+	//	}
+	//}
+	//// 落下状態
+	//else if (fallV.y <= 0.0f) {
+	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
+	//		// 着地
+	//		onGround = true;
+	//		worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 
-		}
-	}
+	//	}
+	//}
 
 	// 行列の更新など
 	Object3d::Update();
@@ -200,7 +169,57 @@ void Player::Draw(ViewProjection* view)
 void Player::OnCollision(const CollisionInfo& info)
 {
 	// 衝突したらカラーを変える
-	atari->worldTransform_.translation = this->worldTransform_.translation;
+	//atari->worldTransform_.translation = this->worldTransform_.translation;
 	//worldTransform_.color_ = { 0.1f,1.0f,0.1f,1.0f };
 	//worldTransform_.UpdateMatrix();
+}
+
+void Player::MoveUpdate()
+{
+	Matrix4 mathMat;
+	input->Update();
+
+	// 移動ベクトルをY軸周りの角度で回転
+
+	Vector3 vectorX = { 0.1f,0,0 };
+
+	Vector3 vectorZ = { 0,0,-0.1f };
+
+	Vector3 move = { 0,0,0 };
+	Vector2 joyStickInfo = { 0,0 };
+	//Matrix4 matRot;
+	//matRot.rotateY(worldTransform_.rotation.y);
+	//move = matRot.transformNotW(move, matRot);
+
+	// 向いてる方向に移動
+
+	if (JoypadInput::GetStick(PadCode::LeftStick).x > deadZone ||
+		JoypadInput::GetStick(PadCode::LeftStick).x < -deadZone ||
+		JoypadInput::GetStick(PadCode::LeftStick).y > deadZone ||
+		JoypadInput::GetStick(PadCode::LeftStick).y < -deadZone) {
+
+		move.x += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.x;
+		move.z += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.z;
+
+		joyStickInfo.x = JoypadInput::GetStick(PadCode::LeftStick).x;
+		joyStickInfo.y = JoypadInput::GetStick(PadCode::LeftStick).y;
+
+	}
+
+	worldTransform_.translation += move;
+	//worldTransform_.rotation.y += 0.01f;
+
+	ImGui::Begin("joyPadInfo");
+
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
+
+
+	ImGui::End();
+
+
+	// ワールド行列更新
+	UpdateWorldMatrix();
 }

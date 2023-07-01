@@ -12,6 +12,7 @@
 #include "FbxAnimetion.h"
 #include "LevelLoder.h"
 #include "TextureManager.h"
+#include "Player.h"
 
 #include <vector>
 
@@ -119,29 +120,7 @@ private:// メンバ変数
 	// ビュープロジェクション
 	ViewProjection* view = nullptr;
 
-	// Quaternion確認
-	Quaternion keisan;
-	Quaternion rotation0;
-	Quaternion rotation1;
-	Quaternion interpolate0;
-	Quaternion interpolate1;
-	Quaternion interpolate2;
-	Quaternion interpolate3;
-	Quaternion interpolate4;
 
-	Vector3 direction1 = { 1.0f,0.0f,1.0f };
-	Vector3 direction2 = { 1.0f,1.0f,0.0f };
-	Quaternion dirToDir;
-
-	// 当たり判定
-	Sphere sphere;
-	Plane plane;
-	Triangle triangle;
-	float distance;
-	Vector3 inter;
-
-	bool hit;
-	bool hitRay;
 
 	Vector2 spritePos;
 	char buf[256] = "";
@@ -156,11 +135,7 @@ private:// メンバ変数
 
 #pragma region 当たり判定
 	CollisionManager* collisionManager = nullptr;
-	Ray ray;
-	
 
-	//Model* atariModel = nullptr;
-	//Object3d* atariObj = nullptr;
 #pragma endregion
 
 #pragma region ローダーの確認
@@ -188,6 +163,12 @@ private:// メンバ変数
 
 	float frem = 0;
 	uint32_t BoneNum = 0;
+#pragma endregion
+
+
+#pragma region プロトタイプ用変数
+	std::unique_ptr<Player> player_;
+
 #pragma endregion
 
 };

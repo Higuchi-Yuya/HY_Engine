@@ -55,7 +55,7 @@ void MeshCollider::ConstructTriangles(Model* model)
 
 }
 
-void MeshCollider::Update()
+void MeshCollider::Update(const Matrix4& worldPos)
 {
 	// ワールド行列の逆行列を計算
 	invMatWorld = -invMatWorld;
@@ -78,12 +78,12 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter, Ve
 
 		if (Collision::CheckSphere2Triangle(localSphere, triangle, inter, reject)) {
 			if (inter) {
-				const Matrix4& matWorld = GetObject3d()->GetMatWorld();
+				const Matrix4& matWorld = keisanM4.identity();
 
 				*inter = keisanM4.transform(*inter, matWorld);
 			}
 			if (reject) {
-				const Matrix4& matWorld = GetObject3d()->GetMatWorld();
+				const Matrix4& matWorld = keisanM4.identity();
 				// ワールド座標系での排斥ベクトルに変換
 				*reject = Matrix4::transformNotW(*reject, matWorld);
 			}
@@ -114,7 +114,7 @@ bool MeshCollider::CheckCollisionRay(const Ray& ray, float* distance, Vector3* i
 		// レイと三角形の当たり判定
 		if (Collision::CheckRay2Triangle(localRay, triangle, nullptr, &tempInter)) {
 
-			const Matrix4& matWorld = GetObject3d()->GetMatWorld();
+			const Matrix4& matWorld = keisanM4.identity();
 
 			// ワールド座標系での交点を得る
 			tempInter = keisanM4.transform(tempInter, matWorld);

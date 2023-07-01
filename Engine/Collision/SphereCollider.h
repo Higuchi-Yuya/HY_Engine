@@ -16,7 +16,7 @@ public:
 	}
 
 	// XV
-	void Update()override;
+	void Update(const Matrix4& worldPos)override;
 	
 	inline const Vector3& GetOffset() { return offset_; }
 

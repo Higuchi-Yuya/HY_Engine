@@ -252,15 +252,6 @@ Vector2 JoypadInput::GetStick(const PadCode padCode, const int sPadIndex_)
 		stick.x = (float)GetInstance()->joypadObjs_[sPadIndex_].padInput.lRx;
 		stick.y = (float)GetInstance()->joypadObjs_[sPadIndex_].padInput.lRy;
 
-		if (std::abs(stick.x) < 500)
-		{
-			stick.x = 0;
-		}
-
-		if (std::abs(stick.y) < 500)
-		{
-			stick.y = 0;
-		}
 	}
 
 	return stick;

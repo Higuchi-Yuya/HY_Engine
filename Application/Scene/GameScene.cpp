@@ -13,39 +13,12 @@ GameScene::~GameScene()
 {
 	// 入力解放
 
-	// スプライトの解放
-	//delete sprite;
-
-	// オブジェクトの解放
-	//delete object3d;
-
-	//delete groundObj;
-	//delete groundObj2;
-	//for (auto object : objects) {
-	//	delete object;
-	//}
-	//objects.clear();
-	//delete point1;
-	//delete point2;
-	//delete point3;
-	//delete rayobj;
-
-	// モデルの解放
-	//delete model;
-	//delete groundModel;
-	//delete modelPlane;
-	//delete modelBox;
-	//delete modelPyramid;
-
 	// ビューの解放
 	delete view;
 	// ライトの解放
 
 	// フォグの解放
 	delete fog;
-
-	//delete atariModel;
-	//delete atariObj;
 
 	//delete levelData;
 	//delete modelSkydome;
@@ -192,41 +165,11 @@ void GameScene::Initialize()
 
 	// ビュープロジェクションの初期化
 	view = new ViewProjection;
-	view->DebugCameraInitialze(input_.get());
+	view->Initialize();
 	view->target.y = 1.0f;
 	view->SetDistance(8.0f);
 
 	spritePos = sprite2->GetPosition();
-
-	rotation0 = keisan.MakeAxisAngle({ 0.71f,0.71f,0.0f }, 0.3f);
-	rotation1 = { -rotation0.x,-rotation0.y, -rotation0.z, -rotation0.w };//keisan.MakeAxisAngle({ 0.71f,0.0f,0.71f }, 3.141592f);
-
-	interpolate0 = keisan.Slerp(rotation0, rotation1, 0.0f);
-	interpolate1 = keisan.Slerp(rotation0, rotation1, 0.3f);
-	interpolate2 = keisan.Slerp(rotation0, rotation1, 0.5f);
-	interpolate3 = keisan.Slerp(rotation0, rotation1, 0.7f);
-	interpolate4 = keisan.Slerp(rotation0, rotation1, 1.0f);
-
-	dirToDir = keisan.DirectionToDirection(direction1, direction2);
-
-	// 球の初期値を設定
-	sphere.center = { 0,2,0 };
-	sphere.radius = 1.0f;
-
-	// 平面の初期値を設定
-	plane.normal = { 0,1,0 };
-	plane.distance = 0.0f;
-
-	// 三角形の初期値を設定
-	triangle.p0 = { -1.0f,0,-1.0f };
-	triangle.p1 = { -1.0f,0,+1.0f };
-	triangle.p2 = { +1.0f,0,-1.0f };
-
-	triangle.normal = { 0.0f,1.0f,0.0f };
-
-	// レイの初期値を設定
-	ray.start = { 10,0.5f,0 };
-	ray.dir = { 0,-1,0 };
 
 	// 確認用オブジェ
 	//point1->SetModel(model_2);
@@ -310,6 +253,12 @@ void GameScene::Initialize()
 	modelAnim_ = std::make_unique<FbxAnimetion>();
 	modelAnim_->Load("boneTest");
 	
+
+	player_ = std::make_unique<Player>();
+
+	player_.reset(Player::Create(model_2.get()));
+
+
 }
 
 void GameScene::Update()
@@ -376,46 +325,7 @@ void GameScene::Update()
 	objMedama->worldTransform_.rotation.y += 0.01f;
 	objMedama->Update();
 
-
-	//for (auto object : objects) {
-	//	object->Update();
-	//}
-	//groundObj->Update();
-	//groundObj2->Update();
-	view->DebugCameraUpdate();
-
-	// 球移動
-	{
-		Vector3 moveY = { 0,0.01f,0 };
-		if (input_->PushKey(DIK_8)) { sphere.center += moveY; }
-		else if (input_->PushKey(DIK_2)) { sphere.center -= moveY; }
-
-		Vector3 moveX = { 0.01f,0,0 };
-		if (input_->PushKey(DIK_6)) { sphere.center += moveX; }
-		else if (input_->PushKey(DIK_4)) { sphere.center -= moveX; }
-
-	}
-	// レイ操作
-	{
-		Vector3 moveZ = { 0,0,0.01f };
-		if (input_->PushKey(DIK_UP)) { ray.start += moveZ; }
-		else if (input_->PushKey(DIK_DOWN)) { ray.start -= moveZ; }
-
-		Vector3 moveX = { 0.01f,0,0 };
-		if (input_->PushKey(DIK_RIGHT)) { ray.start += moveX; }
-		else if (input_->PushKey(DIK_LEFT)) { ray.start -= moveX; }
-	}
-
-	//point1->Update();
-	//point2->Update();
-	//point3->Update();
-
-	//rayobj->worldTransform_.position_ = ray.start;
-	//rayobj->Update();
-
-
-	hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
-	hitRay = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
+	view->UpdateMatrix();
 
 	fog->UpdateMatrix();
 	Object3d::SetFog(fog);
@@ -429,17 +339,14 @@ void GameScene::Update()
 		isStopSound = false;
 	}
 
-	RaycastHit raycastHit;
-	if (collisionManager->Raycast(ray, &raycastHit)) {
-		//atariObj->worldTransform_.position_ = raycastHit.inter;
-		//atariObj->Update();
-	}
 
 	//for (auto& object : objects) {
 	//	object->Update();
 	//}
 	//frem += 0.01f;
 	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
+
+	player_->Update();
 }
 
 void GameScene::ImguiUpdate()
@@ -593,23 +500,9 @@ void GameScene::Draw2DBack()
 void GameScene::Draw3D()
 {
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
-	//object3d->Draw(view);
-	//for (auto& object : objects) {
-	//	object->Draw(view);
-	//}
 
-	//objMedama->Draw(view);
-	
 
-	//objFighter->Draw(view);
-
-	//point1->Draw(view);
-	//point2->Draw(view);
-	//point3->Draw(view);
-	//rayobj->Draw(view);
-	//atariObj->Draw(view);
-	
-	//groundObj->Draw(view);
+	player_->Draw(view);
 
 	// FBXモデルの描画
 	FbxModel::PreDraw(commandList);

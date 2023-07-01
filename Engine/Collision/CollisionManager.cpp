@@ -71,7 +71,7 @@ bool CollisionManager::Raycast(const Ray& ray, unsigned short attribute, Raycast
 		hitInfo->distance = distance;
 		hitInfo->inter = inter;
 		hitInfo->collider = *it_hit;
-		hitInfo->object = hitInfo->collider->GetObject3d();
+		//hitInfo->object = hitInfo->collider->GetObject3d();
 	}
 
 	return result;
@@ -104,7 +104,7 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 			// 交差情報をセット
 			QueryHit info;
 			info.collider = col;
-			info.object = col->GetObject3d();
+			//info.object = col->GetObject3d();
 			info.inter = tempInter;
 			info.reject = tempReject;
 
@@ -125,7 +125,7 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 			// 交差情報をセット
 			QueryHit info;
 			info.collider = col;
-			info.object = col->GetObject3d();
+			//info.object = col->GetObject3d();
 			info.inter = tempInter;
 			info.reject = tempReject;
 
@@ -159,8 +159,9 @@ void CollisionManager::CheckAllCollisions()
 				Sphere* SphereB = dynamic_cast<Sphere*>(colB);
 				Vector3 inter;
 				if (Collision::CheckSphere2Sphere(*SphereA, *SphereB, &inter)) {
-					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
-					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+					// 後でやる部分------★
+					//colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+					//colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
 				}
 			}
 			else if (colA->GetShapeType() == COLLISIONSHAPE_MESH &&
@@ -169,8 +170,8 @@ void CollisionManager::CheckAllCollisions()
 				Sphere* sphere = dynamic_cast<Sphere*>(colB);
 				Vector3 inter;
 				if (meshCollider->CheckCollisionSphere(*sphere, &inter)) {
-					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
-					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+					//colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+					//colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
 				}
 			}
 			else if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
@@ -179,8 +180,8 @@ void CollisionManager::CheckAllCollisions()
 				Sphere* sphere = dynamic_cast<Sphere*>(colA);
 				Vector3 inter;
 				if (meshCollider->CheckCollisionSphere(*sphere, &inter)) {
-					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
-					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+					//colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+					//colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
 				}
 			}
 		}

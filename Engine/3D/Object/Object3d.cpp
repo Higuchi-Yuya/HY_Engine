@@ -566,7 +566,7 @@ void Object3d::Update()
 
 	// 末尾に当たり判定更新
 	if (collider_) {
-		collider_->Update();
+		collider_->Update(worldTransform_.matWorld_);
 	}
 }
 
@@ -603,7 +603,7 @@ void Object3d::Draw(ViewProjection* viewProjection)
 
 void Object3d::SetCollider(BaseCollider* collider)
 {
-	collider_->SetObject(this);
+	//collider_->SetObject(this);
 	collider_ = collider;
 
 	// ワールド行列を更新しおく
@@ -615,7 +615,7 @@ void Object3d::SetCollider(BaseCollider* collider)
 	
 
 	// コライダーを更新しておく
-	collider_->Update();
+	collider_->Update(worldTransform_.matWorld_);
 
 }
 

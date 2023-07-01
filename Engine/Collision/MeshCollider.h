@@ -21,7 +21,7 @@ public:
 	void ConstructTriangles(Model* model);
 
 	// XV
-	void Update()override;
+	void Update(const Matrix4& worldPos)override;
 
 	// ‹…‚Æ‚Ì“–‚½‚è”»’è
 	bool CheckCollisionSphere(const Sphere& sphere, Vector3* inter = nullptr, Vector3* reject = nullptr);

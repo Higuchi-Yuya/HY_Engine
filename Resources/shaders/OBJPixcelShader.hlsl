@@ -42,22 +42,28 @@ float4 main(VSOutput input) : SV_TARGET
             float3 rim = rimIntensity * rimColor;
 			
 			// ŠÂ‹«”½ŽËŒõ
-            float3 ambientIndensity = m_ambient;
-            float3 ambient = ambientIndensity * ambientColor;
+            //float3 ambientIndensity = m_ambient;
+            //float3 ambient = ambientIndensity * ambientColor;
+            float3 ambient = m_ambient;
 			
 			// ŠgŽU”½ŽËŒõ
-			float3 diffuseIndesity = lightIntensity * m_diffuse;
-			float3 diffuse = diffuseIndesity * diffuseColor;
-
+			//float3 diffuseIndesity = lightIntensity * m_diffuse;
+			//float3 diffuse = diffuseIndesity * diffuseColor;
+            float3 diffuse = dotlightnormal * m_diffuse;
+			
 			// ‹¾–Ê”½ŽËŒõ
-			float3 specularIdensity = smoothstep(0.005, 0.01, pow(saturate(dot(reflect, eyedir)), shininess) * m_specular);
-			float3 specular = specularIdensity * specularColor;
+			//float3 specularIdensity = smoothstep(0.005, 0.01, pow(saturate(dot(reflect, eyedir)), shininess) * m_specular);
+			//float3 specular = specularIdensity * specularColor;
+            float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
+			
 			
 			// ‘S‚Ä‰ÁŽZ‚·‚é
-            float3 sColor = (1 - diffuseIndesity) * ambient;
-            sColor += diffuse;
-			sColor = (1 - specularIdensity) * sColor + specular;
-            sColor = (1 - rimIntensity) * sColor + rim;
+            //float3 sColor = (1 - diffuseIndesity) * ambient;
+            //sColor += diffuse;
+            //sColor = (1 - specularIdensity) * sColor + specular;
+            //sColor = (1 - rimIntensity) * sColor + rim;
+			
+            float3 sColor = (ambient + diffuse + specular);
 			
 			shadecolor.rgb += sColor * dirLights[i].lightcolor;
 		}

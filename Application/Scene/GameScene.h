@@ -13,6 +13,9 @@
 #include "LevelLoder.h"
 #include "TextureManager.h"
 #include "Player.h"
+#include "Enemy.h"
+
+#include "GameCamera.h"
 
 #include <vector>
 
@@ -94,7 +97,7 @@ private:// メンバ変数
 	//Model* model = nullptr;
 	std::unique_ptr<Model> model_2 = nullptr;
 	
-	////Model* modelFighter = nullptr;
+	std::unique_ptr<Model> modelMedama_ = nullptr;
 	//Model* groundModel = nullptr;
 
 	//Model* modelPlane = nullptr;
@@ -103,7 +106,7 @@ private:// メンバ変数
 
 	// オブジェクト
 	//Object3d* object3d = nullptr;
-	std::unique_ptr<Object3d> objMedama = nullptr;
+	//std::unique_ptr<Object3d> objMedama = nullptr;
 
 	//Object3d* point1 = nullptr;
 	//Object3d* point2 = nullptr;
@@ -118,7 +121,7 @@ private:// メンバ変数
 	//std::vector<Object3d*>objects;
 	
 	// ビュープロジェクション
-	ViewProjection* view = nullptr;
+	std::unique_ptr<GameCamera>gameCamera;
 
 
 
@@ -126,7 +129,7 @@ private:// メンバ変数
 	char buf[256] = "";
 	float f = 0.0f;
 
-	Fog* fog = nullptr;
+	std::unique_ptr<Fog> fog = nullptr;
 	bool isFogActive = true;
 
 	Sound sound;
@@ -141,13 +144,13 @@ private:// メンバ変数
 #pragma region ローダーの確認
 	LevelData* levelData = nullptr;
 
-	//Model* modelSkydome = nullptr;
-	//Model* modelGround = nullptr;
+	std::unique_ptr<Model> modelSkydome = nullptr;
+	std::unique_ptr<Model> modelGround = nullptr;
 	//Model* modelFighter = nullptr;
 	//Model* modelSphere = nullptr;
 
-	//Object3d* objSkydome = nullptr;
-	//Object3d* objGround = nullptr;
+	std::unique_ptr<Object3d> objSkydome = nullptr;
+	std::unique_ptr<Object3d> objGround = nullptr;
 	//Object3d* objFighter = nullptr;
 	//Object3d* objSphere = nullptr;
 
@@ -168,6 +171,7 @@ private:// メンバ変数
 
 #pragma region プロトタイプ用変数
 	std::unique_ptr<Player> player_;
+	std::unique_ptr<Enemy> enemy_;
 
 #pragma endregion
 

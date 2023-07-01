@@ -21,6 +21,8 @@ public:
 	// 衝突時コールバック関数
 	void OnCollision(const CollisionInfo& info);
 
+	// ポジションのゲッター
+	const Vector3 GetWorldPosition ()const;
 
 private:
 	/// <summary>
@@ -29,10 +31,12 @@ private:
 	void MoveUpdate();
 
 private:
+
+
 	bool IsStickOn = false;
 
 	float deadZone = 450;
-	Vector3 moveValue = { 1,0,1 };
+	Vector3 moveValue = { 0.1f,0.0f,0.1f };
 
 
 	Input* input = new Input;

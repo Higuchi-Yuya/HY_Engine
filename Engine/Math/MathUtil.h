@@ -25,6 +25,17 @@ namespace MathUtil
 	// アシンプのQuaternionをSlerpする
 	Vector4 AssimpQuaternionSlerp(aiQuaternion& assimpaiQuaternion, aiQuaternion& assimpaiQuaternion2, float t);
 
+	//ベクトルと行列の掛け算(出力Vector3)
+	Vector3 MatVector(Matrix4 matrix4, Vector3 vector3);
+
+	// 度数からラジアン
+	float DegreeToRadian(float degree);
+
+	Vector3 DegreeToRadianVec3(Vector3 degree);
+
+	// sin波の動きを作る関数
+	float Sin_ZeroToOne(float pos, float maxCount, float nowCount, float swingWidth);
+
 	// 値をMinとMaxの間に制限する関数
 	template<typename T>
 	T Clamp(const T value, const T min = 0, const T max = 1)

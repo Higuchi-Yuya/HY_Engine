@@ -99,6 +99,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Scene\Player.cpp" />
+    <ClCompile Include="Application\Scene\Enemy.cpp" />
     <ClCompile Include="Engine\Collision\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\BaseCollider.cpp" />
@@ -148,9 +149,11 @@
     <ClCompile Include="Engine\Input\JoyPadInput.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\PostEffect\PostColorInversion.cpp" />
+    <ClCompile Include="Application\Scene\GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\Player.h" />
+    <ClInclude Include="Application\Scene\Enemy.h" />
     <ClInclude Include="Engine\Collision\CollisionAttribute.h" />
     <ClInclude Include="Engine\3D\Object\Mesh.h" />
     <ClInclude Include="Engine\Collision\BaseCollider.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="Engine\Input\JoyPadInput.h" />
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\PostEffect\PostColorInversion.h" />
+    <ClInclude Include="Application\Scene\GameCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

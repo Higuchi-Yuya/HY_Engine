@@ -73,3 +73,40 @@ Vector4 MathUtil::AssimpQuaternionSlerp(aiQuaternion& assimpaiQuaternion, aiQuat
 
 	return slrap;
 }
+
+Vector3 MathUtil::MatVector(Matrix4 matrix4, Vector3 vector3)
+{
+	Vector3 matVector = { 0,0,0 };
+
+	matVector.x = vector3.x * matrix4.m[0][0] + vector3.y * matrix4.m[1][0] + vector3.z * matrix4.m[2][0];
+	matVector.y = vector3.x * matrix4.m[0][1] + vector3.y * matrix4.m[1][1] + vector3.z * matrix4.m[2][1];
+	matVector.z = vector3.x * matrix4.m[0][2] + vector3.y * matrix4.m[1][2] + vector3.z * matrix4.m[2][2];
+
+	return matVector;
+}
+
+float MathUtil::DegreeToRadian(float degree)
+{
+	float PI = 3.141592f;
+	float result = degree * (PI / 180);
+
+	return result;
+}
+
+Vector3 MathUtil::DegreeToRadianVec3(Vector3 degree)
+{
+	float PI = 3.141592f;
+	Vector3 result;
+	result.x = degree.x * (PI / 180);
+	result.y = degree.y * (PI / 180);
+	result.z = degree.z * (PI / 180);
+
+	return result;
+}
+
+float MathUtil::Sin_ZeroToOne(float pos, float maxCount, float nowCount, float swingWidth)
+{
+	float PI = 3.141592f;
+	float result = pos + sin(PI * 2 / maxCount * nowCount) * swingWidth;
+	return result;
+}

@@ -13,12 +13,9 @@ GameScene::~GameScene()
 {
 	// 入力解放
 
-	// ビューの解放
-	delete view;
 	// ライトの解放
 
-	// フォグの解放
-	delete fog;
+
 
 	//delete levelData;
 	//delete modelSkydome;
@@ -71,11 +68,11 @@ void GameScene::Initialize()
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light.get());
 
-	fog = Fog::Create();
+	fog.reset(Fog::Create());
 	fog->nearFog = 10;
 	fog->farFog = 100;
 	fog->isActiveFog = false;
-	Object3d::SetFog(fog);
+	Object3d::SetFog(fog.get());
 
 	// テクスチャハンドルの読み込み
 	textureHandle.reset(TextureManager::Load2DTextureP("whiteTex_1024x1024.png"));
@@ -86,11 +83,12 @@ void GameScene::Initialize()
 	sprite2 = std::make_unique<Sprite>();
 
 	spriteBack_->Initialize(textureHandle.get(), {0,0}, {1280,720});
-	sprite2->Initialize(textureHandle2.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,0.5f});
+	sprite2->Initialize(textureHandle2.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,1.0f});
 
 	// モデルの読み込み
 	//model = Model::LoadFromOBJ("skydome", true);
-	model_2.reset(Model::LoadFromOBJ("doragon", true));
+	model_2.reset(Model::LoadFromOBJ("chr_sword", true));
+	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
 	//groundModel = Model::LoadFromOBJ("ground2");
 	////modelFighter = Model::LoadFromOBJ("sphere");
 	//modelPlane = Model::LoadFromOBJ("plane1x1");
@@ -129,9 +127,6 @@ void GameScene::Initialize()
 	// オブジェクトの初期化
 	//object3d = Object3d::Create();
 
-
-	objMedama.reset(Object3d::Create());
-	objMedama.get()->SetModel(model_2.get());
 	//objMedama->worldTransform_.position_ = { -1,1,0 };
 	//objMedama->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 	//objMedama->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -163,11 +158,7 @@ void GameScene::Initialize()
 
 	//groundObj->SetModel(groundModel);
 
-	// ビュープロジェクションの初期化
-	view = new ViewProjection;
-	view->Initialize();
-	view->target.y = 1.0f;
-	view->SetDistance(8.0f);
+
 
 	spritePos = sprite2->GetPosition();
 
@@ -197,8 +188,15 @@ void GameScene::Initialize()
 	levelData = LevelLoader::LoadFile("testScene");
 
 	// モデル読み込み
-	//modelSkydome = Model::LoadFromOBJ("skydome");
-	//modelGround = Model::LoadFromOBJ("ground");
+	modelSkydome.reset(Model::LoadFromOBJ("skydome"));
+	modelGround.reset(Model::LoadFromOBJ("ground"));
+
+	objSkydome.reset(Object3d::Create());
+	objGround.reset(Object3d::Create());
+
+	objSkydome->SetModel(modelSkydome.get());
+	objGround->SetModel(modelGround.get());
+
 	//modelFighter = Model::LoadFromOBJ("chr_sword", true);
 	//modelSphere = Model::LoadFromOBJ("sphere", true);
 
@@ -258,7 +256,13 @@ void GameScene::Initialize()
 
 	player_.reset(Player::Create(model_2.get()));
 
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Initialize(modelMedama_.get(), player_.get());
 
+
+	// ビュープロジェクションの初期化
+	gameCamera = std::make_unique<GameCamera>();
+	gameCamera->Initialize(&player_->worldTransform_);
 }
 
 void GameScene::Update()
@@ -290,7 +294,7 @@ void GameScene::Update()
 	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
 
 	light->SetCircleShadowDir(0, circleShadowDir);
-	light->SetCircleShadowCasterPos(0, fighterPos);
+	light->SetCircleShadowCasterPos(0, player_->GetWorldPosition());
 	light->SetCircleShadowAtten(0, circleShadowAtten);
 	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
 
@@ -318,17 +322,15 @@ void GameScene::Update()
 	//if (Pad::GetButton(PadCode::ButtonA)) {
 	//	spritePos = { 100,100 };
 	//}
-	spritePos = Pad::GetStick(PadCode::RightStick);
+	//spritePos = Pad::GetStick(PadCode::RightStick);
 	sprite2->SetPosition(spritePos);
 
 
-	objMedama->worldTransform_.rotation.y += 0.01f;
-	objMedama->Update();
 
-	view->UpdateMatrix();
+
 
 	fog->UpdateMatrix();
-	Object3d::SetFog(fog);
+	Object3d::SetFog(fog.get());
 
 	if (isActiveSound == true) {
 		sound.SoundPlayWave(true, 0.01f);
@@ -347,6 +349,14 @@ void GameScene::Update()
 	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
 
 	player_->Update();
+
+	enemy_->Update();
+
+	gameCamera->SetCameraPos(player_->worldTransform_.translation);
+	gameCamera->Update();
+
+	objSkydome->Update();
+	objGround->Update();
 }
 
 void GameScene::ImguiUpdate()
@@ -501,13 +511,17 @@ void GameScene::Draw3D()
 {
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
+	objSkydome->Draw(&gameCamera->GetView());
+	objGround->Draw(&gameCamera->GetView());
 
-	player_->Draw(view);
+	player_->Draw(&gameCamera->GetView());
+
+	enemy_->Draw(&gameCamera->GetView());
 
 	// FBXモデルの描画
 	FbxModel::PreDraw(commandList);
 
-	fbxmodel_->Draw(&fbxTrans_, view);
+	//fbxmodel_->Draw(&fbxTrans_, &gameCamera->GetView());
 
 	FbxModel::PostDraw();
 }

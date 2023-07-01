@@ -174,6 +174,18 @@ void Player::OnCollision(const CollisionInfo& info)
 	//worldTransform_.UpdateMatrix();
 }
 
+const Vector3 Player::GetWorldPosition() const
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
 void Player::MoveUpdate()
 {
 	Matrix4 mathMat;
@@ -181,41 +193,63 @@ void Player::MoveUpdate()
 
 	// 移動ベクトルをY軸周りの角度で回転
 
-	Vector3 vectorX = { 0.1f,0,0 };
+	Vector3 vectorX = { 0.01f,0,0 };
+	vectorX = MathUtil::MatVector(worldTransform_.matWorld_,vectorX);
+	vectorX.normalize();
+	Vector3 vectorZ = { 0,0,-0.01f };
+	vectorZ = MathUtil::MatVector(worldTransform_.matWorld_, vectorZ);
+	vectorZ.normalize();
 
-	Vector3 vectorZ = { 0,0,-0.1f };
+	vectorX *= moveValue;
+	vectorZ *= moveValue;
 
 	Vector3 move = { 0,0,0 };
-	Vector2 joyStickInfo = { 0,0 };
+	Vector3 rot = { 0,0,0 };
+
+	Vector2 joyStickInfoL = { 0,0 };
+	Vector2 joyStickInfoR = { 0,0 };
 	//Matrix4 matRot;
 	//matRot.rotateY(worldTransform_.rotation.y);
 	//move = matRot.transformNotW(move, matRot);
 
 	// 向いてる方向に移動
 
+	// Lスティックで移動
 	if (JoypadInput::GetStick(PadCode::LeftStick).x > deadZone ||
 		JoypadInput::GetStick(PadCode::LeftStick).x < -deadZone ||
 		JoypadInput::GetStick(PadCode::LeftStick).y > deadZone ||
 		JoypadInput::GetStick(PadCode::LeftStick).y < -deadZone) {
 
 		move.x += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.x;
+		move.z += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.z;
+		move.x += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.x;
 		move.z += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.z;
 
-		joyStickInfo.x = JoypadInput::GetStick(PadCode::LeftStick).x;
-		joyStickInfo.y = JoypadInput::GetStick(PadCode::LeftStick).y;
+		joyStickInfoL.x = JoypadInput::GetStick(PadCode::LeftStick).x;
+		joyStickInfoL.y = JoypadInput::GetStick(PadCode::LeftStick).y;
 
 	}
 
+	// Rスティックでカメラ回転
+	if (JoypadInput::GetStick(PadCode::RightStick).x > deadZone ||
+		JoypadInput::GetStick(PadCode::RightStick).x < -deadZone) {
+		rot.y = JoypadInput::GetStick(PadCode::RightStick).x / 1000 * 2;
+
+		joyStickInfoR.y = JoypadInput::GetStick(PadCode::RightStick).x / 1000;
+	}
+
+	worldTransform_.rotation.y += MathUtil::DegreeToRadian(rot.y);
 	worldTransform_.translation += move;
-	//worldTransform_.rotation.y += 0.01f;
+	
 
 	ImGui::Begin("joyPadInfo");
 
 	//ImGui::SetWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 
-	ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
-
+	ImGui::InputFloat2("joySrickL", &joyStickInfoL.x, "%.2f");
+	ImGui::InputFloat2("joySrickR", &joyStickInfoR.x, "%.2f");
+	ImGui::InputFloat3("playerPos", &worldTransform_.translation.x, "%.2f");
 
 	ImGui::End();
 

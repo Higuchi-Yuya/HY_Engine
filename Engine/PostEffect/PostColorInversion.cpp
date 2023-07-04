@@ -294,7 +294,8 @@ void PostColorInversion::CreateSRV()
 
 	for (int i = 0; i < 2; i++) {
 		// デスクリプタヒープにSRV作成
-		sDevice_->CreateShaderResourceView(texBuff_[i].Get(),// ビューと関連付けるバッファ
+		sDevice_->CreateShaderResourceView(
+			texBuff_[i].Get(),// ビューと関連付けるバッファ
 			&srvDesc,
 			CD3DX12_CPU_DESCRIPTOR_HANDLE(
 				descHeapSRV_->GetCPUDescriptorHandleForHeapStart(), i,

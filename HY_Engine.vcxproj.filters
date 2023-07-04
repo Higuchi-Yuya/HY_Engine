@@ -282,6 +282,9 @@
     <ClCompile Include="Application\Scene\Enemy.cpp">
       <Filter>ソース ファイル\Application\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostRenderBase.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -439,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="Application\Scene\Enemy.h">
       <Filter>ヘッダー ファイル\Application\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostRenderBase.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

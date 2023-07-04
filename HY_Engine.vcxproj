@@ -134,6 +134,7 @@
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Math\Vector4.cpp" />
+    <ClCompile Include="Engine\PostEffect\PostRenderBase.cpp" />
     <ClCompile Include="Engine\Sound\Sound.cpp" />
     <ClCompile Include="Application\main.cpp" />
     <ClCompile Include="Application\Scene\GameScene.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4.h" />
+    <ClInclude Include="Engine\PostEffect\PostRenderBase.h" />
     <ClInclude Include="Engine\Sound\Sound.h" />
     <ClInclude Include="Application\Scene\GameScene.h" />
     <ClInclude Include="Engine\Collision\RaycastHit.h" />

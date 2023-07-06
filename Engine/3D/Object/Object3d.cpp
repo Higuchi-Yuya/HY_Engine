@@ -10,7 +10,7 @@ using namespace std;
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
-ComPtr<ID3D12Device> Object3d::sDevice_ = nullptr;
+ID3D12Device* Object3d::sDevice_ = nullptr;
 LightGroup* Object3d::sLight_ = nullptr;
 Fog* Object3d::sFog_ = nullptr;
 
@@ -27,10 +27,11 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 ComPtr<ID3DBlob> Object3d::sVsBlob_; 
 ComPtr<ID3DBlob> Object3d::sPsBlob_;	
 ComPtr<ID3DBlob> Object3d::sErrorBlob_;
+//ComPtr<ID3DBlob> Object3d::sRootSigBlob_;
 
 //Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
 
-void Object3d::StaticInitialize(ID3D12Device* sDevice_, int window_width, int window_height)
+void Object3d::StaticInitialize(ID3D12Device* sDevice_)
 {
 	// nullptrチェック
 	assert(sDevice_);
@@ -42,6 +43,8 @@ void Object3d::StaticInitialize(ID3D12Device* sDevice_, int window_width, int wi
 
 	// ワールドトランスフォームにデバイスを貸す
 	WorldTransform::StaticInitialize(sDevice_);
+
+	Dissolve::StaticInitialize(sDevice_);
 
 	// シェーダーファイルの読み込みと初期化
 	InitializeShader();
@@ -405,46 +408,60 @@ void Object3d::InitializeRootSignature()
 	HRESULT result = S_FALSE;
 
 	// デスクリプタレンジ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
+	descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);// t1 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootParams[6];
+	CD3DX12_ROOT_PARAMETER rootParams[8];
 	//テクスチャレジスタ0番 ---テクスチャシェーダーリソースビュー用
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
-	rootParams[0].DescriptorTable.pDescriptorRanges = &descRangeSRV;			//デスクリプタレンジ
+	rootParams[0].DescriptorTable.pDescriptorRanges = &descRangeSRV0;			//デスクリプタレンジ
 	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
 	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
 
-	//定数バッファ0番 ---ワールド変換データ用
-	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
-	rootParams[1].Descriptor.ShaderRegister = 0;					//定数バッファ番号
-	rootParams[1].Descriptor.RegisterSpace = 0;						//デフォルト値
-	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+	//テクスチャレジスタ1番 ---ディゾルブテクスチャシェーダーリソースビュー用
+	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
+	rootParams[1].DescriptorTable.pDescriptorRanges = &descRangeSRV1;			//デスクリプタレンジ
+	rootParams[1].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
+	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//すべてのシェーダから見える
 
-	//定数バッファ1番 ---ビュープロジェクション変換データ用
-	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[2].Descriptor.ShaderRegister = 1;					//定数バッファ番号
+	//定数バッファ0番 ---ワールド変換データ用
+	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//定数バッファビュー
+	rootParams[2].Descriptor.ShaderRegister = 0;					//定数バッファ番号
 	rootParams[2].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
-	//定数バッファ2番 ---マテリアルバッファビュー用
+	//定数バッファ1番 ---ビュープロジェクション変換データ用
 	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[3].Descriptor.ShaderRegister = 2;					//定数バッファ番号
+	rootParams[3].Descriptor.ShaderRegister = 1;					//定数バッファ番号
 	rootParams[3].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
-	//定数バッファ3番 ---ライトバッファビュー用
+	//定数バッファ2番 ---マテリアルバッファビュー用
 	rootParams[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[4].Descriptor.ShaderRegister = 3;					//定数バッファ番号
+	rootParams[4].Descriptor.ShaderRegister = 2;					//定数バッファ番号
 	rootParams[4].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
-	//定数バッファ4番 ---フォグバッファビュー用
+	//定数バッファ3番 ---ライトバッファビュー用
 	rootParams[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
-	rootParams[5].Descriptor.ShaderRegister = 4;					//定数バッファ番号
+	rootParams[5].Descriptor.ShaderRegister = 3;					//定数バッファ番号
 	rootParams[5].Descriptor.RegisterSpace = 0;						//デフォルト値
 	rootParams[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+
+	//定数バッファ4番 ---フォグバッファビュー用
+	rootParams[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[6].Descriptor.ShaderRegister = 4;					//定数バッファ番号
+	rootParams[6].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
+
+	//定数バッファ5番 ---ディゾルブバッファビュー用
+	rootParams[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//種類
+	rootParams[7].Descriptor.ShaderRegister = 5;					//定数バッファ番号
+	rootParams[7].Descriptor.RegisterSpace = 0;						//デフォルト値
+	rootParams[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;	//すべてのシェーダから見える
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -453,11 +470,11 @@ void Object3d::InitializeRootSignature()
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	rootSignatureDesc.Init_1_0(_countof(rootParams), rootParams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	ComPtr<ID3DBlob> rootSigBlob;
+	ID3DBlob* sRootSigBlob_;
 	// バージョン自動判定のシリアライズ
-	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &sErrorBlob_);
+	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &sRootSigBlob_, &sErrorBlob_);
 	// ルートシグネチャの生成
-	result = sDevice_->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&sRootsignature_));
+	result = sDevice_->CreateRootSignature(0, sRootSigBlob_->GetBufferPointer(), sRootSigBlob_->GetBufferSize(), IID_PPV_ARGS(&sRootsignature_));
 	assert(SUCCEEDED(result));
 }
 
@@ -543,6 +560,7 @@ Object3d::~Object3d()
 		CollisionManager::GetInstance()->RemoveCollider(collider_);
 		delete collider_;
 	}
+
 }
 
 bool Object3d::Initialize()
@@ -553,7 +571,11 @@ bool Object3d::Initialize()
 	// nullptrチェック
 	worldTransform_.Initialize();
 
+	// フォグの初期化
 	sFog_->Initialize();
+
+	// ディゾルブの初期化
+	dissolve_.Initialize();
 
 	return true;
 }
@@ -563,6 +585,8 @@ void Object3d::Update()
 	// ワールドトランスフォームの行列更新と転送
 	UpdateWorldMatrix();
 	sFog_->UpdateMatrix();
+
+	dissolve_.UpdateMatrix();
 
 	// 末尾に当たり判定更新
 	if (collider_) {
@@ -585,19 +609,24 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	if (model_ == nullptr)return;
 
 	// ワールド変換データ定数バッファビューをセット
-	sCmdList_->SetGraphicsRootConstantBufferView(1, worldTransform_.GetBuff()->GetGPUVirtualAddress());
+	sCmdList_->SetGraphicsRootConstantBufferView(static_cast<uint32_t>(rootParameterIndex::WORLDTRANS),
+												 worldTransform_.GetBuff()->GetGPUVirtualAddress());
 
 	// ビュープロジェクション変換データ定数バッファビューをセット
-	sCmdList_->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
+	sCmdList_->SetGraphicsRootConstantBufferView(static_cast<uint32_t>(rootParameterIndex::VIEWPROJECTION), 
+												 viewProjection->GetBuff()->GetGPUVirtualAddress());
 
 	// フォグの描画
-	sFog_->Draw(sCmdList_);
+	sFog_->Draw(sCmdList_, static_cast<uint32_t>(rootParameterIndex::FOGDATA));
 
 	// ライトの描画
-	sLight_->Draw(sCmdList_,4);
+	sLight_->Draw(sCmdList_, static_cast<uint32_t>(rootParameterIndex::LIGHTDATA));
+
+	// ディゾルブの描画
+	dissolve_.Draw(sCmdList_, static_cast<uint32_t>(rootParameterIndex::DISSOLVEDATA));
 
 	// モデルを描画
-	model_->Draw(sCmdList_, 1);
+	model_->Draw(sCmdList_);
 
 }
 
@@ -642,4 +671,16 @@ void Object3d::SetBlendMode(BlendMode mode)
 	default:
 		break;
 	}
+}
+
+void Object3d::StaticFinalize()
+{
+	sRootsignature_ = nullptr;
+	sPipelinestateNormal_ = nullptr;
+	sPipelinestateADDITION_ = nullptr;
+	sPipelinestateADDITIONALPHA_ = nullptr;
+	sPipelinestateSUBTRACTION_ = nullptr;
+	sPipelinestateSCREEN_ = nullptr;
+
+	sInputLayout_.clear();
 }

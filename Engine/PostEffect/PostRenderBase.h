@@ -43,11 +43,11 @@ private:// メンバ変数
 	static ID3D12Device* sDevice_;
 
 	// SRVの最大個数
-	const size_t maxSRVCount = 2056;
+	const uint32_t maxSRVCount = 2056;
 	// RTVの最大個数
-	const size_t maxRTVCount = 2056;
+	const uint32_t maxRTVCount = 2056;
 	// DSVの最大個数
-	const size_t maxDSVCount = 1;
+	const uint32_t maxDSVCount = 1;
 
 	// SRV用デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV_;

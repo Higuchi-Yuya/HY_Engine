@@ -6,6 +6,7 @@ using namespace std;
 /// </summary>
 ID3D12Device* Material::device = nullptr;
 
+
 void Material::StaticInitialize(ID3D12Device* device)
 {
 	Material::device = device;
@@ -30,6 +31,8 @@ void Material::LoadTexture(const std::string& directoryPath, const std::string& 
 	//int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	textureIndex_ = TextureManager::LoadTexture(filepath);
+
+	
 }
 
 void Material::Update()

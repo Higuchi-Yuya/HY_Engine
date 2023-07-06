@@ -124,6 +124,18 @@
     <Filter Include="ソース ファイル\Application\Enemy">
       <UniqueIdentifier>{acd40bbf-bd8f-4050-86cd-76b15409e96b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Objct">
+      <UniqueIdentifier>{c611a32a-99cd-426f-a2d1-ebfee0ac96ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\FBX">
+      <UniqueIdentifier>{526ca2c0-3905-4f31-917c-4523f1f67d77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\PostEffect">
+      <UniqueIdentifier>{ecd4bb78-d5ff-4e1e-a78b-eabcdace8ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\Sprite">
+      <UniqueIdentifier>{a7ef88c4-3a7c-4842-b6eb-3b086b3bc26c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -276,14 +288,20 @@
     <ClCompile Include="Application\Scene\GameCamera.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\Player.cpp">
+    <ClCompile Include="Application\Player\Player.cpp">
       <Filter>ソース ファイル\Application\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\Enemy.cpp">
+    <ClCompile Include="Application\Enemy\Enemy.cpp">
       <Filter>ソース ファイル\Application\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostRenderBase.cpp">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3D\Object\Dissolve.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderBase\ShaderObj.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,34 +455,40 @@
     <ClInclude Include="Application\Scene\GameCamera.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\Player.h">
+    <ClInclude Include="Application\Player\Player.h">
       <Filter>ヘッダー ファイル\Application\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\Enemy.h">
+    <ClInclude Include="Application\Enemy\Enemy.h">
       <Filter>ヘッダー ファイル\Application\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostRenderBase.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Object\Dissolve.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderBase\ShaderObj.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
       <Filter>シェーダーファイル</Filter>
     </None>
-    <None Include="Resources\shaders\SpriteShaderHeader.hlsli">
-      <Filter>シェーダーファイル</Filter>
-    </None>
     <None Include="Resources\shaders\OBJShaderHeader.hlsli">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\Objct</Filter>
     </None>
     <None Include="Resources\shaders\FBX.hlsli">
-      <Filter>シェーダーファイル</Filter>
-    </None>
-    <None Include="Resources\shaders\PostEffectHeader.hlsli">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\FBX</Filter>
     </None>
     <None Include="Resources\shaders\PostEffectHeader (2).hlsli">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\PostEffect</Filter>
+    </None>
+    <None Include="Resources\shaders\PostEffectHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect</Filter>
+    </None>
+    <None Include="Resources\shaders\SpriteShaderHeader.hlsli">
+      <Filter>シェーダーファイル\Sprite</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -474,38 +498,38 @@
     <FxCompile Include="Resources\shaders\BasicVS.hlsl">
       <Filter>シェーダーファイル</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\SpriteVertexShader.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\OBJPixcelShader.hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\Objct</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\OBJVertexShader.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\FBXGS.hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\Objct</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\FBXPS.hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\FBX</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\FBXVS.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectPS.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shaders\PostEffectVS.hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\FBX</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffectPS (2).hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectPS.hlsl">
+      <Filter>シェーダーファイル\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\PostEffectVS (2).hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
+      <Filter>シェーダーファイル\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpriteVertexShader.hlsl">
+      <Filter>シェーダーファイル\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\FBXGS.hlsl">
+      <Filter>シェーダーファイル\FBX</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

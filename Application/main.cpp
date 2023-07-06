@@ -14,6 +14,7 @@
 #include "GameScene.h"
 #include "PostEffect.h"
 #include "InputManager.h"
+#include <dxgidebug.h>
 #pragma endregion
 
 #pragma region おまじない
@@ -33,7 +34,24 @@ void DebugOutputFormatString(const char* format, ...) {
 
 #pragma endregion
 
+struct D3DResouceLeakChecker
+{
+	~D3DResouceLeakChecker()
+	{
+		// リソースリークチェック
+		Microsoft::WRL::ComPtr<IDXGIDebug1>debug;
+		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+			debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+			debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		}
+	}
+};
+
+
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
+
+	D3DResouceLeakChecker leckCheck;
 
 #pragma region WindowsAPI初期化処理
 	// ポインタ
@@ -42,6 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// WindouwsAPIの初期化
 	winApp = new WinApp();
 	winApp->Initialize();
+
 
 #pragma endregion
 
@@ -70,18 +89,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	inputManager->Init();
 
 	// スプライトの初期化
-	SpriteManager* spriteManager = nullptr;
+	std::unique_ptr<SpriteManager> spriteManager = nullptr;
 	// スプライト共通部の初期化
-	spriteManager = new SpriteManager;
+	spriteManager = std::make_unique<SpriteManager>();
 	spriteManager->Initialize(dxCommon);
 	
-	Sprite::StaticInitialize(spriteManager);
+	Sprite::StaticInitialize(spriteManager.get());
 
 	// テクスチャの初期化
 	TextureManager::StaticInitialize(dxCommon);
 	
 	// オブジェクトの初期化
-	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
+	Object3d::StaticInitialize(dxCommon->GetDevice());
 
 	// ビュープロジェクションの初期化
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
@@ -235,10 +254,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ImGuiのマネージャーを解放
 	imguiManager->Finalize();
 	delete imguiManager;
-	// スプライトマネージャーの解放
-	delete spriteManager;
-	// FBXローダーの解放
-	//FbxLoader::GetInstance()->Finalize();
+
+	TextureManager::StaticFinalize();
+	Object3d::StaticFinalize();
+	FbxModel::StaticFainalize();
 
 	// WindouwsAPIの終了処理
 	winApp->Finalize();

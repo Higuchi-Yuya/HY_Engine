@@ -98,7 +98,7 @@ public:// パブリック変数
 private:// メンバ変数
 
 	// デバイス（借りてくる）
-	static Microsoft::WRL::ComPtr<ID3D12Device> sDevice_;
+	static ID3D12Device* sDevice_;
 
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;

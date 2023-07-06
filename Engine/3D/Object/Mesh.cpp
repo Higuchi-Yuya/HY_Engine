@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <DirectXMath.h>
 #include "TextureManager.h"
+#include "Object3d.h"
 
 using namespace DirectX;
 
@@ -27,10 +28,10 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// マテリアル用定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(3, material_->GetConstantBuffer()->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(static_cast<uint32_t>(rootParameterIndex::MATERIALDATA), material_->GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(0, material_->textureIndex_.GetGpuHandle());
+	cmdList->SetGraphicsRootDescriptorTable(static_cast<uint32_t>(rootParameterIndex::BODYTEXTURE), material_->textureIndex_.GetGpuHandle());
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);

@@ -9,8 +9,12 @@ float3 rotate(float3 p, float3 rotation)
     //rotationがゼロ行列だと、Geometry shaderが表示されないので注意
     float3 a = normalize(rotation);
     float angle = length(rotation);
+    float e = 0.001;
     //rotationがゼロ行列のときの対応
-    if (abs(angle) < 0.001) return p;
+    if (abs(angle) < e)
+    {
+        return p;
+    }
     float s = sin(angle);
     float c = cos(angle);
     float r = 1.0 - c;

@@ -38,9 +38,6 @@ private:
 	float deadZone = 450;
 	Vector3 moveValue = { 0.1f,0.0f,0.1f };
 
-
-	Input* input = new Input;
-
 	// 接地フラグ
 	bool onGround = true;
 	// 落下ベクトル

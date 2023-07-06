@@ -3,7 +3,7 @@
 #include <cassert>
 #include "WinApp.h"
 
-Microsoft::WRL::ComPtr<ID3D12Device> ViewProjection::sDevice_ = nullptr;
+ID3D12Device* ViewProjection::sDevice_ = nullptr;
 
 void ViewProjection::StaticInitialize(ID3D12Device* device)
 {

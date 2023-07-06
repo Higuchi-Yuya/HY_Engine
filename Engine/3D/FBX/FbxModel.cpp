@@ -47,6 +47,8 @@ void FbxModel::StaticFainalize()
 
 	constBuffSkin_.Reset();
 	constBuffNothing_.Reset();
+
+	lightGroup_ = nullptr;
 }
 
 void FbxModel::InitializeGraphicsPipeline() {

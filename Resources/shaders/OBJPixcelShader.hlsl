@@ -1,6 +1,7 @@
 #include "OBJShaderHeader.hlsli"
 
 Texture2D<float4> tex : register(t0);  // 0番スロットに設定されたテクスチャ
+Texture2D<float4> dissolveTex : register(t1); // 1番スロットに設定されたテクスチャ
 SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
 float4 main(VSOutput input) : SV_TARGET
@@ -28,7 +29,7 @@ float4 main(VSOutput input) : SV_TARGET
 	for (int i = 0; i < DIRLIGHT_NUM; i++) {
 		if (dirLights[i].active) {
 			// ライトに向かうベクトルと法線の内積
-			float3 dotlightnormal = dot(dirLights[i].lightv, input.normal);
+			float dotlightnormal = dot(dirLights[i].lightv, input.normal);
 
 			float lightIntensity = smoothstep(0, 0.01, dotlightnormal);
 
@@ -36,7 +37,7 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 reflect = normalize(-dirLights[i].lightv + 2 * dotlightnormal * input.normal);
 			
 			// リムライト
-            float4 rimDot = 1 - dot(eyedir, input.normal);
+            float rimDot = 1 - dot(eyedir, input.normal);
             float rimIntensity = smoothstep(0.716 - 0.01, 0.716 + 0.01, rimDot);
             float3 rimColor = { 1, 1, 1 };
             float3 rim = rimIntensity * rimColor;
@@ -178,6 +179,22 @@ float4 main(VSOutput input) : SV_TARGET
 		return outputColor * (1.0f - rate) + specialFogColor * rate;
 	}
 
+	// もしディゾルブがアクティブならディゾルブの処理をする
+    if (isActiveDissolve == true)
+    {
+		// オブジェクト色
+        float4 outputColor = color * shadecolor * texcolor;
+		
+		// ディゾルブのテクスチャ
+        float4 dissolveTexColor = dissolveTex.Sample(smp, input.uv * tilling + offset);
+		
+		// マスクのRチャンネルが０．５を超えると描画破棄
+        float idensity = smoothstep(dissolveSmoothMin, 0.00, dissolveTexColor.r - dissolveTime);
+        clip(idensity - dissolveTime);
+		
+        return outputColor + dissolveColor * dissolvePower * (1 - idensity);
+    }
+	
 
 	// テクスチャの色は使わず色を数値指定
 	return color * shadecolor * texcolor;

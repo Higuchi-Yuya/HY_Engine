@@ -11,6 +11,7 @@
 #include "LightGroup.h"
 #include <vector>
 
+#include "Dissolve.h"
 #include "CollisionInfo.h"
 //#include "BaseCollider.h"
 
@@ -18,6 +19,18 @@
 /// 3Dオブジェクト
 /// </summary>
 class BaseCollider;
+
+enum class rootParameterIndex
+{
+	BODYTEXTURE,// 本体に貼るテクスチャ
+	DISSOLVETEX,// ディゾルブ用のテクスチャ
+	WORLDTRANS, // ワールド変換データ
+	VIEWPROJECTION,// ビュープロジェクションのデータ
+	MATERIALDATA,// マテリアルのバッファデータ
+	LIGHTDATA,// ライトのバッファデータ
+	FOGDATA,// フォグのバッファデータ
+	DISSOLVEDATA,// ディゾルブのバッファデータ
+};
 
 class Object3d
 {
@@ -32,6 +45,8 @@ public:
 		SCREEN,         // スクリーン
 		BLEND_NUMMAX,
 	};
+
+
 private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -46,7 +61,7 @@ public: // 静的メンバ関数
 	/// <param name="device">デバイス</param>
 	/// <param name="window_width">画面幅</param>
 	/// <param name="window_height">画面高さ</param>
-	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
+	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
 	/// 描画前処理
@@ -110,9 +125,12 @@ public: // 静的メンバ関数
 	/// </summary>
 	static void SetBlendMode(BlendMode mode);
 
+	// スタティック系を解放する関数
+	static void StaticFinalize();
+
 private: // 静的メンバ変数
 	// デバイス
-	static ComPtr<ID3D12Device> sDevice_;
+	static ID3D12Device* sDevice_;
 
 	// ライト
 	static LightGroup* sLight_;
@@ -137,10 +155,11 @@ private: // 静的メンバ変数
 
 	// インプットレイアウト
 	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
-
+	
 	static ComPtr<ID3DBlob> sVsBlob_; // 頂点シェーダオブジェクト
 	static ComPtr<ID3DBlob> sPsBlob_;	// ピクセルシェーダオブジェクト
 	static ComPtr<ID3DBlob> sErrorBlob_; // エラーオブジェクト
+
 
 private:// 静的メンバ関数
 
@@ -192,16 +211,19 @@ public: // メンバ関数
 	/// </summary>
 	virtual void OnCollision(const CollisionInfo&info){}
 
-
 public:// パブリック変数
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
+	// ディゾルブ
+	Dissolve dissolve_;
+
 private: // メンバ変数
 	// モデル
 	Model* model_ = nullptr;
 
+	
 protected:// メンバ変数
 	// クラス名（デバッグ用）
 	const char* name_ = nullptr;

@@ -20,7 +20,7 @@ public:// メンバ関数
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParamIndexMaterial);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 
 	// デバイスのセッター

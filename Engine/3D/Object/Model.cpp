@@ -123,7 +123,7 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 	}
 }
 
-void Model::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParamIndexMaterial)
+void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	// nullptrチェック
 	assert(sDevice_);

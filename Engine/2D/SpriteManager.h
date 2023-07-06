@@ -9,7 +9,7 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include <TextureManager.h>
-#pragma comment(lib, "d3dcompiler.lib")
+//#pragma comment(lib, "d3dcompiler.lib")
 
 class SpriteManager
 {

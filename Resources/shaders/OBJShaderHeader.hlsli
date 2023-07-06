@@ -88,6 +88,16 @@ cbuffer Fog : register(b4)
 	float farFog;
 }
 
+// ディゾルブ
+cbuffer Dissolve : register(b5)
+{
+    float4 dissolveColor;
+    bool isActiveDissolve;
+    float dissolvePower;
+    float dissolveTime;
+    float dissolveSmoothMin;
+}
+
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {

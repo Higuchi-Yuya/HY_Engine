@@ -4,12 +4,13 @@
 void Enemy::Initialize(Model* model, Player* player)
 {
 	player_ = player;
+
+	Object3d::Initialize();
 	// モデルのセット
 	if (model) {
 		SetModel(model);
 	}
 
-	worldTransform_.Initialize();
 	worldTransform_.translation.y += 1.0f;
 	worldTransform_.UpdateMatrix();
 }

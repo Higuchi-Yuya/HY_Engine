@@ -48,14 +48,14 @@
     <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)Lib\assimp\include</IncludePath>
     <OutDir>$(SolutionDir)..\Generated\Outputs\HY_Engine\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Debug;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)Lib\assimp\include</IncludePath>
     <OutDir>$(SolutionDir)..\Generated\Outputs\HY_Engine\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Debug;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Application/Scene;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/PostEffect</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Enemy</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -98,8 +98,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application\Scene\Player.cpp" />
-    <ClCompile Include="Application\Scene\Enemy.cpp" />
+    <ClCompile Include="Application\Player\Player.cpp" />
+    <ClCompile Include="Application\Enemy\Enemy.cpp" />
+    <ClCompile Include="Engine\3D\Object\Dissolve.cpp" />
     <ClCompile Include="Engine\Collision\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collision\BaseCollider.cpp" />
@@ -151,10 +152,12 @@
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\PostEffect\PostColorInversion.cpp" />
     <ClCompile Include="Application\Scene\GameCamera.cpp" />
+    <ClCompile Include="Engine\RenderBase\ShaderObj.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Scene\Player.h" />
-    <ClInclude Include="Application\Scene\Enemy.h" />
+    <ClInclude Include="Application\Player\Player.h" />
+    <ClInclude Include="Application\Enemy\Enemy.h" />
+    <ClInclude Include="Engine\3D\Object\Dissolve.h" />
     <ClInclude Include="Engine\Collision\CollisionAttribute.h" />
     <ClInclude Include="Engine\3D\Object\Mesh.h" />
     <ClInclude Include="Engine\Collision\BaseCollider.h" />
@@ -206,6 +209,7 @@
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\PostEffect\PostColorInversion.h" />
     <ClInclude Include="Application\Scene\GameCamera.h" />
+    <ClInclude Include="Engine\RenderBase\ShaderObj.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -241,6 +245,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <FileType>Document</FileType>
     </FxCompile>
     <FxCompile Include="Resources\shaders\FBXPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

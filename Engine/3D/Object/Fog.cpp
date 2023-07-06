@@ -2,7 +2,7 @@
 #include<cassert>
 #include <d3dx12.h>
 
-Microsoft::WRL::ComPtr<ID3D12Device> Fog::sDevice_ = nullptr;
+ID3D12Device* Fog::sDevice_ = nullptr;
 
 void Fog::StaticInitialize(ID3D12Device* device)
 {
@@ -36,10 +36,10 @@ void Fog::UpdateMatrix()
 	constMap_->farFog = farFog;
 }
 
-void Fog::Draw(ID3D12GraphicsCommandList* cmdList)
+void Fog::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t fogRootIndex)
 {
 	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(5, constBuff_->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(fogRootIndex, constBuff_->GetGPUVirtualAddress());
 }
 
 void Fog::CreateConstBuffer()

@@ -11,29 +11,6 @@
 
 GameScene::~GameScene()
 {
-	// 入力解放
-
-	// ライトの解放
-
-
-
-	//delete levelData;
-	//delete modelSkydome;
-	//delete 	modelGround;
-	//delete modelFighter;
-	//delete modelSphere;
-	//delete objSkydome;
-	//delete objGround;
-	//delete objFighter;
-	//delete objSphere;
-	//for (auto it = models.begin(); it == models.end(); it++) {
-	//	delete* it;
-	//}
-	//models.clear();
-	//for (auto it = objects.begin(); it == objects.end(); it++) {
-	//	delete* it;
-	//}
-	//objects.clear();
 
 }
 
@@ -75,117 +52,32 @@ void GameScene::Initialize()
 	Object3d::SetFog(fog.get());
 
 	// テクスチャハンドルの読み込み
-	textureHandle.reset(TextureManager::Load2DTextureP("whiteTex_1024x1024.png"));
-	textureHandle2.reset(TextureManager::Load2DTextureP("texture.png"));
+
+	textureHandleDefu.reset(TextureManager::Load2DTextureP("texture.png"));
 
 	// スプライトの初期化
-	spriteBack_ = std::make_unique<Sprite>();
-	sprite2 = std::make_unique<Sprite>();
+	spriteProvisional = std::make_unique<Sprite>();
 
-	spriteBack_->Initialize(textureHandle.get(), {0,0}, {1280,720});
-	sprite2->Initialize(textureHandle2.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,1.0f});
+	
+	spriteProvisional->Initialize(textureHandleDefu.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,1.0f});
 
 	// モデルの読み込み
-	//model = Model::LoadFromOBJ("skydome", true);
-	model_2.reset(Model::LoadFromOBJ("chr_sword", true));
+	playerModel_.reset(Model::LoadFromOBJ("chr_sword", true));
 	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
-	//groundModel = Model::LoadFromOBJ("ground2");
-	////modelFighter = Model::LoadFromOBJ("sphere");
-	//modelPlane = Model::LoadFromOBJ("plane1x1");
-	//modelBox = Model::LoadFromOBJ("box1x1x1");
-	//modelPyramid = Model::LoadFromOBJ("pyramid1x1");
 
-
-	// モデルテーブル
-	//Model* modeltable[10] = {
-	//	modelPlane,
-	//	modelPlane,
-	//	modelPlane,
-	//	modelPlane,
-	//	modelPlane,
-	//	modelPlane,
-	//	modelPlane,
-	//	modelPlane,
-	//	modelBox,
-	//	modelPyramid,
-	//};
 
 	const int DIV_NUM = 10;
 	const float LAND_SCALE = 2.0f;
-	//for (int i = 0; i < DIV_NUM; i++) {
-	//	for (int j = 0; j < DIV_NUM; j++) {
-
-	//		int modelIndex = rand() % 10;
-
-	//		TouchableObject* object = TouchableObject::Create(modeltable[modelIndex]);
-	//		object->worldTransform_.scale_ = { LAND_SCALE,LAND_SCALE,LAND_SCALE };
-	//		object->worldTransform_.position_={ (j - DIV_NUM / 2) * LAND_SCALE, 0, (i - DIV_NUM / 2) * LAND_SCALE };
-	//		objects.push_back(object);
-	//	}
-	//}
 
 	// オブジェクトの初期化
-	//object3d = Object3d::Create();
-
-	//objMedama->worldTransform_.position_ = { -1,1,0 };
-	//objMedama->worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	//objMedama->worldTransform_.color_ = { 1.0f,1.0f,1.0f,1.0f };
-	//objMedama->SetCollider(new SphereCollider);
-
-	collisionManager = CollisionManager::GetInstance();
-
-
-
-	//point1 = Object3d::Create();
-	//point2 = Object3d::Create();
-	//point3 = Object3d::Create();
-	//rayobj = Object3d::Create();
-
-	
-	//groundObj = TouchableObject::Create(groundModel);
-	//groundObj->worldTransform_.scale_.x += 5;
-
-	//groundObj2 = TouchableObject::Create(modelBox);
-	//groundObj2->worldTransform_.position_.x += 2;
-	//groundObj2->UpdateWorldMatrix();
-
-
-
-
-	//object3d->SetModel(model);
-
-
-
-	//groundObj->SetModel(groundModel);
-
-
-
-	spritePos = sprite2->GetPosition();
-
-	// 確認用オブジェ
-	//point1->SetModel(model_2);
-	//point2->SetModel(model_2);
-	//point3->SetModel(model_2);
-
-	//point1->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
-	//point1->worldTransform_.position_ = triangle.p0;
-	//point2->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
-	//point2->worldTransform_.position_ = triangle.p1;
-	//point3->worldTransform_.scale_ = { 0.2f,0.2f,0.2f };
-	//point3->worldTransform_.position_ = triangle.p2;
-
-	//rayobj->SetModel(modelFighter);
-	//rayobj->worldTransform_.scale_ = { 0.2f,1.0f,0.2f };
-
+	spritePos = spriteProvisional->GetPosition();
 	sound.SoundLoadWave("GameClear.wav");
 
-	//atariModel = Model::LoadFromOBJ("sphere", true);
-	//atariObj = Object3d::Create();
-	//atariObj->SetModel(atariModel);
+
 
 #pragma region ローダー用の読み込み
-	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile("testScene");
+	//// レベルデータの読み込み
+	//levelData = LevelLoader::LoadFile("testScene");
 
 	// モデル読み込み
 	modelSkydome.reset(Model::LoadFromOBJ("skydome"));
@@ -242,23 +134,31 @@ void GameScene::Initialize()
 
 	// モデル名を指定してファイルを読み込み
 	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	fbxmodel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("boneTest"));
-	fbxmodel_->Initialize();
-	fbxTrans_.Initialize();
-	fbxTrans_.scale = { 0.01f,0.01f, 0.01f };
-	fbxTrans_.UpdateMatrix();
+	//fbxmodel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("boneTest"));
+	//fbxmodel_->Initialize();
+	//fbxTrans_.Initialize();
+	//fbxTrans_.scale = { 0.01f,0.01f, 0.01f };
+	//fbxTrans_.UpdateMatrix();
 
-	modelAnim_ = std::make_unique<FbxAnimetion>();
-	modelAnim_->Load("boneTest");
-	
+	////modelAnim_ = std::make_unique<FbxAnimetion>();
+	////modelAnim_->Load("boneTest");
+	//
 
 	player_ = std::make_unique<Player>();
 
-	player_.reset(Player::Create(model_2.get()));
+	player_.reset(Player::Create(playerModel_.get()));
 
 	enemy_ = std::make_unique<Enemy>();
 	enemy_->Initialize(modelMedama_.get(), player_.get());
 
+	objMedama_.reset(Object3d::Create());
+	objMedama_->SetModel(modelMedama_.get());
+	objMedama_->worldTransform_.translation = { 2,1,0 };
+
+	objMedama_->dissolve_.isActiveDissolve_ = true;
+
+
+	objMedama_->Update();
 
 	// ビュープロジェクションの初期化
 	gameCamera = std::make_unique<GameCamera>();
@@ -275,13 +175,6 @@ void GameScene::Update()
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
-	if (input_->TriggerKey(DIK_R)) {
-		//objFighter->worldTransform_.position_ = { 1.0f, 10.0f,0.0f };
-		//objFighter->UpdateWorldMatrix();
-	}
-	//fighterPos = objFighter->worldTransform_.position_;
-
-
 
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
@@ -306,28 +199,7 @@ void GameScene::Update()
 
 	light->Update();
 
-	//object3d->SetScale(scale_);
-	//object3d->Update();
-
-
-
-	//objFighter->worldTransform_.rotation_.y += 0.01f;
-	collisionManager->CheckAllCollisions();
-
-
-	//objFighter->Update();
-	//spritePos = sprite2->GetPosition();
-	Vector2 move = { 2,2 };
-	
-	//if (Pad::GetButton(PadCode::ButtonA)) {
-	//	spritePos = { 100,100 };
-	//}
-	//spritePos = Pad::GetStick(PadCode::RightStick);
-	sprite2->SetPosition(spritePos);
-
-
-
-
+	spriteProvisional->SetPosition(spritePos);
 
 	fog->UpdateMatrix();
 	Object3d::SetFog(fog.get());
@@ -346,7 +218,7 @@ void GameScene::Update()
 	//	object->Update();
 	//}
 	//frem += 0.01f;
-	fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
+	//fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
 
 	player_->Update();
 
@@ -357,6 +229,8 @@ void GameScene::Update()
 
 	objSkydome->Update();
 	objGround->Update();
+
+	objMedama_->Update();
 }
 
 void GameScene::ImguiUpdate()
@@ -380,8 +254,6 @@ void GameScene::ImguiUpdate()
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };
 	}
-
-	ImGui::InputFloat3("fighterPos", &fighterPos.x);
 
 	ImGui::End();
 
@@ -455,7 +327,6 @@ void GameScene::ImguiUpdate()
 		//ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
 		ImGui::InputFloat3("circleShadowAtten", &circleShadowAtten.x);
 		ImGui::InputFloat2("circleShadowFactorAngle", &circleShadowFactorAngle.x);
-		ImGui::InputFloat3("fighterPos", &fighterPos.x);
 
 		ImGui::TreePop();
 	}
@@ -473,6 +344,24 @@ void GameScene::ImguiUpdate()
 		ImGui::SliderFloat("nearFog", &fog->nearFog, 0.0f, 100.0f, "%.1f");
 		ImGui::SliderFloat("farFog", &fog->farFog, 50.0f, 500.0f, "%.1f");
 		ImGui::ColorEdit4("fogColor", &fog->fogColor.x, ImGuiColorEditFlags_Float);
+		ImGui::TreePop();
+	}
+
+	// フォグ
+	if (ImGui::TreeNode("Dissolve")) {
+		ImGui::Checkbox("Is Active", &isDissolve);
+
+		if (isDissolve == true) {
+			objMedama_->dissolve_.isActiveDissolve_ = true;
+		}
+		else if (isDissolve == false) {
+			objMedama_->dissolve_.isActiveDissolve_ = false;
+		}
+
+		ImGui::SliderFloat("dissolvePower", &objMedama_->dissolve_.dissolvePower_, 1.0f, 50.0f, "%.1f");
+		ImGui::SliderFloat("dissolveTime", &objMedama_->dissolve_.dissolveTime_, 0.0f, 2.0f, "%.1f");
+		ImGui::SliderFloat("dissolve", &objMedama_->dissolve_.dissolveSmoothMin_, -1.0f, -0.1f, "%.1f");
+		ImGui::ColorEdit4("fogColor", &objMedama_->dissolve_.dissolveColor_.x, ImGuiColorEditFlags_Float);
 		ImGui::TreePop();
 	}
 
@@ -504,7 +393,7 @@ void GameScene::ImguiUpdate()
 
 void GameScene::Draw2DBack()
 {
-	//spriteBack_->Draw();
+
 }
 
 void GameScene::Draw3D()
@@ -518,6 +407,8 @@ void GameScene::Draw3D()
 
 	enemy_->Draw(&gameCamera->GetView());
 
+	objMedama_->Draw(&gameCamera->GetView());
+
 	// FBXモデルの描画
 	FbxModel::PreDraw(commandList);
 
@@ -529,5 +420,5 @@ void GameScene::Draw3D()
 void GameScene::Draw2DFront()
 {
 
-	sprite2->Draw();
+	spriteProvisional->Draw();
 }

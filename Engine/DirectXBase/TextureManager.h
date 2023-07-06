@@ -15,6 +15,9 @@ public:// メンバ関数
 
 	// テクスチャ読み込み
 
+	// フリーにパスを指定して使う用のテクスチャ読み込み
+	static Texture* LoadFreeTexture(const std::string& filePath = "NULL");
+
 	// 2Dのテクスチャの読み込み
 	static Texture Load2DTexture(const std::string& fileName = "NULL");
 	static Texture* Load2DTextureP(const std::string fileName);
@@ -26,6 +29,9 @@ public:// メンバ関数
 	// テクスチャで一度必要な初期化
 	static void StaticInitialize(DirectXCommon* dxcommon);
 
+	// テクスチャでスタティックの変数を解放
+	static void StaticFinalize();
+
 public:// 静的メンバ変数
 	static uint32_t sSrvIncrementIndex;
 
@@ -34,9 +40,6 @@ public:// 静的メンバ変数
 
 	// デフォルトテクスチャ2D格納ディレクトリ
 	static std::string sDefault2DTextureDirectoryPath;
-
-	// DirextXの基盤を借りてくる
-	static DirectXCommon* sDxcommon_;
 
 	// SRVヒープ
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> sSrvHeap;
@@ -51,5 +54,8 @@ private:// プライベート関数
 private:// メンバ変数
 	// テクスチャリソースデスク
 	static D3D12_RESOURCE_DESC sTextureResourceDesc;
+
+	// DirextXの基盤を借りてくる
+	static DirectXCommon* sDxcommon_;
 };
 

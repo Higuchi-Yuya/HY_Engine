@@ -2,7 +2,7 @@
 #include<cassert>
 #include <d3dx12.h>
 
-Microsoft::WRL::ComPtr<ID3D12Device> WorldTransform::device_ = nullptr;
+ID3D12Device* WorldTransform::device_ = nullptr;
 
 void WorldTransform::StaticInitialize(ID3D12Device* device)
 {

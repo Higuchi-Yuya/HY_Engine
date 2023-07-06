@@ -1,5 +1,7 @@
 #include "PostRenderBase.h"
 
+ID3D12Device* PostRenderBase::sDevice_ = nullptr;
+
 void PostRenderBase::CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
 {
 

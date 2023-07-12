@@ -26,6 +26,15 @@ public:// メンバ関数
 	/// </summary>
 	void Create(const std::string& fileName_, const std::string& entryPoint_, const std::string& target_, const ShaderType& type_);
 
+	/// <summary>
+	/// シェーダオブジェクトを取得
+	/// </summary>
+	D3D12_SHADER_BYTECODE* GetShader() {return &shaderBytecode;}
+
+	/// <summary>
+	/// タイプ
+	/// </summary>
+	const ShaderType& GetType() { return type; }
 
 private:// メンバ変数
 	//シェーダオブジェクト

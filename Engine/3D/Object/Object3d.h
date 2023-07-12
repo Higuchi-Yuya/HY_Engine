@@ -13,6 +13,8 @@
 
 #include "Dissolve.h"
 #include "CollisionInfo.h"
+#include "ShaderObj.h"
+
 //#include "BaseCollider.h"
 
 /// <summary>

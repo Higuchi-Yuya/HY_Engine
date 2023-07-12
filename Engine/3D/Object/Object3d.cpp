@@ -483,6 +483,8 @@ void Object3d::InitializeShader()
 	HRESULT result = S_FALSE;
 
 	// 頂点シェーダの読み込みとコンパイル
+
+
 	result = D3DCompileFromFile(
 		L"Resources/shaders/OBJVertexShader.hlsl",	// シェーダファイル名
 		nullptr,

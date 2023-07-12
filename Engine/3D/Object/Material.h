@@ -6,6 +6,7 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <string>
+#include "TextureManager.h"
 
 class Material
 {
@@ -18,9 +19,12 @@ public:// サブクラス
 	{
 		Vector3 ambient; // アンビエント係数
 		float pad1; // パディング
+
 		Vector3 diffuse; // ディフューズ係数
 		float pad2; // パディング
+
 		Vector3 specular; // スペキュラー係数
+
 		float alpha; // アルファ
 	};
 public: // 静的メンバ関数
@@ -46,17 +50,18 @@ public:
 	Vector3 ambient; // アンビエント影響度
 	Vector3 diffuse; // ディフューズ影響度
 	Vector3 specular; // スペキュラー影響度
+
 	float alpha; // アルファ
 	std::string textureFilename; // テクスチャファイル名
 
 	// テクスチャ番号
-	uint32_t textureIndex = 0;
+	Texture textureIndex_;
 public:
 	/// <summary>
 	/// 定数バッファの取得
 	/// </summary>
 	/// <returns></returns>
-	ID3D12Resource* GetConstantBuffer() { return constBuff.Get(); }
+	ID3D12Resource* GetConstantBuffer() { return constBuff_.Get(); }
 
 	/// テクスチャ読み込み
 	/// </summary>
@@ -69,19 +74,23 @@ public:
 	/// </summary>
 	void Update();
 
+	// テクスチャのセット
+	void SetTexture(Texture textureIndex) { textureIndex_ = textureIndex; }
+
 private:
 
 	// マテリアル用定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 
-	ConstBufferDataB1* constMap = nullptr;
+	ConstBufferDataB1* constMap_ = nullptr;
 
 private:
 	// コンストラクタ
 	Material() {
 		ambient = { 0.3f, 0.3f, 0.3f };
-		diffuse = { 0.0f, 0.0f, 0.0f };
-		specular = { 0.0f, 0.0f, 0.0f };
+		diffuse = { 0.8f, 0.8f, 0.8f };
+		specular = { 0.9f, 0.9f, 0.9f };
+
 		alpha = 1.0f;
 	}
 	/// <summary>

@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "Sound.h"
 #include "Object3d.h"
 #include "ViewProjection.h"
 #include "Model.h"
@@ -7,6 +8,21 @@
 #include "LightGroup.h"
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
+#include "FbxLoader.h"
+#include "FbxAnimetion.h"
+#include "LevelLoder.h"
+#include "TextureManager.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "Dissolve.h"
+
+#include "GameCamera.h"
+
+#include <vector>
+
+class CollisionManager;
+class Player;
+class TouchableObject;
 
 class GameScene
 {
@@ -24,6 +40,8 @@ public:// メンバ関数
 	// Imguiの更新処理
 	void ImguiUpdate();
 
+	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
+
 	// 描画処理
 	void Draw2DBack();
 
@@ -34,11 +52,12 @@ public:// メンバ関数
 private:// メンバ変数
 
 	// 入力
-	Input* input = nullptr;
+	std::unique_ptr<Input> input_ = nullptr;
 
+#pragma region 光源関連
 	// オブジェクト共通のライトの初期化
-	LightGroup* light = nullptr;
-	
+	std::unique_ptr<LightGroup> light = nullptr;
+
 	// 平行光源
 	bool isActiveDirectional = true;
 
@@ -62,68 +81,89 @@ private:// メンバ変数
 	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };
 	bool isActiveCircleShadow = true;
 
-	Vector3 fighterPos = { 1,0.0f,0 };
+	Vector3 AmColor = { 1,0,0 };
+	Vector3 DiColor = { 0,1,0 };
+	Vector3 SpColor = { 0,0,1 };
 
-	// テクスチャハンドル
-	int textureHandle;
-	int textureHandle2;
-
-	// スプライト
-	Sprite* sprite = nullptr;
-	Sprite* sprite2 = nullptr;
-
-	// モデル
-	Model* model = nullptr;
-	Model* model_2 = nullptr;
-	Model* modelFighter = nullptr;
-	Model* groundModel = nullptr;
-
-	// オブジェクト
-	Object3d* object3d = nullptr;
-	Object3d* obj_2[500];
-
-	Object3d* point1 = nullptr;
-	Object3d* point2 = nullptr;
-	Object3d* point3 = nullptr;
-
-	Object3d* rayobj = nullptr;
-
-	Object3d* objFighter = nullptr;
-	Object3d* groundObj = nullptr;
+	// フォグ
+	std::unique_ptr<Fog> fog = nullptr;
+	bool isFogActive = true;
+#pragma endregion
 
 
-	// ビュープロジェクション
-	ViewProjection* view = nullptr;
+#pragma region テクスチャハンドル
 
-	// Quaternion確認
-	Quaternion keisan;
-	Quaternion rotation0;
-	Quaternion rotation1;
-	Quaternion interpolate0;
-	Quaternion interpolate1;
-	Quaternion interpolate2;
-	Quaternion interpolate3;
-	Quaternion interpolate4;
+	std::unique_ptr<Texture> textureHandleDefu;
+#pragma endregion
 
-	Vector3 direction1 = { 1.0f,0.0f,1.0f };
-	Vector3 direction2 = { 1.0f,1.0f,0.0f };
-	Quaternion dirToDir;
 
-	// 当たり判定
-	Sphere sphere;
-	Plane plane;
-	Triangle triangle;
-	Ray ray;
-	float distance;
-	Vector3 inter;
+#pragma region スプライト
 
-	bool hit;
-	bool hitRay;
+	std::unique_ptr<Sprite> spriteProvisional = nullptr;
 
 	Vector2 spritePos;
-	char buf[256] = "";
-	float f = 0.0f;
+#pragma endregion
 
-	Fog* fog = nullptr;
+
+#pragma region モデル
+
+	std::unique_ptr<Model> playerModel_ = nullptr;
+	std::unique_ptr<Model> modelMedama_ = nullptr;
+
+	std::unique_ptr<Model> modelSkydome = nullptr;
+	std::unique_ptr<Model> modelGround = nullptr;
+
+#pragma endregion
+
+
+#pragma region オブジェクト関連
+	std::unique_ptr<Object3d> objSkydome = nullptr;
+	std::unique_ptr<Object3d> objGround = nullptr;
+
+	std::unique_ptr<Object3d>objMedama_;
+	bool isDissolve = false;
+#pragma endregion
+
+
+#pragma region カメラ関連
+	// ビュープロジェクション
+	std::unique_ptr<GameCamera>gameCamera;
+#pragma endregion
+
+
+#pragma region 音関連
+	Sound sound;
+	bool isActiveSound = false;
+	bool isStopSound = false;
+#pragma endregion
+
+
+#pragma region 当たり判定
+
+#pragma endregion
+
+
+#pragma region FBXモデルの確認
+	//std::unique_ptr<FbxModel> fbxmodel_;
+	WorldTransform fbxTrans_;
+	//std::unique_ptr<FbxAnimetion> modelAnim_;
+	DirectXCommon* dxCommon_ = nullptr;
+
+	float frem = 0;
+	uint32_t BoneNum = 0;
+#pragma endregion
+
+
+#pragma region プレイヤー関連
+	std::unique_ptr<Player> player_;
+
+#pragma endregion
+
+
+#pragma region エネミー関連
+	std::unique_ptr<Enemy> enemy_;
+#pragma endregion
+
+
 };
 

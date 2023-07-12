@@ -1,4 +1,5 @@
 #pragma once
+#include <assimp/vector3.h>
 
 class Vector3
 {
@@ -18,6 +19,24 @@ public:
 	Vector3 cross(const Vector3& v)const;
 	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;
 
+	// 補間関数
+	// 線形補間(1次関数補間)
+	static const Vector3 lerp(const Vector3& start, const Vector3& end, const float t);
+
+	//度数法を弧度法に変換する関数
+	static float Deg2Rad(float Deg) {
+		float PI = 3.141592f;
+		return Deg * PI / 180;
+
+	}
+
+	//弧度法を度数法に変換する関数
+	static float Rad2Deg(float rad) {
+		float PI = 3.141592f;
+		return rad / PI * 180;
+
+	}
+
 	//単項演算子オーバーロード
 	Vector3 operator+()const;
 	Vector3 operator-()const;
@@ -28,6 +47,7 @@ public:
 	Vector3& operator*=(float s);
 	Vector3& operator*=(const Vector3& v);
 	Vector3& operator/=(float s);
+
 };
 
 

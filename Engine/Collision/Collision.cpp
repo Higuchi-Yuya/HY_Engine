@@ -20,6 +20,65 @@ bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Vect
     return true;
 }
 
+bool Collision::CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB, Vector3* inter, Vector3* reject)
+{
+	float x = (sphereB.center.x - sphereA.center.x) * (sphereB.center.x - sphereA.center.x);
+	float y = (sphereB.center.y - sphereA.center.y) * (sphereB.center.y - sphereA.center.y);
+	float z = (sphereB.center.z - sphereA.center.z) * (sphereB.center.z - sphereA.center.z);
+
+	float dist = x + y + z;
+	float radius = (sphereA.radius + sphereB.radius) * (sphereA.radius + sphereB.radius);
+
+	if (dist <= radius) {
+		if (inter) {
+			// Aの半径が0の時座標はBの中心  Bの半径が0の時座標はAの中心  となるように補間
+			float t = sphereB.radius / (sphereA.radius + sphereB.radius);
+			*inter = Vector3::lerp(sphereA.center, sphereB.center, t);
+		}
+		if (reject) {
+			float rejectLen = sphereA.radius + sphereB.radius - sqrtf(dist);
+			Vector3 center = sphereA.center - sphereB.center;
+			*reject = center.normalize();
+			*reject *= rejectLen;
+		
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Collision::CheckSphere2SphereOiOi(const Sphere& sphereA, const Sphere& sphereB, Vector3* inter, Vector3* reject)
+{
+	// 中心点の距離の２乗 <= 半径の和の２乗　なら交差
+	Vector3 tmp;
+	tmp = sphereA.center - sphereB.center;
+	float dist = tmp.dot(tmp, tmp);
+	float radius2 = sphereA.radius + sphereB.radius;
+	radius2 *= radius2;
+
+	if (dist <= radius2)
+	{
+		if (inter)
+		{
+			// Aの半径が0の時座標はBの中心　Bの半径が0の時座標はAの中心　となるよう補完
+			float t = sphereB.radius / (sphereA.radius + sphereB.radius);
+			*inter = tmp.lerp(sphereA.center, sphereB.center, t);
+		}
+		// 押し出すベクトルを計算
+		if (reject)
+		{
+			float rejectLen = sphereA.radius + sphereB.radius - sqrtf(dist);
+			tmp = sphereA.center - sphereB.center;
+			*reject = tmp.normalize();
+			*reject *= rejectLen;
+		}
+		return true;
+	}
+
+	
+	return false;
+}
+
 void Collision::ClosestPtPoint2Triangle(const Vector3& point, const Triangle& triangle, Vector3* closest)
 {
 	// pointがp0の外側の頂点領域の中にあるかどうかチェック
@@ -95,7 +154,7 @@ void Collision::ClosestPtPoint2Triangle(const Vector3& point, const Triangle& tr
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, Vector3* inter)
+bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, Vector3* inter, Vector3* reject)
 {
 	Vector3 p;
 	// 球の中心に対する最近接点である三角形上にある点pを見つける
@@ -116,7 +175,13 @@ bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& trian
 		// 三角形上の最近接点pを疑似交点とする
 		*inter = p;
 	}
-
+	// 押し出すベクトルを計算
+	if (reject) {
+		float ds = Vector3::dot(sphere.center, triangle.normal);
+		float dt = Vector3::dot(triangle.p0, triangle.normal);
+		float rejectLen = dt - ds + sphere.radius;
+		*reject = triangle.normal * rejectLen;
+	}
 	return true;
 }
 

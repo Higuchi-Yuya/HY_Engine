@@ -27,7 +27,7 @@ public:
 
 
 private:
-	static DirectXCommon* dxCommon;
+	static DirectXCommon* sDxCommon;
 
 	// SRV用のデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;

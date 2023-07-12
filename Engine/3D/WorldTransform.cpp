@@ -2,7 +2,7 @@
 #include<cassert>
 #include <d3dx12.h>
 
-Microsoft::WRL::ComPtr<ID3D12Device> WorldTransform::device_ = nullptr;
+ID3D12Device* WorldTransform::device_ = nullptr;
 
 void WorldTransform::StaticInitialize(ID3D12Device* device)
 {
@@ -36,7 +36,7 @@ void WorldTransform::CreateConstBuffer()
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 
 	assert(SUCCEEDED(result));
 }
@@ -44,7 +44,7 @@ void WorldTransform::CreateConstBuffer()
 void WorldTransform::Map()
 {
 	//定数バッファのマッピング
-	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);//マッピング
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
 	assert(SUCCEEDED(result));
 }
 
@@ -57,13 +57,13 @@ void WorldTransform::UpdateMatrix()
 	matTrans.identity();
 
 	//各行列計算
-	matScale.scale(scale_);
+	matScale.scale(scale);
 	matRot.identity();
-	matRotZ.rotateZ(rotation_.z);
-	matRotX.rotateX(rotation_.x);
-	matRotY.rotateY(rotation_.y);
+	matRotZ.rotateZ(rotation.z);
+	matRotX.rotateX(rotation.x);
+	matRotY.rotateY(rotation.y);
 	matRot = matRotZ * matRotX * matRotY;
-	matTrans.translate(position_);
+	matTrans.translate(translation);
 
 	matWorld_.identity();
 	matWorld_ *= matScale;
@@ -75,6 +75,6 @@ void WorldTransform::UpdateMatrix()
 	}
 
 	//定数バッファに転送
-	constMap->color = color_;
-	constMap->matWorld = matWorld_;
+	constMap_->color = color;
+	constMap_->matWorld = matWorld_;
 }

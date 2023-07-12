@@ -8,7 +8,8 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4.h"
-#pragma comment(lib, "d3dcompiler.lib")
+#include <TextureManager.h>
+//#pragma comment(lib, "d3dcompiler.lib")
 
 class SpriteManager
 {
@@ -38,17 +39,20 @@ public:// メンバ関数
 	void PostDraw();
 
 	// テクスチャに必要なコマンド設定
-	void SetTextureCommands(uint32_t index);
+	void SetTextureCommands(Texture* index);
 
-	//指定番号のテクスチャバッファを取得
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return Texture::textureBuffers_[index].Get(); }
+	// パイプラインのアクセス
+	ID3D12PipelineState *GetPipelineState() { return pipelineState_.Get(); }
+
+	// ルートシグネチャのアクセス
+	ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
 
 public:
-	static DirectXCommon* dxcommon_;
+	static DirectXCommon* sDxcommon_;
 private:
 	
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;		//パイプラインステート
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;		//ルートシグネチャ
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;		//パイプラインステート
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;		//ルートシグネチャ
 
 	// 結果確認
 	HRESULT result = 0;

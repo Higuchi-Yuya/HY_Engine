@@ -29,7 +29,7 @@ public:// メンバ関数
 	void UpdateMatrix();
 
 	// バッファのゲッター
-	ID3D12Resource *GetBuff() { return constBuff.Get(); }
+	ID3D12Resource *GetBuff() { return constBuff_.Get(); }
 
 private:// プライベート関数
 	/// <summary>
@@ -44,16 +44,16 @@ private:// プライベート関数
 
 public:// パブリック変数
 	// ローカルスケール
-	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
+	Vector3 scale = { 1.0f, 1.0f, 1.0f };
 
 	// X,Y,Z軸回りのローカル回転角
-	Vector3 rotation_ = { 0, 0, 0 };
+	Vector3 rotation = { 0, 0, 0 };
 
 	// ローカル座標
-	Vector3 position_ = { 0, 0, 0 };
+	Vector3 translation = { 0, 0, 0 };
 
 	// 色
-	Vector4 color_ = { 1,1,1,1 };
+	Vector4 color = { 1,1,1,1 };
 
 	// ローカル → ワールド変換行列
 	Matrix4 matWorld_;
@@ -63,12 +63,12 @@ public:// パブリック変数
 
 private:// メンバ変数
 	// デバイス（借りてくる）
-	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	static ID3D12Device* device_;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
 	// マッピング済みアドレス
-	ConstBufferDataWorldTransform* constMap = nullptr;
+	ConstBufferDataWorldTransform* constMap_ = nullptr;
 };
 

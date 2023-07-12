@@ -202,22 +202,21 @@ Quaternion Quaternion::operator-(const Quaternion& q)
 
 Quaternion& Quaternion::operator+=(const Quaternion& q)
 {
-	Quaternion result = *this;
-	result.x += q.x;
-	result.y += q.y;
-	result.z += q.z;
-	result.w += q.w;
-	return result;
+	x += q.x;
+	y += q.y;
+	z += q.z;
+	w += q.w;
+	return *this;
 }
 
 Quaternion& Quaternion::operator-=(const Quaternion& q)
 {
-	Quaternion result = *this;
-	result.x -= q.x;
-	result.y -= q.y;
-	result.z -= q.z;
-	result.w -= q.w;
-	return result;
+	
+	x -= q.x;
+	y -= q.y;
+	z -= q.z;
+	w -= q.w;
+	return *this;
 }
 
 Quaternion& Quaternion::operator/=(float s)
@@ -231,18 +230,20 @@ Quaternion& Quaternion::operator/=(float s)
 
 Quaternion& Quaternion::operator*=(const Quaternion& q)
 {
-	Quaternion result = Multiply(*this, q);
-	return result;
+	y* q.z - z * q.y + q.w * x + w * q.x,  // x(i)
+	z* q.x - x * q.z + q.w * y + w * q.y,  // y(j)
+	x* q.y - y * q.x + q.w * z + w * q.z,  // z(k)
+	w* q.w - x * q.x - y * q.y - z * q.z;   // w
+	return *this;
 }
 
 Quaternion& Quaternion::operator*=(float s)
 {
-	Quaternion result = *this;
-	result.x *= s;
-	result.y *= s;
-	result.z *= s;
-	result.w *= s;
-	return result;
+	x *= s;
+	y *= s;
+	z *= s;
+	w *= s;
+	return *this;
 }
 
 const Quaternion operator+(const Quaternion& q1, const Quaternion& q2)

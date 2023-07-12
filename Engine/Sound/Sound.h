@@ -43,7 +43,7 @@ public:
 	// 初期化
 	static void StaticInitialize();
 	//音声読み込み
-	void SoundLoadWave(const char* filename);
+	void SoundLoadWave(const std::string& filename);
 	//音声再生
 	void SoundPlayWave(bool loop = false, float volume = 1.0f);
 	// 音声停止
@@ -64,12 +64,15 @@ private:
 		unsigned int bufferSize;
 	};
 
+	// デフォルトサウンド格納ディレクトリ
+	static std::string kDefaultSoundDirectoryPath;
+
 	SoundData soundData_;
 
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	IXAudio2SourceVoice* pSourceVoice_ = nullptr;
 
 	//再生する波形データの設定
-	XAUDIO2_BUFFER buf{};
+	XAUDIO2_BUFFER buf_{};
 
 
 };

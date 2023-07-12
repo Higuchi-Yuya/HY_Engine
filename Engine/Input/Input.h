@@ -82,25 +82,25 @@ public: // メンバ関数
 private:// 静的メンバ変数
 
 	// DirectInputのインスタンス
-	ComPtr<IDirectInput8> directInput = nullptr;
+	ComPtr<IDirectInput8> directInput_ = nullptr;
 
 	// キーボードのデバイス
-	ComPtr<IDirectInputDevice8> keyboard = nullptr;
+	ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 
 	// 全キーの状態
-	BYTE key[256] = {};
+	BYTE key_[256] = {};
 
 	// 前回の全キーの状態
-	BYTE keyPre[256] = {};
+	BYTE keyPre_[256] = {};
 
 	// マウスのデバイス
-	ComPtr<IDirectInputDevice8> devMouse;
+	ComPtr<IDirectInputDevice8> devMouse_;
 
 	// マウスの状態
-	DIMOUSESTATE2 mouseState = {};
+	DIMOUSESTATE2 mouseState_ = {};
 
 	// マウスの前の状態
-	DIMOUSESTATE2 mouseStatePre = {};
+	DIMOUSESTATE2 mouseStatePre_ = {};
 
 	// WindowsAPI
 	static WinApp* winApp_;

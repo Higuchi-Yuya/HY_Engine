@@ -10,21 +10,21 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 void WinApp::Initialize()
 {
 	// ウィンドウクラスの設定
-	w.cbSize = sizeof(WNDCLASSEX);
-	w.lpfnWndProc = (WNDPROC)WindowProcedure;	//ウィンドウプロシージャを設定
-	w.lpszClassName = _T("DX12Sample");			//ウィンドウクラス名
-	w.hInstance = GetModuleHandle(nullptr);		//ウィンドウハンドル
-	w.hCursor = LoadCursor(NULL, IDC_ARROW);	//カーソル指定
+	w_.cbSize = sizeof(WNDCLASSEX);
+	w_.lpfnWndProc = (WNDPROC)WindowProcedure;	//ウィンドウプロシージャを設定
+	w_.lpszClassName = _T("DX12Sample");			//ウィンドウクラス名
+	w_.hInstance = GetModuleHandle(nullptr);		//ウィンドウハンドル
+	w_.hCursor = LoadCursor(NULL, IDC_ARROW);	//カーソル指定
 
 	//ウィンドウクラスをOSに登録する
-	RegisterClassEx(&w);
+	RegisterClassEx(&w_);
 	//ウィンドウサイズ{X座標　Y座標　横幅　縦幅}
 	RECT wrc = { 0,0,window_width,window_height };
 	//関数を使ってウィンドウのサイズを自動で補正する
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
 	//ウィンドウオブジェクトの生成
-	hwnd = CreateWindow(w.lpszClassName,//クラス名指定
+	hwnd_ = CreateWindow(w_.lpszClassName,//クラス名指定
 		_T("HY_Engine"),     //タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,			     //タイトルバーと境界線があるウィンドウ
 		CW_USEDEFAULT,					     //表示x座標はOSにお任せ
@@ -33,11 +33,11 @@ void WinApp::Initialize()
 		wrc.bottom - wrc.top,			     //ウィンドウ高
 		nullptr,						     //親ウィンドウハンドル
 		nullptr,						     //メニューハンドル
-		w.hInstance,					     //呼び出しアプリケーションハンドル
+		w_.hInstance,					     //呼び出しアプリケーションハンドル
 		nullptr);						     //追加パラメーター(オプション)
 
 	//ウィンドウ表示
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd_, SW_SHOW);
 
 	// システムタイマーの分解能を上げる
 	timeBeginPeriod(1);
@@ -50,7 +50,7 @@ void WinApp::Update()
 void WinApp::Finalize()
 {
 	// ウィンドウクラスを登録解除
-	UnregisterClass(w.lpszClassName, w.hInstance);
+	UnregisterClass(w_.lpszClassName, w_.hInstance);
 }
 
 bool WinApp::ProcessMessage()
@@ -71,7 +71,7 @@ bool WinApp::ProcessMessage()
 	return false;
 }
 
-LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT WinApp::WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
 {
 	// ImGui用ウィンドウプロシージャ呼び出し
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))return true;

@@ -2,7 +2,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
 
-DirectXCommon* ImGuiManager::dxCommon = nullptr;
+DirectXCommon* ImGuiManager::sDxCommon = nullptr;
 
 ImGuiManager::ImGuiManager()
 {
@@ -15,7 +15,7 @@ ImGuiManager::~ImGuiManager()
 
 void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 {
-	this->dxCommon = dxCommon;
+	sDxCommon = dxCommon;
 
 	// ImGuiのコンテキストを生成
 	ImGui::CreateContext();
@@ -36,13 +36,13 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
 	// デスクリプタヒープ生成
-	result = this->dxCommon->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&srvHeap_));
+	result = sDxCommon->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&srvHeap_));
 	assert(SUCCEEDED(result));
 
 	// DirectX12用初期化
 	ImGui_ImplDX12_Init(
-		this->dxCommon->GetDevice(),
-		static_cast<int>(this->dxCommon->GetBackBufferCount()),
+		sDxCommon->GetDevice(),
+		static_cast<int>(sDxCommon->GetBackBufferCount()),
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, srvHeap_.Get(),
 		srvHeap_->GetCPUDescriptorHandleForHeapStart(),
 		srvHeap_->GetGPUDescriptorHandleForHeapStart()
@@ -72,7 +72,7 @@ void ImGuiManager::End()
 
 void ImGuiManager::Draw()
 {
-	ID3D12GraphicsCommandList* commandList = dxCommon->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = sDxCommon->GetCommandList();
 
 	// デスクリプタヒープの配列をセットするコマンド
 	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get() };

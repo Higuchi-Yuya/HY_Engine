@@ -2,12 +2,12 @@
 #include<cassert>
 #include <d3dx12.h>
 
-Microsoft::WRL::ComPtr<ID3D12Device> Fog::device_ = nullptr;
+ID3D12Device* Fog::sDevice_ = nullptr;
 
 void Fog::StaticInitialize(ID3D12Device* device)
 {
 	assert(device);
-	device_ = device;
+	sDevice_ = device;
 }
 
 Fog* Fog::Create()
@@ -30,21 +30,21 @@ void Fog::Initialize()
 void Fog::UpdateMatrix()
 {
 	//定数バッファに転送
-	constMap->isActiveFog = this->isActiveFog;
-	constMap->fogColor = this->fogColor;
-	constMap->nearFog = this->nearFog;
-	constMap->farFog = this->farFog;
+	constMap_->isActiveFog = isActiveFog;
+	constMap_->fogColor = fogColor;
+	constMap_->nearFog = nearFog;
+	constMap_->farFog = farFog;
 }
 
-void Fog::Draw(ID3D12GraphicsCommandList* cmdList)
+void Fog::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t fogRootIndex)
 {
 	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(5, constBuff->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(fogRootIndex, constBuff_->GetGPUVirtualAddress());
 }
 
 void Fog::CreateConstBuffer()
 {
-	assert(device_);
+	assert(sDevice_);
 
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -55,13 +55,13 @@ void Fog::CreateConstBuffer()
 	HRESULT result;
 
 	// 定数バッファの生成
-	result = device_->CreateCommittedResource(
+	result = sDevice_->CreateCommittedResource(
 		&heapProps, // アップロード可能
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 
 	assert(SUCCEEDED(result));
 }
@@ -69,6 +69,6 @@ void Fog::CreateConstBuffer()
 void Fog::Map()
 {
 	//定数バッファのマッピング
-	HRESULT result = constBuff->Map(0, nullptr, (void**)&constMap);//マッピング
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
 	assert(SUCCEEDED(result));
 }

@@ -11,9 +11,28 @@
 #include "LightGroup.h"
 #include <vector>
 
+#include "Dissolve.h"
+#include "CollisionInfo.h"
+#include "ShaderObj.h"
+
+//#include "BaseCollider.h"
+
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
+class BaseCollider;
+
+enum class rootParameterIndex
+{
+	BODYTEXTURE,// 本体に貼るテクスチャ
+	DISSOLVETEX,// ディゾルブ用のテクスチャ
+	WORLDTRANS, // ワールド変換データ
+	VIEWPROJECTION,// ビュープロジェクションのデータ
+	MATERIALDATA,// マテリアルのバッファデータ
+	LIGHTDATA,// ライトのバッファデータ
+	FOGDATA,// フォグのバッファデータ
+	DISSOLVEDATA,// ディゾルブのバッファデータ
+};
 
 class Object3d
 {
@@ -28,6 +47,8 @@ public:
 		SCREEN,         // スクリーン
 		BLEND_NUMMAX,
 	};
+
+
 private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -42,7 +63,7 @@ public: // 静的メンバ関数
 	/// <param name="device">デバイス</param>
 	/// <param name="window_width">画面幅</param>
 	/// <param name="window_height">画面高さ</param>
-	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
+	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
 	/// 描画前処理
@@ -64,12 +85,12 @@ public: // 静的メンバ関数
 	/// <summary>
 	/// ライトのセット
 	/// </summary>
-	static void SetLight(LightGroup* light) {Object3d::light = light;}
+	static void SetLight(LightGroup* light) {Object3d::sLight_ = light;}
 
 	/// <summary>
 	/// フォグのセット
 	/// </summary>
-	static void SetFog(Fog* fog) { Object3d::fog = fog; }
+	static void SetFog(Fog* fog) { Object3d::sFog_ = fog; }
 
 	/// <summary>
 	/// ルートシグネチャの生成
@@ -106,75 +127,111 @@ public: // 静的メンバ関数
 	/// </summary>
 	static void SetBlendMode(BlendMode mode);
 
+	// スタティック系を解放する関数
+	static void StaticFinalize();
+
 private: // 静的メンバ変数
 	// デバイス
-	static ComPtr<ID3D12Device> device;
+	static ID3D12Device* sDevice_;
 
 	// ライト
-	static LightGroup* light;
+	static LightGroup* sLight_;
 
 	// フォグ
-	static Fog* fog;
+	static Fog* sFog_;
 
 	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static ID3D12GraphicsCommandList* sCmdList_;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> sRootsignature_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateNormal;
+	static ComPtr<ID3D12PipelineState> sPipelinestateNormal_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateADDITION;
+	static ComPtr<ID3D12PipelineState> sPipelinestateADDITION_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateADDITIONALPHA;
+	static ComPtr<ID3D12PipelineState> sPipelinestateADDITIONALPHA_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateSUBTRACTION;
+	static ComPtr<ID3D12PipelineState> sPipelinestateSUBTRACTION_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestateSCREEN;
+	static ComPtr<ID3D12PipelineState> sPipelinestateSCREEN_;
 
 	// インプットレイアウト
-	static std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
+	
+	static ComPtr<ID3DBlob> sVsBlob_; // 頂点シェーダオブジェクト
+	static ComPtr<ID3DBlob> sPsBlob_;	// ピクセルシェーダオブジェクト
+	static ComPtr<ID3DBlob> sErrorBlob_; // エラーオブジェクト
 
-	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
-	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 private:// 静的メンバ関数
 
 
 public: // メンバ関数
 
+	// コンストラクタ
+	Object3d() = default;
+
+	// デストラクタ
+	virtual ~Object3d();
+
 	// 初期化処理
-	bool Initialize();
+	virtual bool Initialize();
 
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
-
+	virtual void Update();
+	
+	/// <summary>
+	/// 行列の更新
+	/// </summary>
+	/// <returns></returns>
+	void UpdateWorldMatrix();
+	
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ViewProjection* viewProjection);
+	virtual void Draw(ViewProjection* viewProjection);
+
+	/// <summary>
+	/// ワールド行列の取得
+	/// </summary>
+	const Matrix4& GetMatWorld() { return worldTransform_.matWorld_; }
 
 	/// <summary>
 	/// モデルの設定
 	/// </summary>
-	void SetModel(Model* model) { this->model = model; }
+	void SetModel(Model* model) { model_ = model; }
 
+	/// <summary>
+	/// コライダーのセット
+	/// </summary>
+	void SetCollider(BaseCollider* collider);
 
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	virtual void OnCollision(const CollisionInfo&info){}
 
 public:// パブリック変数
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 
+	// ディゾルブ
+	Dissolve dissolve_;
+
 private: // メンバ変数
-
-
-
 	// モデル
-	Model* model = nullptr;
+	Model* model_ = nullptr;
 
+	
+protected:// メンバ変数
+	// クラス名（デバッグ用）
+	const char* name_ = nullptr;
+
+	// コライダー
+	BaseCollider* collider_ = nullptr;
 
 };
 

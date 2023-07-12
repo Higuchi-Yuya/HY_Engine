@@ -51,6 +51,11 @@ Vector3 Vector3::distanceFrom(const Vector3& v, const Vector3& v2) const
 	);
 }
 
+const Vector3 Vector3::lerp(const Vector3& start, const Vector3& end, const float t)
+{
+	return start * (1.0f - t) + end * t;
+}
+
 Vector3 Vector3::operator+() const
 {
 	return *this;

@@ -3,6 +3,7 @@
 #include "Matrix4.h"
 #include "Vector2.h"
 #include "Vector4.h"
+#include "Texture.h"
 
 class Sprite
 {
@@ -16,11 +17,15 @@ public:// サブクラス
 	};
 
 public:// メンバ関数
+	// コンストラクタ
+	Sprite();
+	Sprite(Texture textureNum, Vector2 position, Vector2 size, Vector4 color, Vector2 anchorPoint, bool isFlipX, bool isFlipY);
+
 	// スプライトマネージャーを借りる
 	static void StaticInitialize(SpriteManager* spriteManager);
 
 	// 初期化
-	void Initialize(uint32_t textureNum = UINT32_MAX, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f },Vector4 color={1,1,1,1});
+	void Initialize(Texture* textureNum = nullptr, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f }, Vector4 color = { 1,1,1,1 });
 
 	// 更新処理
 	void Updata();
@@ -50,7 +55,7 @@ public:// メンバ関数
 	void SetSize(const Vector2& size) { size_ = size; }
 
 	// サイズの取得
-	const Vector2& GetSize()const { return size_; }
+	const Vector2& GetSize() const { return size_; }
 
 	// アンカーポイントの設定
 	void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint;}
@@ -85,22 +90,25 @@ public:// メンバ関数
 
 public:// 静的メンバ変数
 
-	static SpriteManager* spriteManager_;
+	static SpriteManager* sSpriteManager_;
 
 private:// プライベートメンバ関数
 	// テクスチャサイズをイメージに合わせる
 	void AbjustTextureSize();
 
-private:// メンバ変数
+protected:// メンバ変数
 
-	SpriteManager::Vertex vertices[4] = {
+	SpriteManager::Vertex vertices_[4] = {
 	{{  0.0f,100.0f, 0.0f },{0.0f,1.0f}}, // 左下
 	{{  0.0f,  0.0f, 0.0f },{0.0f,0.0f}}, // 左上
 	{{100.0f,100.0f, 0.0f },{1.0f,1.0f}}, // 右下
 	{{100.0f,  0.0f, 0.0f },{1.0f,0.0f}}, // 右上
 	};
 
-	Matrix4 matWorld;	//ワールド変換行列
+	// 頂点数
+	static const int kVertNum = 4;
+
+	Matrix4 matWorld_;	//ワールド変換行列
 
 	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	    // 回転角
 
@@ -125,21 +133,21 @@ private:// メンバ変数
 	Vector2 textureSize_ = { 100.0f,100.0f };
 
 	// テクスチャ番号
-	uint32_t textureIndex_ = 0;
+	Texture* textureIndex_;
 
-	SpriteManager::ConstBufferData* constMap = nullptr;
+	SpriteManager::ConstBufferData* constMap_ = nullptr;
 
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
 	// 頂点マップ
-	SpriteManager::Vertex* vertMap = nullptr;
+	SpriteManager::Vertex* vertMap_ = nullptr;
 
 	// 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_ = nullptr;
 
 	// 結果確認
 	HRESULT result;

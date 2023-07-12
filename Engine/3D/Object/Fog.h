@@ -31,10 +31,10 @@ public:// メンバ関数
 	void UpdateMatrix();
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList,uint32_t fogRootIndex);
 
 	// バッファのゲッター
-	ID3D12Resource* GetBuff() { return constBuff.Get(); }
+	ID3D12Resource* GetBuff() { return constBuff_.Get(); }
 
 private:// プライベート関数
 	/// <summary>
@@ -55,13 +55,13 @@ public:// 外側から変更可能な値
 
 private:// メンバ変数
 	// デバイス（借りてくる）
-	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	static ID3D12Device* sDevice_;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
 	// マッピング済みアドレス
-	ConstBufferDataFog* constMap = nullptr;
+	ConstBufferDataFog* constMap_ = nullptr;
 
 };
 

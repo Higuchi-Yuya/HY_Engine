@@ -12,7 +12,9 @@
 #include "SpriteManager.h"
 #include "LightGroup.h"
 #include "GameScene.h"
-
+#include "PostEffect.h"
+#include "InputManager.h"
+#include <dxgidebug.h>
 #pragma endregion
 
 #pragma region おまじない
@@ -32,7 +34,24 @@ void DebugOutputFormatString(const char* format, ...) {
 
 #pragma endregion
 
+struct D3DResouceLeakChecker
+{
+	~D3DResouceLeakChecker()
+	{
+		// リソースリークチェック
+		Microsoft::WRL::ComPtr<IDXGIDebug1>debug;
+		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+			debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+			debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		}
+	}
+};
+
+
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
+
+	D3DResouceLeakChecker leckCheck;
 
 #pragma region WindowsAPI初期化処理
 	// ポインタ
@@ -41,6 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// WindouwsAPIの初期化
 	winApp = new WinApp();
 	winApp->Initialize();
+
 
 #pragma endregion
 
@@ -64,28 +84,42 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// 入力の初期化
 	Input::StaticInitialize(winApp);
 
+	InputManager* inputManager = InputManager::GetInstance().get();
+	inputManager->SetWinApp(winApp);
+	inputManager->Init();
+
 	// スプライトの初期化
-	SpriteManager* spriteManager = nullptr;
+	std::unique_ptr<SpriteManager> spriteManager = nullptr;
 	// スプライト共通部の初期化
-	spriteManager = new SpriteManager;
+	spriteManager = std::make_unique<SpriteManager>();
 	spriteManager->Initialize(dxCommon);
 	
-	Sprite::StaticInitialize(spriteManager);
+	Sprite::StaticInitialize(spriteManager.get());
 
 	// テクスチャの初期化
-	Texture::StaticInitialize(dxCommon);
+	TextureManager::StaticInitialize(dxCommon);
 	
 	// オブジェクトの初期化
-	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height);
+	Object3d::StaticInitialize(dxCommon->GetDevice());
 
 	// ビュープロジェクションの初期化
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
+
+	// サウンドの静的の初期化
+	Sound::StaticInitialize();
 
 	// ライトの静的初期化
 	LightGroup::StaticInititalize(dxCommon->GetDevice());
 
 	// フォグの静的初期化
 	Fog::StaticInitialize(dxCommon->GetDevice());
+
+	// FBXの初期化
+	FbxModel::SetDevice(dxCommon->GetDevice());
+	FbxModel::StaticInitialize();
+
+	// ポストエフェクトの初期化
+	PostEffect::SetDevice(dxCommon->GetDevice());
 
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
@@ -95,6 +129,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region シーンに使う変数の初期化
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize();
+	gameScene->SetDxComon(dxCommon);
+
+	//PostEffect* postEffect = nullptr;
+	//// かりに持たせるやつ
+	//PostColorInversion* post = nullptr;
+	//Texture tex = TextureManager::Load2DTexture("risu.jpg");
+
+	//postEffect = new PostEffect();
+	//postEffect->Initialize();
+
+	//post = new PostColorInversion();
+	//post->Initialize();
+
 
 #pragma endregion
 
@@ -115,8 +162,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//----------DireceX毎フレーム処理　ここから------------//
 		///////////////////////////////////////////////////
 
-
-		gameScene->Update();
+		InputManager::GetInstance()->Update();
+		
 
 
 		//////////////////////////////////////////////
@@ -125,6 +172,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma region IMGUIの更新処理
 	// ImGuiの更新処理
 		imguiManager->Begin();
+		gameScene->Update();
 		gameScene->ImguiUpdate();
 		
 		imguiManager->End();
@@ -132,18 +180,31 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma endregion
 
+		//postEffect->PreDrawScene(dxCommon->GetCommandList());
+
+		//postEffect->PostDrawScene(dxCommon->GetCommandList());
+
+		//post->PreDrawScene(dxCommon->GetCommandList());
+		//
+		//postEffect->Draw(dxCommon->GetCommandList());
+
+		//post->PostDrawScene(dxCommon->GetCommandList());
+
 #pragma region 描画処理
+
+
 
 		//描画コマンドここから
 		dxCommon->PreDraw();
 		
 #pragma region 背景スプライト描画
 		// 背景スプライト描画
+
 		spriteManager->PreDraw();
 		//-----ここから 背景スプライト描画 -----//
 		gameScene->Draw2DBack();
 
-
+		//post->Draw(dxCommon->GetCommandList());
 
 		//-----ここまで 背景スプライト描画 -----//
 		spriteManager->PostDraw();
@@ -166,7 +227,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		spriteManager->PreDraw();
 		//-----ここから 2D描画 -------//
 		gameScene->Draw2DFront();
-
+		
 
 
 		//-----ここまで 2D描画 -------//
@@ -190,12 +251,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	// ゲームシーンの解放
 	delete gameScene;
-
 	// ImGuiのマネージャーを解放
 	imguiManager->Finalize();
 	delete imguiManager;
-	// スプライトマネージャーの解放
-	delete spriteManager;
+
+	TextureManager::StaticFinalize();
+	Object3d::StaticFinalize();
+	FbxModel::StaticFainalize();
 
 	// WindouwsAPIの終了処理
 	winApp->Finalize();

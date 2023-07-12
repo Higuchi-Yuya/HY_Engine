@@ -335,6 +335,119 @@ Matrix4 Matrix4::ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, 
 	return *this;
 }
 
+Matrix4 Matrix4::MatMul(const Matrix4& Mat)
+{
+	Matrix4 tmp;
+
+	Vector4 vX;
+	Vector4 vY;
+	Vector4 vZ;
+	Vector4 vW;
+
+	Vector4 matR0;
+	Vector4 matR1;
+	Vector4 matR2;
+	Vector4 matR3;
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		vX = { m[i][0],m[i][0],m[i][0],m[i][0] };
+		vY = { m[i][1],m[i][1],m[i][1],m[i][1] };
+		vZ = { m[i][2],m[i][2],m[i][2],m[i][2] };
+		vW = { m[i][3],m[i][3],m[i][3],m[i][3] };
+
+		matR0 = { Mat.m[0][0],Mat.m[0][1],Mat.m[0][2],Mat.m[0][3] };
+		matR1 = { Mat.m[1][0],Mat.m[1][1],Mat.m[1][2],Mat.m[1][3] };
+		matR2 = { Mat.m[2][0],Mat.m[2][1],Mat.m[2][2],Mat.m[2][3] };
+		matR3 = { Mat.m[3][0],Mat.m[3][1],Mat.m[3][2],Mat.m[3][3] };
+
+		vX = Vec4MulPs(vX, matR0);
+		vY = Vec4MulPs(vY, matR1);
+		vZ = Vec4MulPs(vZ, matR2);
+		vW = Vec4MulPs(vW, matR3);
+
+		vX = Vec4AddPs(vX, vZ);
+		vY = Vec4AddPs(vY, vW);
+		vX = Vec4AddPs(vX, vY);
+
+		tmp.m[i][0] = vX.x;
+		tmp.m[i][1] = vX.y;
+		tmp.m[i][2] = vX.z;
+		tmp.m[i][3] = vX.w;
+	}
+
+	return tmp;
+}
+
+Vector4 Matrix4::Vec4MulPs(const Vector4& v4_1, const Vector4& v4_2)
+{
+	Vector4 result{
+	v4_1.x * v4_2.x,
+	v4_1.y * v4_2.y,
+	v4_1.z * v4_2.z,
+	v4_1.w * v4_2.w
+	};
+
+	return result;
+}
+
+Vector4 Matrix4::Vec4AddPs(const Vector4& v4_1, const Vector4& v4_2)
+{
+	Vector4 result{
+	v4_1.x + v4_2.x,
+	v4_1.y + v4_2.y,
+	v4_1.z + v4_2.z,
+	v4_1.w + v4_2.w
+	};
+
+	return result;
+}
+
+Matrix4 Matrix4::operator-() const
+{
+	Matrix4 result;
+	float temp[4][8] = {};
+
+	float a;
+
+	//
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			temp[i][j] = m[i][j];
+
+			if (i == j)temp[i][4 + j] = 1;
+		}
+	}
+
+	for (int k = 0; k < 4; k++) {
+		a = 1 / temp[k][k];
+
+		for (int j = 0; j < 8; j++) {
+			temp[k][j] *= a;
+		}
+
+		for (int i = 0; i < 4; i++) {
+			if (i == k) {
+				continue;
+			}
+
+			a = -temp[i][k];
+
+			for (int j = 0; j < 8; j++) {
+				temp[i][j] += temp[k][j] * a;
+			}
+		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			result.m[i][j] = temp[i][4 + j];
+		}
+	}
+	return result;
+	
+}
+
 // 代入演算子　*=　オーバーロード関数（行列と行列の積）
 Matrix4& Matrix4::operator*=(const Matrix4& m1)
 {

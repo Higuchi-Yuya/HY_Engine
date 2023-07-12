@@ -1,5 +1,7 @@
 #pragma once
 #include "Vector3.h"
+#include<assimp/scene.h>
+#include <Vector4.h>
 
 class Matrix4
 {
@@ -37,10 +39,10 @@ public:
 	Matrix4 translate(const Vector3& t);
 
 	// 座標変換（ベクトルと行列の掛け算をする）
-	Vector3 transform(const Vector3& v, const Matrix4& m);
+	static Vector3 transform(const Vector3& v, const Matrix4& m);
 
 	// 座標変換（ベクトルと行列の掛け算をする）
-	Vector3 transformNotW(const Vector3& v, const Matrix4& m);
+	static Vector3 transformNotW(const Vector3& v, const Matrix4& m);
 
 	// ビュー行列作成
 	Matrix4 ViewMat(Vector3 eye, Vector3 target, Vector3 up);
@@ -48,7 +50,17 @@ public:
 	// 射影行列作成
 	Matrix4 ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ);
 
+	// マットリックスの掛け算を返す
+	Matrix4 MatMul(const Matrix4& Mat);
+
+	// Vec4の掛け
+	Vector4 Vec4MulPs(const Vector4& v4_1, const Vector4& v4_2);
+
+	// Vec4の足し
+	Vector4 Vec4AddPs(const Vector4& v4_1, const Vector4& v4_2);
+
 	// 代入演算子オーバーロード
+	Matrix4 operator - () const;
 	Matrix4& operator*=(const Matrix4& m1);
 
 	Matrix4 operator*(const Matrix4& m1);

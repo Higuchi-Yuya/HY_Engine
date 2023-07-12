@@ -31,7 +31,7 @@ public:// メンバ関数
 	void UpdateMatrix();
 
 	// バッファのゲッター
-	ID3D12Resource* GetBuff() { return constBuff.Get(); }
+	ID3D12Resource* GetBuff() { return constBuff_.Get(); }
 
 	// デバッグカメラの初期化
 	void DebugCameraInitialze(Input* input);
@@ -41,7 +41,7 @@ public:// メンバ関数
 
 	// カメラ注視点までの距離のセット
 	void SetDistance(float distance) {
-		this->distance = distance;
+		distance_ = distance;
 	}
 
 private:// プライベート関数
@@ -91,32 +91,32 @@ public:// パブリック変数
 #pragma endregion
 
 	// ビュー行列
-	Matrix4 matView;
+	Matrix4 matView_;
 	// 射影行列
-	Matrix4 matProjection;
+	Matrix4 matProjection_;
 
 private:// メンバ変数
 
 	// デバイス（借りてくる）
-	static Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	static ID3D12Device* sDevice_;
 
 	// 定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
 	// マッピング済みアドレス
-	ConstBufferDataViewProjection* constMap = nullptr;
+	ConstBufferDataViewProjection* constMap_ = nullptr;
 
 	// デバッグカメラに必要な変数
 #pragma region デバッグカメラ
 	// 入力クラスのポインタ
-	Input* input;
+	Input* input_;
 	// カメラ注視点までの距離
-	float distance = 3;
+	float distance_ = 3;
 	// スケーリング
-	float scaleX = 1.0f;
-	float scaleY = 1.0f;
+	float scaleX_ = 1.0f;
+	float scaleY_ = 1.0f;
 	// 回転行列
-	Matrix4 matRot;
+	Matrix4 matRot_;
 #pragma endregion
 
 };

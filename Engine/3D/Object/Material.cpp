@@ -1,11 +1,11 @@
 #include "Material.h"
-#include "Texture.h"
-
+#include "TextureManager.h"
 using namespace std;
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
 ID3D12Device* Material::device = nullptr;
+
 
 void Material::StaticInitialize(ID3D12Device* device)
 {
@@ -26,20 +26,23 @@ void Material::LoadTexture(const std::string& directoryPath, const std::string& 
 	// ファイルパスを結合
 	string filepath = directoryPath + filename;
 
-	// ユニコード文字列に変換する
-	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
+	//// ユニコード文字列に変換する
+	//wchar_t wfilepath[128];
+	//int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 
-	textureIndex = Texture::LoadTexture(wfilepath);
+	textureIndex_ = TextureManager::LoadTexture(filepath);
+
+	
 }
 
 void Material::Update()
 {
-	constMap->ambient = ambient;
-	constMap->diffuse = diffuse;
-	constMap->specular = specular;
-	constMap->alpha = alpha;
-	constBuff->Unmap(0, nullptr);
+	constMap_->ambient = ambient;
+	constMap_->diffuse = diffuse;
+	constMap_->specular = specular;
+
+	constMap_->alpha = alpha;
+	constBuff_->Unmap(0, nullptr);
 }
 
 void Material::Initialize()
@@ -65,11 +68,11 @@ void Material::CreateConstantBuffer()
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 
 	assert(SUCCEEDED(result));
 
 	// マテリアル用定数バッファへデータ転送
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }

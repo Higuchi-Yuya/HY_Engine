@@ -13,13 +13,13 @@ private:
 
 public:// 定数
 	// 平行光源の数
-	static const int DirLightNum = 3;
+	static const int sDirLightNum = 3;
 	// 点光源の数
-	static const int PointLightNum = 3;
+	static const int sPointLightNum = 3;
 	// スポットライトの数
-	static const int SpotLightNum = 3;
+	static const int sSpotLightNum = 3;
 	// 丸影の数
-	static const int CircleShadowNum = 1;
+	static const int sCircleShadowNum = 1;
 
 public:// サブクラス
 	struct ConstBufferData
@@ -27,19 +27,23 @@ public:// サブクラス
 		// 環境光の色
 		Vector3 ambientColor;
 		float pad1;
+		Vector3 diffuseColor;// ディフューズカラー
+		float pad2;
+		Vector3 specularColor; // スペキュラーカラー
+		float pad3; // パディング
 		// 平行光源用
-		DirectionalLight::ConstBufferData dirLights[DirLightNum];
+		DirectionalLight::ConstBufferData dirLights[sDirLightNum];
 		// 点光源用
-		PointLight::ConstBufferData pointLights[PointLightNum];
+		PointLight::ConstBufferData pointLights[sPointLightNum];
 		// スポットライト用
-		SpotLight::ConstBufferData spotLights[SpotLightNum];
+		SpotLight::ConstBufferData spotLights[sSpotLightNum];
 		// 丸影用
-		CircleShadow::ConstBufferData circleShadows[CircleShadowNum];
+		CircleShadow::ConstBufferData circleShadows[sCircleShadowNum];
 	};
 
 private:// 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* sDevice;
 
 public:// 静的メンバ関数
 	// 静的初期化
@@ -57,13 +61,25 @@ public:// メンバ関数
 	void Update();
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList, uint32_t rootParameterIndex);
 
 	/// <summary>
 	/// 環境光のライト色をセット
 	/// </summary>
 	/// <param name="color">ライト色</param>
 	void SetAmbientColor(const Vector3& color);
+
+	/// <summary>
+	/// ディフューズのライト色をセット
+	/// </summary>
+	/// <param name="color">ライト色</param>
+	void SetDiffuseColor(const Vector3& color);
+
+	/// <summary>
+	/// スペキュラーのライト色をセット
+	/// </summary>
+	/// <param name="color">ライト色</param>
+	void SetSpecularColor(const Vector3& color);
 
 	/// <summary>
 	/// 平行光源の有効フラグをセット
@@ -218,28 +234,34 @@ private:// プライベートメンバ関数
 private:// メンバ変数
 
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 
 	// 定数バッファのマップ
-	ConstBufferData* constMap = nullptr;
+	ConstBufferData* constMap_ = nullptr;
 
 	// 環境光の色
 	Vector3 ambientColor_ = { 1,1,1 };
 
+	// ディフューズの色
+	Vector3 diffuseColor_ = { 1,1,1 };
+
+	// スペキュラーの色
+	Vector3 specularColor_ = { 1,1,1 };
+
 	// 平行光源の配列
-	DirectionalLight dirLights_[DirLightNum];
+	DirectionalLight dirLights_[sDirLightNum];
 
 	// 点光源の配列
-	PointLight pointLights_[PointLightNum];
+	PointLight pointLights_[sPointLightNum];
 
 	// スポットライトの配列
-	SpotLight spotLights_[SpotLightNum];
+	SpotLight spotLights_[sSpotLightNum];
 
 	// 丸影の配列
-	CircleShadow circleShadows_[CircleShadowNum];
+	CircleShadow circleShadows_[sCircleShadowNum];
 
 	// ダーティフラグ
-	bool dirty = false;
+	bool dirty_ = false;
 
 };
 

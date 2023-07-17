@@ -1,6 +1,5 @@
 #pragma once
-#include "Vector3.h"
-#include "Vector4.h"
+#include "WorldTransform.h"
 
 // 球
 struct Sphere
@@ -10,6 +9,16 @@ struct Sphere
 
 	// 半径
 	float radius = 1.0f;
+};
+
+// ボックス
+struct Box
+{
+	// 中心座標
+	Vector3 center = { 0,0,0 };
+
+	// 半径
+	Vector3 radius = { 1,1,1 };
 };
 
 // 平面

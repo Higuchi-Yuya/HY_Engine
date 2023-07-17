@@ -287,3 +287,18 @@ bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* dis
 
 	return true;
 }
+
+bool Collision::CheckAABB(const WorldTransform& transA, const WorldTransform& transB)
+{
+	Box a,b;
+	a.center = transA.translation;
+	a.radius = transA.scale;
+
+	b.center = transB.translation;
+	b.radius = transB.scale;
+
+
+
+
+	return false;
+}

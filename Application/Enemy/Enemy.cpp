@@ -41,6 +41,7 @@ void Enemy::OnCollision()
 
 	if (Collision::CheckSphere2Sphere(playerS, enemyS)) {
 		worldTransform_.color = { 1,0,0,1 };
+
 	}
 	else {
 		worldTransform_.color = { 1,1,1,1 };

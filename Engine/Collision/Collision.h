@@ -28,5 +28,6 @@ public:
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, Vector3* inter = nullptr);
 
 
+	static bool CheckAABB(const WorldTransform& transA, const WorldTransform& transB);
 };
 

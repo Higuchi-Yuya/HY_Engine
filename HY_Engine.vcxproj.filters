@@ -246,9 +246,6 @@
     <ClCompile Include="Engine\Collision\CollisionAttribute.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\TouchableObject.cpp">
-      <Filter>ソース ファイル\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Collision\QueryCallback.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
@@ -302,6 +299,9 @@
     </ClCompile>
     <ClCompile Include="Engine\RenderBase\ShaderObj.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Scene\TouchableObject.cpp">
+      <Filter>ソース ファイル\Engine\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,9 +413,6 @@
     <ClInclude Include="Engine\Collision\CollisionAttribute.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\TouchableObject.h">
-      <Filter>ヘッダー ファイル\Application</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Collision\QueryCallback.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
@@ -469,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="Engine\RenderBase\ShaderObj.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Scene\TouchableObject.h">
+      <Filter>ヘッダー ファイル\Engine\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

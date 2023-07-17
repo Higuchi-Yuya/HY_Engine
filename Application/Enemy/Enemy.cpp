@@ -12,6 +12,7 @@ void Enemy::Initialize(Model* model, Player* player)
 	}
 
 	worldTransform_.translation.y += 1.0f;
+	worldTransform_.scale.x = 2.0f;
 	worldTransform_.UpdateMatrix();
 }
 
@@ -31,15 +32,15 @@ void Enemy::Draw(ViewProjection* view)
 
 void Enemy::OnCollision()
 {
-	Sphere enemyS;
-	enemyS.center = { worldTransform_.translation };
-	enemyS.radius = 1.0f;
+	//Sphere enemyS;
+	//enemyS.center = { worldTransform_.translation };
+	//enemyS.radius = 1.0f;
 
-	Sphere playerS;
-	playerS.center = player_->worldTransform_.translation;
-	playerS.radius = 1.0f;
+	//Sphere playerS;
+	//playerS.center = player_->worldTransform_.translation;
+	//playerS.radius = 1.0f;
 
-	if (Collision::CheckSphere2Sphere(playerS, enemyS)) {
+	if (Collision::CheckAABB(player_->worldTransform_,worldTransform_)) {
 		worldTransform_.color = { 1,0,0,1 };
 
 	}

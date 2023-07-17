@@ -61,6 +61,10 @@ public:// パブリック変数
 	// 親となるワールド変換へのポインタ
 	const WorldTransform* parent_ = nullptr;
 
+	// 一番小さい頂点と大きい頂点
+	Vector3 minVertex_;
+	Vector3 maxVertex_;
+
 private:// メンバ変数
 	// デバイス（借りてくる）
 	static ID3D12Device* device_;

@@ -136,6 +136,12 @@
     <Filter Include="シェーダーファイル\Sprite">
       <UniqueIdentifier>{a7ef88c4-3a7c-4842-b6eb-3b086b3bc26c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\RenderBase">
+      <UniqueIdentifier>{f8c0c02b-e839-47cc-8179-2dd9ef26f91a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\RenderBase">
+      <UniqueIdentifier>{74797585-73ab-4582-859f-37f73b950d55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -297,11 +303,11 @@
     <ClCompile Include="Engine\3D\Object\Dissolve.cpp">
       <Filter>ソース ファイル\Engine\3D\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\RenderBase\ShaderObj.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Scene\TouchableObject.cpp">
       <Filter>ソース ファイル\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderBase\ShaderObj.cpp">
+      <Filter>ソース ファイル\Engine\RenderBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -464,11 +470,11 @@
     <ClInclude Include="Engine\3D\Object\Dissolve.h">
       <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\RenderBase\ShaderObj.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Scene\TouchableObject.h">
       <Filter>ヘッダー ファイル\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderBase\ShaderObj.h">
+      <Filter>ヘッダー ファイル\Engine\RenderBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

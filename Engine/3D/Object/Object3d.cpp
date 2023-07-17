@@ -27,6 +27,9 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 ComPtr<ID3DBlob> Object3d::sVsBlob_; 
 ComPtr<ID3DBlob> Object3d::sPsBlob_;	
 ComPtr<ID3DBlob> Object3d::sErrorBlob_;
+
+ShaderObj* Object3d::sVsShader_ = nullptr;
+ShaderObj* Object3d::sPsShader_ = nullptr;
 //ComPtr<ID3DBlob> Object3d::sRootSigBlob_;
 
 //Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
@@ -57,17 +60,17 @@ void Object3d::StaticInitialize(ID3D12Device* sDevice_)
 	// ノーマル
 	InitializeGraphicsPipelineNormal();
 
-	// 加算
-	InitializeGraphicsPipelineADDITION();
+	//// 加算
+	//InitializeGraphicsPipelineADDITION();
 
-	// 加算（透過あり）
-	InitializeGraphicsPipelineADDITIONALPHA();
+	//// 加算（透過あり）
+	//InitializeGraphicsPipelineADDITIONALPHA();
 
-	// 減算
-	InitializeGraphicsPipelineSUBTRACTION();
+	//// 減算
+	//InitializeGraphicsPipelineSUBTRACTION();
 
-	// スクリーン
-	InitializeGraphicsPipelineSCREEN();
+	//// スクリーン
+	//InitializeGraphicsPipelineSCREEN();
 
 
 }
@@ -118,8 +121,8 @@ void Object3d::InitializeGraphicsPipelineNormal()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
+	gpipeline.VS = *sVsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = *sPsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -480,55 +483,14 @@ void Object3d::InitializeRootSignature()
 
 void Object3d::InitializeShader()
 {
-	HRESULT result = S_FALSE;
 
 	// 頂点シェーダの読み込みとコンパイル
-
-
-	result = D3DCompileFromFile(
-		L"Resources/shaders/OBJVertexShader.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&sVsBlob_, &sErrorBlob_);
-	if (FAILED(result)) {
-		// sErrorBlob_からエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(sErrorBlob_->GetBufferSize());
-
-		std::copy_n((char*)sErrorBlob_->GetBufferPointer(),
-			sErrorBlob_->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
+	sVsShader_ = new ShaderObj;
+	sVsShader_->Create("Resources/shaders/OBJVertexShader.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
 	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/OBJPixcelShader.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&sPsBlob_, &sErrorBlob_);
-	if (FAILED(result)) {
-		// sErrorBlob_からエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(sErrorBlob_->GetBufferSize());
-
-		std::copy_n((char*)sErrorBlob_->GetBufferPointer(),
-			sErrorBlob_->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
+	sPsShader_ = new ShaderObj;
+	sPsShader_->Create("Resources/shaders/OBJPixcelShader.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
 	// 頂点レイアウト
 	sInputLayout_.push_back
@@ -630,6 +592,13 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	// モデルを描画
 	model_->Draw(sCmdList_);
 
+}
+
+void Object3d::SetModel(Model* model)
+{
+	model_ = model; 
+	worldTransform_.minVertex_ = model->GetMinVertex();
+	worldTransform_.maxVertex_ = model->GetMaxVertex();
 }
 
 void Object3d::SetCollider(BaseCollider* collider)

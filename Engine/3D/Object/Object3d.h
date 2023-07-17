@@ -162,6 +162,10 @@ private: // 静的メンバ変数
 	static ComPtr<ID3DBlob> sPsBlob_;	// ピクセルシェーダオブジェクト
 	static ComPtr<ID3DBlob> sErrorBlob_; // エラーオブジェクト
 
+	static ShaderObj *sVsShader_;// 頂点シェーダー
+	static ShaderObj *sPsShader_;// ピクセルシェーダー
+
+
 
 private:// 静的メンバ関数
 
@@ -201,7 +205,7 @@ public: // メンバ関数
 	/// <summary>
 	/// モデルの設定
 	/// </summary>
-	void SetModel(Model* model) { model_ = model; }
+	void SetModel(Model* model);
 
 	/// <summary>
 	/// コライダーのセット

@@ -286,6 +286,7 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 						// vキー（座標データ）の番号と、全て合成した頂点のインデックスをセットで登録する
 						mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
 					}
+					AddMinMaxVertex(vertex.pos);
 				}
 				else {
 					char c;
@@ -304,6 +305,8 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 						//	// vキー（座標データ）の番号と、全て合成した頂点のインデックスをセットで登録する
 						//	AddSmoothData(indexPosition, (unsigned short)GetVertexCount() - 1);
 						//}
+
+						AddMinMaxVertex(vertex.pos);
 					}
 					else {
 						index_stream.seekg(-1, ios_base::cur); // 1文字戻る
@@ -322,6 +325,7 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 							// vキー（座標データ）の番号と、全て合成した頂点のインデックスをセットで登録する
 							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
 						}
+						AddMinMaxVertex(vertex.pos);
 					}
 				}
 				// インデックスデータの追加
@@ -335,6 +339,7 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 				else {
 					mesh->AddIndex(indexCountTex);
 				}
+				
 				indexCountTex++;
 				faceIndexCount++;
 				//// インデックスデータの追加
@@ -344,6 +349,9 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 	}
 	// ファイルを閉じる
 	file.close();
+
+	// 一度だけ最初の頂点を登録するフラグをオフ
+	isFirstAddMinMax = false;
 
 	// 頂点法線の平均によるエッジの平滑化
 	if (smoothing) {
@@ -369,6 +377,45 @@ void Model::AddMaterial(Material* material)
 {
 	// コンテナに登録
 	materials_.emplace(material->name, material);
+}
+
+void Model::AddMinMaxVertex(Vector3 vertexPos)
+{
+	if (isFirstAddMinMax == false) {
+		minVertex_ = vertexPos;
+		maxVertex_ = vertexPos;
+		isFirstAddMinMax = true;
+	}
+
+	// 小さいものを代入
+
+	// x
+	if (vertexPos.x <= minVertex_.x) {
+		minVertex_.x = vertexPos.x;
+	}
+	// y
+	if (vertexPos.y < minVertex_.y) {
+		minVertex_.y = vertexPos.y;
+	}
+	// z
+	if (vertexPos.z <= minVertex_.z) {
+		minVertex_.z = vertexPos.z;
+	}
+
+	// 大きいものを代入
+
+	// x
+	if (vertexPos.x >= maxVertex_.x) {
+		maxVertex_.x = vertexPos.x;
+	}
+	// y
+	if (vertexPos.y >= maxVertex_.y) {
+		maxVertex_.y = vertexPos.y;
+	}
+	// z
+	if (vertexPos.z >= maxVertex_.z) {
+		maxVertex_.z = vertexPos.z;
+	}
 }
 
 void Model::SetDevice(ID3D12Device* device)

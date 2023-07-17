@@ -291,14 +291,32 @@ bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* dis
 bool Collision::CheckAABB(const WorldTransform& transA, const WorldTransform& transB)
 {
 	Box a,b;
+	// ボックス構造体に情報を登録
 	a.center = transA.translation;
-	a.radius = transA.scale;
+	a.minRadius = transA.minVertex_ * transA.scale;
+	a.maxRadius = transA.maxVertex_ * transA.scale;
 
 	b.center = transB.translation;
-	b.radius = transB.scale;
+	b.minRadius = transB.minVertex_ * transB.scale;
+	b.maxRadius = transB.maxVertex_ * transB.scale;
 
+	// ボックス構造体の中心点からのプラスとマイナスのそれぞれ半径を算出
+	a.minCenterRadius = a.center + a.minRadius;
+	a.maxCenterRadius = a.center + a.maxRadius;
 
+	b.minCenterRadius = b.center + b.minRadius;
+	b.maxCenterRadius = b.center + b.maxRadius;
 
+	// これらの条件があったなら当たっていない
+	if (a.minCenterRadius.x > b.maxCenterRadius.x ||
+		a.maxCenterRadius.x < b.minCenterRadius.x ||
+		a.minCenterRadius.y > b.maxCenterRadius.y ||
+		a.maxCenterRadius.y < b.minCenterRadius.y ||
+		a.minCenterRadius.z > b.maxCenterRadius.z ||
+		a.maxCenterRadius.z < b.minCenterRadius.z) {
+		return false;
+	}
 
-	return false;
+	// 上の条件が通っていなないなら当たっている
+	return true;
 }

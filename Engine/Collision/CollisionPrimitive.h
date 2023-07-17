@@ -18,7 +18,12 @@ struct Box
 	Vector3 center = { 0,0,0 };
 
 	// îºåa
-	Vector3 radius = { 1,1,1 };
+	Vector3 minRadius = { 1,1,1 };
+	Vector3 maxRadius = { 1,1,1 };
+
+	// íÜêSÇ©ÇÁÇÃ+Ç∆-ÇÃÇªÇÍÇºÇÍÇÃîºåa
+	Vector3 minCenterRadius = { 0,0,0 };
+	Vector3 maxCenterRadius = { 0,0,0 };
 };
 
 // ïΩñ 

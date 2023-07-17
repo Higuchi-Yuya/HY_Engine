@@ -32,6 +32,17 @@ public:// メンバ関数
 	/// <returns>メッシュコンテナ</returns>
 	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
 	
+	/// <summary>
+	/// モデル内の一番小さい頂点ポジションの取得
+	/// </summary>
+	/// <returns></returns>
+	inline const Vector3& GetMinVertex() { return minVertex_; }
+
+	/// <summary>
+	/// モデル内の一番大きい頂点ポジションの取得
+	/// </summary>
+	/// <returns></returns>
+	inline const Vector3& GetMaxVertex() { return maxVertex_; }
 
 private:
 	// 静的な関数内ではメンバ変数を呼び出せないためプライベートメンバ関数のパッケージを作った
@@ -48,6 +59,12 @@ private:
 	/// </summary>
 	/// <param name="material"></param>
 	void AddMaterial(Material* material);
+
+	/// <summary>
+	/// モデル内の頂点で最も大きいのと小さい頂点を登録
+	/// </summary>
+	/// <param name="vertexPos"></param>
+	void AddMinMaxVertex(Vector3 vertexPos);
 
 private:// メンバ変数
 
@@ -66,7 +83,12 @@ private:// メンバ変数
 	// デバイス（借りてくる）
 	static ID3D12Device* sDevice_;
 
+	// モデル内にある最も小さい頂点
+	bool isFirstAddMinMax;
+	Vector3 minVertex_;
 
+	// モデル内にある最も大きい頂点
+	Vector3 maxVertex_;
 
 
 };

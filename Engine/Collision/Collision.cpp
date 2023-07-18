@@ -307,7 +307,7 @@ bool Collision::CheckAABB(const WorldTransform& transA, const WorldTransform& tr
 	b.minCenterRadius = b.center + b.minRadius;
 	b.maxCenterRadius = b.center + b.maxRadius;
 
-	// これらの条件があったなら当たっていない
+	// これらの条件が合ったなら当たっていない
 	if (a.minCenterRadius.x > b.maxCenterRadius.x ||
 		a.maxCenterRadius.x < b.minCenterRadius.x ||
 		a.minCenterRadius.y > b.maxCenterRadius.y ||
@@ -319,4 +319,179 @@ bool Collision::CheckAABB(const WorldTransform& transA, const WorldTransform& tr
 
 	// 上の条件が通っていなないなら当たっている
 	return true;
+}
+
+bool Collision::CheckOBB(const WorldTransform& obbA, const WorldTransform& obbB)
+{
+	OBB a, b;
+	// ポジションのセット
+	a.centerPos = obbA.translation;
+	// 各軸の方向ベクトル x,y,z
+	a.directionVector[0] = { obbA.matWorld_.m[0][0],obbA.matWorld_.m[0][1],obbA.matWorld_.m[0][2] };
+	a.directionVector[1] = { obbA.matWorld_.m[1][0],obbA.matWorld_.m[1][1],obbA.matWorld_.m[1][2] };
+	a.directionVector[2] = { obbA.matWorld_.m[2][0],obbA.matWorld_.m[2][1],obbA.matWorld_.m[2][2] };
+
+	// ポジションのセット
+	b.centerPos = obbB.translation;
+	// 各軸の方向ベクトル x,y,z
+	b.directionVector[0] = { obbB.matWorld_.m[0][0],obbB.matWorld_.m[0][1],obbB.matWorld_.m[0][2] };
+	b.directionVector[1] = { obbB.matWorld_.m[1][0],obbB.matWorld_.m[1][1],obbB.matWorld_.m[1][2] };
+	b.directionVector[2] = { obbB.matWorld_.m[2][0],obbB.matWorld_.m[2][1],obbB.matWorld_.m[2][2] };
+
+	// ボックス構造体に情報を登録
+	a.minRadius = obbA.minVertex_ * obbA.scale;
+	a.maxRadius = obbA.maxVertex_ * obbA.scale;
+
+	b.minRadius = obbB.minVertex_ * obbB.scale;
+	b.maxRadius = obbB.maxVertex_ * obbB.scale;
+
+	// 各軸の長さ
+	a.shaftLength[0] = (abs(a.maxRadius.x) + abs(a.minRadius.x)) * 0.5f;
+	a.shaftLength[1] = (abs(a.maxRadius.y) + abs(a.minRadius.y)) * 0.5f;
+	a.shaftLength[2] = (abs(a.maxRadius.z) + abs(a.minRadius.z)) * 0.5f;
+
+	b.shaftLength[0] = (abs(b.maxRadius.x) + abs(b.minRadius.x)) * 0.5f;
+	b.shaftLength[1] = (abs(b.maxRadius.y) + abs(b.minRadius.y)) * 0.5f;
+	b.shaftLength[2] = (abs(b.maxRadius.z) + abs(b.minRadius.z)) * 0.5f;
+
+	// 各方向ベクトルの確保
+	// （N***:標準化方向ベクトル）
+	Vector3 NAe1 = a.directionVector[0], Ae1 = NAe1 * a.shaftLength[0];
+	Vector3 NAe2 = a.directionVector[1], Ae2 = NAe2 * a.shaftLength[1];
+	Vector3 NAe3 = a.directionVector[2], Ae3 = NAe3 * a.shaftLength[2];
+	Vector3 NBe1 = b.directionVector[0], Be1 = NBe1 * b.shaftLength[0];
+	Vector3 NBe2 = b.directionVector[1], Be2 = NBe2 * b.shaftLength[1];
+	Vector3 NBe3 = b.directionVector[2], Be3 = NBe3 * b.shaftLength[2];
+	Vector3 Interval = a.centerPos - b.centerPos;
+
+	// 分離軸 : Ae1
+	Vector3 mathVec3;
+	FLOAT rA = mathVec3.length(Ae1);
+	FLOAT rB = LenSegOnSeparateAxis(&NAe1, &Be1, &Be2, &Be3);
+	FLOAT L = fabs(mathVec3.dot(Interval, NAe1));
+	if (L > rA + rB)
+		return false; // 衝突していない
+
+	 // 分離軸 : Ae2
+	rA = mathVec3.length(Ae2);
+	rB = LenSegOnSeparateAxis(&NAe2, &Be1, &Be2, &Be3);
+	L = fabs(mathVec3.dot(Interval, NAe2));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : Ae3
+	rA = mathVec3.length(Ae3);
+	rB = LenSegOnSeparateAxis(&NAe3, &Be1, &Be2, &Be3);
+	L = fabs(mathVec3.dot(Interval, NAe3));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : Be1
+	rA = LenSegOnSeparateAxis(&NBe1, &Ae1, &Ae2, &Ae3);
+	rB = mathVec3.length(Be1);
+	L = fabs(mathVec3.dot(Interval, NBe1));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : Be2
+	rA = LenSegOnSeparateAxis(&NBe2, &Ae1, &Ae2, &Ae3);
+	rB = mathVec3.length(Be2);
+	L = fabs(mathVec3.dot(Interval, NBe2));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : Be3
+	rA = LenSegOnSeparateAxis(&NBe3, &Ae1, &Ae2, &Ae3);
+	rB = mathVec3.length(Be3);
+	L = fabs(mathVec3.dot(Interval, NBe3));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C11
+	Vector3 Cross;
+	Cross = mathVec3.cross(NAe1, NBe1);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae2, &Ae3);
+	rB = LenSegOnSeparateAxis(&Cross, &Be2, &Be3);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C12
+	Cross = mathVec3.cross(NAe1, NBe2);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae2, &Ae3);
+	rB = LenSegOnSeparateAxis(&Cross, &Be1, &Be3);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C13
+	Cross = mathVec3.cross(NAe1, NBe3);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae2, &Ae3);
+	rB = LenSegOnSeparateAxis(&Cross, &Be1, &Be2);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C21
+	Cross = mathVec3.cross(NAe2, NBe1);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae1, &Ae3);
+	rB = LenSegOnSeparateAxis(&Cross, &Be2, &Be3);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C22
+	Cross = mathVec3.cross(NAe2, NBe2);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae1, &Ae3);
+	rB = LenSegOnSeparateAxis(&Cross, &Be1, &Be3);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C23
+	Cross = mathVec3.cross(NAe2, NBe3);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae1, &Ae3);
+	rB = LenSegOnSeparateAxis(&Cross, &Be1, &Be2);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C31
+	Cross = mathVec3.cross(NAe3, NBe1);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae1, &Ae2);
+	rB = LenSegOnSeparateAxis(&Cross, &Be2, &Be3);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C32
+	Cross = mathVec3.cross(NAe3, NBe2);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae1, &Ae2);
+	rB = LenSegOnSeparateAxis(&Cross, &Be1, &Be3);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離軸 : C33
+	Cross = mathVec3.cross(NAe3, NBe3);
+	rA = LenSegOnSeparateAxis(&Cross, &Ae1, &Ae2);
+	rB = LenSegOnSeparateAxis(&Cross, &Be1, &Be2);
+	L = fabs(mathVec3.dot(Interval, Cross));
+	if (L > rA + rB)
+		return false;
+
+	// 分離平面が存在しないので「衝突している」
+	return true;
+}
+
+float Collision::LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3)
+{
+	Vector3 mathVec3;
+	// 3つの内積の絶対値の和で投影線分長を計算
+   // 分離軸Sepは標準化されていること
+	FLOAT r1 = fabs(mathVec3.dot(*Sep, *e1));
+	FLOAT r2 = fabs(mathVec3.dot(*Sep, *e2));
+	FLOAT r3 = e3 ? (fabs(mathVec3.dot(*Sep, *e3))) : 0;
+
+	return r1 + r2 + r3;
 }

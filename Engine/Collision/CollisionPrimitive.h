@@ -26,6 +26,22 @@ struct Box
 	Vector3 maxCenterRadius = { 0,0,0 };
 };
 
+// OBB
+struct OBB
+{
+	// 中心座標
+	Vector3 centerPos = { 0,0,0 };
+	// 方向ベクトル x,y,z
+	Vector3 directionVector[3];
+	// 半径
+	Vector3 minRadius = { 1,1,1 };
+	Vector3 maxRadius = { 1,1,1 };
+
+	// 軸の長さ x,y,z
+	float shaftLength[3];
+
+};
+
 // 平面
 struct Plane
 {

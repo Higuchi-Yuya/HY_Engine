@@ -26,5 +26,9 @@ private:
 	// “–‚½‚Á‚½‚©‚Ç‚¤‚©
 	bool IsCollision = false;
 
+	// ƒtƒ‰ƒO
+	bool isH = false;
+	float timer = 0;
+	float maxTime = 240;
 };
 

@@ -14,9 +14,12 @@ public:
 
 	//ƒƒ“ƒoŠÖ”
 	float length()const;
+	float length(Vector3 v1)const;
+
 	Vector3& normalize();
 	static float dot(const Vector3& v, const Vector3& v2);
 	Vector3 cross(const Vector3& v)const;
+	Vector3 cross(const Vector3& v1, const Vector3& v2)const;
 	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;
 
 	// •âŠÔŠÖ”

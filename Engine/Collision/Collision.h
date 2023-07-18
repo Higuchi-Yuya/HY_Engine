@@ -27,7 +27,13 @@ public:
 	// ƒŒƒC‚Æ‹…‚Ì“–‚½‚è”»’è
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, Vector3* inter = nullptr);
 
-
+	// AABB‚Ì“–‚½‚è”»’è
 	static bool CheckAABB(const WorldTransform& transA, const WorldTransform& transB);
+
+	// OBB‚Ì“–‚½‚è”»’è
+	static bool CheckOBB(const WorldTransform& obbA, const WorldTransform& obbB);
+
+	// OBB—p‚Ì•ª—£²‚É“Š‰e‚³‚ê‚½²¬•ª‚©‚ç“Š‰eü•ª’·‚ğZo
+	static float LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3 = 0);
 };
 

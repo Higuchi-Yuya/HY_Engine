@@ -26,7 +26,7 @@ void GameCamera::Update()
 
 	// ワールド行列の場所をビューに収納
 	viewProjection_.eye = Vector3(worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2]);
-
+	
 	// プレイヤーの座標を注視点にセット
 	viewProjection_.target = Vector3(playerPos_.x, playerPos_.y + 3, playerPos_.z);
 

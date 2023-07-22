@@ -53,109 +53,6 @@ void Player::Update()
 
 	MoveUpdate();
 
-	//// 落下処理
-	//if (!onGround) {
-	//	// 下向き加速度
-	//	const float fallAcc = -0.01f;
-	//	const float fallVYMin = -0.5f;
-	//	// 加速
-	//	fallV.y = max(fallV.y + fallAcc, fallVYMin);
-	//	// 移動
-	//	worldTransform_.translation.x += fallV.x;
-	//	worldTransform_.translation.y += fallV.y;
-	//	worldTransform_.translation.z += fallV.z;
-	//}
-	//// ジャンプ操作
-	//else if (input->TriggerKey(DIK_SPACE)) {
-	//	onGround = false;
-	//	const float jumpVYFist = 0.2f;
-	//	fallV = { 0, jumpVYFist, 0 };
-	//}
-
-	//// ワールド行列更新
-	//UpdateWorldMatrix();
-	//collider_->Update(worldTransform_.matWorld_);
-
-	//// 球コライダーを取得
-	//SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
-	//assert(sphereCollider);
-
-	//// クエリーコールバッククラス
-	//class PlayerQueryCallback : public QueryCallback
-	//{
-	//public:
-	//	PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
-
-	//	// 衝突時コールバック関数
-	//	bool OnQueryHit(const QueryHit& info) {
-
-	//		const Vector3 up = { 0,1,0 };
-	//		Vector3 info_ = info.reject;
-	//		Vector3 rejectDir = info_.normalize();
-	//		float cos = Vector3::dot(rejectDir, up);
-
-	//		// 地面判定しきい値
-	//		const float threshold = cosf(Vector3::Deg2Rad(30.0f));
-
-	//		if (-threshold < cos && cos < threshold) {
-	//			sphere->center += info.reject;
-	//			move += info.reject;
-	//		}
-
-	//		return true;
-	//	}
-
-	//	Sphere* sphere = nullptr;
-	//	Vector3 move = {};
-	//};
-
-	//PlayerQueryCallback callback(sphereCollider);
-
-	//// 球と地形の交差を全検索
-	//CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
-
-	//// 交差による排斥分動かす
-	//worldTransform_.translation += callback.move;
-
-
-	//// ワールド行列更新
-	//UpdateWorldMatrix();
-	//collider_->Update(worldTransform_.matWorld_);
-
-	//// 球の上端から球の下端までのレイキャスト用レイを準備
-	//Ray ray;
-	//ray.start = sphereCollider->center;
-	//ray.start.y += sphereCollider->GetRadius();
-	//ray.dir = { 0,-1,0 };
-	//RaycastHit raycastHit;
-
-	//// 接地状態
-	//if (onGround) {
-	//	// スムーズに坂を下る為の吸着距離
-	//	const float adsDistance = 0.2f;
-	//	// 接地を維持
-	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
-	//		onGround = true;
-	//		worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-	//		// 行列の更新など
-	//		Object3d::Update();
-	//	}
-	//	// 地面がないので落下
-	//	else {
-	//		onGround = false;
-	//		fallV = {0,0,0};
-	//	}
-	//}
-	//// 落下状態
-	//else if (fallV.y <= 0.0f) {
-	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
-	//		// 着地
-	//		onGround = true;
-	//		worldTransform_.translation.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-
-	//	}
-	//}
-
 	// 行列の更新など
 	Object3d::Update();
 }
@@ -168,10 +65,7 @@ void Player::Draw(ViewProjection* view)
 
 void Player::OnCollision(const CollisionInfo& info)
 {
-	// 衝突したらカラーを変える
-	//atari->worldTransform_.translation = this->worldTransform_.translation;
-	//worldTransform_.color_ = { 0.1f,1.0f,0.1f,1.0f };
-	//worldTransform_.UpdateMatrix();
+
 }
 
 const Vector3 Player::GetWorldPosition() const

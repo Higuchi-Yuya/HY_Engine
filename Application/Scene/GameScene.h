@@ -52,6 +52,30 @@ public:// メンバ関数
 
 	void Draw2DFront();
 
+private:// サブクラス
+	// シーンクラス（仮）
+	enum class Scene {
+		Title,
+		Game,
+		Result,
+	};
+
+private:// プライベート関数
+	/// <summary>
+	/// タイトルシーンの更新処理
+	/// </summary>
+	void TitleUpdate();
+
+	/// <summary>
+	/// ゲームシーンの更新処理
+	/// </summary>
+	void GameSceneUpdate();
+
+	/// <summary>
+	/// シーンチェンジの更新処理
+	/// </summary>
+	void SceneChageUpdate();
+
 private:// メンバ変数
 
 	// 入力
@@ -97,6 +121,9 @@ private:// メンバ変数
 #pragma region テクスチャハンドル
 
 	std::unique_ptr<Texture> textureHandleDefu;
+
+	// フェードインフェードアウト用の画像ハンドル
+	std::unique_ptr<Texture> blackOutTexHandle_;
 #pragma endregion
 
 
@@ -105,6 +132,9 @@ private:// メンバ変数
 	std::unique_ptr<Sprite> spriteProvisional = nullptr;
 
 	Vector2 spritePos;
+
+	// フェードインフェードアウト用の画像スプライト
+	std::unique_ptr<Sprite> blackOut = nullptr;
 #pragma endregion
 
 
@@ -167,6 +197,17 @@ private:// メンバ変数
 	std::unique_ptr<Enemy> enemy_;
 #pragma endregion
 
+
+#pragma region シーンチェンジ関連
+	// シーン管理
+	Scene scene = Scene::Title;
+
+	// ブラックアウトの変数
+	float blackAlpha = 0.0f;
+	bool sceneChangeFlag = false;
+	Scene oldScene = Scene::Title;
+	bool resultChange = false;
+#pragma endregion
 
 };
 

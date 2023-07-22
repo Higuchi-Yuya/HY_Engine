@@ -21,6 +21,7 @@ void GameScene::Initialize()
 	input_ = std::make_unique<Input>();
 	input_->Initialize();
 
+#pragma region ライトの初期化
 	// ライトの生成
 	light.reset(LightGroup::Create());
 	// ライト設定
@@ -40,40 +41,54 @@ void GameScene::Initialize()
 
 	light->SetCircleShadowActive(0, true);
 
-	
-
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light.get());
+#pragma endregion
 
+#pragma region フォグ
 	fog.reset(Fog::Create());
 	fog->nearFog = 10;
 	fog->farFog = 100;
 	fog->isActiveFog = false;
 	Object3d::SetFog(fog.get());
+#pragma endregion
 
+#pragma region テクスチャ読み込み
 	// テクスチャハンドルの読み込み
 
+	// 仮のスプライトのハンドル
 	textureHandleDefu.reset(TextureManager::Load2DTextureP("texture.png"));
-
-	// スプライトの初期化
-	spriteProvisional = std::make_unique<Sprite>();
-
 	
-	spriteProvisional->Initialize(textureHandleDefu.get(), {200,200}, {150,150}, {0.5f,0.5f, 0.5f,1.0f});
+	// シーンチェンジで使うハンドル
+	blackOutTexHandle_.reset(TextureManager::Load2DTextureP("SceneChageTex.png"));
 
+
+#pragma endregion
+
+#pragma region モデルの読み込み
 	// モデルの読み込み
 	playerModel_.reset(Model::LoadFromOBJ("chr_sword", true));
 	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
+#pragma endregion
 
-
-	const int DIV_NUM = 10;
-	const float LAND_SCALE = 2.0f;
-
-	// オブジェクトの初期化
-	spritePos = spriteProvisional->GetPosition();
+#pragma region サウンド読み込み
 	sound.SoundLoadWave("GameClear.wav");
+#pragma endregion
 
+#pragma region スプライト初期化
+	// スプライトの初期化
 
+	// 仮のスプライト
+	spriteProvisional = std::make_unique<Sprite>();
+	spriteProvisional->Initialize(textureHandleDefu.get(), { 200,200 }, { 150,150 }, { 0.5f,0.5f, 0.5f,1.0f });
+	spritePos = spriteProvisional->GetPosition();
+
+	// シーンチェンジ用のスプライト
+	blackOut = std::make_unique<Sprite>();
+	blackOut->Initialize(blackOutTexHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280 * 2,720 * 2 });
+	blackOut->SetColor({ 1,1,1,blackAlpha });
+
+#pragma endregion
 
 #pragma region ローダー用の読み込み
 	//// レベルデータの読み込み
@@ -130,118 +145,60 @@ void GameScene::Initialize()
 	//}
 #pragma endregion
 
-	
-
-	// モデル名を指定してファイルを読み込み
-	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	//fbxmodel_.reset(FbxLoader::GetInstance()->LoadModelFromFile("boneTest"));
-	//fbxmodel_->Initialize();
-	//fbxTrans_.Initialize();
-	//fbxTrans_.scale = { 0.01f,0.01f, 0.01f };
-	//fbxTrans_.UpdateMatrix();
-
-	////modelAnim_ = std::make_unique<FbxAnimetion>();
-	////modelAnim_->Load("boneTest");
-	//
-
+#pragma region プレイヤー関連の初期化
 	player_ = std::make_unique<Player>();
 
 	player_.reset(Player::Create(playerModel_.get()));
+#pragma endregion
 
+#pragma region エネミー関連の初期化
 	enemy_ = std::make_unique<Enemy>();
 	enemy_->Initialize(modelMedama_.get(), player_.get());
+#pragma endregion
+
+#pragma region ビュープロジェクション関連の初期化
+	// ビュープロジェクションの初期化
+	gameCamera = std::make_unique<GameCamera>();
+	gameCamera->Initialize(&player_->worldTransform_);
+#pragma endregion
+
+#pragma region コライダー関連の初期化
+	gameCollider = std::make_unique<GameCollider>();
+	gameCollider->Initialize();
+	gameCollider->AddEnemy(enemy_.get());
+	gameCollider->SetPlayer(player_.get());
+#pragma endregion
 
 	objMedama_.reset(Object3d::Create());
 	objMedama_->SetModel(modelMedama_.get());
 	objMedama_->worldTransform_.translation = { 2,1,0 };
 
 	objMedama_->dissolve_.isActiveDissolve_ = true;
-
-
 	objMedama_->Update();
-
-	// ビュープロジェクションの初期化
-	gameCamera = std::make_unique<GameCamera>();
-	gameCamera->Initialize(&player_->worldTransform_);
-
-	gameCollider = std::make_unique<GameCollider>();
-	gameCollider->Initialize();
-	gameCollider->AddEnemy(enemy_.get());
-	gameCollider->SetPlayer(player_.get());
-
-
 
 }
 
 void GameScene::Update()
 {
-	// 入力の更新
-	input_->Update();
+	// シーンチェンジ処理
+	SceneChageUpdate();
 
-	// 数字の0キーが押されていたら
-	if (input_->PushKey(DIK_0))
+	// シーンのそれぞれの更新処理
+	switch (scene)
 	{
-		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
+	case GameScene::Scene::Title: // タイトルシーン
+		TitleUpdate();
+		break;
+	case GameScene::Scene::Game: // ゲームシーン
+		GameSceneUpdate();
+		break;
+	case GameScene::Scene::Result: // リザルトシーン
+
+		break;
+	default:
+		break;
 	}
-
-	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
-	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
-	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
-
-	light->SetSpotLightDir(0, spotLightDir);
-	light->SetSpotLightPos(0, spotLightPos);
-	light->SetSpotLightColor(0, spotLightColor);
-	light->SetSpotLightAtten(0, spotLightAtten);
-	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
-
-	light->SetCircleShadowDir(0, circleShadowDir);
-	light->SetCircleShadowCasterPos(0, player_->GetWorldPosition());
-	light->SetCircleShadowAtten(0, circleShadowAtten);
-	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
-
-	light->SetAmbientColor(AmColor);
-	light->SetDiffuseColor(DiColor);
-	light->SetSpecularColor(SpColor);
-
-	//objFighter->worldTransform_.position_ = fighterPos;
-
-	light->Update();
-
-	spriteProvisional->SetPosition(spritePos);
-
-	fog->UpdateMatrix();
-	Object3d::SetFog(fog.get());
-
-	if (isActiveSound == true) {
-		sound.SoundPlayWave(true, 0.01f);
-		isActiveSound = false;
-	}
-	if (isStopSound == true) {
-		sound.StopWave();
-		isStopSound = false;
-	}
-
-
-	//for (auto& object : objects) {
-	//	object->Update();
-	//}
-	//frem += 0.01f;
-	//fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
-
-	player_->Update();
-
-	enemy_->Update();
-
-	gameCamera->SetCameraPos(player_->worldTransform_.translation);
-	gameCamera->Update();
-
-	objSkydome->Update();
-	objGround->Update();
-
-	objMedama_->Update();
-
-	// 当たり判定関連の更新処理
-	gameCollider->Updata();
+	
 
 }
 
@@ -405,30 +362,60 @@ void GameScene::ImguiUpdate()
 
 void GameScene::Draw2DBack()
 {
+	switch (scene)
+	{
+	case GameScene::Scene::Title: // タイトルシーン
 
+		break;
+	case GameScene::Scene::Game: // ゲームシーン
+
+		break;
+	case GameScene::Scene::Result: // リザルトシーン
+
+		break;
+	default:
+		break;
+	}
 }
 
 void GameScene::Draw3D()
 {
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
-	objSkydome->Draw(&gameCamera->GetView());
-	objGround->Draw(&gameCamera->GetView());
+	switch (scene)
+	{
+	case GameScene::Scene::Title: // タイトルシーン
 
-	player_->Draw(&gameCamera->GetView());
+		break;
+	case GameScene::Scene::Game: // ゲームシーン
 
-	enemy_->Draw(&gameCamera->GetView());
+		// オブジェクト関連の描画
+		objSkydome->Draw(&gameCamera->GetView());
+		objGround->Draw(&gameCamera->GetView());
 
-	objMedama_->Draw(&gameCamera->GetView());
+		player_->Draw(&gameCamera->GetView());
 
-	// FBXモデルの描画
-	FbxModel::PreDraw(commandList);
+		enemy_->Draw(&gameCamera->GetView());
 
-	//fbxmodel_->Draw(&fbxTrans_, &gameCamera->GetView());
+		objMedama_->Draw(&gameCamera->GetView());
 
-	FbxModel::PostDraw();
+		// FBXモデルの描画
+		FbxModel::PreDraw(commandList);
 
-	DrawParticle();
+
+		FbxModel::PostDraw();
+
+		// パーティクルの描画
+		DrawParticle();
+		break;
+	case GameScene::Scene::Result: // リザルトシーン
+
+		break;
+	default:
+		break;
+	}
+
+
 }
 
 void GameScene::DrawParticle()
@@ -439,6 +426,177 @@ void GameScene::DrawParticle()
 
 void GameScene::Draw2DFront()
 {
+	switch (scene)
+	{
+	case GameScene::Scene::Title: // タイトルシーン
 
-	spriteProvisional->Draw();
+		break;
+	case GameScene::Scene::Game: // ゲームシーン
+		spriteProvisional->Draw();
+		break;
+	case GameScene::Scene::Result: // リザルトシーン
+
+		break;
+	default:
+		break;
+	}
+
+	// シーンチェンジ用ののスプライトの描画
+	blackOut->Draw();
+}
+
+void GameScene::TitleUpdate()
+{
+	// パッドでAボタンを押すか、もしくはスペースキーを押した瞬間
+	if (JoypadInput::GetButtonDown(PadCode::ButtonA)||input_->TriggerKey(DIK_SPACE)) {
+		oldScene = Scene::Title;
+		sceneChangeFlag = true;
+	}
+}
+
+void GameScene::GameSceneUpdate()
+{
+	// 入力の更新
+	input_->Update();
+
+	// 数字の0キーが押されていたら
+	if (input_->PushKey(DIK_0))
+	{
+		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
+	}
+
+	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
+	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+
+	light->SetSpotLightDir(0, spotLightDir);
+	light->SetSpotLightPos(0, spotLightPos);
+	light->SetSpotLightColor(0, spotLightColor);
+	light->SetSpotLightAtten(0, spotLightAtten);
+	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
+
+	light->SetCircleShadowDir(0, circleShadowDir);
+	light->SetCircleShadowCasterPos(0, player_->GetWorldPosition());
+	light->SetCircleShadowAtten(0, circleShadowAtten);
+	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
+
+	light->SetAmbientColor(AmColor);
+	light->SetDiffuseColor(DiColor);
+	light->SetSpecularColor(SpColor);
+
+	//objFighter->worldTransform_.position_ = fighterPos;
+
+	light->Update();
+
+	spriteProvisional->SetPosition(spritePos);
+
+	fog->UpdateMatrix();
+	Object3d::SetFog(fog.get());
+
+	if (isActiveSound == true) {
+		sound.SoundPlayWave(true, 0.01f);
+		isActiveSound = false;
+	}
+	if (isStopSound == true) {
+		sound.StopWave();
+		isStopSound = false;
+	}
+
+
+	//for (auto& object : objects) {
+	//	object->Update();
+	//}
+	//frem += 0.01f;
+	//fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
+
+	player_->Update();
+
+	enemy_->Update();
+
+	gameCamera->SetCameraPos(player_->worldTransform_.translation);
+	gameCamera->Update();
+
+	objSkydome->Update();
+	objGround->Update();
+
+	objMedama_->Update();
+
+	// 当たり判定関連の更新処理
+	gameCollider->Updata();
+}
+
+void GameScene::SceneChageUpdate()
+{
+	if (sceneChangeFlag == true) {
+		switch (scene)
+		{
+		case GameScene::Scene::Title:
+			if (oldScene == Scene::Title) {
+				blackAlpha += 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha >= 1) {
+					blackAlpha = 1;
+					scene = Scene::Game;
+					// ここにリセット関数を置く
+				}
+			}
+			else if (oldScene == Scene::Result) {
+				blackAlpha -= 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha <= 0) {
+					blackAlpha = 0;
+					sceneChangeFlag = false;
+				}
+			}
+			break;
+		case GameScene::Scene::Game:
+			if (oldScene != Scene::Game) {
+				blackAlpha -= 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha <= 0) {
+					blackAlpha = 0;
+					sceneChangeFlag = false;
+				}
+			}
+			// ゲームシーンからリザルトシーン
+			else {
+				blackAlpha += 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha >= 1) {
+					blackAlpha = 1;
+					scene = Scene::Result;
+					// ここにリセット関数を置く
+				}
+			}
+			break;
+		case GameScene::Scene::Result:
+			if (oldScene == Scene::Game) {
+				blackAlpha -= 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha <= 0) {
+					blackAlpha = 0;
+					sceneChangeFlag = false;
+				}
+			}
+			else {
+				blackAlpha += 0.025f;
+				blackOut->SetColor({ 1,1,1,blackAlpha });
+				if (blackAlpha >= 1) {
+					blackAlpha = 1;
+
+					if (resultChange == false) {
+						scene = Scene::Game;
+						// ここにリセット関数を置く
+					}
+					else if (resultChange == true) {
+						scene = Scene::Title;
+						// ここにリセット関数を置く
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
 }

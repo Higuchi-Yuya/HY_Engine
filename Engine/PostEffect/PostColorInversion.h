@@ -110,6 +110,9 @@ private:
     // ルートシグネチャ
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 
+    ShaderObj* vsShader_;// 頂点シェーダー
+    ShaderObj* psShader_;// ピクセルシェーダー
+
     // テクスチャ
     //Texture texHandle_;
 

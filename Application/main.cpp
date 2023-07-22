@@ -15,6 +15,7 @@
 #include "PostEffect.h"
 #include "InputManager.h"
 #include <dxgidebug.h>
+#include "ParticleManager.h"
 #pragma endregion
 
 #pragma region おまじない
@@ -121,12 +122,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// ポストエフェクトの初期化
 	PostEffect::SetDevice(dxCommon->GetDevice());
 
+	// パーティクルの初期化
+	ParticleManager::StaticInitialize(dxCommon->GetDevice());
+
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
 	///////////////////////////////////////////////////////
 #pragma endregion
 
 #pragma region シーンに使う変数の初期化
+
+
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize();
 	gameScene->SetDxComon(dxCommon);
@@ -255,6 +261,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	imguiManager->Finalize();
 	delete imguiManager;
 
+	ParticleManager::StaticFinalize();
 	TextureManager::StaticFinalize();
 	Object3d::StaticFinalize();
 	FbxModel::StaticFainalize();

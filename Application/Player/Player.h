@@ -32,7 +32,6 @@ private:
 
 private:
 
-
 	bool IsStickOn = false;
 
 	float deadZone = 450;

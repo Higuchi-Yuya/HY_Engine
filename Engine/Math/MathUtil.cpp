@@ -110,3 +110,9 @@ float MathUtil::Sin_ZeroToOne(float pos, float maxCount, float nowCount, float s
 	float result = pos + sin(PI * 2 / maxCount * nowCount) * swingWidth;
 	return result;
 }
+
+Matrix4 MathUtil::Matrix4Indecity()
+{
+	Matrix4 mat4;
+	return mat4.identity();
+}

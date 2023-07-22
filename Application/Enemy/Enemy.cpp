@@ -47,10 +47,5 @@ void Enemy::OnCollision()
 	//playerS.center = player_->worldTransform_.translation;
 	//playerS.radius = 1.0f;
 
-	if (Collision::CheckOBB(player_->worldTransform_,worldTransform_)) {
-		worldTransform_.color = { 1,0,0,1 };
-	}
-	else {
-		worldTransform_.color = { 1,1,1,1 };
-	}
+
 }

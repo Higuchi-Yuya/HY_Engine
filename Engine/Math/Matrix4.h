@@ -72,3 +72,5 @@ private:
 // 2項演算子オーバーロード
 
 Vector3 operator*(const Vector3& v, const Matrix4& m);
+
+Matrix4 operator*(const Matrix4& m1, const Matrix4& m2);

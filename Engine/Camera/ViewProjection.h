@@ -94,6 +94,8 @@ public:// パブリック変数
 	Matrix4 matView_;
 	// 射影行列
 	Matrix4 matProjection_;
+	// ビルボード行列
+	Matrix4 matBillboard_;
 
 private:// メンバ変数
 

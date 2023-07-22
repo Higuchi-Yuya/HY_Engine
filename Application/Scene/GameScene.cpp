@@ -11,7 +11,7 @@
 
 GameScene::~GameScene()
 {
-
+	
 }
 
 void GameScene::Initialize()
@@ -163,6 +163,14 @@ void GameScene::Initialize()
 	// ビュープロジェクションの初期化
 	gameCamera = std::make_unique<GameCamera>();
 	gameCamera->Initialize(&player_->worldTransform_);
+
+	gameCollider = std::make_unique<GameCollider>();
+	gameCollider->Initialize();
+	gameCollider->AddEnemy(enemy_.get());
+	gameCollider->SetPlayer(player_.get());
+
+
+
 }
 
 void GameScene::Update()
@@ -231,6 +239,10 @@ void GameScene::Update()
 	objGround->Update();
 
 	objMedama_->Update();
+
+	// 当たり判定関連の更新処理
+	gameCollider->Updata();
+
 }
 
 void GameScene::ImguiUpdate()
@@ -415,6 +427,14 @@ void GameScene::Draw3D()
 	//fbxmodel_->Draw(&fbxTrans_, &gameCamera->GetView());
 
 	FbxModel::PostDraw();
+
+	DrawParticle();
+}
+
+void GameScene::DrawParticle()
+{
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	gameCollider->Draw(commandList, &gameCamera->GetView());
 }
 
 void GameScene::Draw2DFront()

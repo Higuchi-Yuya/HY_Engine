@@ -5,11 +5,14 @@
 #include "Matrix4.h"
 #include "Quaternion.h"
 #include <DirectXMath.h>
-#include<assimp/scene.h>
+#include <assimp/scene.h>
 
 // 数学便利関数まとめ
 namespace MathUtil
 {
+	// 円周率
+	static float PI = 3.141592f;
+
 	// アシンプのマトリックスを自作のものに変換
 	Matrix4 AssimpMatToMat4(aiMatrix4x4 mat4);
 
@@ -35,6 +38,9 @@ namespace MathUtil
 
 	// sin波の動きを作る関数
 	float Sin_ZeroToOne(float pos, float maxCount, float nowCount, float swingWidth);
+
+	// 単位行列を取得
+	Matrix4 Matrix4Indecity();
 
 	// 値をMinとMaxの間に制限する関数
 	template<typename T>

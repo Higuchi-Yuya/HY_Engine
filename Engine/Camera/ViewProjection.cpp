@@ -2,6 +2,7 @@
 #include <d3dx12.h>
 #include <cassert>
 #include "WinApp.h"
+#include "MathUtil.h"
 
 ID3D12Device* ViewProjection::sDevice_ = nullptr;
 
@@ -84,6 +85,46 @@ void ViewProjection::UpdateMatrix()
 	constMap_->view = matView_;
 	constMap_->projection = matProjection_;
 	constMap_->cameraPos = eye;
+
+	//視点座標
+	Vector3 eyePosition = eye;
+	//注視点座標X
+	Vector3 targetPosition = target;
+	//(仮の)上方向
+	Vector3 upVector = up;
+
+	//カメラZ軸(視点方向)
+	Vector3 cameraAxisZ = targetPosition - eyePosition;
+
+	//ベクトルを正規化
+	cameraAxisZ.normalize();
+
+	//カメラのX軸(右方向)
+	Vector3 cameraAxisX;
+	//X軸は上方向→Z軸の外積で求まる
+	cameraAxisX = upVector.cross(cameraAxisZ);
+	//ベクトルを正規化
+	cameraAxisX.normalize();
+
+	//カメラのY軸(上方向)
+	Vector3 cameraAxisY;
+	//Y軸は上方向→Z軸の外積で求まる
+	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
+	//ベクトルを正規化
+	cameraAxisY.normalize();
+
+	matBillboard_ = MathUtil::Matrix4Indecity();
+
+	//ビルボード行列
+	matBillboard_.m[0][0] = cameraAxisX.x;
+	matBillboard_.m[0][1] = cameraAxisX.y;
+	matBillboard_.m[0][2] = cameraAxisX.z;
+	matBillboard_.m[1][0] = cameraAxisY.x;
+	matBillboard_.m[1][1] = cameraAxisY.y;
+	matBillboard_.m[1][2] = cameraAxisY.z;
+	matBillboard_.m[2][0] = cameraAxisZ.x;
+	matBillboard_.m[2][1] = cameraAxisZ.y;
+	matBillboard_.m[2][2] = cameraAxisZ.z;
 }
 
 void ViewProjection::DebugCameraInitialze(Input* input)

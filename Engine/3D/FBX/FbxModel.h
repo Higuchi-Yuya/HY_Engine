@@ -17,7 +17,7 @@
 #include "WorldTransform.h"
 #include <ViewProjection.h>
 #include <assimp/anim.h>
-
+#include "ShaderObj.h"
 
 class FbxModel
 {
@@ -99,6 +99,10 @@ private: // 静的メンバ変数
 	static std::unique_ptr<LightGroup> lightGroup_;
 	// 借りてくるデバイス
 	static ID3D12Device* device_;
+
+	static ShaderObj* sVsShader_;// 頂点シェーダー
+	static ShaderObj* sPsShader_;// ピクセルシェーダー
+	static ShaderObj* sGsShader_;// ジオメトリシェーダー
 
 public: // 静的メンバ関数
 

@@ -24,14 +24,13 @@ ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSCREEN_ = nullptr;
 
 std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 
-ComPtr<ID3DBlob> Object3d::sVsBlob_; 
+ComPtr<ID3DBlob> Object3d::sVsBlob_;
 ComPtr<ID3DBlob> Object3d::sPsBlob_;	
 ComPtr<ID3DBlob> Object3d::sErrorBlob_;
 
 ShaderObj* Object3d::sVsShader_ = nullptr;
 ShaderObj* Object3d::sPsShader_ = nullptr;
 //ComPtr<ID3DBlob> Object3d::sRootSigBlob_;
-
 //Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
 
 void Object3d::StaticInitialize(ID3D12Device* sDevice_)
@@ -486,11 +485,11 @@ void Object3d::InitializeShader()
 
 	// 頂点シェーダの読み込みとコンパイル
 	sVsShader_ = new ShaderObj;
-	sVsShader_->Create("Resources/shaders/OBJVertexShader.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+	sVsShader_->Create("Object/OBJVertexShader.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
 	// ピクセルシェーダの読み込みとコンパイル
 	sPsShader_ = new ShaderObj;
-	sPsShader_->Create("Resources/shaders/OBJPixcelShader.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+	sPsShader_->Create("Object/OBJPixcelShader.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
 	// 頂点レイアウト
 	sInputLayout_.push_back

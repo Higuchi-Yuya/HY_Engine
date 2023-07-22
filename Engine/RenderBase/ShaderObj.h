@@ -46,5 +46,7 @@ private:// メンバ変数
 	//タイプ
 	ShaderType type = ShaderType::VS;
 
+	// デフォルトシェーダーファイル格納ディレクトリ
+	static std::string sDefaultShaderDirectoryPath_;
 };
 

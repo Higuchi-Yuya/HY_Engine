@@ -20,6 +20,7 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+
 	// インデックスバッファの設定
 	cmdList->IASetIndexBuffer(&ibView_);
 

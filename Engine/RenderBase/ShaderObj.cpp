@@ -1,4 +1,5 @@
 #include "ShaderObj.h"
+std::string ShaderObj::sDefaultShaderDirectoryPath_ = "Resources/Shaders/";
 
 std::wstring StringToWstring(const std::string& string)
 {
@@ -20,8 +21,11 @@ void ShaderObj::Create(const std::string& fileName_, const std::string& entryPoi
 	// エラーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> lErrorBlob;
 
+	// ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPath = sDefaultShaderDirectoryPath_ + fileName_;
+
 	std::wstring lWFileName;
-	lWFileName = StringToWstring(fileName_);
+	lWFileName = StringToWstring(fullPath);
 
 	// ピクセルシェーダの読み込みとコンパイル
 	lResult = D3DCompileFromFile(

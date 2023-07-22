@@ -9,6 +9,7 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include <TextureManager.h>
+#include "ShaderObj.h"
 //#pragma comment(lib, "d3dcompiler.lib")
 
 class SpriteManager
@@ -53,6 +54,9 @@ private:
 	
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;		//パイプラインステート
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;		//ルートシグネチャ
+
+	ShaderObj vsShader_;// 頂点シェーダー
+	ShaderObj psShader_;// ピクセルシェーダー
 
 	// 結果確認
 	HRESULT result = 0;

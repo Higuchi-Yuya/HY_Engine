@@ -15,9 +15,10 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Dissolve.h"
+#include "ParticleManager.h"
 
 #include "GameCamera.h"
-
+#include "GameCollider.h"
 #include <vector>
 
 class CollisionManager;
@@ -46,6 +47,8 @@ public:// ƒƒ“ƒoŠÖ”
 	void Draw2DBack();
 
 	void Draw3D();
+
+	void DrawParticle();
 
 	void Draw2DFront();
 
@@ -139,7 +142,7 @@ private:// ƒƒ“ƒo•Ï”
 
 
 #pragma region “–‚½‚è”»’è
-
+	std::unique_ptr < GameCollider> gameCollider;
 #pragma endregion
 
 

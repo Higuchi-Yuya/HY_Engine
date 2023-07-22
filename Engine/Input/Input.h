@@ -8,9 +8,6 @@
 // 入力
 class Input
 {
-private:
-	// namespaceの省略
-	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
 	struct MouseMove {
@@ -82,10 +79,10 @@ public: // メンバ関数
 private:// 静的メンバ変数
 
 	// DirectInputのインスタンス
-	ComPtr<IDirectInput8> directInput_ = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInput8> directInput_ = nullptr;
 
 	// キーボードのデバイス
-	ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 
 	// 全キーの状態
 	BYTE key_[256] = {};
@@ -94,7 +91,7 @@ private:// 静的メンバ変数
 	BYTE keyPre_[256] = {};
 
 	// マウスのデバイス
-	ComPtr<IDirectInputDevice8> devMouse_;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> devMouse_;
 
 	// マウスの状態
 	DIMOUSESTATE2 mouseState_ = {};

@@ -1,6 +1,6 @@
 #pragma region “Ç‚İ‚Şƒwƒbƒ_[
 
-#pragma comment(lib,"d3dcompiler.lib")
+//#pragma comment(lib,"d3dcompiler.lib")
 
 #include<iostream>
 

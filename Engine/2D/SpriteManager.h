@@ -10,7 +10,6 @@
 #include "Matrix4.h"
 #include <TextureManager.h>
 #include "ShaderObj.h"
-//#pragma comment(lib, "d3dcompiler.lib")
 
 class SpriteManager
 {

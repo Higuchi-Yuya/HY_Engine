@@ -76,7 +76,7 @@ void GameCollider::OnColParticle()
 
 		// d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ{-0.001f,0}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
 		Vector3 acc{};
-		const float md_acc = 0.005f;
+		const float md_acc = 0.003f;
 		acc.y = -(float)rand() / RAND_MAX * md_acc;
 
 		// ’Ç‰Á

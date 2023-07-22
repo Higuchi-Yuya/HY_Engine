@@ -7,10 +7,6 @@
 #include <wrl.h>
 class LightGroup
 {
-private:
-	// namespaceの省略
-	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-
 public:// 定数
 	// 平行光源の数
 	static const int sDirLightNum = 3;
@@ -234,7 +230,7 @@ private:// プライベートメンバ関数
 private:// メンバ変数
 
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
 	// 定数バッファのマップ
 	ConstBufferData* constMap_ = nullptr;

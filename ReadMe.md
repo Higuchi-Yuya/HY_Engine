@@ -13,11 +13,13 @@ Hy Engine は、C++での基本的なゲーム開発を指標として、学生�
 
 # クローン or ダウンロード 
 下記の画像の**Code**の部分を開きます。
-![スクリーンショット 2023-07-25 152310](https://github.com/Higuchi-Yuya/HY_Engine/assets/94943675/baf6c349-2142-41ea-9c1f-ef14cc977f69)
+<img src="https://github.com/Higuchi-Yuya/HY_Engine/assets/94943675/baf6c349-2142-41ea-9c1f-ef14cc977f69" width="500">
 
 1. クローンする方は **1** と書かれている方をクリックしてURLをコピーしてクローンを行ってください。
 2. ダウンロードする方は **2** と書かれている方をクリックしてZipをダウンロードしたのち、Zipを展開してください。
-![スクリーンショット 2023-07-25 153248](https://github.com/Higuchi-Yuya/HY_Engine/assets/94943675/b569e19b-16b8-4ffd-bd1c-8a1b049b69a9)
+
+
+<img src="https://github.com/Higuchi-Yuya/HY_Engine/assets/94943675/b569e19b-16b8-4ffd-bd1c-8a1b049b69a9" width="350">
 
 # 出力の場所
 - クローンまたはダウンロードした際のソリューションファイル階層の一つ上の階層に**Generatedファイル**というものが生成されます。

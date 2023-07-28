@@ -62,6 +62,15 @@ void GameScene::Initialize()
 	// シーンチェンジで使うハンドル
 	blackOutTexHandle_.reset(TextureManager::Load2DTextureP("SceneChageTex.png"));
 
+	// タイトルの文字で使うハンドル（仮）
+	titleFontTexHandle.reset(TextureManager::Load2DTextureP("kariTitle.png"));
+
+	// タイトルの背景で使うハンドル（仮）
+	titleBackTexHandle.reset(TextureManager::Load2DTextureP("titleBack.png"));
+
+	// タイトルのAボタン押すフォント（仮）
+	titleButtonTexHandle.reset(TextureManager::Load2DTextureP("PressA.png"));
+
 
 #pragma endregion
 
@@ -87,6 +96,18 @@ void GameScene::Initialize()
 	blackOut = std::make_unique<Sprite>();
 	blackOut->Initialize(blackOutTexHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280 * 2,720 * 2 });
 	blackOut->SetColor({ 1,1,1,blackAlpha });
+
+	// タイトルの文字用のスプライト
+	titleKariFont = std::make_unique<Sprite>();
+	titleKariFont->Initialize(titleFontTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 - 150 },{500,100});
+
+	// タイトルのボタンAのスプライト
+	titleKariPressA = std::make_unique<Sprite>();
+	titleKariPressA->Initialize(titleButtonTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 + 200 },{250,50});
+
+	// タイトルの背景のスプライト
+	titleKariBack = std::make_unique<Sprite>();
+	titleKariBack->Initialize(titleBackTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 
 #pragma endregion
 
@@ -429,7 +450,10 @@ void GameScene::Draw2DFront()
 	switch (scene)
 	{
 	case GameScene::Scene::Title: // タイトルシーン
-
+		titleKariBack->Draw();
+		titleKariFont->Draw();
+		titleKariPressA->Draw();
+		
 		break;
 	case GameScene::Scene::Game: // ゲームシーン
 		spriteProvisional->Draw();

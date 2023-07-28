@@ -121,6 +121,9 @@ private:// メンバ変数
 #pragma region テクスチャハンドル
 
 	std::unique_ptr<Texture> textureHandleDefu;
+	std::unique_ptr<Texture> titleFontTexHandle;
+	std::unique_ptr<Texture> titleBackTexHandle;
+	std::unique_ptr<Texture> titleButtonTexHandle;
 
 	// フェードインフェードアウト用の画像ハンドル
 	std::unique_ptr<Texture> blackOutTexHandle_;
@@ -130,7 +133,9 @@ private:// メンバ変数
 #pragma region スプライト
 
 	std::unique_ptr<Sprite> spriteProvisional = nullptr;
-
+	std::unique_ptr<Sprite> titleKariFont = nullptr;
+	std::unique_ptr<Sprite> titleKariBack = nullptr;
+	std::unique_ptr<Sprite> titleKariPressA = nullptr;
 	Vector2 spritePos;
 
 	// フェードインフェードアウト用の画像スプライト

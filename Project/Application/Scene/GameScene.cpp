@@ -180,7 +180,8 @@ void GameScene::Initialize()
 #pragma region ビュープロジェクション関連の初期化
 	// ビュープロジェクションの初期化
 	gameCamera = std::make_unique<GameCamera>();
-	gameCamera->Initialize(&player_->worldTransform_);
+	gameCamera->Initialize(player_->GetCameraWorld());
+	player_->SetGameCamera(gameCamera.get());
 #pragma endregion
 
 #pragma region コライダー関連の初期化
@@ -313,6 +314,8 @@ void GameScene::ImguiUpdate()
 		else if (isActiveCircleShadow == false) {
 			light->SetCircleShadowActive(0, false);
 		}
+
+		ImGui::InputFloat3("circleShadowPos", &circleShadowCasterPos.x);
 		ImGui::InputFloat3("circleShadowDir", &circleShadowDir.x);
 		//ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
 		ImGui::InputFloat3("circleShadowAtten", &circleShadowAtten.x);
@@ -500,7 +503,7 @@ void GameScene::GameSceneUpdate()
 	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
 
 	light->SetCircleShadowDir(0, circleShadowDir);
-	light->SetCircleShadowCasterPos(0, player_->GetWorldPosition());
+
 	light->SetCircleShadowAtten(0, circleShadowAtten);
 	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
 
@@ -510,7 +513,7 @@ void GameScene::GameSceneUpdate()
 
 	//objFighter->worldTransform_.position_ = fighterPos;
 
-	light->Update();
+	
 
 	spriteProvisional->SetPosition(spritePos);
 
@@ -547,6 +550,10 @@ void GameScene::GameSceneUpdate()
 
 	// 当たり判定関連の更新処理
 	gameCollider->Updata();
+
+	circleShadowCasterPos = player_->GetWorldPosition();
+	light->SetCircleShadowCasterPos(0, circleShadowCasterPos);
+	light->Update();
 }
 
 void GameScene::SceneChageUpdate()

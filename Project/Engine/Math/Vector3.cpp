@@ -56,6 +56,15 @@ Vector3 Vector3::cross(const Vector3& v1, const Vector3& v2) const
 	);
 }
 
+Vector3 Vector3::Cross(const Vector3 v1, const Vector3 v2)
+{
+	return Vector3(
+		v1.y * v2.z - v1.z * v2.y,
+		v1.z * v2.x - v1.x * v2.z,
+		v1.x * v2.y - v1.y * v2.x
+	);
+}
+
 Vector3 Vector3::distanceFrom(const Vector3& v, const Vector3& v2) const
 {
 	return  Vector3(
@@ -118,6 +127,11 @@ Vector3& Vector3::operator/=(float s)
 	y /= s;
 	z /= s;
 	return *this;
+}
+
+bool Vector3::operator!=(float num)
+{
+	return x != num || y != num || z != num;
 }
 
 const Vector3 operator+(const Vector3& v1, const Vector3& v2)

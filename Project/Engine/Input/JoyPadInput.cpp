@@ -235,7 +235,7 @@ bool JoypadInput::GetButtonUp(const PadCode padCode, const int sPadIndex_)
 #pragma region スティック関連
 
 // スティックを倒している間
-Vector2 JoypadInput::GetStick(const PadCode padCode, const int sPadIndex_)
+Vector2 JoypadInput::GetStick(const PadCode padCode, const float length, const int sPadIndex_)
 {
 	// 接続しているか
 	if (GetisLinkPad() == false) return 0;
@@ -253,8 +253,14 @@ Vector2 JoypadInput::GetStick(const PadCode padCode, const int sPadIndex_)
 		stick.y = (float)GetInstance()->joypadObjs_[sPadIndex_].padInput.lRy;
 
 	}
+	// 指定した長さを超えた場合にしか返さない
+	if (stick.length() > fabsf(length))
+	{
+		return stick;
+	}
 
-	return stick;
+	return 0;
+
 }
 
 // スティックを倒した瞬間

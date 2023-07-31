@@ -44,7 +44,7 @@ bool Player::Initialize()
 	// 半径分だけ足元から浮いた座標を球の中心にする
 	//SetCollider(new SphereCollider(Vector3(0, radius, 0), radius));
 	//collider_->SetAttribute(COLLISION_ATTR_ALLIES);
-
+	cameraWorld_.Initialize();
 	return true;
 }
 
@@ -80,6 +80,18 @@ const Vector3 Player::GetWorldPosition() const
 	return worldPos;
 }
 
+const WorldTransform* Player::GetCameraWorld() const
+{
+	return &cameraWorld_;
+}
+
+void Player::SetGameCamera(GameCamera* gameCamera)
+{
+	bGameCamera = gameCamera;
+}
+
+
+
 void Player::MoveUpdate()
 {
 	Matrix4 mathMat;
@@ -107,20 +119,53 @@ void Player::MoveUpdate()
 
 	// 向いてる方向に移動
 
-	// Lスティックで移動
-	if (JoypadInput::GetStick(PadCode::LeftStick).x > deadZone ||
-		JoypadInput::GetStick(PadCode::LeftStick).x < -deadZone ||
-		JoypadInput::GetStick(PadCode::LeftStick).y > deadZone ||
-		JoypadInput::GetStick(PadCode::LeftStick).y < -deadZone) {
+	//// Lスティックで移動
+	//if (JoypadInput::GetStick(PadCode::LeftStick).x > deadZone ||
+	//	JoypadInput::GetStick(PadCode::LeftStick).x < -deadZone ||
+	//	JoypadInput::GetStick(PadCode::LeftStick).y > deadZone ||
+	//	JoypadInput::GetStick(PadCode::LeftStick).y < -deadZone) {
 
-		move.x += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.x;
-		move.z += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.z;
-		move.x += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.x;
-		move.z += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.z;
+	//	move.x += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.x;
+	//	move.z += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.z;
+	//	move.x += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.x;
+	//	move.z += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.z;
 
-		joyStickInfoL.x = JoypadInput::GetStick(PadCode::LeftStick).x;
-		joyStickInfoL.y = JoypadInput::GetStick(PadCode::LeftStick).y;
+	//	joyStickInfoL.x = JoypadInput::GetStick(PadCode::LeftStick).x;
+	//	joyStickInfoL.y = JoypadInput::GetStick(PadCode::LeftStick).y;
 
+	//}
+	moveVel_ = { 0,0,0 };
+	frontVec_ = { 0,0,0 };
+	// カメラの前ベクトル
+	Vector3 cameForward = worldTransform_.translation - bGameCamera->GetView().eye;
+	cameForward.y = 0.0f;
+
+	// カメラの右ベクトル
+	Vector3 up = { 0, 1, 0 };
+	Vector3 cameRight = Vector3::Cross(cameForward, up);
+
+	Vector3 stick =
+	{
+		Pad::GetStick(PadCode::LeftStick, 300).x,
+		0,
+		Pad::GetStick(PadCode::LeftStick, 300).y,
+	};
+	if (stick != 0.0f)
+	{
+		Vector3 stickMoveVec = {0,0,0};
+
+		stickMoveVec.x = -stick.normalize().x;
+		stickMoveVec.z = -stick.normalize().z;
+
+		frontVec_ = cameForward * stickMoveVec.z + cameRight * stickMoveVec.x;
+	}
+
+	if (frontVec_ != 0.0f)
+	{
+		moveVel_ = frontVec_.normalize() * moveSpeed_;
+
+		worldTransform_.translation += moveVel_;
+		worldTransform_.rotation.y = atan2f(frontVec_.x, frontVec_.z);
 	}
 
 	// Rスティックでカメラ回転
@@ -131,8 +176,13 @@ void Player::MoveUpdate()
 		joyStickInfoR.y = JoypadInput::GetStick(PadCode::RightStick).x / 1000;
 	}
 
-	worldTransform_.rotation.y += MathUtil::DegreeToRadian(rot.y);
-	worldTransform_.translation += move;
+	// カメラの回転用のものにかりにコピー
+	cameraWorld_.translation = worldTransform_.translation;
+
+	cameraWorld_.rotation.y += MathUtil::DegreeToRadian(rot.y);
+	cameraWorld_.UpdateMatrix();
+	//worldTransform_.rotation.y += MathUtil::DegreeToRadian(rot.y);
+	//worldTransform_.translation += move;
 	
 
 	ImGui::Begin("joyPadInfo");
@@ -145,7 +195,7 @@ void Player::MoveUpdate()
 	ImGui::InputFloat3("playerPos", &worldTransform_.translation.x, "%.2f");
 
 	ImGui::End();
-
+	
 
 	// ワールド行列更新
 	UpdateWorldMatrix();

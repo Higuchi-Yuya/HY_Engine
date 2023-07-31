@@ -20,6 +20,7 @@ public:
 	static float dot(const Vector3& v, const Vector3& v2);
 	Vector3 cross(const Vector3& v)const;
 	Vector3 cross(const Vector3& v1, const Vector3& v2)const;
+	static Vector3 Cross(const Vector3 v1, const Vector3 v2);		// 二つのベクトルの外積
 	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;
 
 	// 補間関数
@@ -51,6 +52,8 @@ public:
 	Vector3& operator*=(const Vector3& v);
 	Vector3& operator/=(float s);
 
+	// 比較演算子
+	bool operator!=(float num);
 };
 
 

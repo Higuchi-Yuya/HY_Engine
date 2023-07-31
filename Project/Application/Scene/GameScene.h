@@ -103,6 +103,7 @@ private:// メンバ変数
 	bool isActiveSpot = false;
 
 	// 丸影のステータス
+	Vector3 circleShadowCasterPos = { 0,0,0 };
 	Vector3 circleShadowDir = { 0,-1,0 };
 	Vector3 circleShadowAtten = { 1.5f,0.6f,0.0f };
 	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };

@@ -75,9 +75,15 @@ void GameScene::Initialize()
 #pragma endregion
 
 #pragma region モデルの読み込み
-	// モデルの読み込み
+	// プレイヤーのモデル読み込み
 	playerModel_.reset(Model::LoadFromOBJ("chr_sword", true));
+
+	// 敵のモデル読み込み
 	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
+
+	// 背景モデル関連
+	modelSkydome.reset(Model::LoadFromOBJ("skydome"));
+	modelGround.reset(Model::LoadFromOBJ("ground"));
 #pragma endregion
 
 #pragma region サウンド読み込み
@@ -111,65 +117,93 @@ void GameScene::Initialize()
 
 #pragma endregion
 
+#pragma region プレイヤー関連の初期化
+	player_ = std::make_unique<Player>();
+	player_.reset(Player::Create(playerModel_.get()));
+#pragma endregion
+
 #pragma region ローダー用の読み込み
-	//// レベルデータの読み込み
-	//levelData = LevelLoader::LoadFile("testScene");
+	// レベルデータの読み込み
+	levelData_.reset(LevelLoader::LoadFile("testScene"));
 
-	// モデル読み込み
-	modelSkydome.reset(Model::LoadFromOBJ("skydome"));
-	modelGround.reset(Model::LoadFromOBJ("ground"));
 
+	// オブジェクトの初期化
 	objSkydome.reset(Object3d::Create());
 	objGround.reset(Object3d::Create());
 
 	objSkydome->SetModel(modelSkydome.get());
 	objGround->SetModel(modelGround.get());
 
-	//modelFighter = Model::LoadFromOBJ("chr_sword", true);
-	//modelSphere = Model::LoadFromOBJ("sphere", true);
+	// モデルデータをモデルのリストに登録
+	models.insert(std::make_pair("skydome", modelSkydome.get()));
+	models.insert(std::make_pair("ground", modelGround.get()));
+	models.insert(std::make_pair("chr_sword", playerModel_.get()));
+	models.insert(std::make_pair("sphere", modelMedama_.get()));
 
-	//models.insert(std::make_pair("skydome", modelSkydome));
-	//models.insert(std::make_pair("ground", modelGround));
-	//models.insert(std::make_pair("chr_sword", modelFighter));
-	//models.insert(std::make_pair("sphere", modelSphere));
+	// レベルデータからオブジェクトを生成、配置
+	//	また、プレイヤーの初期位置やエネミーの初期
+	for (auto& objectData : levelData_->objects) {
+		// ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end()) {
+			model = it->second;
+		}
 
-	//レベルデータからオブジェクトを生成、配置
-	//for (auto& objectData : levelData->objects) {
-	//	// ファイル名から登録済みモデルを検索
-	//	Model* model = nullptr;
-	//	decltype(models)::iterator it = models.find(objectData.fileName);
-	//	if (it != models.end()) {
-	//		model = it->second;
-	//	}
+		// タグ名がプレイヤーなら
+		if (objectData.tagName == "player")
+		{
+			WorldTransform w;
+			w.Initialize();
+			w.translation = objectData.translation;
+			w.scale = objectData.scaling;
+			w.rotation = objectData.rotation;
 
-	//	// モデルを指定して3Dオブジェクトを生成
-	//	Object3d* newObject = Object3d::Create();
-	//	newObject->SetModel(model);
 
-	//	// 座標
-	//	Vector3 pos;
-	//	pos = objectData.translation;
-	//	newObject->worldTransform_.position_ = pos;
+			player_->SetWorldTransInfo(w);
+			player_->UpdateWorldMatrix();
+		}
+		// タグ名がエネミーなら
+		else if (objectData.tagName == "enemy" && player_ != nullptr)
+		{
+			WorldTransform w;
+			w.Initialize();
+			w.translation = objectData.translation;
+			w.scale = objectData.scaling;
+			w.rotation = objectData.rotation;
 
-	//	// 回転角
-	//	Vector3 rot;
-	//	rot= objectData.rotation;
-	//	newObject->worldTransform_.rotation_ = rot;
+			// 新しい敵の生成
+			Enemy* newEnemy;
+			newEnemy->Initialize(modelMedama_.get(), player_.get());
 
-	//	// スケール
-	//	Vector3 scale;
-	//	scale= objectData.scaling;
-	//	newObject->worldTransform_.scale_ = scale;
+		}
+		// それ以外のタグ名またはなしの場合
+		else 
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			newObject->SetModel(model);
 
-	//	// 配列に登録
-	//	objects.push_back(newObject);
-	//}
-#pragma endregion
+			// 座標
+			Vector3 pos;
+			pos = objectData.translation;
+			newObject->worldTransform_.translation = pos;
 
-#pragma region プレイヤー関連の初期化
-	player_ = std::make_unique<Player>();
+			// 回転角
+			Vector3 rot;
+			rot = objectData.rotation;
+			newObject->worldTransform_.rotation = rot;
 
-	player_.reset(Player::Create(playerModel_.get()));
+			// スケール
+			Vector3 scale;
+			scale = objectData.scaling;
+			newObject->worldTransform_.scale = scale;
+
+			// 配列に登録
+			objects.push_back(newObject);
+		}
+		
+	}
 #pragma endregion
 
 #pragma region エネミー関連の初期化

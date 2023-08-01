@@ -23,7 +23,8 @@ private:// メンバ変数
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	// 注視点のY座標を変更する値
-	float chageYPos = 3;
+	Vector3 offSet;
+
 
 	// 回転
 	Vector3 angle_;

@@ -85,6 +85,13 @@ const WorldTransform* Player::GetCameraWorld() const
 	return &cameraWorld_;
 }
 
+void Player::SetWorldTransInfo(WorldTransform worldTrans)
+{
+	worldTransform_.translation = worldTrans.translation;
+	worldTransform_.scale = worldTrans.scale;
+	worldTransform_.rotation = worldTrans.rotation;
+}
+
 void Player::SetGameCamera(GameCamera* gameCamera)
 {
 	bGameCamera = gameCamera;

@@ -200,6 +200,7 @@ private:// メンバ変数
 
 
 #pragma region エネミー関連
+	std::vector<Enemy*>enemys_;
 	std::unique_ptr<Enemy> enemy_;
 #pragma endregion
 
@@ -213,6 +214,15 @@ private:// メンバ変数
 	bool sceneChangeFlag = false;
 	Scene oldScene = Scene::Title;
 	bool resultChange = false;
+#pragma endregion
+
+
+#pragma region レベルデータ関連
+	std::unique_ptr<LevelData> levelData_;
+
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
+	
 #pragma endregion
 
 };

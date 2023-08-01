@@ -11,6 +11,8 @@ struct LevelData {
 	struct ObjectData {
 		// ファイル名
 		std::string fileName;
+		// タグ名
+		std::string tagName;
 		// 平行移動
 		Vector3 translation;
 		// 回転角

@@ -28,6 +28,10 @@ public:
 	// カメラ用のワールドトランスフォームの取得
 	const WorldTransform *GetCameraWorld()const;
 
+	// ワールドトランスフォームの情報をセット
+	void SetWorldTransInfo(WorldTransform worldTrans);
+
+	// ゲームカメラをセット
 	void SetGameCamera(GameCamera* gameCamera);
 
 private:

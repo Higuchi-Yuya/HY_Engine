@@ -45,7 +45,7 @@ bool Player::Initialize()
 	frontW_.translation = { 0,0,1 };
 	frontW_.parent_ = &worldTransform_;
 
-	bulletModel_.reset(Model::LoadFromOBJ("sphere"));
+	bulletModel_.reset(Model::LoadFromOBJ("doragon"));
 	cameraWorld_.Initialize();
 	return true;
 }
@@ -157,10 +157,10 @@ void Player::MoveUpdate()
 	{
 		Vector3 stickMoveVec = {0,0,0};
 
-		stickMoveVec.x = -stick.normalize().x;
-		stickMoveVec.z = -stick.normalize().z;
+		stickMoveVec.x = stick.normalize().x;
+		stickMoveVec.z = stick.normalize().z;
 
-		frontVec_ = cameForward * stickMoveVec.z + cameRight * stickMoveVec.x;
+		frontVec_ = cameForward * -stickMoveVec.z + cameRight * -stickMoveVec.x;
 	}
 
 	if (frontVec_ != 0.0f)

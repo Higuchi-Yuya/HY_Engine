@@ -24,10 +24,20 @@ void Enemy::Update()
 	// 生きている時
 	if (IsAlive_){
 		timer++;
+		followTimer++;
 		if (timer > maxTime) {
 			timer = 0;
 		}
-		worldTransform_.translation.x = MathUtil::Sin_ZeroToOne(0.0f, maxTime, timer, 3.2f);
+		// 借りてきたプレイヤーのポジション
+		Vector3 playerPos = player_->worldTransform_.translation;
+		if (followTimer > followTimeMax) {
+			// 追従のベクトルの更新
+			Vector3 velo = playerPos - worldTransform_.translation;
+			followVec = velo.normalize() * followSpeed;
+			followTimer = 0;
+		}
+
+		worldTransform_.translation += followVec;
 		worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 		
 		OnCollision();
@@ -52,14 +62,6 @@ void Enemy::Draw(ViewProjection* view)
 
 void Enemy::OnCollision()
 {
-	//Sphere enemyS;
-	//enemyS.center = { worldTransform_.translation };
-	//enemyS.radius = 1.0f;
-
-	//Sphere playerS;
-	//playerS.center = player_->worldTransform_.translation;
-	//playerS.radius = 1.0f;
-
 
 }
 

@@ -38,6 +38,7 @@ public: // サブクラス
 	enum class Type
 	{
 		Normal,
+		EnemySpown,
 	};
 
 	//パーティクル一粒

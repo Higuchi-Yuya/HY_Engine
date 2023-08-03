@@ -47,6 +47,13 @@ private:
 
 	// ƒtƒ‰ƒO
 	bool isH = false;
+
+	// ’Ç]ŠÖ˜A
+	float followTimer = 0;
+	float followTimeMax = 20;
+	Vector3 followVec;
+	float followSpeed = 0.1f;
+
 	float timer = 0;
 	float maxTime = 240;
 };

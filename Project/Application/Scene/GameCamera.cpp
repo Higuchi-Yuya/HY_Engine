@@ -13,7 +13,7 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 	worldTransform_.translation = { -15,15,-15 };
 	worldTransform_.UpdateMatrix();
 
-	offSet = { 0,3,0 };
+	offSet = { 0,5,0 };
 	
 }
 

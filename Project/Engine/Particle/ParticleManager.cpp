@@ -337,6 +337,8 @@ void ParticleManager::Update()
 			it->color.w += it->startColor.w;
 
 			break;
+		case  Type::EnemySpown:
+
 		default:
 			break;
 		}

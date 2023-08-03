@@ -132,7 +132,7 @@ void GameScene::Initialize()
 
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("test"));
+	levelData_.reset(LevelLoader::LoadFile("levelData"));
 
 	// モデルデータをモデルのリストに登録
 	models.insert(std::make_pair("skydome", modelSkydome.get()));

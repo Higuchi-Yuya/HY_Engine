@@ -34,7 +34,7 @@ private:// ƒƒ“ƒo•Ï”
 	Vector3 cameraVecRot_;
 	Vector3 dirVec;
 	float velLength;
-	const Vector3 cameraFPos = { -15,15,-15 };;
+	const Vector3 cameraFPos = { -15,5,-15 };;
 	Vector3 rotPos= { -15,15,-15 };
 	Vector3 rotNorm;
 	Vector3 vel;

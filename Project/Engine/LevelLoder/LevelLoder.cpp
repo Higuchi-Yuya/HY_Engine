@@ -60,7 +60,7 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName) {
 			}
 			if (object.contains("tag_name")) {
 				// ファイル名
-				objectData.fileName = object["tag_name"];
+				objectData.tagName = object["tag_name"];
 			}
 
 			// トランスフォームのパラメータ読み込み

@@ -2,6 +2,7 @@
 #include "Object3d.h"
 #include "ImGuiManager.h"
 #include "GameCamera.h"
+#include "PlayerBullet.h"
 class Player:public Object3d
 {
 public:
@@ -40,6 +41,11 @@ private:
 	/// </summary>
 	void MoveUpdate();
 
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void Attack();
+
 private:
 
 	bool IsStickOn = false;
@@ -47,6 +53,9 @@ private:
 	WorldTransform cameraWorld_;
 	float deadZone = 450;
 	Vector3 moveValue = { 0.1f,0.0f,0.1f };
+
+	//プレイヤー関連
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	// 接地フラグ
 	bool onGround = true;
@@ -61,5 +70,16 @@ private:
 
 	// 借りてくるカメラ
 	GameCamera *bGameCamera;
+
+	// 弾関連
+	// 前にある仮のワールドトランスフォーム
+	WorldTransform frontW_;
+
+	//モデル
+	std::unique_ptr<Model> bulletModel_ = nullptr;
+	// 弾のインターバル
+	float bulletInterval = 40;
+	float bulletInterTimer = 0;
+
 };
 

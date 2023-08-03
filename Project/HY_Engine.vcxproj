@@ -167,6 +167,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClCompile Include="Engine\RenderBase\ShaderObj.cpp" />
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\GameCollider\GameCollider.cpp" />
+    <ClCompile Include="Application\Player\PlayerBullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -226,6 +227,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClInclude Include="Engine\RenderBase\ShaderObj.h" />
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
     <ClInclude Include="Application\GameCollider\GameCollider.h" />
+    <ClInclude Include="Application\Player\PlayerBullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

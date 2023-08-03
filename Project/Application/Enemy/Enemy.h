@@ -6,7 +6,6 @@
 class Enemy:public Object3d
 {
 public:
-
 	// 初期化
 	void Initialize(Model* model,Player* player);
 
@@ -19,12 +18,32 @@ public:
 	// 衝突時コールバック関数
 	void OnCollision();
 
+	const bool GetAlive() { return IsAlive_; }
+
+	// ワールドトランスフォームの情報をセット
+	void SetWorldTransInfo(WorldTransform worldTrans);
+
+	/// <summary>
+	/// 生きているかフラグのセット
+	/// </summary>
+	/// <param name="isAlive">生きているかフラグ</param>
+	void SetAlive(bool isAlive) { IsAlive_ = isAlive; }
+
+
 private:
 	// 借りてくるプレイヤーの情報を一時的に保存
 	Player* player_ = nullptr;
 
 	// 当たったかどうか
 	bool IsCollision = false;
+
+	// 生きているかどうか
+	bool IsAlive_ = false;
+
+	// ディゾルブ関連
+	float disoTimer_ = 0;
+	float disoTimeMax_ = 60 * 3;
+	float disoTimeLate_ = 0;
 
 	// フラグ
 	bool isH = false;

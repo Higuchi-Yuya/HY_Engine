@@ -12,6 +12,7 @@ void Enemy::Initialize(Model* model, Player* player)
 		SetModel(model);
 	}
 
+	IsAlive_ = true;
 	worldTransform_.translation.y += 1.0f;
 	worldTransform_.rotation.y += MathUtil::DegreeToRadian(90);
 	worldTransform_.scale.x = 2.0f;
@@ -20,14 +21,26 @@ void Enemy::Initialize(Model* model, Player* player)
 
 void Enemy::Update()
 {
-	timer++;
-	if (timer > maxTime) {
-		timer = 0;
-	}
-	worldTransform_.translation.x = MathUtil::Sin_ZeroToOne(0.0f, maxTime, timer, 3.2f);
-	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
-	OnCollision();
+	// ê∂Ç´ÇƒÇ¢ÇÈéû
+	if (IsAlive_){
+		timer++;
+		if (timer > maxTime) {
+			timer = 0;
+		}
+		worldTransform_.translation.x = MathUtil::Sin_ZeroToOne(0.0f, maxTime, timer, 3.2f);
+		worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
+		
+		OnCollision();
 
+	}
+	else {
+		disoTimer_++;
+		disoTimeLate_ = disoTimer_ / disoTimeMax_;
+		dissolve_.isActiveDissolve_ = true;
+
+		dissolve_.dissolveTime_ = disoTimeLate_;
+	}
+	
 	// çsóÒÇÃçXêVÇ»Ç«
 	Object3d::Update();
 }
@@ -48,4 +61,11 @@ void Enemy::OnCollision()
 	//playerS.radius = 1.0f;
 
 
+}
+
+void Enemy::SetWorldTransInfo(WorldTransform worldTrans)
+{
+	worldTransform_.translation = worldTrans.translation;
+	worldTransform_.scale = worldTrans.scale;
+	worldTransform_.rotation = worldTrans.rotation;
 }

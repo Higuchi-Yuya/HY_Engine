@@ -40,19 +40,24 @@ void Dissolve::Initialize()
 void Dissolve::UpdateMatrix()
 {
 	//定数バッファに転送
-	constMap_->isActiveDissolve = isActiveDissolve_;
-	constMap_->dissolveColor = dissolveColor_;
-	constMap_->dissolvePower = dissolvePower_;
-	constMap_->dissolveTime = dissolveTime_;
-	constMap_->dissolveSmoothMin = dissolveSmoothMin_;
+	if (isActiveDissolve_ == true) {
+		constMap_->isActiveDissolve = isActiveDissolve_;
+		constMap_->dissolveColor = dissolveColor_;
+		constMap_->dissolvePower = dissolvePower_;
+		constMap_->dissolveTime = dissolveTime_;
+		constMap_->dissolveSmoothMin = dissolveSmoothMin_;
+	}
+
 }
 
 void Dissolve::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t dissolveRootIndex)
 {
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(dissolveRootIndex, constBuff_->GetGPUVirtualAddress());
-	// ディゾルブシェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(static_cast<uint32_t>(rootParameterIndex::DISSOLVETEX), dissolveTex_->GetGpuHandle());
+	if (isActiveDissolve_ == true) {
+		// ディゾルブシェーダリソースビューをセット
+		cmdList->SetGraphicsRootDescriptorTable(static_cast<uint32_t>(rootParameterIndex::DISSOLVETEX), dissolveTex_->GetGpuHandle());
+	}
 }
 
 void Dissolve::CreateConstBuffer()
@@ -81,7 +86,14 @@ void Dissolve::CreateConstBuffer()
 
 void Dissolve::Map()
 {
-	//定数バッファのマッピング
+	// 定数バッファのマッピング
 	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
 	assert(SUCCEEDED(result));
+
+	// 定数バッファの初期値を送る
+	constMap_->isActiveDissolve = isActiveDissolve_;
+	constMap_->dissolveColor = dissolveColor_;
+	constMap_->dissolvePower = dissolvePower_;
+	constMap_->dissolveTime = dissolveTime_;
+	constMap_->dissolveSmoothMin = dissolveSmoothMin_;
 }

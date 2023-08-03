@@ -27,7 +27,7 @@ public:// メンバ関数
 	void Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection);
 
 	/// <summary>
-	/// エネミーをリストに格納
+	/// エネミーの情報をベクターに格納
 	/// </summary>
 	/// <param name="enemy">エネミー</param>
 	void AddEnemy(Enemy* enemy);
@@ -48,7 +48,7 @@ private:// メンバ変数
 	bool isPlayerHit = false;
 	bool isPartile = false;
 
-	std::vector<Enemy*>enemys_;
+	std::vector<Enemy*>enemysInfo_;
 	Player* player_ = nullptr;
 
 #pragma region パーティクル

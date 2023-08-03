@@ -13,12 +13,17 @@ void GameCollider::Initialize()
 
 void GameCollider::Updata()
 {
+	//寿命が尽きた敵の情報を全削除
+	enemysInfo_.erase(std::remove_if(enemysInfo_.begin(), enemysInfo_.end(), [](Enemy* x) {
+		return x->GetAlive() == false;
+		}), enemysInfo_.end());
+
 	// 当たり判定（エネミー側の反応）
-	for (auto& e : enemys_){
+	for (auto& e : enemysInfo_){
 		if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 			// エネミーがわを赤くする（仮）
 			e->worldTransform_.color = { 1,0,0,1 }; 
-
+			e->SetAlive(false);
 			// プレイヤーのヒットフラグを立てる
 			isPlayerHit = true;
 			
@@ -97,7 +102,7 @@ void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* 
 
 void GameCollider::AddEnemy(Enemy* enemy)
 {
-	enemys_.push_back(enemy);
+	enemysInfo_.push_back(enemy);
 }
 
 void GameCollider::SetPlayer(Player* player)

@@ -11,7 +11,9 @@ public:// メンバ関数
 
 	ViewProjection& GetView() { return viewProjection_; }
 
-	void SetCameraPos(Vector3 pos) { playerPos_ = pos; }
+	void SetCameraFPos(Vector3 pos);
+
+	void SetCameraPos(Vector3 pos);
 
 private:// プライベートメンバ関数
 	void RotUpdate();
@@ -27,9 +29,15 @@ private:// メンバ変数
 
 
 	// 回転
+	float aInfo;
 	Vector3 angle_;
 	Vector3 cameraVecRot_;
-	Vector3 dir_;
+	Vector3 dirVec;
+	float velLength;
+	const Vector3 cameraFPos = { -15,15,-15 };;
+	Vector3 rotPos= { -15,15,-15 };
+	Vector3 rotNorm;
+	Vector3 vel;
 	Vector3 rotSpeed_ = { 5,5,5 };
 
 	// 注視点となるプレイヤーの座標

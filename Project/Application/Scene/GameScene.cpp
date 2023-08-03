@@ -11,7 +11,15 @@
 
 GameScene::~GameScene()
 {
-	
+	models.clear();
+	for (auto e : enemys_) {
+		delete e;
+	}
+	enemys_.clear();
+	for (auto o : objects) {
+		delete o;
+	}
+	objects.clear();
 }
 
 void GameScene::Initialize()
@@ -124,21 +132,13 @@ void GameScene::Initialize()
 
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("testScene"));
-
-
-	// オブジェクトの初期化
-	objSkydome.reset(Object3d::Create());
-	objGround.reset(Object3d::Create());
-
-	objSkydome->SetModel(modelSkydome.get());
-	objGround->SetModel(modelGround.get());
+	levelData_.reset(LevelLoader::LoadFile("test"));
 
 	// モデルデータをモデルのリストに登録
 	models.insert(std::make_pair("skydome", modelSkydome.get()));
 	models.insert(std::make_pair("ground", modelGround.get()));
 	models.insert(std::make_pair("chr_sword", playerModel_.get()));
-	models.insert(std::make_pair("sphere", modelMedama_.get()));
+	models.insert(std::make_pair("Medama", modelMedama_.get()));
 
 	// レベルデータからオブジェクトを生成、配置
 	//	また、プレイヤーの初期位置やエネミーの初期
@@ -150,21 +150,9 @@ void GameScene::Initialize()
 			model = it->second;
 		}
 
-		// タグ名がプレイヤーなら
-		if (objectData.tagName == "player")
-		{
-			WorldTransform w;
-			w.Initialize();
-			w.translation = objectData.translation;
-			w.scale = objectData.scaling;
-			w.rotation = objectData.rotation;
-
-
-			player_->SetWorldTransInfo(w);
-			player_->UpdateWorldMatrix();
-		}
 		// タグ名がエネミーなら
-		else if (objectData.tagName == "enemy" && player_ != nullptr)
+		#pragma region エネミー関連の初期化
+		if (objectData.tagName == "enemy")
 		{
 			WorldTransform w;
 			w.Initialize();
@@ -173,11 +161,18 @@ void GameScene::Initialize()
 			w.rotation = objectData.rotation;
 
 			// 新しい敵の生成
-			Enemy* newEnemy;
+			Enemy* newEnemy = new Enemy;
 			newEnemy->Initialize(modelMedama_.get(), player_.get());
+			newEnemy->SetWorldTransInfo(w);
+			newEnemy->UpdateWorldMatrix();
 
+			// 今作成した敵を配列に格納
+			enemys_.push_back(newEnemy);
 		}
+#pragma endregion
+
 		// それ以外のタグ名またはなしの場合
+		// 普通のオブジェクトと判断し生成
 		else 
 		{
 			// モデルを指定して3Dオブジェクトを生成
@@ -206,22 +201,22 @@ void GameScene::Initialize()
 	}
 #pragma endregion
 
-#pragma region エネミー関連の初期化
-	enemy_ = std::make_unique<Enemy>();
-	enemy_->Initialize(modelMedama_.get(), player_.get());
-#pragma endregion
-
 #pragma region ビュープロジェクション関連の初期化
 	// ビュープロジェクションの初期化
 	gameCamera = std::make_unique<GameCamera>();
 	gameCamera->Initialize(player_->GetCameraWorld());
+	gameCamera->SetCameraFPos(player_->worldTransform_.translation);
 	player_->SetGameCamera(gameCamera.get());
 #pragma endregion
 
 #pragma region コライダー関連の初期化
 	gameCollider = std::make_unique<GameCollider>();
 	gameCollider->Initialize();
-	gameCollider->AddEnemy(enemy_.get());
+
+	for (auto e:enemys_){
+		gameCollider->AddEnemy(e);
+	}
+	
 	gameCollider->SetPlayer(player_.get());
 #pragma endregion
 
@@ -448,12 +443,19 @@ void GameScene::Draw3D()
 	case GameScene::Scene::Game: // ゲームシーン
 
 		// オブジェクト関連の描画
-		objSkydome->Draw(&gameCamera->GetView());
-		objGround->Draw(&gameCamera->GetView());
 
+		// プレイヤーの描画
 		player_->Draw(&gameCamera->GetView());
 
-		enemy_->Draw(&gameCamera->GetView());
+		// 敵の描画
+		for (auto e : enemys_) {
+			e->Draw(&gameCamera->GetView());
+		}
+
+		// 普通のオブジェクトの描画
+		for (auto o : objects) {
+			o->Draw(&gameCamera->GetView());
+		}
 
 		objMedama_->Draw(&gameCamera->GetView());
 
@@ -545,10 +547,6 @@ void GameScene::GameSceneUpdate()
 	light->SetDiffuseColor(DiColor);
 	light->SetSpecularColor(SpColor);
 
-	//objFighter->worldTransform_.position_ = fighterPos;
-
-	
-
 	spriteProvisional->SetPosition(spritePos);
 
 	fog->UpdateMatrix();
@@ -563,22 +561,22 @@ void GameScene::GameSceneUpdate()
 		isStopSound = false;
 	}
 
-
-	//for (auto& object : objects) {
-	//	object->Update();
-	//}
-	//frem += 0.01f;
-	//fbxmodel_->ModelAnimation(frem, modelAnim_->GetAnimation(static_cast<int>(0)), BoneNum);
-
 	player_->Update();
 
-	enemy_->Update();
+	
+
+	// エネミーの更新処理
+	for (auto e : enemys_) {
+		e->Update();
+	}
 
 	gameCamera->SetCameraPos(player_->worldTransform_.translation);
 	gameCamera->Update();
 
-	objSkydome->Update();
-	objGround->Update();
+	// オブジェクトの更新処理
+	for (auto o : objects) {
+		o->Update();
+	}
 
 	objMedama_->Update();
 

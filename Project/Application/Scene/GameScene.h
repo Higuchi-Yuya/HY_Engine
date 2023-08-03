@@ -156,8 +156,6 @@ private:// メンバ変数
 
 
 #pragma region オブジェクト関連
-	std::unique_ptr<Object3d> objSkydome = nullptr;
-	std::unique_ptr<Object3d> objGround = nullptr;
 
 	std::unique_ptr<Object3d>objMedama_;
 	bool isDissolve = false;
@@ -201,13 +199,12 @@ private:// メンバ変数
 
 #pragma region エネミー関連
 	std::vector<Enemy*>enemys_;
-	std::unique_ptr<Enemy> enemy_;
 #pragma endregion
 
 
 #pragma region シーンチェンジ関連
 	// シーン管理
-	Scene scene = Scene::Title;
+	Scene scene = Scene::Game;
 
 	// ブラックアウトの変数
 	float blackAlpha = 0.0f;
@@ -218,9 +215,12 @@ private:// メンバ変数
 
 
 #pragma region レベルデータ関連
+	// レベルデータ
 	std::unique_ptr<LevelData> levelData_;
 
+	// レベルデータに登録するモデルの配列
 	std::map<std::string, Model*> models;
+	// レベルデータに登録するオブジェクトの配列
 	std::vector<Object3d*> objects;
 	
 #pragma endregion

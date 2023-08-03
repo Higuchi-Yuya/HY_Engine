@@ -40,18 +40,28 @@ bool Player::Initialize()
 	//input->Initialize();
 	// コライダーの追加
 	float radius = 0.6f;
-	//worldTransform_.position_.y += 100;
-	// 半径分だけ足元から浮いた座標を球の中心にする
-	//SetCollider(new SphereCollider(Vector3(0, radius, 0), radius));
-	//collider_->SetAttribute(COLLISION_ATTR_ALLIES);
+
+	frontW_.Initialize();
+	frontW_.translation = { 0,0,1 };
+	frontW_.parent_ = &worldTransform_;
+
+	bulletModel_.reset(Model::LoadFromOBJ("sphere"));
 	cameraWorld_.Initialize();
 	return true;
 }
 
 void Player::Update()
 {
-
+	// 移動の更新処理
 	MoveUpdate();
+
+	// 攻撃関数
+	Attack();
+
+	//弾更新
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Update();
+	}
 
 	// 行列の更新など
 	Object3d::Update();
@@ -60,6 +70,10 @@ void Player::Update()
 void Player::Draw(ViewProjection* view)
 {
 	Object3d::Draw(view);
+	//弾描画
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Draw(view);
+	}
 	//atari->Draw(view);
 }
 
@@ -120,27 +134,9 @@ void Player::MoveUpdate()
 
 	Vector2 joyStickInfoL = { 0,0 };
 	Vector2 joyStickInfoR = { 0,0 };
-	//Matrix4 matRot;
-	//matRot.rotateY(worldTransform_.rotation.y);
-	//move = matRot.transformNotW(move, matRot);
 
 	// 向いてる方向に移動
 
-	//// Lスティックで移動
-	//if (JoypadInput::GetStick(PadCode::LeftStick).x > deadZone ||
-	//	JoypadInput::GetStick(PadCode::LeftStick).x < -deadZone ||
-	//	JoypadInput::GetStick(PadCode::LeftStick).y > deadZone ||
-	//	JoypadInput::GetStick(PadCode::LeftStick).y < -deadZone) {
-
-	//	move.x += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.x;
-	//	move.z += JoypadInput::GetStick(PadCode::LeftStick).x / 1000 * vectorX.z;
-	//	move.x += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.x;
-	//	move.z += JoypadInput::GetStick(PadCode::LeftStick).y / 1000 * vectorZ.z;
-
-	//	joyStickInfoL.x = JoypadInput::GetStick(PadCode::LeftStick).x;
-	//	joyStickInfoL.y = JoypadInput::GetStick(PadCode::LeftStick).y;
-
-	//}
 	moveVel_ = { 0,0,0 };
 	frontVec_ = { 0,0,0 };
 	// カメラの前ベクトル
@@ -175,21 +171,10 @@ void Player::MoveUpdate()
 		worldTransform_.rotation.y = atan2f(frontVec_.x, frontVec_.z);
 	}
 
-	// Rスティックでカメラ回転
-	if (JoypadInput::GetStick(PadCode::RightStick).x > deadZone ||
-		JoypadInput::GetStick(PadCode::RightStick).x < -deadZone) {
-		rot.y = JoypadInput::GetStick(PadCode::RightStick).x / 1000 * 2;
-
-		joyStickInfoR.y = JoypadInput::GetStick(PadCode::RightStick).x / 1000;
-	}
-
 	// カメラの回転用のものにかりにコピー
 	cameraWorld_.translation = worldTransform_.translation;
-
 	cameraWorld_.rotation.y += MathUtil::DegreeToRadian(rot.y);
 	cameraWorld_.UpdateMatrix();
-	//worldTransform_.rotation.y += MathUtil::DegreeToRadian(rot.y);
-	//worldTransform_.translation += move;
 	
 
 	ImGui::Begin("joyPadInfo");
@@ -203,7 +188,45 @@ void Player::MoveUpdate()
 
 	ImGui::End();
 	
-
+	frontW_.UpdateMatrix();
 	// ワールド行列更新
 	UpdateWorldMatrix();
+}
+
+void Player::Attack()
+{
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
+	bulletInterTimer--;
+	if (JoypadInput::GetButton(PadCode::ButtonA))//input_->PushKey(DIK_Y)) {
+	{
+		
+
+		if (bulletInterTimer <= 0) {
+
+			//弾の速度
+			const float kBulletSpeed = 0.3f;
+			Vector3 velocity;
+			Vector3 frontVec = { frontW_.matWorld_.m[3][0],frontW_.matWorld_.m[3][1] ,frontW_.matWorld_.m[3][2] };
+
+
+			// 自機から照準オブジェクトへのベクトル
+			velocity = frontVec - worldTransform_.translation;
+			velocity.normalize();
+			velocity *= kBulletSpeed;
+
+			//速度ベクトルを自機の向きに合わせて回転させる
+			// velocity = velocity * worldTransform_.matWorld_;
+
+			//弾を生成し、初期化
+			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+			newBullet->Initialize(bulletModel_.get(), worldTransform_, velocity);
+
+			//弾を登録する
+			bullets_.push_back(std::move(newBullet));
+
+			bulletInterTimer = bulletInterval;
+		}
+
+	}
 }

@@ -330,6 +330,9 @@
     <ClCompile Include="Application\GameCollider\GameCollider.cpp">
       <Filter>ソース ファイル\Application\GameCollider</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Player\PlayerBullet.cpp">
+      <Filter>ソース ファイル\Application\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -502,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="Application\GameCollider\GameCollider.h">
       <Filter>ヘッダー ファイル\Application\GameCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Player\PlayerBullet.h">
+      <Filter>ヘッダー ファイル\Application\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

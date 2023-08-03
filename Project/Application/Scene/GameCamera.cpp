@@ -14,23 +14,13 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 	worldTransform_.UpdateMatrix();
 
 	offSet = { 0,3,0 };
+	
 }
 
 void GameCamera::Update()
 {
 	// カメラ回転
-	
 	RotUpdate();
-
-	// 親の行列を掛ける
-	//worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
-	
-	// ワールド行列の場所をビューに収納
-	 //Vector3(worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2]);
-
-	
-
-
 
 	//ビュープロジェクションを更新
 	viewProjection_.UpdateMatrix();
@@ -41,6 +31,11 @@ void GameCamera::Update()
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 
 	//ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
+	ImGui::InputFloat("ainfo", &aInfo);
+	ImGui::InputFloat3("angle", &angle_.x);
+	ImGui::InputFloat3("rotPos", &rotPos.x);
+	ImGui::InputFloat3("rotnorm", &rotNorm.x);
+	ImGui::InputFloat3("rotnorm", &vel.x);
 	ImGui::InputFloat("chagePos Y", &offSet.y);
 	ImGui::InputFloat3("worldRot", &worldTransform_.rotation.x, "%.2f");
 	ImGui::InputFloat3("worldPos", &worldTransform_.translation.x, "%.2f");
@@ -50,31 +45,53 @@ void GameCamera::Update()
 	ImGui::End();
 }
 
+void GameCamera::SetCameraFPos(Vector3 pos)
+{
+	playerPos_ = pos;
+	dirVec = Vector3{0,0,0} - cameraFPos;
+	velLength = dirVec.length();
+}
+
+void GameCamera::SetCameraPos(Vector3 pos)
+{
+	playerPos_ = pos; 
+}
+
 void GameCamera::RotUpdate()
 {
-	Vector3 cameraPos = worldTransform_.translation;//Vector3(worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1], worldTransform_.matWorld_.m[3][2]);
-	// 方向ベクトルを求める
-	Vector3 dirVec =  + cameraPos;
+	// Rスティックでカメラ回転
+	if (JoypadInput::GetStick(PadCode::RightStick).x > 450) {
+		if (aInfo >= 360) {
+			aInfo = 0;
+			angle_ = { 0,0,0 };
+		}
+		aInfo += 2;
+		angle_.x = MathUtil::DegreeToRadian(aInfo);
+		angle_.z = MathUtil::DegreeToRadian(aInfo);
+		rotPos.x = viewProjection_.target.x + cosf(angle_.x) * velLength;
+		rotPos.y = 15;
+		rotPos.z = viewProjection_.target.z + sinf(angle_.z) * velLength;
+		rotNorm = rotPos.normalize();
+		vel = rotPos.normalize();
+		vel.y = 15;
+	}
 
 	const float cameraEaseSpeed = 0.1f;//1e-100f;
-	//dirVec.normalize();
-	//dir_ = { 0,0,0 };
-	viewProjection_.eye += ((playerPos_ + Vector3{ -15, 15, -15 }) - viewProjection_.eye) * cameraEaseSpeed;
 
-	// プレイヤーの座標を注視点にセット
-	viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
-
-	// Rスティックでカメラ回転
-	if (JoypadInput::GetStick(PadCode::RightStick).x > 450 ||
-		JoypadInput::GetStick(PadCode::RightStick).x < -450) {
-		angle_.x = JoypadInput::GetStick(PadCode::RightStick).x / 1000 * 2;
-		angle_.z = JoypadInput::GetStick(PadCode::RightStick).y / 1000 * 2;
-		
-		dir_.x = dirVec.x * MathUtil::DegreeToRadian(angle_.x);
-		//dir_.z = dirVec.z * MathUtil::DegreeToRadian(angle_.z);
-		dir_ *= rotSpeed_;
-	}
 	
+	//vel.y = 15;
+	viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
+	viewProjection_.eye = ((viewProjection_.target + cameraFPos));// - viewProjection_.eye)* cameraEaseSpeed;
+	//viewProjection_.eye = rotPos;
+	// プレイヤーの座標を注視点にセット
+	//viewProjection_.target = playerPos_;
+	// 方向ベクトルを求める
+
+
+
+	if (JoypadInput::GetStick(PadCode::RightStick).x < -450) {
+
+	}
 
 
 	////cameraVecRot_.y = atan2f(dirVec.x, dirVec.z);

@@ -20,6 +20,8 @@ GameScene::~GameScene()
 		delete o;
 	}
 	objects.clear();
+
+	Enemy::StaticFinalize();
 }
 
 void GameScene::Initialize()
@@ -28,7 +30,7 @@ void GameScene::Initialize()
 	// 入力の初期化
 	input_ = std::make_unique<Input>();
 	input_->Initialize();
-
+	Enemy::StaticInitialize();
 #pragma region ライトの初期化
 	// ライトの生成
 	light.reset(LightGroup::Create());
@@ -162,8 +164,8 @@ void GameScene::Initialize()
 
 			// 新しい敵の生成
 			Enemy* newEnemy = new Enemy;
-			newEnemy->Initialize(modelMedama_.get(), player_.get());
 			newEnemy->SetWorldTransInfo(w);
+			newEnemy->Initialize(modelMedama_.get(), player_.get());
 			newEnemy->UpdateWorldMatrix();
 
 			// 今作成した敵を配列に格納
@@ -465,8 +467,14 @@ void GameScene::Draw3D()
 
 		FbxModel::PostDraw();
 
+		ParticleManager::PreDraw(commandList);
 		// パーティクルの描画
 		DrawParticle();
+		// 敵の描画
+		for (auto e : enemys_) {
+			e->DrawParticle(&gameCamera->GetView());
+		}
+		ParticleManager::PostDraw();
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
 

@@ -337,8 +337,33 @@ void ParticleManager::Update()
 			it->color.w += it->startColor.w;
 
 			break;
-		case  Type::EnemySpown:
+		case  Type::EnemySpawn:
+			// 経過フレーム数をカウント
+			it->frame++;
 
+			// 速度に加速度を加算
+			it->velocity = it->velocity + it->accel;
+			// 速度による移動
+			it->position = it->position + it->velocity;
+
+			// 進行度を0～1の範囲に換算
+			f = (float)it->frame / it->numFrame;
+			//スケールの線形補間
+			it->scale = (it->endScale - it->startScale) * f;
+			it->scale += it->startScale;
+
+			//赤の線形補間
+			it->color.x = (it->endColor.x - it->startColor.x) * f;
+			it->color.x += it->startColor.x;
+			//青の線形補間
+			it->color.y = (it->endColor.y - it->startColor.y) * f;
+			it->color.y += it->startColor.y;
+			//緑の線形補間
+			it->color.z = (it->endColor.z - it->startColor.z) * f;
+			it->color.z += it->startColor.z;
+			//アルファ値の線形補間
+			it->color.w = (it->endColor.w - it->startColor.w) * f;
+			it->color.w += it->startColor.w;
 		default:
 			break;
 		}
@@ -394,7 +419,7 @@ void ParticleManager::Draw(const ViewProjection& view)
 	cmdList->DrawInstanced((UINT)std::distance(Particles.begin(), Particles.end()), 1, 0, 0);
 }
 
-void ParticleManager::Add(Type type, int life, Vector3 position, Vector3 velocity, Vector3 accel, float startScale, float endScale, Vector4 startColor, Vector4 endColor)
+void ParticleManager::Add(Type type, int life, Vector3 position, Vector3 velocity, Vector3 accel, Vector3 angle, float startScale, float endScale, Vector4 startColor, Vector4 endColor)
 {
 	//リストに要素を追加
 	Particles.emplace_front();
@@ -406,6 +431,7 @@ void ParticleManager::Add(Type type, int life, Vector3 position, Vector3 velocit
 	p.position = position;
 	p.velocity = velocity;
 	p.accel = accel;
+	p.angle = angle;
 	p.startScale = startScale;
 	p.endScale = endScale;
 	p.startColor = startColor;

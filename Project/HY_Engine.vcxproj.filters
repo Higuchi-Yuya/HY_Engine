@@ -333,6 +333,9 @@
     <ClCompile Include="Application\Player\PlayerBullet.cpp">
       <Filter>ソース ファイル\Application\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Math\Easing.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -508,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="Application\Player\PlayerBullet.h">
       <Filter>ヘッダー ファイル\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Easing.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

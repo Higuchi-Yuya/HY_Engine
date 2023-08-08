@@ -38,7 +38,7 @@ public: // サブクラス
 	enum class Type
 	{
 		Normal,
-		EnemySpown,
+		EnemySpawn,
 	};
 
 	//パーティクル一粒
@@ -55,6 +55,9 @@ public: // サブクラス
 
 		// 加速度
 		Vector3 accel = {};
+
+		// 角度
+		Vector3 angle = {};
 
 		// スケール
 		float scale = 1.0f;
@@ -170,7 +173,7 @@ public: // メンバ関数
 	/// <param name="endScale">最終サイズ</param>
 	/// <param name="startColor">初期色</param>
 	/// <param name="endColor">最終色</param>
-	void Add(Type type, int life, Vector3 position,Vector3 velocity, Vector3 accel,float startScale, float endScale, Vector4 startColor, Vector4 endColor);
+	void Add(Type type, int life, Vector3 position,Vector3 velocity, Vector3 accel,Vector3 angle,float startScale, float endScale, Vector4 startColor, Vector4 endColor);
 
 	void AllDelete() { Particles.clear(); }
 

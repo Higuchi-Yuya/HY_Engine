@@ -84,19 +84,20 @@ void GameCollider::OnColParticle()
 		const float md_acc = 0.003f;
 		acc.y = -(float)rand() / RAND_MAX * md_acc;
 
+		Vector3 angle = { 0,0,0 };
 		// 追加
-		particleMan_->Add(ParticleManager::Type::Normal, 120, pos, vel, acc, 0.2f, 0.0f, startColor_, endColor_);
+		particleMan_->Add(ParticleManager::Type::Normal, 120, pos, vel, acc, angle, 0.2f, 0.0f, startColor_, endColor_);
 	}
 }
 
 void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection)
 {
 	// ----------------パーティクルの描画はここから--------------- //
-	ParticleManager::PreDraw(commandList);
+	
 	particleMan_->Draw(*viewProjection);
 
 
-	ParticleManager::PostDraw();
+	
 	// ----------------パーティクルの描画ここまで----------------- //
 }
 

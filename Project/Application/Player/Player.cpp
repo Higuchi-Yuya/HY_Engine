@@ -111,6 +111,11 @@ void Player::SetGameCamera(GameCamera* gameCamera)
 	bGameCamera = gameCamera;
 }
 
+const std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets() 
+{
+	return bullets_;
+}
+
 
 
 void Player::MoveUpdate()

@@ -35,6 +35,8 @@ public:
 	// ゲームカメラをセット
 	void SetGameCamera(GameCamera* gameCamera);
 
+	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
+
 private:
 	/// <summary>
 	/// 移動の更新処理

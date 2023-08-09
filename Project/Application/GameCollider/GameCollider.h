@@ -49,6 +49,7 @@ private:// メンバ変数
 	bool isPartile = false;
 
 	std::vector<Enemy*>enemysInfo_;
+	std::list<std::unique_ptr<PlayerBullet>> bulletsInfo_;
 	Player* player_ = nullptr;
 
 #pragma region パーティクル

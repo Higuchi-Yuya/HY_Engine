@@ -83,6 +83,7 @@ void Enemy::Update()
 			}
 
 			worldTransform_.translation += followVec;
+			worldTransform_.translation.y = 1.0f;
 			worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 
 			OnCollision();

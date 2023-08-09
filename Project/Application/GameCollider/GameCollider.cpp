@@ -18,12 +18,14 @@ void GameCollider::Updata()
 		return x->GetAlive() == false;
 		}), enemysInfo_.end());
 
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+
 	// 当たり判定（エネミー側の反応）
 	for (auto& e : enemysInfo_){
 		if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 			// エネミーがわを赤くする（仮）
 			e->worldTransform_.color = { 1,0,0,1 }; 
-			e->SetAlive(false);
+			//e->SetAlive(false);
 			// プレイヤーのヒットフラグを立てる
 			isPlayerHit = true;
 			
@@ -31,6 +33,25 @@ void GameCollider::Updata()
 		else {
 			e->worldTransform_.color = { 1,1,1,1 };
 		}
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+			// エネミーの情報をスフィアのものに登録
+			Sphere a;
+			a.center = e->worldTransform_.translation;
+			a.radius = 1.0f;
+			// プレイヤーの弾の情報をスフィアのものに登録
+			Sphere pB;
+			pB.center = playerbullet->worldTransform_.translation;
+			pB.radius = 1.0f;
+
+			// プレイヤーの弾とエネミーの当たり判定
+			if (Collision::CheckSphere2Sphere(a, pB)) {
+				// エネミーが死亡
+				e->SetAlive(false);
+				// 弾を消す
+				playerbullet->OnCollision();
+			}
+		}
+
 	}
 
 	

@@ -52,6 +52,12 @@ public:// メンバ関数
 
 	void Draw2DFront();
 
+	// リセット関数
+	void Reset();
+
+	// 敵のレベルデータを読み込む
+	void LoadEnemy();
+
 private:// サブクラス
 	// シーンクラス（仮）
 	enum class Scene {
@@ -70,6 +76,11 @@ private:// プライベート関数
 	/// ゲームシーンの更新処理
 	/// </summary>
 	void GameSceneUpdate();
+
+	/// <summary>
+	/// リザルトシーンの更新処理
+	/// </summary>
+	void ResultSceneUpdate();
 
 	/// <summary>
 	/// シーンチェンジの更新処理
@@ -156,8 +167,6 @@ private:// メンバ変数
 
 
 #pragma region オブジェクト関連
-
-	std::unique_ptr<Object3d>objMedama_;
 	bool isDissolve = false;
 #pragma endregion
 

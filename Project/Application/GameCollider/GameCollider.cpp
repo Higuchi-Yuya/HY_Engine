@@ -22,7 +22,7 @@ void GameCollider::Updata()
 
 	// 当たり判定（エネミー側の反応）
 	for (auto& e : enemysInfo_){
-		if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
+		if (e->GetState() == Enemy::State::Alive && Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 			// エネミーがわを赤くする（仮）
 			e->worldTransform_.color = { 1,0,0,1 }; 
 			//e->SetAlive(false);
@@ -44,9 +44,9 @@ void GameCollider::Updata()
 			pB.radius = 1.0f;
 
 			// プレイヤーの弾とエネミーの当たり判定
-			if (Collision::CheckSphere2Sphere(a, pB)) {
+			if (e->GetState()==Enemy::State::Alive && Collision::CheckSphere2Sphere(a, pB)) {
 				// エネミーが死亡
-				e->SetAlive(false);
+				e->OnCollision();
 				// 弾を消す
 				playerbullet->OnCollision();
 			}

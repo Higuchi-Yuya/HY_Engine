@@ -37,6 +37,9 @@ void Enemy::Initialize(Model* model, Player* player)
 	particleMan_ = std::make_unique<ParticleManager>();
 	particleMan_->Initialize();
 	particleMan_->SetTextureHandle(sParticleTex_.get());
+
+	// ライフの初期化
+	nowLife_ = maxLife_;
 }
 
 void Enemy::Update()
@@ -86,8 +89,6 @@ void Enemy::Update()
 			worldTransform_.translation.y = 1.0f;
 			worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 
-			OnCollision();
-
 			// 死んだら状態を変更
 			if (IsAlive_ == false) {
 				nowState_ = State::Dead;
@@ -101,6 +102,10 @@ void Enemy::Update()
 		dissolve_.isActiveDissolve_ = true;
 
 		dissolve_.dissolveTime_ = disoTimeLate_;
+
+		if (dissolve_.dissolveTime_ >= 1.0f) {
+			IsDeadMotionEnd = true;
+		}
 		break;
 	default:
 		break;
@@ -161,7 +166,38 @@ void Enemy::DrawParticle(ViewProjection* view)
 
 void Enemy::OnCollision()
 {
+	// 現在のライフを一つ減らす
+	nowLife_--;
 
+	// ライフが0以下になったら死ぬ
+	if (nowLife_ <= 0) {
+		IsAlive_ = false;
+	}
+
+	// 当たり判定
+	for (int i = 0; i < particleNum; i++) {
+		// X,Y,Z全て{-5.0f,+5.0f}でランダムに分布
+		Vector3 pos{};
+
+		// ポジションをプレイヤーの中心座標にセット
+		pos = worldTransform_.translation;
+		//pos.y += 0.5f;
+		// X,Y,Z全て{-0.05f,+0.05f}でランダムに分布
+		const float md_vel = 0.1f;
+		Vector3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+
+		// 重力に見立ててYのみ{-0.001f,0}でランダムに分布
+		Vector3 acc{};
+		const float md_acc = 0.003f;
+		acc.y = -(float)rand() / RAND_MAX * md_acc;
+
+		Vector3 angle = { 0,0,0 };
+		// 追加
+		particleMan_->Add(ParticleManager::Type::Normal, 120, pos, vel, acc, angle, 0.2f, 0.0f, startColor_, endColor_);
+	}
 }
 
 void Enemy::SetWorldTransInfo(WorldTransform worldTrans)

@@ -79,8 +79,9 @@ private:
 
 	//モデル
 	std::unique_ptr<Model> bulletModel_ = nullptr;
+
 	// 弾のインターバル
-	float bulletInterval = 40;
+	float bulletInterval = 20;
 	float bulletInterTimer = 0;
 
 };

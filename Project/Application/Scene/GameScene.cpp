@@ -222,13 +222,6 @@ void GameScene::Initialize()
 	gameCollider->SetPlayer(player_.get());
 #pragma endregion
 
-	objMedama_.reset(Object3d::Create());
-	objMedama_->SetModel(modelMedama_.get());
-	objMedama_->worldTransform_.translation = { 2,1,0 };
-
-	objMedama_->dissolve_.isActiveDissolve_ = true;
-	objMedama_->Update();
-
 }
 
 void GameScene::Update()
@@ -246,7 +239,7 @@ void GameScene::Update()
 		GameSceneUpdate();
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
-
+		ResultSceneUpdate();
 		break;
 	default:
 		break;
@@ -371,24 +364,6 @@ void GameScene::ImguiUpdate()
 		ImGui::TreePop();
 	}
 
-	// フォグ
-	if (ImGui::TreeNode("Dissolve")) {
-		ImGui::Checkbox("Is Active", &isDissolve);
-
-		if (isDissolve == true) {
-			objMedama_->dissolve_.isActiveDissolve_ = true;
-		}
-		else if (isDissolve == false) {
-			objMedama_->dissolve_.isActiveDissolve_ = false;
-		}
-
-		ImGui::SliderFloat("dissolvePower", &objMedama_->dissolve_.dissolvePower_, 1.0f, 50.0f, "%.1f");
-		ImGui::SliderFloat("dissolveTime", &objMedama_->dissolve_.dissolveTime_, 0.0f, 2.0f, "%.1f");
-		ImGui::SliderFloat("dissolve", &objMedama_->dissolve_.dissolveSmoothMin_, -1.0f, -0.1f, "%.1f");
-		ImGui::ColorEdit4("fogColor", &objMedama_->dissolve_.dissolveColor_.x, ImGuiColorEditFlags_Float);
-		ImGui::TreePop();
-	}
-
 	ImGui::End();
 
 	// 当たり判定-----------------------//
@@ -459,8 +434,6 @@ void GameScene::Draw3D()
 			o->Draw(&gameCamera->GetView());
 		}
 
-		objMedama_->Draw(&gameCamera->GetView());
-
 		// FBXモデルの描画
 		FbxModel::PreDraw(commandList);
 
@@ -482,8 +455,6 @@ void GameScene::Draw3D()
 	default:
 		break;
 	}
-
-
 }
 
 void GameScene::DrawParticle()
@@ -514,6 +485,62 @@ void GameScene::Draw2DFront()
 
 	// シーンチェンジ用ののスプライトの描画
 	blackOut->Draw();
+}
+
+void GameScene::Reset()
+{
+	switch (scene)
+	{
+	case GameScene::Scene::Title:
+		break;
+	case GameScene::Scene::Game:
+
+		break;
+	case GameScene::Scene::Result:
+
+		LoadEnemy();
+
+		for (auto e : enemys_) {
+			gameCollider->AddEnemy(e);
+		}
+		player_->worldTransform_.translation = { 0,0,0 };
+		break;
+	default:
+		break;
+	}
+}
+
+void GameScene::LoadEnemy()
+{
+	for (auto& objectData : levelData_->objects) {
+		// ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end()) {
+			model = it->second;
+		}
+
+		// タグ名がエネミーなら
+#pragma region エネミー関連の初期化
+		if (objectData.tagName == "enemy")
+		{
+			WorldTransform w;
+			w.Initialize();
+			w.translation = objectData.translation;
+			w.scale = objectData.scaling;
+			w.rotation = objectData.rotation;
+
+			// 新しい敵の生成
+			Enemy* newEnemy = new Enemy;
+			newEnemy->SetWorldTransInfo(w);
+			newEnemy->Initialize(modelMedama_.get(), player_.get());
+			newEnemy->UpdateWorldMatrix();
+
+			// 今作成した敵を配列に格納
+			enemys_.push_back(newEnemy);
+		}
+#pragma endregion
+	}
 }
 
 void GameScene::TitleUpdate()
@@ -569,15 +596,23 @@ void GameScene::GameSceneUpdate()
 		isStopSound = false;
 	}
 
+	// プレイヤーの更新処理
 	player_->Update();
 
-	
-
 	// エネミーの更新処理
+	
+	//寿命が尽きた敵を全削除
+	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a) 
+		{return a->GetDeadMotionEnd() == true;});
+	std::for_each(enemys_.begin(), it, [](Enemy* a) { delete a; });
+	enemys_.erase(enemys_.begin(), it);
+
+	//	敵の更新処理
 	for (auto e : enemys_) {
 		e->Update();
 	}
 
+	// カメラの更新処理
 	gameCamera->SetCameraPos(player_->worldTransform_.translation);
 	gameCamera->Update();
 
@@ -586,14 +621,28 @@ void GameScene::GameSceneUpdate()
 		o->Update();
 	}
 
-	objMedama_->Update();
-
 	// 当たり判定関連の更新処理
 	gameCollider->Updata();
 
+	// ライトの更新処理
 	circleShadowCasterPos = player_->GetWorldPosition();
 	light->SetCircleShadowCasterPos(0, circleShadowCasterPos);
 	light->Update();
+
+	if (enemys_.size() <= 1) {
+		oldScene = Scene::Game;
+		sceneChangeFlag = true;
+	}
+}
+
+void GameScene::ResultSceneUpdate()
+{
+	// パッドでAボタンを押すか、もしくはスペースキーを押した瞬間
+	if (JoypadInput::GetButtonDown(PadCode::ButtonA) || input_->TriggerKey(DIK_SPACE)) {
+		oldScene = Scene::Result;
+		sceneChangeFlag = true;
+		resultChange = true;
+	}
 }
 
 void GameScene::SceneChageUpdate()
@@ -660,8 +709,12 @@ void GameScene::SceneChageUpdate()
 						// ここにリセット関数を置く
 					}
 					else if (resultChange == true) {
-						scene = Scene::Title;
 						// ここにリセット関数を置く
+						Reset();
+
+						scene = Scene::Title;
+						
+						
 					}
 				}
 			}

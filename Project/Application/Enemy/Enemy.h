@@ -6,7 +6,7 @@
 
 class Enemy:public Object3d
 {
-private:// サブクラス
+public:// サブクラス
 	enum class State
 	{
 		Spawn,// 生成
@@ -45,6 +45,10 @@ public:
 
 	const bool GetAlive() { return IsAlive_; }
 
+	const bool GetDeadMotionEnd() { return IsDeadMotionEnd; }
+
+	const State GetState() { return nowState_; }
+
 	// ワールドトランスフォームの情報をセット
 	void SetWorldTransInfo(WorldTransform worldTrans);
 
@@ -65,6 +69,9 @@ private:
 	// 生きているかどうか
 	bool IsAlive_ = false;
 
+	// 死亡時モーションが終わっているかどうか
+	bool IsDeadMotionEnd = false;
+
 	// ディゾルブ関連
 	float disoTimer_ = 0;
 	float disoTimeMax_ = 60 * 3;
@@ -84,6 +91,10 @@ private:
 
 	// 現在の状態
 	State nowState_ = State::Spawn;
+
+	// ライフ
+	uint32_t nowLife_ = 0;
+	const uint32_t maxLife_ = 3;
 
 #pragma region スポーン関連
 	float spawnTimer = 0;

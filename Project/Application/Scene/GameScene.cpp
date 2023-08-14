@@ -8,6 +8,7 @@
 #include <time.h>
 #include "InputManager.h"
 #include "FbxLoader.h"
+#include "Random.h"
 
 GameScene::~GameScene()
 {
@@ -26,7 +27,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
-	srand((unsigned int)time(NULL));
+	Random::Init();
 	// 入力の初期化
 	input_ = std::make_unique<Input>();
 	input_->Initialize();
@@ -512,6 +513,29 @@ void GameScene::Reset()
 
 void GameScene::LoadEnemy()
 {
+	randomWave01 = Random::Range(1, 3);
+
+	// ウェーブ０１の時の敵のスポーンパターン抽選
+	switch (randomWave01)
+	{
+	case 1:
+		// レベルデータの読み込み
+		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p1"));
+		break;
+	case 2:
+		// レベルデータの読み込み
+		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p2"));
+		break;
+	case 3:
+		// レベルデータの読み込み
+		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p3"));
+		break;
+	default:
+		break;
+	}
+
+
+
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
@@ -538,6 +562,8 @@ void GameScene::LoadEnemy()
 
 			// 今作成した敵を配列に格納
 			enemys_.push_back(newEnemy);
+			// 今作成した敵を当たり判定に情報を登録
+			gameCollider->AddEnemy(newEnemy);
 		}
 #pragma endregion
 	}
@@ -599,11 +625,19 @@ void GameScene::GameSceneUpdate()
 	// プレイヤーの更新処理
 	player_->Update();
 
-	// エネミーの更新処理
+#pragma region 敵の更新処理関連
 	
+	enemySpawnTimer++;
+
+	// エネミーの時間ごとにわく処理 (無限沸き)
+	if (enemySpawnTimer >= enemySpawnTimeMax && enemys_.size() <= 6) {
+		LoadEnemy();
+		enemySpawnTimer = 0;
+	}
+
 	//寿命が尽きた敵を全削除
-	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a) 
-		{return a->GetDeadMotionEnd() == true;});
+	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a)
+		{return a->GetDeadMotionEnd() == true; });
 	std::for_each(enemys_.begin(), it, [](Enemy* a) { delete a; });
 	enemys_.erase(enemys_.begin(), it);
 
@@ -611,7 +645,9 @@ void GameScene::GameSceneUpdate()
 	for (auto e : enemys_) {
 		e->Update();
 	}
+#pragma endregion
 
+	
 	// カメラの更新処理
 	gameCamera->SetCameraPos(player_->worldTransform_.translation);
 	gameCamera->Update();
@@ -629,6 +665,8 @@ void GameScene::GameSceneUpdate()
 	light->SetCircleShadowCasterPos(0, circleShadowCasterPos);
 	light->Update();
 
+
+	// 敵が全滅したらとりあえずシーンを切り替える
 	if (enemys_.size() <= 1) {
 		oldScene = Scene::Game;
 		sceneChangeFlag = true;

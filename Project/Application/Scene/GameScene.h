@@ -66,6 +66,13 @@ private:// サブクラス
 		Result,
 	};
 
+	// 敵のウェーブ
+	enum class EnemyWave {
+		wave01,
+		wave02,
+		wave03,
+	};
+
 private:// プライベート関数
 	/// <summary>
 	/// タイトルシーンの更新処理
@@ -213,7 +220,7 @@ private:// メンバ変数
 
 #pragma region シーンチェンジ関連
 	// シーン管理
-	Scene scene = Scene::Game;
+	Scene scene = Scene::Title;
 
 	// ブラックアウトの変数
 	float blackAlpha = 0.0f;
@@ -231,7 +238,26 @@ private:// メンバ変数
 	std::map<std::string, Model*> models;
 	// レベルデータに登録するオブジェクトの配列
 	std::vector<Object3d*> objects;
-	
+
+#pragma endregion
+
+
+#pragma region 敵のウェーブ関連
+
+	// エネミーのウエーブを管理するもの
+	EnemyWave enemyWave_ = EnemyWave::wave01;
+
+	// ゲームのウェーブごとの時間
+	float waveTimer_ = 0;
+	float waveTimeMax_ = 60 * 20;
+
+	// エネミーのスポーン時間
+	float enemySpawnTimer = 0;
+	float enemySpawnTimeMax = 60 * 2;
+
+	// 抽選するエネミーのスポーンパターン
+	int randomWave01 = 0;
+
 #pragma endregion
 
 };

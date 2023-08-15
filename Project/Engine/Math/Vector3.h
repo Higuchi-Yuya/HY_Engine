@@ -16,12 +16,12 @@ public:
 	float length()const;
 	float length(Vector3 v1)const;
 
-	Vector3& normalize();
-	static float dot(const Vector3& v, const Vector3& v2);
+	Vector3& normalize(); // 正規化したベクトル
+	static float dot(const Vector3& v, const Vector3& v2);// 二つのベクトルの内積
 	Vector3 cross(const Vector3& v)const;
-	Vector3 cross(const Vector3& v1, const Vector3& v2)const;
+	Vector3 cross(const Vector3& v1, const Vector3& v2)const;// 二つのベクトルの外積
 	static Vector3 Cross(const Vector3 v1, const Vector3 v2);		// 二つのベクトルの外積
-	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;
+	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;// 二つのベクトルの距離
 
 	// 補間関数
 	// 線形補間(1次関数補間)

@@ -29,6 +29,9 @@ public:
 	// カメラ用のワールドトランスフォームの取得
 	const WorldTransform *GetCameraWorld()const;
 
+	// プレイヤー前方にあるワールドトランスフォームの取得
+	const Vector3 GetFrontPos()const;
+
 	// ワールドトランスフォームの情報をセット
 	void SetWorldTransInfo(WorldTransform worldTrans);
 
@@ -36,6 +39,15 @@ public:
 	void SetGameCamera(GameCamera* gameCamera);
 
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
+
+	// 押し戻し衝突判定コールバック関数
+	void pushBackOnCol();
+
+	// 前方にいる敵の体と当たった場合に移動速度を下げる
+	void OnColDownSpeed();
+
+	// 前方にいる敵の体と当たっていない場合に移動速度を上げる
+	void OnColUpSpeed();
 
 private:
 	/// <summary>
@@ -47,6 +59,13 @@ private:
 	/// 攻撃処理
 	/// </summary>
 	void Attack();
+
+public:// パブリック変数
+	// 衝突点
+	Vector3 interPos;
+	// 排斥ベクトル
+	Vector3 rejectVec;
+
 
 private:
 
@@ -69,6 +88,8 @@ private:
 	// 移動ベクトル
 	Vector3 moveVel_;
 	float moveSpeed_ = 0.2f;
+	float moveSpeedMax_ = 0.2f;
+	float moveSpeedMin_ = 0.05f;
 
 	// 借りてくるカメラ
 	GameCamera *bGameCamera;

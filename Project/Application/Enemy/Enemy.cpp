@@ -71,6 +71,9 @@ void Enemy::Update()
 		break;
 	case Enemy::State::Alive:
 		{
+			// 移動前ポジションを代入
+			oldPos_ = worldTransform_.translation;
+
 			timer++;
 			followTimer++;
 			if (timer > maxTime) {
@@ -200,9 +203,38 @@ void Enemy::OnCollision()
 	}
 }
 
+void Enemy::pushBackOnCol()
+{
+	const Vector3 up = { 0,1,0 };
+	Vector3 info_ = rejectVec;
+	Vector3 rejectDir = info_.normalize();
+	float cos = Vector3::dot(rejectDir, up);
+
+	Vector3 move;
+
+	// 地面判定しきい値
+	const float threshold = cosf(Vector3::Deg2Rad(30.0f));
+
+	if (-threshold < cos && cos < threshold) {
+		//sphere->center += info.reject;
+		move += rejectVec;
+	}
+
+	worldTransform_.translation += move;
+	worldTransform_.UpdateMatrix();
+}
+
 void Enemy::SetWorldTransInfo(WorldTransform worldTrans)
 {
 	worldTransform_.translation = worldTrans.translation;
 	worldTransform_.scale = worldTrans.scale;
 	worldTransform_.rotation = worldTrans.rotation;
+}
+
+void Enemy::SetWorldPos(Vector3 pos)
+{
+	// ポジションをセット
+	worldTransform_.translation = pos;
+	// 行列の更新
+	worldTransform_.UpdateMatrix();
 }

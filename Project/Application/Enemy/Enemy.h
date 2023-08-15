@@ -43,14 +43,26 @@ public:
 	// 衝突時コールバック関数
 	void OnCollision();
 
+	// 押し戻し衝突判定コールバック関数
+	void pushBackOnCol();
+
+	// 生きているかを取得
 	const bool GetAlive() { return IsAlive_; }
 
+	// 死亡モーションが全て終わっているかを取得
 	const bool GetDeadMotionEnd() { return IsDeadMotionEnd; }
 
+	// 今の状態を取得
 	const State GetState() { return nowState_; }
+
+	// 移動前のポジションの取得
+	const Vector3 GetOldPos() { return oldPos_; }
 
 	// ワールドトランスフォームの情報をセット
 	void SetWorldTransInfo(WorldTransform worldTrans);
+
+	// ポジションのセット
+	void SetWorldPos(Vector3 pos);
 
 	/// <summary>
 	/// 生きているかフラグのセット
@@ -58,6 +70,11 @@ public:
 	/// <param name="isAlive">生きているかフラグ</param>
 	void SetAlive(bool isAlive) { IsAlive_ = isAlive; }
 
+public:
+	// 衝突点
+	Vector3 interPos;
+	// 排斥ベクトル
+	Vector3 rejectVec;
 
 private:
 	// 借りてくるプレイヤーの情報を一時的に保存
@@ -95,6 +112,9 @@ private:
 	// ライフ
 	uint32_t nowLife_ = 0;
 	const uint32_t maxLife_ = 3;
+
+	// 移動する前の古いポジション
+	Vector3 oldPos_{};
 
 #pragma region スポーン関連
 	float spawnTimer = 0;

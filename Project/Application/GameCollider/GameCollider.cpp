@@ -22,6 +22,17 @@ void GameCollider::Updata()
 
 	// 当たり判定（エネミー側の反応）
 	for (auto& e : enemysInfo_){
+		// エネミーの情報をスフィアのものに登録
+		Sphere sphereE;
+		sphereE.center = e->worldTransform_.translation;
+		sphereE.radius = 1.0f;
+
+		// プレイヤーの情報をスフィアのものに登録
+		Sphere p;
+		p.center = player_->worldTransform_.translation;
+		p.center.y += 1.0f;
+		p.radius = 1.0f;
+
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 			// エネミーがわを赤くする（仮）
 			e->worldTransform_.color = { 1,0,0,1 }; 
@@ -33,18 +44,17 @@ void GameCollider::Updata()
 		else {
 			e->worldTransform_.color = { 1,1,1,1 };
 		}
+
+		// -------------敵とプレイヤーの弾の当たり判定------------ //
 		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-			// エネミーの情報をスフィアのものに登録
-			Sphere a;
-			a.center = e->worldTransform_.translation;
-			a.radius = 1.0f;
+
 			// プレイヤーの弾の情報をスフィアのものに登録
 			Sphere pB;
 			pB.center = playerbullet->worldTransform_.translation;
 			pB.radius = 1.0f;
 
 			// プレイヤーの弾とエネミーの当たり判定
-			if (e->GetState()==Enemy::State::Alive && Collision::CheckSphere2Sphere(a, pB)) {
+			if (e->GetState()==Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
 				// エネミーが死亡
 				e->OnCollision();
 				// 弾を消す
@@ -52,6 +62,36 @@ void GameCollider::Updata()
 			}
 		}
 
+		// ----------敵と敵同士の当たり判定-------------- //
+		for (auto& e2 : enemysInfo_) {
+			if (e2 != e) {
+				Sphere sphereE2;
+				sphereE2.center = e2->worldTransform_.translation;
+				sphereE2.radius = 1.0f;
+
+				if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
+					e->pushBackOnCol();
+				}
+			}
+		}
+
+
+		// -----------プレイヤーと敵の当たり判定------------- //
+		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, p, &e->interPos, &e->rejectVec)) {
+			e->pushBackOnCol();
+
+			// プレイヤーの前方情報をスフィアのものに登録
+			Sphere frontP;
+			frontP.center = player_->GetFrontPos();
+			//frontP.center.y += 1.0f;
+			frontP.radius = 0.8f;
+			if (Collision::CheckSphere2Sphere(sphereE, frontP)) {
+				player_->OnColDownSpeed();
+			}
+			else {
+				player_->OnColUpSpeed();
+			}
+		}
 	}
 
 	

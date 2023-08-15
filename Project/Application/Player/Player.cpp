@@ -99,6 +99,13 @@ const WorldTransform* Player::GetCameraWorld() const
 	return &cameraWorld_;
 }
 
+const Vector3 Player::GetFrontPos() const
+{
+	return Vector3(frontW_.matWorld_.m[3][0], frontW_.matWorld_.m[3][1], frontW_.matWorld_.m[3][2]);
+}
+
+
+
 void Player::SetWorldTransInfo(WorldTransform worldTrans)
 {
 	worldTransform_.translation = worldTrans.translation;
@@ -114,6 +121,44 @@ void Player::SetGameCamera(GameCamera* gameCamera)
 const std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets() 
 {
 	return bullets_;
+}
+
+void Player::pushBackOnCol()
+{
+	const Vector3 up = { 0,1,0 };
+	Vector3 info_ = rejectVec;
+	Vector3 rejectDir = info_.normalize();
+	float cos = Vector3::dot(rejectDir, up);
+
+	Vector3 move;
+
+	// ’n–Ê”»’è‚µ‚«‚¢’l
+	const float threshold = cosf(Vector3::Deg2Rad(30.0f));
+
+	if (-threshold < cos && cos < threshold) {
+		//sphere->center += info.reject;
+		move += rejectVec;
+	}
+
+	worldTransform_.translation += move;
+	worldTransform_.UpdateMatrix();
+}
+
+void Player::OnColDownSpeed()
+{
+	moveSpeed_ /= 2;
+	if (moveSpeed_ <= moveSpeedMin_) {
+		moveSpeed_ = moveSpeedMin_;
+	}
+
+}
+
+void Player::OnColUpSpeed()
+{
+	moveSpeed_ += 0.005f;
+	if (moveSpeed_ >= moveSpeedMax_) {
+		moveSpeed_ = moveSpeedMax_;
+	}
 }
 
 
@@ -141,6 +186,7 @@ void Player::MoveUpdate()
 	Vector2 joyStickInfoR = { 0,0 };
 
 	// Œü‚¢‚Ä‚é•ûŒü‚ÉˆÚ“®
+
 
 	moveVel_ = { 0,0,0 };
 	frontVec_ = { 0,0,0 };

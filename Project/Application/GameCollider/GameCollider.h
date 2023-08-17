@@ -38,6 +38,11 @@ public:// メンバ関数
 	/// <param name="player">プレイヤー</param>
 	void SetPlayer(Player* player);
 
+	/// <summary>
+	/// リセット関数
+	/// </summary>
+	void Reset();
+
 private:// プライベート関数
 
 

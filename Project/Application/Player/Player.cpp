@@ -47,21 +47,50 @@ bool Player::Initialize()
 
 	bulletModel_.reset(Model::LoadFromOBJ("doragon"));
 	cameraWorld_.Initialize();
+
+	// プレイヤーのHPの初期化
+	playerHitPoint_ = 11;
+
+	// プレイヤーのテクスチャハンドルの初期化
+	textureHandleHpBar_.reset(TextureManager::Load2DTextureP("hpBar.png"));
+	textureHandleHpInside_.reset(TextureManager::Load2DTextureP("hpInside.png"));
+
+	// プレイヤーのスプライトの初期化
+	playerHpBar_ = std::make_unique<Sprite>();
+	playerHpBar_->Initialize(textureHandleHpBar_.get());
+	playerHpBar_->SetAnchorPoint({ 0,0 });
+
+	playerHpInside_ = std::make_unique<Sprite>();
+	playerHpInside_->Initialize(textureHandleHpInside_.get());
+	playerHpInside_->SetAnchorPoint({ 0,0 });
+
 	return true;
 }
 
 void Player::Update()
 {
-	// 移動の更新処理
-	MoveUpdate();
+	// 生きている間の更新処理
+	if (IsAlive_){
 
-	// 攻撃関数
-	Attack();
+		// 移動の更新処理
+		MoveUpdate();
+
+		// 攻撃関数
+		Attack();
+
+		// プレイヤーのHPが０以下ならプレイヤーが死ぬ
+		if (playerHitPoint_ <= 0) {
+			IsAlive_ = false;
+		}
+	}
+	
 
 	//弾更新
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Update();
 	}
+
+	
 
 	// 行列の更新など
 	Object3d::Update();
@@ -77,7 +106,7 @@ void Player::Draw(ViewProjection* view)
 	//atari->Draw(view);
 }
 
-void Player::OnCollision(const CollisionInfo& info)
+void Player::OnCollision()
 {
 
 }
@@ -102,6 +131,11 @@ const WorldTransform* Player::GetCameraWorld() const
 const Vector3 Player::GetFrontPos() const
 {
 	return Vector3(frontW_.matWorld_.m[3][0], frontW_.matWorld_.m[3][1], frontW_.matWorld_.m[3][2]);
+}
+
+const bool Player::GetIsAlive() const
+{
+	return IsAlive_;
 }
 
 
@@ -161,7 +195,29 @@ void Player::OnColUpSpeed()
 	}
 }
 
+void Player::Draw2DFront()
+{
+	playerHpInside_->Draw();
+	playerHpBar_->Draw();
+	
+}
 
+void Player::Reset()
+{
+	// ワールド変換データのリセット
+	worldTransform_.translation = { 0,0,0 };
+	worldTransform_.rotation = { 0,0,0 };
+
+	// プレイヤーのHPのリセット
+	playerHitPoint_ = playerHitPointMax_;
+
+	// プレイヤーの状態を復活
+	IsAlive_ = true;
+
+	// プレイヤーのHPスプライトの情報をリセット
+	pHpInsidePos_ = { 20,50 };
+	pHpInsideSize_ = { 500,70 };
+}
 
 void Player::MoveUpdate()
 {
@@ -239,6 +295,25 @@ void Player::MoveUpdate()
 
 	ImGui::End();
 	
+	ImGui::Begin("playerSprite");
+
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat2("hpBarPos", &pHpBarPos_.x, "%.2f");
+	ImGui::InputFloat2("hpInsidePos", &pHpInsidePos_.x, "%.2f");
+	ImGui::InputFloat2("hpBarSize", &pHpBarSize_.x, "%.2f");
+	ImGui::InputFloat2("hpInsideSize", &pHpInsideSize_.x, "%.2f");
+
+	ImGui::End();
+
+	// スプライトのポジションやサイズの変更
+	playerHpBar_->SetPosition(pHpBarPos_);
+	playerHpInside_->SetPosition(pHpInsidePos_);
+	playerHpBar_->SetSize(pHpBarSize_);
+	playerHpInside_->SetSize(pHpInsideSize_);
+
+
 	frontW_.UpdateMatrix();
 	// ワールド行列更新
 	UpdateWorldMatrix();
@@ -280,4 +355,32 @@ void Player::Attack()
 		}
 
 	}
+}
+
+void Player::OnColHitPoint()
+{
+	playerHitPoint_ -= 1;
+	// HPのセット
+	float nowHp = playerHitPoint_ / playerHitPointMax_;
+	if (nowHp <= 0.05f) {
+		pHpInsideSize_.x = 500.0f * nowHp;
+		pHpInsideSize_.y -= 4.7f;
+		pHpInsidePos_.y += 1.f;
+	}
+	else if (nowHp <= 0.1f) {
+		pHpInsideSize_.x = 500.0f * nowHp;
+		pHpInsideSize_.y -= 2.5f;
+		pHpInsidePos_.y += 1.f;
+	}
+	else {
+		pHpInsideSize_ = { 500.0f * nowHp,70.0f };
+	}
+
+	// HPのポジションのずらし
+	float hpMovePos = 0;
+	hpMovePos = (1 - (nowHp)) * 100;
+	pHpInsidePos_.x = (20 + (hpMovePos * 0.3f));
+
+	playerHpInside_->SetPosition(pHpInsidePos_);
+	playerHpInside_->SetSize(pHpInsideSize_);
 }

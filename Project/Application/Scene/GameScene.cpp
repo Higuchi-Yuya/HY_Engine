@@ -476,6 +476,7 @@ void GameScene::Draw2DFront()
 		break;
 	case GameScene::Scene::Game: // ゲームシーン
 		spriteProvisional->Draw();
+		player_->Draw2DFront();
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
 
@@ -499,12 +500,24 @@ void GameScene::Reset()
 		break;
 	case GameScene::Scene::Result:
 
+		// ゲームコライダーのリセット
+		gameCollider->Reset();
+
+		//	エネミーを全削除
+		for (auto e : enemys_) {
+			delete e;
+		}
+		enemys_.clear();
+
+		// エネミーの再読み込み
 		LoadEnemy();
 
-		for (auto e : enemys_) {
-			gameCollider->AddEnemy(e);
-		}
-		player_->worldTransform_.translation = { 0,0,0 };
+		// エネミーのスポーンする間隔をリセット
+		enemySpawnTimer = 0;
+
+		// プレイヤーのリセット
+		player_->Reset();
+
 		break;
 	default:
 		break;
@@ -622,8 +635,17 @@ void GameScene::GameSceneUpdate()
 		isStopSound = false;
 	}
 
+#pragma region プレイヤーの更新処理
 	// プレイヤーの更新処理
 	player_->Update();
+
+	// プレイヤーが死んだらとりあえずリザルト画面に移行
+	if (player_->GetIsAlive() == false) {
+		oldScene = Scene::Game;
+		sceneChangeFlag = true;
+	}
+#pragma endregion
+
 
 #pragma region 敵の更新処理関連
 	
@@ -666,11 +688,11 @@ void GameScene::GameSceneUpdate()
 	light->Update();
 
 
-	// 敵が全滅したらとりあえずシーンを切り替える
-	if (enemys_.size() <= 1) {
-		oldScene = Scene::Game;
-		sceneChangeFlag = true;
-	}
+	//// 敵が全滅したらとりあえずシーンを切り替える
+	//if (enemys_.size() <= 1) {
+	//	oldScene = Scene::Game;
+	//	sceneChangeFlag = true;
+	//}
 }
 
 void GameScene::ResultSceneUpdate()

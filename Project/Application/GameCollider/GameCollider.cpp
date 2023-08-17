@@ -42,6 +42,7 @@ void GameCollider::Updata()
 			
 		}
 		else {
+			player_->OnColUpSpeed();
 			e->worldTransform_.color = { 1,1,1,1 };
 		}
 
@@ -99,6 +100,7 @@ void GameCollider::Updata()
 		// ヒット時に一度パーティクルを出す
 		if (isPartile == false) {
 			OnColParticle();
+			player_->OnColHitPoint();
 			isPartile = true;
 		}
 
@@ -170,4 +172,9 @@ void GameCollider::AddEnemy(Enemy* enemy)
 void GameCollider::SetPlayer(Player* player)
 {
 	player_ = player;
+}
+
+void GameCollider::Reset()
+{
+	enemysInfo_.clear();
 }

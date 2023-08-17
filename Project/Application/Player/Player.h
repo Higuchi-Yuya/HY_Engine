@@ -3,6 +3,8 @@
 #include "ImGuiManager.h"
 #include "GameCamera.h"
 #include "PlayerBullet.h"
+#include "Sprite.h"
+
 class Player:public Object3d
 {
 public:
@@ -10,7 +12,10 @@ public:
 	static Player* Create(Model* model = nullptr);
 
 public:
+
+	// デストラクタ
 	~Player();
+
 	// 初期化
 	bool Initialize()override;
 
@@ -20,8 +25,13 @@ public:
 	// 描画
 	void Draw(ViewProjection* view)override;
 
-	// 衝突時コールバック関数
-	void OnCollision(const CollisionInfo& info);
+	// プレイヤーの2D描画前面
+	void Draw2DFront();
+
+	// リセット関数
+	void Reset();
+
+public:// ゲッター
 
 	// ポジションのゲッター
 	const Vector3 GetWorldPosition ()const;
@@ -32,6 +42,11 @@ public:
 	// プレイヤー前方にあるワールドトランスフォームの取得
 	const Vector3 GetFrontPos()const;
 
+	// プレイヤーの生きているフラグの取得
+	const bool GetIsAlive()const;
+
+public:// セッター
+
 	// ワールドトランスフォームの情報をセット
 	void SetWorldTransInfo(WorldTransform worldTrans);
 
@@ -39,6 +54,11 @@ public:
 	void SetGameCamera(GameCamera* gameCamera);
 
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
+
+public:// 当たり判定
+
+	// 衝突時コールバック関数
+	void OnCollision();
 
 	// 押し戻し衝突判定コールバック関数
 	void pushBackOnCol();
@@ -49,7 +69,12 @@ public:
 	// 前方にいる敵の体と当たっていない場合に移動速度を上げる
 	void OnColUpSpeed();
 
-private:
+	/// <summary>
+	/// 当たり判定ヒットポイント
+	/// </summary>
+	void OnColHitPoint();
+
+private:// プライベート関数
 	/// <summary>
 	/// 移動の更新処理
 	/// </summary>
@@ -104,6 +129,29 @@ private:
 	// 弾のインターバル
 	float bulletInterval = 20;
 	float bulletInterTimer = 0;
+
+	// 生きているかフラグ
+	bool IsAlive_ = true;
+
+#pragma region プレイヤーのHP関連
+	// プレイヤーのHP関連
+	float playerHitPoint_ = 0;
+	float playerHitPointMax_ = 100;
+
+	// プレイヤーのHPのスプライト
+	std::unique_ptr<Sprite> playerHpBar_ = nullptr;
+	std::unique_ptr<Sprite> playerHpInside_ = nullptr;
+
+	// プレイヤーのHpのテクスチャハンドル
+	std::unique_ptr<Texture> textureHandleHpBar_ = nullptr;
+	std::unique_ptr<Texture> textureHandleHpInside_ = nullptr;
+
+	Vector2 pHpBarPos_ = { 20,50 };
+	Vector2 pHpInsidePos_ = { 20,50 };
+
+	Vector2 pHpBarSize_ = { 500,70 };
+	Vector2 pHpInsideSize_ = { 500,70 };
+#pragma endregion
 
 };
 

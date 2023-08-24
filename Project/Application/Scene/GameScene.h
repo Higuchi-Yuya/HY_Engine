@@ -104,20 +104,20 @@ private:// メンバ変数
 	std::unique_ptr<LightGroup> light = nullptr;
 
 	// 平行光源
-	bool isActiveDirectional = true;
+	bool isActiveDirectional = false;
 
 	// 点光源のステータス
-	float pointLightPos[3] = { 0,1,0 };
+	float pointLightPos[3] = { 0,5,0 };
 	float pointLightColor[3] = { 1,1,1 };
-	float pointLightAtten[3] = { 0.3f,0.1f,0.1f };
+	float pointLightAtten[3] = { 0.0f,0.0f,0.001f };
 	bool isActivePoint = false;
 
 	// スポットライトのステータス
 	Vector3 spotLightDir = { 0,-1,0 };
 	Vector3 spotLightPos = { 0,5,0 };
 	Vector3 spotLightColor = { 1,1,1 };
-	Vector3 spotLightAtten = { 0.0f,0.0f,0.0f };
-	Vector2 spotLightFactorAngle = { 20.0f,30.0f };
+	Vector3 spotLightAtten = { 0.0f,0.001f,0.001f };
+	Vector2 spotLightFactorAngle = { 20.0f,90.0f };
 	bool isActiveSpot = false;
 
 	// 丸影のステータス
@@ -167,8 +167,20 @@ private:// メンバ変数
 	std::unique_ptr<Model> playerModel_ = nullptr;
 	std::unique_ptr<Model> modelMedama_ = nullptr;
 
-	std::unique_ptr<Model> modelSkydome = nullptr;
-	std::unique_ptr<Model> modelGround = nullptr;
+	std::unique_ptr<Model> modelSkydome_ = nullptr;
+	std::unique_ptr<Model> modelGround_ = nullptr;
+
+	// 木
+	std::unique_ptr<Model> modelTreeBald_ = nullptr;
+	std::unique_ptr<Model> modelTreeNormal_ = nullptr;
+
+	// フェンス
+	std::unique_ptr<Model> modelFence_ = nullptr;
+	std::unique_ptr<Model> modelFencePost_ = nullptr;
+
+	// お墓
+	std::unique_ptr<Model> modelGraveCross = nullptr;
+	std::unique_ptr<Model> modelGraveSquare = nullptr;
 
 #pragma endregion
 

@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include <fstream>
 #include <cassert>
+#include "MathUtil.h"
 
 const std::string LevelLoader::kDefaultBaseDirectory = "Resources/Levels/";
 const std::string LevelLoader::kExtension = ".json";
@@ -71,9 +72,9 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName) {
 			objectData.translation.z = -(float)transform["translation"][0];
 			
 			// 回転角
-			objectData.rotation.x = -(float)transform["rotation"][1];
-			objectData.rotation.y = -(float)transform["rotation"][2];
-			objectData.rotation.z = (float)transform["rotation"][0];
+			objectData.rotation.x = MathUtil::DegreeToRadian((float)transform["rotation"][0] - 90);
+			objectData.rotation.y = -MathUtil::DegreeToRadian((float)transform["rotation"][2] - 90);
+			objectData.rotation.z = MathUtil::DegreeToRadian((float)transform["rotation"][1] );
 
 			// スケーリング
 			objectData.scaling.x = (float)transform["scaling"][1];

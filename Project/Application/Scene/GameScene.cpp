@@ -93,8 +93,21 @@ void GameScene::Initialize()
 	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
 
 	// 背景モデル関連
-	modelSkydome.reset(Model::LoadFromOBJ("skydome"));
-	modelGround.reset(Model::LoadFromOBJ("ground"));
+	modelSkydome_.reset(Model::LoadFromOBJ("skydome"));
+	modelGround_.reset(Model::LoadFromOBJ("ground"));
+
+	// 木
+	modelTreeBald_.reset(Model::LoadFromOBJ("tree_bald"));
+	modelTreeNormal_.reset(Model::LoadFromOBJ("tree_Normal"));
+
+	// フェンス
+	modelFence_.reset(Model::LoadFromOBJ("fence"));
+	modelFencePost_.reset(Model::LoadFromOBJ("fencePost"));
+
+	// お墓
+	modelGraveCross.reset(Model::LoadFromOBJ("grave_cross"));
+	modelGraveSquare.reset(Model::LoadFromOBJ("grave_square"));
+
 #pragma endregion
 
 #pragma region サウンド読み込み
@@ -135,13 +148,20 @@ void GameScene::Initialize()
 
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("levelData"));
+	levelData_.reset(LevelLoader::LoadFile("field"));
 
 	// モデルデータをモデルのリストに登録
-	models.insert(std::make_pair("skydome", modelSkydome.get()));
-	models.insert(std::make_pair("ground", modelGround.get()));
+	models.insert(std::make_pair("skydome", modelSkydome_.get()));
+	models.insert(std::make_pair("ground", modelGround_.get()));
 	models.insert(std::make_pair("chr_sword", playerModel_.get()));
 	models.insert(std::make_pair("Medama", modelMedama_.get()));
+
+	models.insert(std::make_pair("tree_bald", modelTreeBald_.get()));
+	models.insert(std::make_pair("tree_Normal", modelTreeNormal_.get()));
+	models.insert(std::make_pair("fence", modelFence_.get()));
+	models.insert(std::make_pair("fencePost", modelFencePost_.get()));
+	models.insert(std::make_pair("grave_cross", modelGraveCross.get()));
+	models.insert(std::make_pair("grave_square", modelGraveSquare.get()));
 
 	// レベルデータからオブジェクトを生成、配置
 	//	また、プレイヤーの初期位置やエネミーの初期

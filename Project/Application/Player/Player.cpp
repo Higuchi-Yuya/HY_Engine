@@ -291,7 +291,7 @@ void Player::MoveUpdate()
 
 	ImGui::InputFloat2("joySrickL", &joyStickInfoL.x, "%.2f");
 	ImGui::InputFloat2("joySrickR", &joyStickInfoR.x, "%.2f");
-	ImGui::InputFloat3("playerPos", &worldTransform_.translation.x, "%.2f");
+	ImGui::InputFloat3("playerRot", &worldTransform_.rotation.x, "%.2f");
 
 	ImGui::End();
 	

@@ -87,6 +87,8 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 dotlightnormal = dot(lightv, input.normal);
 			// ”½ŽËŒõƒxƒNƒgƒ‹
 			float3 reflect = normalize(-lightv + 2 * dotlightnormal * input.normal);
+			// ŠÂ‹«”½ŽËŒõ
+            float3 ambient = m_ambient;
 			// ŠgŽU”½ŽËŒõ
 			float3 diffuse = dotlightnormal * m_diffuse;
 			// ‹¾–Ê”½ŽËŒõ
@@ -120,6 +122,8 @@ float4 main(VSOutput input) : SV_TARGET
 			float3 dotlightnormal = dot(lightv, input.normal);
 			// ”½ŽËŒõƒxƒNƒgƒ‹
 			float3 reflect = normalize(-lightv + 2 * dotlightnormal * input.normal);
+			// ŠÂ‹«”½ŽËŒõ
+            float3 ambient = m_ambient;
 			// ŠgŽU”½ŽËŒõ
 			float3 diffuse = dotlightnormal * m_diffuse;
 			// ‹¾–Ê”½ŽËŒõ

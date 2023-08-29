@@ -146,9 +146,14 @@ void GameScene::Initialize()
 	player_.reset(Player::Create(playerModel_.get()));
 #pragma endregion
 
+#pragma region コライダー本体の初期化
+	gameCollider = std::make_unique<GameCollider>();
+	gameCollider->Initialize();
+#pragma endregion
+
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("field"));
+	levelData_.reset(LevelLoader::LoadFile("field2"));
 
 	// モデルデータをモデルのリストに登録
 	models.insert(std::make_pair("skydome", modelSkydome_.get()));
@@ -219,6 +224,12 @@ void GameScene::Initialize()
 
 			// 配列に登録
 			objects.push_back(newObject);
+
+			// タグ名が墓もしくは木だったら、当たり判定をつける
+			if (objectData.tagName == "tree"|| 
+				objectData.tagName == "grave") {
+				gameCollider->AddObj(newObject);
+			}
 		}
 		
 	}
@@ -233,8 +244,7 @@ void GameScene::Initialize()
 #pragma endregion
 
 #pragma region コライダー関連の初期化
-	gameCollider = std::make_unique<GameCollider>();
-	gameCollider->Initialize();
+
 
 	for (auto e:enemys_){
 		gameCollider->AddEnemy(e);
@@ -304,12 +314,7 @@ void GameScene::ImguiUpdate()
 		ImGui::ColorEdit3("diffuseColor", &DiColor.x);
 		ImGui::ColorEdit3("specularColor", &SpColor.x);
 
-		if (isActiveDirectional == true) {
-			light->SetDirLightActive(0, true);
-		}
-		else if (isActiveDirectional == false) {
-			light->SetDirLightActive(0, false);
-		}
+
 
 		ImGui::TreePop();
 	}
@@ -334,12 +339,7 @@ void GameScene::ImguiUpdate()
 	if (ImGui::TreeNode("spotLight")) {
 		ImGui::Checkbox("Is Active", &isActiveSpot);
 
-		if (isActiveSpot == true) {
-			light->SetSpotLightActive(0, true);
-		}
-		else if (isActiveSpot == false) {
-			light->SetSpotLightActive(0, false);
-		}
+
 
 		ImGui::InputFloat3("spotLightPos", &spotLightPos.x);
 		ImGui::InputFloat3("spotLightDir", &spotLightDir.x);
@@ -495,7 +495,7 @@ void GameScene::Draw2DFront()
 		
 		break;
 	case GameScene::Scene::Game: // ゲームシーン
-		spriteProvisional->Draw();
+		//spriteProvisional->Draw();
 		player_->Draw2DFront();
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
@@ -622,6 +622,7 @@ void GameScene::GameSceneUpdate()
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
 
+#pragma region ライトの更新処理
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
@@ -640,6 +641,20 @@ void GameScene::GameSceneUpdate()
 	light->SetAmbientColor(AmColor);
 	light->SetDiffuseColor(DiColor);
 	light->SetSpecularColor(SpColor);
+
+	if (isActiveDirectional == true) {
+		light->SetDirLightActive(0, true);
+	}
+	else if (isActiveDirectional == false) {
+		light->SetDirLightActive(0, false);
+	}
+	if (isActiveSpot == true) {
+		light->SetSpotLightActive(0, true);
+	}
+	else if (isActiveSpot == false) {
+		light->SetSpotLightActive(0, false);
+	}
+#pragma endregion
 
 	spriteProvisional->SetPosition(spritePos);
 
@@ -672,7 +687,7 @@ void GameScene::GameSceneUpdate()
 	enemySpawnTimer++;
 
 	// エネミーの時間ごとにわく処理 (無限沸き)
-	if (enemySpawnTimer >= enemySpawnTimeMax && enemys_.size() <= 6) {
+	if (enemySpawnTimer >= enemySpawnTimeMax && enemys_.size() <= 3) {
 		LoadEnemy();
 		enemySpawnTimer = 0;
 	}

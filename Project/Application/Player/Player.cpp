@@ -49,7 +49,7 @@ bool Player::Initialize()
 	cameraWorld_.Initialize();
 
 	// プレイヤーのHPの初期化
-	playerHitPoint_ = 11;
+	playerHitPoint_ = playerHitPointMax_;
 
 	// プレイヤーのテクスチャハンドルの初期化
 	textureHandleHpBar_.reset(TextureManager::Load2DTextureP("hpBar.png"));
@@ -167,7 +167,7 @@ void Player::pushBackOnCol()
 	Vector3 move;
 
 	// 地面判定しきい値
-	const float threshold = cosf(Vector3::Deg2Rad(30.0f));
+	const float threshold = cosf(Vector3::Deg2Rad(50.0f));
 
 	if (-threshold < cos && cos < threshold) {
 		//sphere->center += info.reject;
@@ -272,10 +272,20 @@ void Player::MoveUpdate()
 
 	if (frontVec_ != 0.0f)
 	{
-		moveVel_ = frontVec_.normalize() * moveSpeed_;
 
+		if (IsAttack_ == true) {
+			moveSpeed_ = 0.08f;
+			moveVel_ = frontVec_.normalize() * moveSpeed_;
+			
+		}
+		else if (IsAttack_ == false) {
+			moveSpeed_ = 0.2f;
+			moveVel_ = frontVec_.normalize() * moveSpeed_;
+			worldTransform_.rotation.y = atan2f(frontVec_.x, frontVec_.z);
+		}
+
+		// 移動ベクトル方向に移動
 		worldTransform_.translation += moveVel_;
-		worldTransform_.rotation.y = atan2f(frontVec_.x, frontVec_.z);
 	}
 
 	// カメラの回転用のものにかりにコピー
@@ -326,7 +336,7 @@ void Player::Attack()
 	bulletInterTimer--;
 	if (JoypadInput::GetButton(PadCode::ButtonA))//input_->PushKey(DIK_Y)) {
 	{
-		
+		IsAttack_ = true;
 
 		if (bulletInterTimer <= 0) {
 
@@ -354,6 +364,9 @@ void Player::Attack()
 			bulletInterTimer = bulletInterval;
 		}
 
+	}
+	else {
+		IsAttack_ = false;
 	}
 }
 

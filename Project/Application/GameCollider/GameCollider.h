@@ -33,6 +33,12 @@ public:// メンバ関数
 	void AddEnemy(Enemy* enemy);
 
 	/// <summary>
+	/// オブジェクトの情報をベクター型に格納
+	/// </summary>
+	/// <param name="obj">オブジェクト</param>
+	void AddObj(Object3d* obj);
+
+	/// <summary>
 	/// プレイヤーを取得する
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
@@ -53,8 +59,13 @@ private:// メンバ変数
 	bool isPlayerHit = false;
 	bool isPartile = false;
 
+	// エネミーの当たり判定用配列
 	std::vector<Enemy*>enemysInfo_;
+	// プレイヤーバレット当たり判定用の配列
 	std::list<std::unique_ptr<PlayerBullet>> bulletsInfo_;
+	// オブジェクト当たり判定用の配列
+	std::vector<Object3d*> objectsInfo_;
+
 	Player* player_ = nullptr;
 
 #pragma region パーティクル

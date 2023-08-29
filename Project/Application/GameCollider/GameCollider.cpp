@@ -20,18 +20,18 @@ void GameCollider::Updata()
 
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
 
+	// プレイヤーの情報をスフィアのものに登録
+	Sphere p;
+	p.center = player_->worldTransform_.translation;
+	p.center.y += 1.0f;
+	p.radius = 1.0f;
+
 	// 当たり判定（エネミー側の反応）
 	for (auto& e : enemysInfo_){
 		// エネミーの情報をスフィアのものに登録
 		Sphere sphereE;
 		sphereE.center = e->worldTransform_.translation;
 		sphereE.radius = 1.0f;
-
-		// プレイヤーの情報をスフィアのものに登録
-		Sphere p;
-		p.center = player_->worldTransform_.translation;
-		p.center.y += 1.0f;
-		p.radius = 1.0f;
 
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 			// エネミーがわを赤くする（仮）
@@ -91,6 +91,46 @@ void GameCollider::Updata()
 			}
 			else {
 				player_->OnColUpSpeed();
+			}
+		}
+
+		// -----------敵とフィールドのオブジェクトの当たり判定------------- //
+		for (auto obj : objectsInfo_) {
+			Sphere sphereE2;
+			sphereE2.center = obj->worldTransform_.translation;
+			sphereE2.center.y += 1;
+			sphereE2.radius = 1.0f;
+
+			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
+				e->pushBackOnCol();
+			}
+		}
+	}
+
+	// フィールドのオブジェクトの当たり判定
+	for (auto obj : objectsInfo_) {
+		Sphere sphereObj;
+		sphereObj.center = obj->worldTransform_.translation;
+		sphereObj.center.y = 1.0f;
+		sphereObj.radius = 0.6f;
+
+		// -----------プレイヤーとフィールドのオブジェクトの当たり判定----------- //
+		if (Collision::CheckSphere2Sphere(p, sphereObj, &player_->interPos, &player_->rejectVec)) {
+			player_->pushBackOnCol();
+		}
+
+		// -------------プレイヤーの弾とフィールドのオブジェクトの当たり判定------------ //
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+
+			// プレイヤーの弾の情報をスフィアのものに登録
+			Sphere pB;
+			pB.center = playerbullet->worldTransform_.translation;
+			pB.radius = 1.0f;
+
+			// プレイヤーの弾とエネミーの当たり判定
+			if (Collision::CheckSphere2Sphere(sphereObj, pB)) {
+				// 弾を消す
+				playerbullet->OnCollision();
 			}
 		}
 	}
@@ -167,6 +207,11 @@ void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* 
 void GameCollider::AddEnemy(Enemy* enemy)
 {
 	enemysInfo_.push_back(enemy);
+}
+
+void GameCollider::AddObj(Object3d* obj)
+{
+	objectsInfo_.push_back(obj);
 }
 
 void GameCollider::SetPlayer(Player* player)

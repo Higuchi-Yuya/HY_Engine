@@ -130,6 +130,9 @@ private:
 	float bulletInterval = 20;
 	float bulletInterTimer = 0;
 
+	// アタックフラグ
+	bool IsAttack_ = false;
+
 	// 生きているかフラグ
 	bool IsAlive_ = true;
 

@@ -114,11 +114,11 @@ private:// メンバ変数
 
 	// スポットライトのステータス
 	Vector3 spotLightDir = { 0,-1,0 };
-	Vector3 spotLightPos = { 0,5,0 };
+	Vector3 spotLightPos = { 0,50,0 };
 	Vector3 spotLightColor = { 1,1,1 };
 	Vector3 spotLightAtten = { 0.0f,0.001f,0.001f };
 	Vector2 spotLightFactorAngle = { 20.0f,90.0f };
-	bool isActiveSpot = false;
+	bool isActiveSpot = true;
 
 	// 丸影のステータス
 	Vector3 circleShadowCasterPos = { 0,0,0 };
@@ -265,7 +265,7 @@ private:// メンバ変数
 
 	// エネミーのスポーン時間
 	float enemySpawnTimer = 0;
-	float enemySpawnTimeMax = 60 * 2;
+	float enemySpawnTimeMax = 60 * 5;
 
 	// 抽選するエネミーのスポーンパターン
 	int randomWave01 = 0;

@@ -52,8 +52,15 @@ public:
 	Vector3& operator*=(const Vector3& v);
 	Vector3& operator/=(float s);
 
-	// ”äŠr‰‰ŽZŽq
+	// ”äŠr‰‰ŽZŽq‚ÌƒI[ƒo[ƒ[ƒh
+	//bool operator==(const Vector3 other);
+	//bool operator!=(const Vector3 other);
+	//bool operator>=(const Vector3 other);
+	//bool operator<=(const Vector3 other);
+	//bool operator==(float num);
 	bool operator!=(float num);
+	//bool operator>=(float num);
+	//bool operator<=(float num);
 };
 
 

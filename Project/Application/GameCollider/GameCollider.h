@@ -27,6 +27,11 @@ public:// メンバ関数
 	void Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection);
 
 	/// <summary>
+	/// 描画処理
+	/// </summary>
+	void Draw3D(ViewProjection* viewProjection);
+
+	/// <summary>
 	/// エネミーの情報をベクターに格納
 	/// </summary>
 	/// <param name="enemy">エネミー</param>
@@ -67,6 +72,9 @@ private:// メンバ変数
 	std::vector<Object3d*> objectsInfo_;
 
 	Player* player_ = nullptr;
+
+	std::unique_ptr<Model> boxModel_ = nullptr;
+	std::unique_ptr<Object3d> box_;
 
 #pragma region パーティクル
 	// パーティクルのテクスチャ

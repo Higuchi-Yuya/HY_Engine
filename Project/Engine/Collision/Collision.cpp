@@ -288,6 +288,101 @@ bool Collision::CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* dis
 	return true;
 }
 
+bool Collision::CheckSphere2AABB(const Sphere& sphere, const WorldTransform& transA, Vector3* inter, Vector3* reject)
+{
+	Box box;
+	// ボックス構造体に情報を登録
+	box.center = transA.translation;
+	box.maxRadius = (transA.maxVertex_ * transA.scale);
+	box.maxRadius.x = abs(box.maxRadius.x);
+	box.maxRadius.y = abs(box.maxRadius.y);
+	box.maxRadius.z = abs(box.maxRadius.z);
+
+	// 中心点の距離の２乗 <= 半径の和の２乗　なら交差
+	Vector3 tmp = sphere.center - box.center;
+	float distx = (box.center.x - sphere.center.x) * (box.center.x - sphere.center.x);
+	float disty = (box.center.y - sphere.center.y) * (box.center.y - sphere.center.y);
+	float distz = (box.center.z - sphere.center.z) * (box.center.z - sphere.center.z);
+
+	//float dist = Vector3::dot(tmp, tmp);
+	Vector3 radius = {
+		sphere.radius + box.maxRadius.x,
+		sphere.radius + box.maxRadius.y,
+		sphere.radius + box.maxRadius.z
+	};
+	radius *= radius;
+
+	if (distx <= radius.x&&
+		disty <= radius.y&&
+		distz <= radius.z) {
+
+		//if (inter) {
+		//	// Aの半径が0の時座標はBの中心  Bの半径が0の時座標はAの中心  となるように補間
+		//	float t = sphereB.radius / (sphereA.radius + sphereB.radius);
+		//	*inter = Vector3::lerp(sphereA.center, sphereB.center, t);
+		//}
+
+		// 押し出しのベクトル計算
+		if (reject) {
+			// 球の中心から半径を加算した時のポジション
+			Vector3 sphereColP;
+			sphereColP.x = sphere.center.x;
+			sphereColP.y = sphere.center.y;
+			sphereColP.z = sphere.center.z;
+			Vector3 sphereColM;
+			sphereColM.x = sphere.center.x;
+			sphereColM.y = sphere.center.y;
+			sphereColM.z = sphere.center.z;
+
+
+			// キューブの中心から半径を加算や減算したポジション
+			Vector3 cubeColP;
+			cubeColP.x = box.center.x + box.maxRadius.x;
+			cubeColP.y = box.center.y + box.maxRadius.y;
+			cubeColP.z = box.center.z + box.maxRadius.z;
+			Vector3 cubeColM;
+			cubeColM.x = box.center.x - box.maxRadius.x;
+			cubeColM.y = box.center.y - box.maxRadius.y;
+			cubeColM.z = box.center.z - box.maxRadius.z;
+
+			Vector3 rejectLen;
+
+			// 前方に押し出し
+			if (sphereColP.z <= cubeColM.z &&
+			   (sphereColM.x <= cubeColP.x && sphereColP.x >= cubeColM.x)) {
+
+				rejectLen.z = sphere.radius + box.maxRadius.z - sqrtf(distz);
+			}
+			// 後方に押し出し
+			if (sphereColM.z >= cubeColP.z &&
+			   (sphereColM.x <= cubeColP.x && sphereColP.x >= cubeColM.x)) {
+
+				rejectLen.z = sphere.radius + box.maxRadius.z - sqrtf(distz);
+			}
+			// 右方に押し出し
+			if (sphereColM.x >= cubeColP.x &&
+			   (sphereColM.z <= cubeColP.z && sphereColP.z >= cubeColM.z)) {
+
+				rejectLen.x = sphere.radius + box.maxRadius.x - sqrtf(distx);
+			}
+			// 左方に押し出し
+			if (sphereColP.x <= cubeColM.x &&
+			   (sphereColM.z <= cubeColP.z && sphereColP.z >= cubeColM.z)) {
+
+				rejectLen.x = sphere.radius + box.maxRadius.x - sqrtf(distx);
+			}
+
+			Vector3 center = sphere.center - box.center;
+
+			*reject = center.normalize();
+			*reject *= rejectLen;
+
+		}
+		return true;
+	}
+	return false;
+}
+
 bool Collision::CheckAABB(const WorldTransform& transA, const WorldTransform& transB)
 {
 	Box a,b;

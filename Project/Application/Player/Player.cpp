@@ -171,9 +171,9 @@ void Player::pushBackOnCol()
 
 	if (-threshold < cos && cos < threshold) {
 		//sphere->center += info.reject;
-		move += rejectVec;
+		
 	}
-
+	move += rejectVec;
 	worldTransform_.translation += move;
 	worldTransform_.UpdateMatrix();
 }

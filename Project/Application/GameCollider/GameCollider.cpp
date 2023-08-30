@@ -9,6 +9,15 @@ void GameCollider::Initialize()
 	particleMan_ = std::make_unique<ParticleManager>();
 	particleMan_->Initialize();
 	particleMan_->SetTextureHandle(particleTex_.get());
+
+	boxModel_.reset(Model::LoadFromOBJ("box1x1x1"));
+	box_.reset(Object3d::Create());
+	box_->SetModel(boxModel_.get());
+	box_->worldTransform_.translation.y = 1;
+	box_->worldTransform_.translation.z = 31;
+	box_->worldTransform_.scale.x = 200;
+	box_->worldTransform_.scale.z = 1;
+	box_->worldTransform_.UpdateMatrix();
 }
 
 void GameCollider::Updata()
@@ -135,7 +144,14 @@ void GameCollider::Updata()
 		}
 	}
 
-	
+	// おためしの当たり判定
+	if (Collision::CheckSphere2AABB(p, box_->worldTransform_,&player_->interPos,&player_->rejectVec)) {
+		box_->worldTransform_.color = { 1,0,0,1 };
+		player_->pushBackOnCol();
+	}
+	else {
+		box_->worldTransform_.color = { 1,1,1,1 };
+	}
 	if (isPlayerHit == true) {
 		// ヒット時に一度パーティクルを出す
 		if (isPartile == false) {
@@ -159,6 +175,8 @@ void GameCollider::Updata()
 
 	// パーティクルの更新処理
 	particleMan_->Update();
+
+	box_->Update();
 }
 
 void GameCollider::OnColParticle()
@@ -198,10 +216,15 @@ void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* 
 	// ----------------パーティクルの描画はここから--------------- //
 	
 	particleMan_->Draw(*viewProjection);
-
+	
 
 	
 	// ----------------パーティクルの描画ここまで----------------- //
+}
+
+void GameCollider::Draw3D(ViewProjection* viewProjection)
+{
+	box_->Draw(viewProjection);
 }
 
 void GameCollider::AddEnemy(Enemy* enemy)

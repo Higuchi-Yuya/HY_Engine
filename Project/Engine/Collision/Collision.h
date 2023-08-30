@@ -27,6 +27,9 @@ public:
 	// ƒŒƒC‚Æ‹…‚Ì“–‚½‚è”»’è
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, Vector3* inter = nullptr);
 
+	// ‹…‚ÆAABB‚Ì“–‚½‚è”»’è
+	static bool CheckSphere2AABB(const Sphere& sphere, const WorldTransform& transA, Vector3* inter = nullptr, Vector3* reject = nullptr);
+
 	// AABB‚Ì“–‚½‚è”»’è
 	static bool CheckAABB(const WorldTransform& transA, const WorldTransform& transB);
 

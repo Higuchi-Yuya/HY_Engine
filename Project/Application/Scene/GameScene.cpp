@@ -454,7 +454,7 @@ void GameScene::Draw3D()
 		for (auto o : objects) {
 			o->Draw(&gameCamera->GetView());
 		}
-
+		gameCollider->Draw3D(&gameCamera->GetView());
 		// FBXモデルの描画
 		FbxModel::PreDraw(commandList);
 
@@ -688,7 +688,7 @@ void GameScene::GameSceneUpdate()
 
 	// エネミーの時間ごとにわく処理 (無限沸き)
 	if (enemySpawnTimer >= enemySpawnTimeMax && enemys_.size() <= 3) {
-		LoadEnemy();
+		//LoadEnemy();
 		enemySpawnTimer = 0;
 	}
 

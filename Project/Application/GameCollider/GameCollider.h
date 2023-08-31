@@ -74,7 +74,7 @@ private:// メンバ変数
 	Player* player_ = nullptr;
 
 	std::unique_ptr<Model> boxModel_ = nullptr;
-	std::unique_ptr<Object3d> box_;
+	std::unique_ptr<Object3d> box_[4];
 
 #pragma region パーティクル
 	// パーティクルのテクスチャ

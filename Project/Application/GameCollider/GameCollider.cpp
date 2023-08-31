@@ -11,13 +11,42 @@ void GameCollider::Initialize()
 	particleMan_->SetTextureHandle(particleTex_.get());
 
 	boxModel_.reset(Model::LoadFromOBJ("box1x1x1"));
-	box_.reset(Object3d::Create());
-	box_->SetModel(boxModel_.get());
-	box_->worldTransform_.translation.y = 1;
-	box_->worldTransform_.translation.z = 31;
-	box_->worldTransform_.scale.x = 200;
-	box_->worldTransform_.scale.z = 1;
-	box_->worldTransform_.UpdateMatrix();
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		box_[i].reset(Object3d::Create());
+		box_[i]->SetModel(boxModel_.get());
+		box_[i]->worldTransform_.translation.y = 1;
+		switch (i)
+		{
+		case 0:
+			box_[i]->worldTransform_.translation.z = 30 + 50.22f;
+			box_[i]->worldTransform_.scale.x = 50;
+			box_[i]->worldTransform_.scale.z = 50;
+			break;
+		case 1:
+			box_[i]->worldTransform_.translation.z = -30 - 50.22f;
+			box_[i]->worldTransform_.scale.x = 50;
+			box_[i]->worldTransform_.scale.z = 50;
+			break;
+		case 2:
+			box_[i]->worldTransform_.translation.x = 30 + 45.8f;
+			box_[i]->worldTransform_.scale.x = 30;
+			box_[i]->worldTransform_.scale.z = 30;
+			break;
+		case 3:
+			box_[i]->worldTransform_.translation.x = -30 - 47.3f;
+			box_[i]->worldTransform_.scale.x = 30;
+			box_[i]->worldTransform_.scale.z = 30;
+			break;
+		default:
+			break;
+		}
+		box_[i]->worldTransform_.UpdateMatrix();
+	}
+
+
+
 }
 
 void GameCollider::Updata()
@@ -36,7 +65,7 @@ void GameCollider::Updata()
 	p.radius = 1.0f;
 
 	// 当たり判定（エネミー側の反応）
-	for (auto& e : enemysInfo_){
+	for (auto& e : enemysInfo_) {
 		// エネミーの情報をスフィアのものに登録
 		Sphere sphereE;
 		sphereE.center = e->worldTransform_.translation;
@@ -44,11 +73,11 @@ void GameCollider::Updata()
 
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 			// エネミーがわを赤くする（仮）
-			e->worldTransform_.color = { 1,0,0,1 }; 
+			e->worldTransform_.color = { 1,0,0,1 };
 			//e->SetAlive(false);
 			// プレイヤーのヒットフラグを立てる
 			isPlayerHit = true;
-			
+
 		}
 		else {
 			player_->OnColUpSpeed();
@@ -64,7 +93,7 @@ void GameCollider::Updata()
 			pB.radius = 1.0f;
 
 			// プレイヤーの弾とエネミーの当たり判定
-			if (e->GetState()==Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
+			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
 				// エネミーが死亡
 				e->OnCollision();
 				// 弾を消す
@@ -144,14 +173,44 @@ void GameCollider::Updata()
 		}
 	}
 
-	// おためしの当たり判定
-	if (Collision::CheckSphere2AABB(p, box_->worldTransform_,&player_->interPos,&player_->rejectVec)) {
-		box_->worldTransform_.color = { 1,0,0,1 };
-		player_->pushBackOnCol();
+	// 壁との当たり判定
+	for (size_t i = 0; i < 4; i++)
+	{
+		// ------------プレイヤーと壁の当たり判定---------- //
+		if (Collision::CheckSphere2AABB(p, box_[i]->worldTransform_, &player_->interPos, &player_->rejectVec)) {
+			player_->pushBackOnCol();
+		}
+
+		// ------------敵と壁の当たり判定----------- //
+		for (auto& e : enemysInfo_) {
+			// エネミーの情報をスフィアのものに登録
+			Sphere sphereE;
+			sphereE.center = e->worldTransform_.translation;
+			sphereE.radius = 1.0f;
+
+			if (Collision::CheckSphere2AABB(sphereE, box_[i]->worldTransform_, &e->interPos, &e->rejectVec)) {
+				box_[i]->worldTransform_.color = { 1,0,0,1 };
+				e->pushBackOnCol();
+			}
+		}
+
+		// --------プレイヤーの弾と壁の当たり判定---------- //
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+
+			// プレイヤーの弾の情報をスフィアのものに登録
+			Sphere pB;
+			pB.center = playerbullet->worldTransform_.translation;
+			pB.radius = 1.0f;
+
+			if (Collision::CheckSphere2AABB(pB, box_[i]->worldTransform_)) {
+				// 弾を消す
+				playerbullet->OnCollision();
+			}
+		}
+
+		box_[i]->Update();
 	}
-	else {
-		box_->worldTransform_.color = { 1,1,1,1 };
-	}
+
 	if (isPlayerHit == true) {
 		// ヒット時に一度パーティクルを出す
 		if (isPartile == false) {
@@ -176,7 +235,7 @@ void GameCollider::Updata()
 	// パーティクルの更新処理
 	particleMan_->Update();
 
-	box_->Update();
+
 }
 
 void GameCollider::OnColParticle()
@@ -214,17 +273,20 @@ void GameCollider::OnColParticle()
 void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection)
 {
 	// ----------------パーティクルの描画はここから--------------- //
-	
-	particleMan_->Draw(*viewProjection);
-	
 
-	
+	particleMan_->Draw(*viewProjection);
+
+
+
 	// ----------------パーティクルの描画ここまで----------------- //
 }
 
 void GameCollider::Draw3D(ViewProjection* viewProjection)
 {
-	box_->Draw(viewProjection);
+	for (size_t i = 0; i < 4; i++)
+	{
+		//box_[i]->Draw(viewProjection);
+	}
 }
 
 void GameCollider::AddEnemy(Enemy* enemy)

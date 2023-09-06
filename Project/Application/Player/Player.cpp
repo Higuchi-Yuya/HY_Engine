@@ -45,7 +45,7 @@ bool Player::Initialize()
 	frontW_.translation = { 0,0,1 };
 	frontW_.parent_ = &worldTransform_;
 
-	bulletModel_.reset(Model::LoadFromOBJ("doragon"));
+	bulletModel_.reset(Model::LoadFromOBJ("sphere",true));
 	cameraWorld_.Initialize();
 
 	// ÉvÉåÉCÉÑÅ[ÇÃHPÇÃèâä˙âª
@@ -279,7 +279,7 @@ void Player::MoveUpdate()
 			
 		}
 		else if (IsAttack_ == false) {
-			moveSpeed_ = 0.2f;
+			OnColUpSpeed();
 			moveVel_ = frontVec_.normalize() * moveSpeed_;
 			worldTransform_.rotation.y = atan2f(frontVec_.x, frontVec_.z);
 		}

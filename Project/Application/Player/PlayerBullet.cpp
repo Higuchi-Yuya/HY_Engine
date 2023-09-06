@@ -16,10 +16,11 @@ void PlayerBullet::Initialize(Model* model, const WorldTransform worldTransform,
 	worldTransform_.translation = {
 	  worldTransform.matWorld_.m[3][0], worldTransform.matWorld_.m[3][1],
 	  worldTransform.matWorld_.m[3][2] };
+	worldTransform_.translation.y = 1;
 
-	worldTransform_.scale.x = 0.6f;
-	worldTransform_.scale.y = 0.6f;
-	worldTransform_.scale.z = 0.6f;
+	worldTransform_.scale.x = 0.3f;
+	worldTransform_.scale.y = 0.3f;
+	worldTransform_.scale.z = 0.3f;
 
 	// 打つ方向に向けてオブジェクトを回転させる
 

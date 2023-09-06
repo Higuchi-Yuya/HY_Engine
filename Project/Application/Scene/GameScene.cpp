@@ -688,7 +688,7 @@ void GameScene::GameSceneUpdate()
 
 	// エネミーの時間ごとにわく処理 (無限沸き)
 	if (enemySpawnTimer >= enemySpawnTimeMax && enemys_.size() <= 3) {
-		//LoadEnemy();
+		LoadEnemy();
 		enemySpawnTimer = 0;
 	}
 

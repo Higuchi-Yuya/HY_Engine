@@ -163,7 +163,7 @@ void GameCollider::Updata()
 			// プレイヤーの弾の情報をスフィアのものに登録
 			Sphere pB;
 			pB.center = playerbullet->worldTransform_.translation;
-			pB.radius = 1.0f;
+			pB.radius = playerbullet->worldTransform_.scale.x;
 
 			// プレイヤーの弾とエネミーの当たり判定
 			if (Collision::CheckSphere2Sphere(sphereObj, pB)) {

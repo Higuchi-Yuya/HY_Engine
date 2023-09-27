@@ -139,7 +139,7 @@ private:
 	// 色の最終値
 	Vector4 endColor_ = { 0,0,0,0 };
 	// 一度にだすパーティクルの数
-	int particleNum = 5;
+	int particleNum = 15;
 
 #pragma endregion
 };

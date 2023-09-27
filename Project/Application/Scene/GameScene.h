@@ -67,7 +67,7 @@ private:// サブクラス
 	};
 
 	// 敵のウェーブ
-	enum class EnemyWave {
+	enum EnemyWave {
 		wave01,
 		wave02,
 		wave03,
@@ -93,6 +93,11 @@ private:// プライベート関数
 	/// シーンチェンジの更新処理
 	/// </summary>
 	void SceneChageUpdate();
+
+	/// <summary>
+	/// エネミーのゲームシーンの更新処理
+	/// </summary>
+	void EnemyGameUpdate();
 
 private:// メンバ変数
 
@@ -261,14 +266,19 @@ private:// メンバ変数
 
 	// ゲームのウェーブごとの時間
 	float waveTimer_ = 0;
-	float waveTimeMax_ = 60 * 20;
+	const float waveTimeMax_ = 60 * 20;
+
+	// 今のウェーブ
+	uint32_t waveTimeNum_ = 0;
 
 	// エネミーのスポーン時間
-	float enemySpawnTimer = 0;
-	float enemySpawnTimeMax = 60 * 5;
+	float enemySpawnTimer_ = 0;
 
+	const float enemySpawnTimeMax1_ = 60 * 5;
+	const float enemySpawnTimeMax2_ = 60 * 4;
+	const float enemySpawnTimeMax3_ = 60 * 3;
 	// 抽選するエネミーのスポーンパターン
-	int randomWave01 = 0;
+	int randomWave01_ = 0;
 
 #pragma endregion
 

@@ -186,7 +186,7 @@ void Enemy::OnCollision()
 		pos = worldTransform_.translation;
 		//pos.y += 0.5f;
 		// X,Y,Z‘S‚Ä{-0.05f,+0.05f}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
-		const float md_vel = 0.1f;
+		const float md_vel = 0.15f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;

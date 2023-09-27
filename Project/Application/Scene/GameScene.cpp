@@ -520,6 +520,10 @@ void GameScene::Reset()
 		break;
 	case GameScene::Scene::Result:
 
+		// ウェーブのリセット
+		waveTimeNum_ = 0;
+		waveTimer_ = 0;
+
 		// ゲームコライダーのリセット
 		gameCollider->Reset();
 
@@ -533,7 +537,7 @@ void GameScene::Reset()
 		LoadEnemy();
 
 		// エネミーのスポーンする間隔をリセット
-		enemySpawnTimer = 0;
+		enemySpawnTimer_ = 0;
 
 		// プレイヤーのリセット
 		player_->Reset();
@@ -546,27 +550,80 @@ void GameScene::Reset()
 
 void GameScene::LoadEnemy()
 {
-	randomWave01 = Random::Range(1, 3);
 
-	// ウェーブ０１の時の敵のスポーンパターン抽選
-	switch (randomWave01)
+	switch (enemyWave_)
 	{
-	case 1:
-		// レベルデータの読み込み
-		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p1"));
+	case GameScene::wave01:// ウェーブ０１の時の敵のスポーンパターン抽選
+
+		randomWave01_ = Random::Range(1, 3);
+		
+		switch (randomWave01_)
+		{
+		case 1:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p1"));
+			break;
+		case 2:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p2"));
+			break;
+		case 3:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p3"));
+			break;
+		default:
+			break;
+		}
+
 		break;
-	case 2:
-		// レベルデータの読み込み
-		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p2"));
+	case GameScene::wave02:// ウェーブ０２の時の敵のスポーンパターン抽選
+		randomWave01_ = Random::Range(1, 3);
+
+		switch (randomWave01_)
+		{
+		case 1:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p1"));
+			break;
+		case 2:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p2"));
+			break;
+		case 3:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p3"));
+			break;
+		default:
+			break;
+		}
+
 		break;
-	case 3:
-		// レベルデータの読み込み
-		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p3"));
+	case GameScene::wave03:// ウェーブ０３の時の敵のスポーンパターン抽選
+
+		randomWave01_ = Random::Range(1, 3);
+
+		switch (randomWave01_)
+		{
+		case 1:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p1"));
+			break;
+		case 2:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p2"));
+			break;
+		case 3:
+			// レベルデータの読み込み
+			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p3"));
+			break;
+		default:
+			break;
+		}
+
 		break;
 	default:
 		break;
 	}
-
 
 
 	for (auto& objectData : levelData_->objects) {
@@ -684,24 +741,7 @@ void GameScene::GameSceneUpdate()
 
 #pragma region 敵の更新処理関連
 	
-	enemySpawnTimer++;
-
-	// エネミーの時間ごとにわく処理 (無限沸き)
-	if (enemySpawnTimer >= enemySpawnTimeMax && enemys_.size() <= 3) {
-		LoadEnemy();
-		enemySpawnTimer = 0;
-	}
-
-	//寿命が尽きた敵を全削除
-	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a)
-		{return a->GetDeadMotionEnd() == true; });
-	std::for_each(enemys_.begin(), it, [](Enemy* a) { delete a; });
-	enemys_.erase(enemys_.begin(), it);
-
-	//	敵の更新処理
-	for (auto e : enemys_) {
-		e->Update();
-	}
+	EnemyGameUpdate();
 #pragma endregion
 
 	
@@ -817,5 +857,73 @@ void GameScene::SceneChageUpdate()
 		default:
 			break;
 		}
+	}
+}
+
+void GameScene::EnemyGameUpdate()
+{
+	enemySpawnTimer_++;
+
+	// エネミーのウェーブの時間を進める
+	waveTimer_++;
+
+	// エネミーのウェーブの時間がマックスになったらウェーブを進める
+	if (waveTimer_ >= waveTimeMax_) {
+		if (waveTimeNum_ < 3) {
+			waveTimeNum_++;
+		}
+		switch (waveTimeNum_)
+		{
+		case 0:
+			enemyWave_ = wave01;
+			break;
+		case 1:
+			enemyWave_ = wave02;
+			break;
+		case 2:
+			enemyWave_ = wave03;
+			break;
+		default:
+			break;
+		}
+
+		// ウェーブの時間をリセット
+		waveTimer_ = 0;
+	}
+
+	// エネミーの時間ごとにわく処理 (無限沸き)
+	switch (enemyWave_)
+	{
+	case GameScene::wave01:
+		if (enemySpawnTimer_ >= enemySpawnTimeMax1_ && enemys_.size() <= 3 * 1) {
+			LoadEnemy();
+			enemySpawnTimer_ = 0;
+		}
+		break;
+	case GameScene::wave02:
+		if (enemySpawnTimer_ >= enemySpawnTimeMax2_ && enemys_.size() <= 4 * 2) {
+			LoadEnemy();
+			enemySpawnTimer_ = 0;
+		}
+		break;
+	case GameScene::wave03:
+		if (enemySpawnTimer_ >= enemySpawnTimeMax3_ && enemys_.size() <= 5 * 3) {
+			LoadEnemy();
+			enemySpawnTimer_ = 0;
+		}
+		break;
+	default:
+		break;
+	}
+
+	//寿命が尽きた敵を全削除
+	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a)
+		{return a->GetDeadMotionEnd() == true; });
+	std::for_each(enemys_.begin(), it, [](Enemy* a) { delete a; });
+	enemys_.erase(enemys_.begin(), it);
+
+	//	敵の更新処理
+	for (auto e : enemys_) {
+		e->Update();
 	}
 }

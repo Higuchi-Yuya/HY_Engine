@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -89,7 +89,7 @@ copy "$(SolutionDir)lib\assimp\bin\Debug\pugixml.dll" "$(TargetDir)pugixml.dll"<
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -170,6 +170,8 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\GameCollider\GameCollider.cpp" />
     <ClCompile Include="Application\Player\PlayerBullet.cpp" />
+    <ClCompile Include="Engine\Util\Util.cpp" />
+    <ClCompile Include="Application\UI\TimerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -232,6 +234,8 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
     <ClInclude Include="Application\GameCollider\GameCollider.h" />
     <ClInclude Include="Application\Player\PlayerBullet.h" />
+    <ClInclude Include="Engine\Util\Util.h" />
+    <ClInclude Include="Application\UI\TimerUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

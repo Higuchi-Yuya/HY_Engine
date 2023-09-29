@@ -253,6 +253,11 @@ void GameScene::Initialize()
 	gameCollider->SetPlayer(player_.get());
 #pragma endregion
 
+#pragma region UI関連の初期化
+	timerUi_ = std::make_unique<TimerUI>();
+	timerUi_->Init();
+#pragma endregion
+
 }
 
 void GameScene::Update()
@@ -497,6 +502,8 @@ void GameScene::Draw2DFront()
 	case GameScene::Scene::Game: // ゲームシーン
 		//spriteProvisional->Draw();
 		player_->Draw2DFront();
+		timerUi_->DrawFrontSprite();
+
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
 
@@ -762,6 +769,9 @@ void GameScene::GameSceneUpdate()
 	light->SetCircleShadowCasterPos(0, circleShadowCasterPos);
 	light->Update();
 
+
+	// タイマーの更新処理
+	timerUi_->Update();
 
 	//// 敵が全滅したらとりあえずシーンを切り替える
 	//if (enemys_.size() <= 1) {

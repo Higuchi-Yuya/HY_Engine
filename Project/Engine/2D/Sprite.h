@@ -1,5 +1,6 @@
 #pragma once
 #include "SpriteManager.h"
+#include "WorldTransform.h"
 #include "Matrix4.h"
 #include "Vector2.h"
 #include "Vector4.h"
@@ -28,7 +29,7 @@ public:// メンバ関数
 	void Initialize(Texture* textureNum = nullptr, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f }, Vector4 color = { 1,1,1,1 });
 
 	// 更新処理
-	void Updata();
+	void Updata(WorldTransform* parent = nullptr);
 
 	// 描画
 	void Draw();
@@ -57,6 +58,12 @@ public:// メンバ関数
 	// サイズの取得
 	const Vector2& GetSize() const { return size_; }
 
+	// スケールの設定
+	void SetScale(const Vector3& scale) { scale_ = scale; }
+
+	// スケールの取得
+	const Vector3& GetScale() const { return scale_; }
+
 	// アンカーポイントの設定
 	void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint;}
 
@@ -80,6 +87,11 @@ public:// メンバ関数
 
 	// 非表示のフラグの取得
 	const bool& GetInvisible()const { return isInvisible_; }
+
+	// テクスチャの切り出しサイズの設定
+	void SetRectSize(const Vector2& leftTopPos, const Vector2& rightDownPos) {
+		textureLeftTop_ = leftTopPos; textureSize_ = rightDownPos;
+	}
 
 	// テクスチャ切り出しの設定
 	void SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }
@@ -118,6 +130,8 @@ protected:// メンバ変数
 	
 	Vector2 size_ = { 100.0f,100.0f };          // スプライトサイズ
 	
+	Vector3 scale_ = { 1.0f,1.0f,0.0f };             // スプライトのスケール
+
 	Vector2 anchorPoint_ = { 0.5f,0.5f };       // アンカーポイント(座標変換の基準点)
 	
 	bool isFlipX_ = false;	                    // 左右反転フラグ

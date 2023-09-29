@@ -17,6 +17,7 @@
 #include "Dissolve.h"
 #include "ParticleManager.h"
 
+#include "TimerUI.h"
 #include "GameCamera.h"
 #include "GameCollider.h"
 #include <vector>
@@ -266,7 +267,7 @@ private:// メンバ変数
 
 	// ゲームのウェーブごとの時間
 	float waveTimer_ = 0;
-	const float waveTimeMax_ = 60 * 20;
+	const float waveTimeMax_ = 120 * 60 / 3;
 
 	// 今のウェーブ
 	uint32_t waveTimeNum_ = 0;
@@ -274,12 +275,22 @@ private:// メンバ変数
 	// エネミーのスポーン時間
 	float enemySpawnTimer_ = 0;
 
+	// エネミーのウェーブごとのスポーン間隔
 	const float enemySpawnTimeMax1_ = 60 * 5;
 	const float enemySpawnTimeMax2_ = 60 * 4;
 	const float enemySpawnTimeMax3_ = 60 * 3;
+
 	// 抽選するエネミーのスポーンパターン
 	int randomWave01_ = 0;
 
+	// ウェーブが終わった時の判別フラグ
+	bool IsEndWave = false;
+
+#pragma endregion
+
+
+#pragma region タイマー関連
+	std::unique_ptr<TimerUI>timerUi_;
 #pragma endregion
 
 };

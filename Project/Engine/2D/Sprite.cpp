@@ -127,7 +127,7 @@ void Sprite::StaticInitialize(SpriteManager* spriteManager)
 	sSpriteManager_ = spriteManager;
 }
 
-void Sprite::Updata()
+void Sprite::Updata(WorldTransform* parent)
 {
 	//’¸“_ƒf[ƒ^‚ðƒƒ“ƒo•Ï”‚ÅŒvŽZ
 	float left = (0.0f - anchorPoint_.x) * size_.x;
@@ -162,9 +162,9 @@ void Sprite::Updata()
 		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
 
 		float tex_left = textureLeftTop_.x / resDesc.Width;
-		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
+		float tex_right = (textureSize_.x) / resDesc.Width;
 		float tex_top = textureLeftTop_.y / resDesc.Height;
-		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		float tex_bottom = (textureSize_.y) / resDesc.Height;
 
 		//’¸“_‚ÌUV‚É”½‰f
 		vertices_[LB].uv = { tex_left,tex_bottom };
@@ -177,12 +177,17 @@ void Sprite::Updata()
 	std::copy(std::begin(vertices_), std::end(vertices_), vertMap_);
 
 	// s—ñ‚ÌÝ’è
+	Matrix4 matScale;
 	Matrix4 matRot;
 	Matrix4 matTrans;
 
+	Matrix4 matResult;
+
+	matScale.identity();
 	matRot.identity();
 	matTrans.identity();
 
+	matScale.scale(scale_);
 	matRot.rotation(rotation_);
 	matTrans.translate({ position_.x,position_.y,0.0f });
 
@@ -195,11 +200,21 @@ void Sprite::Updata()
 
 	// s—ñ‚ÌŠ|‚¯ŽZ
 	matWorld_.identity();
+	matWorld_ *= matScale;
 	matWorld_ *= matRot;
 	matWorld_ *= matTrans;
+	// es—ñ‚ª‚ ‚Á‚½ê‡
+	if (parent != nullptr)
+	{
+		//parent->matWorld_ *= matProjection;
+		matWorld_ *= parent->matWorld_;
+	}
+	matResult = matWorld_ * matProjection;
+
+
 
 	// s—ñ‚Ì“]‘—
-	constMap_->mat = matWorld_ * matProjection;
+	constMap_->mat = matResult;
 
 	// F‚ð“]‘—
 	constMap_->color = color_;

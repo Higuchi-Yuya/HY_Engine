@@ -19,34 +19,36 @@ void OperationUI::Init()
 	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/AttackText.png"));
 	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/MoveText.png"));
 
+	Vector3 AbuttonScale(1.0f, 1.0f, 0);
+	Vector3 LstickScale(1.5f, 1.5f, 0);
 
 	// Aボタン Up の初期化
 	sprites_[AButtonUp]->Initialize(AbuttonTex_.get(),Vector2(100, 500), Vector2(49, 48));
 	sprites_[AButtonUp]->SetRectSize(Vector2(0, 0), Vector2(204, 200));
-	sprites_[AButtonUp]->SetScale(Vector3(2, 2, 0));
+	sprites_[AButtonUp]->SetScale(AbuttonScale);
 
 	// Aボタン Down の初期化
 	sprites_[AButtonDown]->Initialize(AbuttonTex_.get(), Vector2(100, 500), Vector2(49, 48));
 	sprites_[AButtonDown]->SetRectSize(Vector2(204, 0), Vector2(408, 200));
-	sprites_[AButtonDown]->SetScale(Vector3(2, 2, 0));
+	sprites_[AButtonDown]->SetScale(AbuttonScale);
 
 	// Lスティック 上 の初期化
 	sprites_[LstickCover]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(28, 48));
 	sprites_[LstickCover]->SetRectSize(Vector2(0, 0), Vector2(115, 200));
-	sprites_[LstickCover]->SetScale(Vector3(2.5f, 2.5f, 0));
+	sprites_[LstickCover]->SetScale(LstickScale);
 
 	// Lスティック 下 の初期化
 	sprites_[LstickUnder]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(46, 48));
 	sprites_[LstickUnder]->SetRectSize(Vector2(115, 0), Vector2(308, 200));
-	sprites_[LstickUnder]->SetScale(Vector3(2.5f, 2.5f, 0));
+	sprites_[LstickUnder]->SetScale(LstickScale);
 
 	// 攻撃テキストの初期化
-	sprites_[AttackText]->Initialize(attackTextTex_.get(), Vector2(100, 500) + Vector2(150, 0));
-	sprites_[AttackText]->SetScale(Vector3(0.5f, 0.5f, 0));
+	sprites_[AttackText]->Initialize(attackTextTex_.get(), Vector2(100, 500) + Vector2(100, -2),Vector2(360,120));
+	sprites_[AttackText]->SetScale(Vector3(0.3f, 0.3f, 0));
 
 	// 移動テキストの初期化
-	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(150, 0));
-	sprites_[MoveText]->SetScale(Vector3(0.5f, 0.5f, 0));
+	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(100, 0), Vector2(272, 120));
+	sprites_[MoveText]->SetScale(Vector3(0.3f, 0.3f, 0));
 }
 
 void OperationUI::Update()
@@ -60,7 +62,7 @@ void OperationUI::Update()
 			leftStick.y
 		};
 
-		sprites_[LstickCover]->SetPosition(LstickDefuPos_ + mMoveVec.normalize() * 30);
+		sprites_[LstickCover]->SetPosition(LstickDefuPos_ + mMoveVec.normalize() * 20);
 	}
 	else
 	{

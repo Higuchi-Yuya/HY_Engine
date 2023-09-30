@@ -103,7 +103,7 @@ void Enemy::Update()
 		disoTimer_++;
 		disoTimeLate_ = disoTimer_ / disoTimeMax_;
 		dissolve_.isActiveDissolve_ = true;
-
+		dissolve_.dissolveColor_ = Vector4(0.15f, 0.0f, 0.0f, 1);
 		dissolve_.dissolveTime_ = disoTimeLate_;
 
 		if (dissolve_.dissolveTime_ >= 1.0f) {

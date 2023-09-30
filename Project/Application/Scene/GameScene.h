@@ -18,8 +18,10 @@
 #include "ParticleManager.h"
 
 #include "TimerUI.h"
+#include "OperationUI.h"
 #include "GameCamera.h"
 #include "GameCollider.h"
+
 #include <vector>
 
 class CollisionManager;
@@ -289,8 +291,10 @@ private:// メンバ変数
 #pragma endregion
 
 
-#pragma region タイマー関連
+#pragma region UI関連
 	std::unique_ptr<TimerUI>timerUi_;
+
+	std::unique_ptr<OperationUI> operationUi_;
 #pragma endregion
 
 };

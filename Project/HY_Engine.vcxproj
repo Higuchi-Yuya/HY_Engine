@@ -172,6 +172,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClCompile Include="Application\Player\PlayerBullet.cpp" />
     <ClCompile Include="Engine\Util\Util.cpp" />
     <ClCompile Include="Application\UI\TimerUI.cpp" />
+    <ClCompile Include="Application\UI\OperationUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -236,6 +237,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClInclude Include="Application\Player\PlayerBullet.h" />
     <ClInclude Include="Engine\Util\Util.h" />
     <ClInclude Include="Application\UI\TimerUI.h" />
+    <ClInclude Include="Application\UI\OperationUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

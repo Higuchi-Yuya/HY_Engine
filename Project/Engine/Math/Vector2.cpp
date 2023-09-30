@@ -60,6 +60,46 @@ Vector2& Vector2::operator/=(float s)
 	return *this;
 }
 
+bool Vector2::operator==(const Vector2 other)
+{
+	return x == other.x && y == other.y;
+}
+
+bool Vector2::operator!=(const Vector2 other)
+{
+	return x != other.x || y != other.y;
+}
+
+bool Vector2::operator>=(const Vector2 other)
+{
+	return x >= other.x && y >= other.y;
+}
+
+bool Vector2::operator<=(const Vector2 other)
+{
+	return x <= other.x && y <= other.y;
+}
+
+bool Vector2::operator==(float num)
+{
+	return x == num && y == num;
+}
+
+bool Vector2::operator!=(float num)
+{
+	return x != num || y != num;
+}
+
+bool Vector2::operator>=(float num)
+{
+	return x >= num && y >= num;
+}
+
+bool Vector2::operator<=(float num)
+{
+	return x <= num && y <= num;
+}
+
 //Vector2 ƒNƒ‰ƒX‚É‘®‚³‚È‚¢ŠÖ”ŒQ
 const Vector2 operator+(const Vector2& v1, const Vector2& v2)
 {

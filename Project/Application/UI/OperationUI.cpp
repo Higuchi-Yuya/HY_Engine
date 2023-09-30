@@ -1,0 +1,88 @@
+#include "OperationUI.h"
+#include "JoyPadInput.h"
+
+OperationUI::OperationUI()
+{
+	// スプライトのユニークポインタ作り
+	for (uint32_t i = 0; i < Type::Size; i++){
+		sprites_.push_back(std::move(std::make_unique<Sprite>()));
+	}
+}
+
+void OperationUI::Init()
+{
+	LstickDefuPos_ = Vector2(100, 600);
+
+	// スプライトのハンドルの初期化
+	AbuttonTex_.reset(TextureManager::Load2DTextureP("UI/Abutton.png"));
+	LstickTex_.reset(TextureManager::Load2DTextureP("UI/Lstic.png"));
+	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/AttackText.png"));
+	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/MoveText.png"));
+
+
+	// Aボタン Up の初期化
+	sprites_[AButtonUp]->Initialize(AbuttonTex_.get(),Vector2(100, 500), Vector2(49, 48));
+	sprites_[AButtonUp]->SetRectSize(Vector2(0, 0), Vector2(204, 200));
+	sprites_[AButtonUp]->SetScale(Vector3(2, 2, 0));
+
+	// Aボタン Down の初期化
+	sprites_[AButtonDown]->Initialize(AbuttonTex_.get(), Vector2(100, 500), Vector2(49, 48));
+	sprites_[AButtonDown]->SetRectSize(Vector2(204, 0), Vector2(408, 200));
+	sprites_[AButtonDown]->SetScale(Vector3(2, 2, 0));
+
+	// Lスティック 上 の初期化
+	sprites_[LstickCover]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(28, 48));
+	sprites_[LstickCover]->SetRectSize(Vector2(0, 0), Vector2(115, 200));
+	sprites_[LstickCover]->SetScale(Vector3(2.5f, 2.5f, 0));
+
+	// Lスティック 下 の初期化
+	sprites_[LstickUnder]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(46, 48));
+	sprites_[LstickUnder]->SetRectSize(Vector2(115, 0), Vector2(308, 200));
+	sprites_[LstickUnder]->SetScale(Vector3(2.5f, 2.5f, 0));
+
+	// 攻撃テキストの初期化
+	sprites_[AttackText]->Initialize(attackTextTex_.get(), Vector2(100, 500) + Vector2(150, 0));
+	sprites_[AttackText]->SetScale(Vector3(0.5f, 0.5f, 0));
+
+	// 移動テキストの初期化
+	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(150, 0));
+	sprites_[MoveText]->SetScale(Vector3(0.5f, 0.5f, 0));
+}
+
+void OperationUI::Update()
+{
+	Vector2 leftStick = Pad::GetStick(PadCode::LeftStick, 300);
+	if (leftStick != 0)
+	{
+		Vector2 mMoveVec =
+		{
+			leftStick.x,
+			leftStick.y
+		};
+
+		sprites_[LstickCover]->SetPosition(LstickDefuPos_ + mMoveVec.normalize() * 30);
+	}
+	else
+	{
+		sprites_[LstickCover]->SetPosition(LstickDefuPos_);
+	}
+}
+
+void OperationUI::DrawFrontSprite()
+{
+	for (uint32_t i = 0; i < Type::Size; i++)
+	{
+		if (i != AButtonUp && i != AButtonDown)
+		{
+			sprites_[i]->Draw();
+		}
+	}
+	if (Pad::GetButton(PadCode::ButtonA))
+	{
+		sprites_[AButtonDown]->Draw();
+	}
+	else
+	{
+		sprites_[AButtonUp]->Draw();
+	}
+}

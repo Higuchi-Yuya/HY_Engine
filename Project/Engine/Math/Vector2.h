@@ -24,6 +24,15 @@ public:
 	Vector2& operator*=(float s);
 	Vector2& operator/=(float s);
 
+	// 比較演算子のオーバーロード
+	bool operator ==(const Vector2 other);
+	bool operator !=(const Vector2 other);
+	bool operator >=(const Vector2 other);
+	bool operator <=(const Vector2 other);
+	bool operator ==(float num);
+	bool operator !=(float num);
+	bool operator >=(float num);
+	bool operator <=(float num);
 };
 
 //2項目演算子オーバーロード

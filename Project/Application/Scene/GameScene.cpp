@@ -256,6 +256,10 @@ void GameScene::Initialize()
 #pragma region UI関連の初期化
 	timerUi_ = std::make_unique<TimerUI>();
 	timerUi_->Init();
+
+	operationUi_= std::make_unique<OperationUI>();
+	operationUi_->Init();
+
 #pragma endregion
 
 }
@@ -503,7 +507,7 @@ void GameScene::Draw2DFront()
 		//spriteProvisional->Draw();
 		player_->Draw2DFront();
 		timerUi_->DrawFrontSprite();
-
+		operationUi_->DrawFrontSprite();
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
 
@@ -772,6 +776,9 @@ void GameScene::GameSceneUpdate()
 
 	// タイマーの更新処理
 	timerUi_->Update();
+
+	// オペレーションの更新処理
+	operationUi_->Update();
 
 	//// 敵が全滅したらとりあえずシーンを切り替える
 	//if (enemys_.size() <= 1) {

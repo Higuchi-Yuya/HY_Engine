@@ -357,6 +357,9 @@
     <ClCompile Include="Application\UI\TimerUI.cpp">
       <Filter>ソース ファイル\Application\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Application\UI\OperationUI.cpp">
+      <Filter>ソース ファイル\Application\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -543,6 +546,9 @@
       <Filter>ヘッダー ファイル\Engine\Util</Filter>
     </ClInclude>
     <ClInclude Include="Application\UI\TimerUI.h">
+      <Filter>ヘッダー ファイル\Application\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\UI\OperationUI.h">
       <Filter>ヘッダー ファイル\Application\UI</Filter>
     </ClInclude>
   </ItemGroup>

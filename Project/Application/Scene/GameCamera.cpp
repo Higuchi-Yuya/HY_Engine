@@ -17,7 +17,16 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 	
 }
 
-void GameCamera::Update()
+void GameCamera::TitleUpdate()
+{
+	// カメラの座標を前に移動
+	//viewProjection_.eye.z += 0.1f;
+
+	// ビューの更新処理
+	viewProjection_.UpdateMatrix();
+}
+
+void GameCamera::GameUpdate()
 {
 	// カメラ回転
 	RotUpdate();

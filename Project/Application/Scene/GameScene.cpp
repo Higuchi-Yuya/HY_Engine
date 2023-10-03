@@ -22,6 +22,11 @@ GameScene::~GameScene()
 	}
 	objects.clear();
 
+	for (auto o : latticeDoors_) {
+		delete o;
+	}
+	latticeDoors_.clear();
+
 	Enemy::StaticFinalize();
 }
 
@@ -103,6 +108,7 @@ void GameScene::Initialize()
 	// フェンス
 	modelFence_.reset(Model::LoadFromOBJ("fence"));
 	modelFencePost_.reset(Model::LoadFromOBJ("fencePost"));
+	modelLatticeDoor_.reset(Model::LoadFromOBJ("latticeDoor"));
 
 	// お墓
 	modelGraveCross.reset(Model::LoadFromOBJ("grave_cross"));
@@ -165,6 +171,7 @@ void GameScene::Initialize()
 	models.insert(std::make_pair("tree_Normal", modelTreeNormal_.get()));
 	models.insert(std::make_pair("fence", modelFence_.get()));
 	models.insert(std::make_pair("fencePost", modelFencePost_.get()));
+	models.insert(std::make_pair("latticeDoor", modelLatticeDoor_.get()));
 	models.insert(std::make_pair("grave_cross", modelGraveCross.get()));
 	models.insert(std::make_pair("grave_square", modelGraveSquare.get()));
 
@@ -198,6 +205,35 @@ void GameScene::Initialize()
 			enemys_.push_back(newEnemy);
 		}
 #pragma endregion
+
+#pragma region お墓のドア
+		else if (objectData.tagName == "Door")
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			newObject->SetModel(model);
+
+			// 座標
+			Vector3 pos;
+			pos = objectData.translation;
+			newObject->worldTransform_.translation = pos;
+
+			// 回転角
+			Vector3 rot;
+			rot = objectData.rotation;
+			newObject->worldTransform_.rotation = rot;
+			newObject->worldTransform_.rotation.y += MathUtil::DegreeToRadian(180);
+
+			// スケール
+			Vector3 scale;
+			scale = objectData.scaling;
+			newObject->worldTransform_.scale = scale;
+
+			// 配列に登録
+			latticeDoors_.push_back(newObject);
+		}
+#pragma endregion
+
 
 		// それ以外のタグ名またはなしの場合
 		// 普通のオブジェクトと判断し生成
@@ -240,6 +276,10 @@ void GameScene::Initialize()
 	gameCamera = std::make_unique<GameCamera>();
 	gameCamera->Initialize(player_->GetCameraWorld());
 	gameCamera->SetCameraFPos(player_->worldTransform_.translation);
+
+	
+	gameCamera->GetView().eye = { -0.8f,6,-55 };
+	gameCamera->GetView().target = { -0.8f,0,0 };
 	player_->SetGameCamera(gameCamera.get());
 #pragma endregion
 
@@ -446,6 +486,16 @@ void GameScene::Draw3D()
 	{
 	case GameScene::Scene::Title: // タイトルシーン
 
+		// お墓のドアのオブジェクトの描画
+		for (auto l: latticeDoors_){
+			l->Draw(&gameCamera->GetView());
+		}
+
+		// 普通のオブジェクトの描画
+		for (auto o : objects) {
+			o->Draw(&gameCamera->GetView());
+		}
+
 		break;
 	case GameScene::Scene::Game: // ゲームシーン
 
@@ -457,6 +507,11 @@ void GameScene::Draw3D()
 		// 敵の描画
 		for (auto e : enemys_) {
 			e->Draw(&gameCamera->GetView());
+		}
+
+		// お墓のドアのオブジェクトの描画
+		for (auto l : latticeDoors_){
+			l->Draw(&gameCamera->GetView());
 		}
 
 		// 普通のオブジェクトの描画
@@ -498,7 +553,7 @@ void GameScene::Draw2DFront()
 	switch (scene)
 	{
 	case GameScene::Scene::Title: // タイトルシーン
-		titleKariBack->Draw();
+		//titleKariBack->Draw();
 		titleKariFont->Draw();
 		titleKariPressA->Draw();
 		
@@ -677,6 +732,57 @@ void GameScene::TitleUpdate()
 		oldScene = Scene::Title;
 		sceneChangeFlag = true;
 	}
+
+#pragma region ライトの更新処理
+	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
+	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+
+	light->SetSpotLightDir(0, spotLightDir);
+	light->SetSpotLightPos(0, spotLightPos);
+	light->SetSpotLightColor(0, spotLightColor);
+	light->SetSpotLightAtten(0, spotLightAtten);
+	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);
+
+	light->SetCircleShadowDir(0, circleShadowDir);
+
+	light->SetCircleShadowAtten(0, circleShadowAtten);
+	light->SetCircleShadowFactorAngle(0, circleShadowFactorAngle);
+
+	light->SetAmbientColor(AmColor);
+	light->SetDiffuseColor(DiColor);
+	light->SetSpecularColor(SpColor);
+
+	if (isActiveDirectional == true) {
+		light->SetDirLightActive(0, true);
+	}
+	else if (isActiveDirectional == false) {
+		light->SetDirLightActive(0, false);
+	}
+	if (isActiveSpot == true) {
+		light->SetSpotLightActive(0, true);
+	}
+	else if (isActiveSpot == false) {
+		light->SetSpotLightActive(0, false);
+	}
+#pragma endregion
+
+	// オブジェクトの更新処理
+	for (auto o : objects) {
+		o->Update();
+	}
+
+	// お墓のドアのオブジェクトの描画
+	for (auto l : latticeDoors_)
+	{
+		l->Update();
+	}
+
+	// カメラの更新処理
+	//gameCamera->GetView().eye.z += 0.1f;
+	gameCamera->TitleUpdate();
+
+	light->Update();
 }
 
 void GameScene::GameSceneUpdate()
@@ -758,7 +864,12 @@ void GameScene::GameSceneUpdate()
 	
 	// カメラの更新処理
 	gameCamera->SetCameraPos(player_->worldTransform_.translation);
-	gameCamera->Update();
+	gameCamera->GameUpdate();
+
+	// お墓のドアのオブジェクトの描画
+	for (auto l : latticeDoors_){
+		l->Update();
+	}
 
 	// オブジェクトの更新処理
 	for (auto o : objects) {

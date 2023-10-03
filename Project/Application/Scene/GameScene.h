@@ -185,6 +185,7 @@ private:// メンバ変数
 	// フェンス
 	std::unique_ptr<Model> modelFence_ = nullptr;
 	std::unique_ptr<Model> modelFencePost_ = nullptr;
+	std::unique_ptr<Model> modelLatticeDoor_ = nullptr;
 
 	// お墓
 	std::unique_ptr<Model> modelGraveCross = nullptr;
@@ -258,6 +259,9 @@ private:// メンバ変数
 	std::map<std::string, Model*> models;
 	// レベルデータに登録するオブジェクトの配列
 	std::vector<Object3d*> objects;
+
+	// お墓のドアの配列
+	std::vector<Object3d*> latticeDoors_;
 
 #pragma endregion
 

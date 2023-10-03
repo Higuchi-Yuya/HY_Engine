@@ -7,7 +7,9 @@ class GameCamera
 public:// ƒƒ“ƒoŠÖ”
 	void Initialize(const WorldTransform* worldTransform);
 
-	void Update();
+	void TitleUpdate();
+
+	void GameUpdate();
 
 	ViewProjection& GetView() { return viewProjection_; }
 

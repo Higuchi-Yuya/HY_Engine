@@ -2,6 +2,7 @@
 #include "Object3d.h"
 #include<cassert>
 
+
 ID3D12Device* Dissolve::sDevice_ = nullptr;
 
 const std::string Dissolve::sDissolveTexBasePass_ = "Resources/3D_Resources/DefaultMaterial/DissolveMap.png";
@@ -19,11 +20,11 @@ void Dissolve::StaticInitialize(ID3D12Device* device)
 
 Dissolve* Dissolve::Create()
 {
-	// 3DƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ð¶¬
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
 	Dissolve* instance = new Dissolve();
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	instance->Initialize();
-	// ¶¬‚µ‚½ƒCƒ“ƒXƒ^ƒ“ƒX‚ð•Ô‚·
+	// ç”Ÿæˆã—ãŸã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¿”ã™
 	return instance;
 }
 
@@ -33,13 +34,13 @@ void Dissolve::Initialize()
 	Map();
 	UpdateMatrix();
 
-	// ƒfƒtƒHƒ‹ƒgƒeƒNƒXƒ`ƒƒ‚ð“Ç‚Ýž‚Þ
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’èª­ã¿è¾¼ã‚€
 	dissolveTex_ = TextureManager::LoadFreeTexture(sDissolveTexBasePass_);
 }
 
 void Dissolve::UpdateMatrix()
 {
-	//’è”ƒoƒbƒtƒ@‚É“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«è»¢é€
 	if (isActiveDissolve_ == true) {
 		constMap_->isActiveDissolve = isActiveDissolve_;
 		constMap_->dissolveColor = dissolveColor_;
@@ -52,10 +53,10 @@ void Dissolve::UpdateMatrix()
 
 void Dissolve::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t dissolveRootIndex)
 {
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ðƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList->SetGraphicsRootConstantBufferView(dissolveRootIndex, constBuff_->GetGPUVirtualAddress());
 	if (isActiveDissolve_ == true) {
-		// ƒfƒBƒ]ƒ‹ƒuƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚ðƒZƒbƒg
+		// ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 		cmdList->SetGraphicsRootDescriptorTable(static_cast<uint32_t>(rootParameterIndex::DISSOLVETEX), dissolveTex_->GetGpuHandle());
 	}
 }
@@ -64,17 +65,17 @@ void Dissolve::CreateConstBuffer()
 {
 	assert(sDevice_);
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXÝ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataDissolve) + 0xff) & ~0xff);
 
 	HRESULT result;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = sDevice_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -86,11 +87,11 @@ void Dissolve::CreateConstBuffer()
 
 void Dissolve::Map()
 {
-	// ’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//ƒ}ƒbƒsƒ“ƒO
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒžãƒƒãƒ”ãƒ³ã‚°
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//ãƒžãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
-	// ’è”ƒoƒbƒtƒ@‚Ì‰Šú’l‚ð‘—‚é
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®åˆæœŸå€¤ã‚’é€ã‚‹
 	constMap_->isActiveDissolve = isActiveDissolve_;
 	constMap_->dissolveColor = dissolveColor_;
 	constMap_->dissolvePower = dissolvePower_;

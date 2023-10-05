@@ -3,6 +3,7 @@
 #include "Object3d.h"
 #include <cassert>
 
+
 class PlayerBullet:public Object3d
 {
 public:
@@ -14,23 +15,23 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
-	// ƒ[ƒ‹ƒh’eÀ•W‚ğæ“¾
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰å¼¾åº§æ¨™ã‚’å–å¾—
 	Vector3 GetBulletWorldPosition();
 
-	// Õ“Ë‚ğŒŸo‚µ‚½‚çŒÄ‚Ño‚³‚ê‚éƒR[ƒ‹ƒoƒbƒNŠÖ”
+	// è¡çªã‚’æ¤œå‡ºã—ãŸã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 	void OnCollision();
 private:
 
-	//‘¬“x
+	//é€Ÿåº¦
 	Vector3 velocity_;
 
-	//õ–½<frm>
+	//å¯¿å‘½<frm>
 	static const int32_t kLifeTime = 60 * 5;
 
-	//ƒfƒXƒ^ƒCƒ}[
+	//ãƒ‡ã‚¹ã‚¿ã‚¤ãƒãƒ¼
 	int32_t deathTimer_ = kLifeTime;
 
-	//ƒfƒXƒtƒ‰ƒO
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°
 	bool isDead_ = false;
 };
 

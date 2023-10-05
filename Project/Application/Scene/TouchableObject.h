@@ -1,18 +1,19 @@
 #pragma once
+
 #include "Object3d.h"
 class TouchableObject : public Object3d
 {
 public:
 	/// <summary>
-	/// ƒIƒuƒWƒFƒNƒg¶¬
+	/// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	/// </summary>
 	/// <returns></returns>
 	static TouchableObject* Create(Model* model = nullptr);
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
-	/// <returns>¬”Û</returns>
+	/// <returns>æˆå¦</returns>
 	bool Initialize(Model* model);
 };
 

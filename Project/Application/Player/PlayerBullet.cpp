@@ -1,18 +1,19 @@
 #include "PlayerBullet.h"
 
+
 void PlayerBullet::Initialize(Model* model, const WorldTransform worldTransform, const Vector3& velocity) {
-	//NULLƒ|ƒCƒ“ƒ^ƒ`ƒFƒbƒN
+	//NULLãƒã‚¤ãƒ³ã‚¿ãƒã‚§ãƒƒã‚¯
 	assert(model);
 
 	SetModel(model);
 
-	//ˆø”‚Åó‚¯æ‚Á‚½‘¬“x‚ğƒƒ“ƒo•Ï”‚É‘ã“ü
+	//å¼•æ•°ã§å—ã‘å–ã£ãŸé€Ÿåº¦ã‚’ãƒ¡ãƒ³ãƒå¤‰æ•°ã«ä»£å…¥
 	velocity_ = velocity;
 
-	//ƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ì‰Šú‰»
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®åˆæœŸåŒ–
 	Object3d::Initialize();
 
-	//ˆø”‚Åó‚¯æ‚Á‚½‰ŠúÀ•W‚ğƒZƒbƒg
+	//å¼•æ•°ã§å—ã‘å–ã£ãŸåˆæœŸåº§æ¨™ã‚’ã‚»ãƒƒãƒˆ
 	worldTransform_.translation = {
 	  worldTransform.matWorld_.m[3][0], worldTransform.matWorld_.m[3][1],
 	  worldTransform.matWorld_.m[3][2] };
@@ -22,25 +23,25 @@ void PlayerBullet::Initialize(Model* model, const WorldTransform worldTransform,
 	worldTransform_.scale.y = 0.3f;
 	worldTransform_.scale.z = 0.3f;
 
-	// ‘Å‚Â•ûŒü‚ÉŒü‚¯‚ÄƒIƒuƒWƒFƒNƒg‚ğ‰ñ“]‚³‚¹‚é
+	// æ‰“ã¤æ–¹å‘ã«å‘ã‘ã¦ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å›è»¢ã•ã›ã‚‹
 
-	// Y²ü‚èŠp“x(ƒÆy)
+	// Yè»¸å‘¨ã‚Šè§’åº¦(Î¸y)
 	worldTransform_.rotation.y = std::atan2(velocity_.x, velocity_.z);
-	// Y²ü‚è‚É-ƒÆy‰ñ‚·‰ñ“]s—ñ‚ğŒvZ
+	// Yè»¸å‘¨ã‚Šã«-Î¸yå›ã™å›è»¢è¡Œåˆ—ã‚’è¨ˆç®—
 	Matrix4 RotY;
 	Matrix4 mathMat;
 	RotY.rotateY(-worldTransform_.rotation.y);
-	// velosity_‚É‰ñ“]s—ñ‚ğŠ|‚¯Z‚µ‚ÄvelosityZ‚ğ‹‚ß‚é
+	// velosity_ã«å›è»¢è¡Œåˆ—ã‚’æ›ã‘ç®—ã—ã¦velosityZã‚’æ±‚ã‚ã‚‹
 	Vector3 velosityZ = velocity_;
 	velosityZ = mathMat.transformNotW(velosityZ, RotY);
 
-	// X²ü‚èŠp“x(ƒÆx)
+	// Xè»¸å‘¨ã‚Šè§’åº¦(Î¸x)
 	worldTransform_.rotation.x = std::atan2(-velosityZ.y, velosityZ.z);
 }
 
 void PlayerBullet::Update()
 {
-	//À•W‚ğˆÚ“®‚³‚¹‚é(‚PƒtƒŒ[ƒ€•ª‚ÌˆÚ“®—Ê‚ğ‘«‚µ‚±‚Ş)
+	//åº§æ¨™ã‚’ç§»å‹•ã•ã›ã‚‹(ï¼‘ãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®ç§»å‹•é‡ã‚’è¶³ã—ã“ã‚€)
 	worldTransform_.translation += velocity_;
 
 	worldTransform_.UpdateMatrix();
@@ -57,9 +58,9 @@ void PlayerBullet::Draw(ViewProjection* view)
 
 Vector3 PlayerBullet::GetBulletWorldPosition()
 {
-	// ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 worldPos;
-	// ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ª‚ğæ“¾(ƒ[ƒ‹ƒhÀ•W)
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†ã‚’å–å¾—(ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™)
 	worldPos.x = worldTransform_.translation.x;
 	worldPos.y = worldTransform_.translation.y;
 	worldPos.z = worldTransform_.translation.z;

@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "assimp/aabb.h"
 
+
 using namespace DirectX;
 using namespace std;
 
@@ -22,7 +23,7 @@ Model::~Model()
 	for (auto m : materials_) {
 		delete m.second;
 	}
-	// ‘SƒƒbƒVƒ…‚ğíœ
+	// å…¨ãƒ¡ãƒƒã‚·ãƒ¥ã‚’å‰Šé™¤
 	for (auto mesh : meshes_) {
 		delete mesh;
 	}
@@ -33,10 +34,10 @@ Model* Model::LoadFromOBJ(const std::string& modelname, bool smoothing)
 {
 	Model* model = new Model;
 
-	// ƒIƒuƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚©‚çƒf[ƒ^‚ğ“Ç‚İ‚Ş
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
 	model->LoadFromOBJInternal(modelname, smoothing);
 
-	// ƒoƒbƒtƒ@¶¬
+	// ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	model->CreateBuffers();
 
 	return model;
@@ -44,54 +45,54 @@ Model* Model::LoadFromOBJ(const std::string& modelname, bool smoothing)
 
 void Model::LoadMaterial(const std::string& directoryPath, const std::string& filename)
 {
-	//ƒtƒ@ƒCƒ‹ƒXƒgƒŠ[ƒ€
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒªãƒ¼ãƒ 
 	std::ifstream file;
-	// ƒ}ƒeƒŠƒAƒ‹ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	file.open(directoryPath + filename);
-	// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“¸”s‚ğƒ`ƒFƒbƒN
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³å¤±æ•—ã‚’ãƒã‚§ãƒƒã‚¯
 	if (file.fail()) {
 		assert(0);
 	}
 
 	Material* material = nullptr;
 
-	// 1s‚¸‚Â“Ç‚İ‚Ş
+	// 1è¡Œãšã¤èª­ã¿è¾¼ã‚€
 	string line;
 	while (getline(file, line)) {
-		// ˆês•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·
+		// ä¸€è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›
 		std::istringstream line_stream(line);
-		// ”¼ŠpƒXƒy[ƒX‹æØ‚è‚Ås‚Ìæ“ª•¶š—ñ‚ğæ“¾
+		// åŠè§’ã‚¹ãƒšãƒ¼ã‚¹åŒºåˆ‡ã‚Šã§è¡Œã®å…ˆé ­æ–‡å­—åˆ—ã‚’å–å¾—
 		string key;
 		getline(line_stream, key, ' ');
 
-		// æ“ª‚Ìƒ^ƒu•¶š‚Í–³‹‚·‚é
+		// å…ˆé ­ã®ã‚¿ãƒ–æ–‡å­—ã¯ç„¡è¦–ã™ã‚‹
 		if (key[0] == '\t') {
-			key.erase(key.begin());// æ“ª‚Ì•¶š‚ğíœ
+			key.erase(key.begin());// å…ˆé ­ã®æ–‡å­—ã‚’å‰Šé™¤
 		}
 
-		// æ“ª•¶š—ñ‚ªnewmtl‚È‚çƒ}ƒeƒŠƒAƒ‹–¼
+		// å…ˆé ­æ–‡å­—åˆ—ãŒnewmtlãªã‚‰ãƒãƒ†ãƒªã‚¢ãƒ«å
 		if (key == "newmtl") {
-			// Šù‚Éƒ}ƒeƒŠƒAƒ‹‚ª‚ ‚ê‚Î
+			// æ—¢ã«ãƒãƒ†ãƒªã‚¢ãƒ«ãŒã‚ã‚Œã°
 			if (material) {
-				// ƒ}ƒeƒŠƒAƒ‹‚ğƒRƒ“ƒeƒi‚É“o˜^
+				// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ã‚³ãƒ³ãƒ†ãƒŠã«ç™»éŒ²
 				AddMaterial(material);
 			}
 
-			// V‚µ‚¢ƒ}ƒeƒŠƒAƒ‹‚ğ¶¬
+			// æ–°ã—ã„ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ç”Ÿæˆ
 			material = Material::Create();
 
-			// ƒ}ƒeƒŠƒAƒ‹–¼“Ç‚İ‚İ
+			// ãƒãƒ†ãƒªã‚¢ãƒ«åèª­ã¿è¾¼ã¿
 			line_stream >> material->name;
 		}
 
-		// æ“ª•¶š—ñ‚ªKs‚È‚çƒAƒ“ƒrƒGƒ“ƒgF
+		// å…ˆé ­æ–‡å­—åˆ—ãŒKsãªã‚‰ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆè‰²
 		if (key == "Ka") {
 			line_stream >> material->ambient.x;
 			line_stream >> material->ambient.y;
 			line_stream >> material->ambient.z;
 
 		}
-		// æ“ª•¶š—ñ‚ªKs‚È‚çƒfƒBƒtƒ…[ƒYF
+		// å…ˆé ­æ–‡å­—åˆ—ãŒKsãªã‚‰ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºè‰²
 		if (key == "Kd") {
 			line_stream >> material->diffuse.x;
 			line_stream >> material->diffuse.y;
@@ -99,37 +100,37 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 
 		}
 
-		// æ“ª•¶š—ñ‚ªKs‚È‚çƒXƒyƒLƒ…ƒ‰[F
+		// å…ˆé ­æ–‡å­—åˆ—ãŒKsãªã‚‰ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼è‰²
 		if (key == "Ks") {
 			line_stream >> material->specular.x;
 			line_stream >> material->specular.y;
 			line_stream >> material->specular.z;
 
 		}
-		// æ“ª•¶š—ñ‚ªmap_Kd‚È‚çƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
+		// å…ˆé ­æ–‡å­—åˆ—ãŒmap_Kdãªã‚‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«å
 		if (key == "map_Kd") {
-			// ƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹–¼“Ç‚İ‚İ
+			// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ•ã‚¡ã‚¤ãƒ«åèª­ã¿è¾¼ã¿
 			line_stream >> material->textureFilename;
-			// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+			// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 			material->LoadTexture(directoryPath, material->textureFilename);
 		}
 	}
-	// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	file.close();
 
 	if (material) {
-		// ƒ}ƒeƒŠƒAƒ‹‚ğ“o˜^
+		// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ç™»éŒ²
 		AddMaterial(material);
 	}
 }
 
 void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	// nullptrƒ`ƒFƒbƒN
+	// nullptrãƒã‚§ãƒƒã‚¯
 	assert(sDevice_);
 	assert(cmdList);
 
-	// ‘SƒƒbƒVƒ…‚ğ•`‰æ
+	// å…¨ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æç”»
 	for (auto& mesh : meshes_) {
 		mesh->Draw(cmdList);
 	}
@@ -139,151 +140,150 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 {
-	// ƒtƒ@ƒCƒ‹ƒXƒgƒŠ[ƒ€
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒªãƒ¼ãƒ 
 	std::ifstream file;
 
-	// objƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	// objãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	//const string modelname = "skydome";
 	const string filename = modelname + ".obj"; // "triangle_mat.obj"
 	const string directoryPath = "Resources/3D_Resources/Object_File/" + modelname + "/"; // "Resources/triangle_mat/"
 	file.open(directoryPath + filename); //"Resources/triangle_mat/triangle_mat.obj"
-	// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“¸”s‚ğƒ`ƒFƒbƒN
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³å¤±æ•—ã‚’ãƒã‚§ãƒƒã‚¯
 	if (file.fail()) {
 		assert(0);
 	}
 
 	name_ = modelname;
 
-	// ƒƒbƒVƒ…¶¬
+	// ãƒ¡ãƒƒã‚·ãƒ¥ç”Ÿæˆ
 	meshes_.emplace_back(new Mesh);
 	Mesh* mesh = meshes_.back();
 	int indexCountTex = 0;
-	int indexCountNoTex = 0;
 
-	vector<Vector3> positions; // ’¸“_À•W
-	vector<Vector3> normals; // –@üƒxƒNƒgƒ‹
-	vector<Vector2> texcoords; // ƒeƒNƒXƒ`ƒƒUV
-	// 1s‚¸‚Â“Ç‚İ‚Ş
+	vector<Vector3> positions; // é ‚ç‚¹åº§æ¨™
+	vector<Vector3> normals; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+	vector<Vector2> texcoords; // ãƒ†ã‚¯ã‚¹ãƒãƒ£UV
+	// 1è¡Œãšã¤èª­ã¿è¾¼ã‚€
 	string line;
 	while (getline(file, line)) {
-		// 1s•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+		// 1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 		std::istringstream line_stream(line);
 
-		// ”¼ŠpƒXƒy[ƒX‹æØ‚è‚Ås‚Ìæ“ª•¶š—ñ‚ğæ“¾
+		// åŠè§’ã‚¹ãƒšãƒ¼ã‚¹åŒºåˆ‡ã‚Šã§è¡Œã®å…ˆé ­æ–‡å­—åˆ—ã‚’å–å¾—
 		string key;
 		getline(line_stream, key, ' ');
 
-		// æ“ª•¶š—ñ‚ªmtllib‚È‚çƒ}ƒeƒŠƒAƒ‹
+		// å…ˆé ­æ–‡å­—åˆ—ãŒmtllibãªã‚‰ãƒãƒ†ãƒªã‚¢ãƒ«
 		if (key == "mtllib")
 		{
-			// ƒ}ƒeƒŠƒAƒ‹‚Ìƒtƒ@ƒCƒ‹–¼“Ç‚İ‚İ
-			string filename;
-			line_stream >> filename;
+			// ãƒãƒ†ãƒªã‚¢ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«åèª­ã¿è¾¼ã¿
+			string mfilename;
+			line_stream >> mfilename;
 
-			// ƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ
-			LoadMaterial(directoryPath, filename);
+			// ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿
+			LoadMaterial(directoryPath, mfilename);
 		}
-		// æ“ª•¶š—ñ‚ªg‚È‚çƒOƒ‹[ƒv‚ÌŠJn
+		// å…ˆé ­æ–‡å­—åˆ—ãŒgãªã‚‰ã‚°ãƒ«ãƒ¼ãƒ—ã®é–‹å§‹
 		if (key == "g") {
 
-			// ƒJƒŒƒ“ƒgƒƒbƒVƒ…‚Ìî•ñ‚ª‘µ‚Á‚Ä‚¢‚é‚È‚ç
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ¡ãƒƒã‚·ãƒ¥ã®æƒ…å ±ãŒæƒã£ã¦ã„ã‚‹ãªã‚‰
 			if (mesh->GetName().size() > 0 && mesh->GetVertexCount() > 0) {
-				// ’¸“_–@ü‚Ì•½‹Ï‚É‚æ‚éƒGƒbƒW‚Ì•½ŠŠ‰»
+				// é ‚ç‚¹æ³•ç·šã®å¹³å‡ã«ã‚ˆã‚‹ã‚¨ãƒƒã‚¸ã®å¹³æ»‘åŒ–
 				if (smoothing) {
 					mesh->CalculateSmoothedVertexNormals();
 				}
-				// Ÿ‚ÌƒƒbƒVƒ…¶¬
+				// æ¬¡ã®ãƒ¡ãƒƒã‚·ãƒ¥ç”Ÿæˆ
 				meshes_.emplace_back(new Mesh);
 				mesh = meshes_.back();
 				indexCountTex = 0;
 			}
 
-			// ƒOƒ‹[ƒv–¼“Ç‚İ‚İ
+			// ã‚°ãƒ«ãƒ¼ãƒ—åèª­ã¿è¾¼ã¿
 			string groupName;
 			line_stream >> groupName;
 
-			// ƒƒbƒVƒ…‚É–¼‘O‚ğƒZƒbƒg
+			// ãƒ¡ãƒƒã‚·ãƒ¥ã«åå‰ã‚’ã‚»ãƒƒãƒˆ
 			mesh->SetName(groupName);
 		}
-		// æ“ª•¶š—ñ‚ªv‚È‚ç’¸“_À•W
+		// å…ˆé ­æ–‡å­—åˆ—ãŒvãªã‚‰é ‚ç‚¹åº§æ¨™
 		if (key == "v") {
-			// X,Y,ZÀ•W“Ç‚İ‚İ
+			// X,Y,Zåº§æ¨™èª­ã¿è¾¼ã¿
 			Vector3 position{};
 			line_stream >> position.x;
 			line_stream >> position.y;
 			line_stream >> position.z;
 
-			// À•Wƒf[ƒ^‚É’Ç‰Á
+			// åº§æ¨™ãƒ‡ãƒ¼ã‚¿ã«è¿½åŠ 
 			positions.emplace_back(position);
 		}
 
-		// æ“ª•¶š—ñ‚ªvt‚È‚çƒeƒNƒXƒ`ƒƒ
+		// å…ˆé ­æ–‡å­—åˆ—ãŒvtãªã‚‰ãƒ†ã‚¯ã‚¹ãƒãƒ£
 		if (key == "vt") {
-			// U,V¬•ª“Ç‚İ‚İ
+			// U,Væˆåˆ†èª­ã¿è¾¼ã¿
 			Vector2 texcoord{};
 			line_stream >> texcoord.x;
 			line_stream >> texcoord.y;
 
-			// V•ûŒü”½“]
+			// Væ–¹å‘åè»¢
 			texcoord.y = 1.0f - texcoord.y;
-			// ƒeƒNƒXƒ`ƒƒÀ•Wƒf[ƒ^‚É’Ç‰Á
+			// ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ãƒ‡ãƒ¼ã‚¿ã«è¿½åŠ 
 			texcoords.emplace_back(texcoord);
 
 		}
 
-		// æ“ª•¶š—ñ‚ªVN‚È‚ç–@üƒxƒNƒgƒ‹
+		// å…ˆé ­æ–‡å­—åˆ—ãŒVNãªã‚‰æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 		if (key == "vn") {
-			// X,Y,Z¬•ª“Ç‚İ‚İ
+			// X,Y,Zæˆåˆ†èª­ã¿è¾¼ã¿
 			Vector3 normal{};
 			line_stream >> normal.x;
 			line_stream >> normal.y;
 			line_stream >> normal.z;
-			// –@üƒxƒNƒgƒ‹ƒf[ƒ^‚É’Ç‰Á
+			// æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ãƒ‡ãƒ¼ã‚¿ã«è¿½åŠ 
 			normals.emplace_back(normal);
 		}
-		// æ“ª•¶š—ñ‚ªusemtl‚È‚çƒ}ƒeƒŠƒAƒ‹‚ğŠ„‚è“–‚Ä‚é
+		// å…ˆé ­æ–‡å­—åˆ—ãŒusemtlãªã‚‰ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹
 		if (key == "usemtl") {
 			if (mesh->GetMaterial() == nullptr) {
-				// ƒ}ƒeƒŠƒAƒ‹‚Ì–¼“Ç‚İ‚İ
+				// ãƒãƒ†ãƒªã‚¢ãƒ«ã®åèª­ã¿è¾¼ã¿
 				string materialName;
 				line_stream >> materialName;
 
-				// ƒ}ƒeƒŠƒAƒ‹–¼‚ÅŒŸõ‚µAƒ}ƒeƒŠƒAƒ‹‚ğŠ„‚è“–‚Ä‚é
+				// ãƒãƒ†ãƒªã‚¢ãƒ«åã§æ¤œç´¢ã—ã€ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹
 				auto itr = materials_.find(materialName);
 				if (itr != materials_.end()) {
 					mesh->SetMaterial(itr->second);
 				}
 			}
 		}
-		// æ“ª•¶š—ñ‚ªf‚È‚çƒ|ƒŠƒSƒ“iOŠpŒ`j
+		// å…ˆé ­æ–‡å­—åˆ—ãŒfãªã‚‰ãƒãƒªã‚´ãƒ³ï¼ˆä¸‰è§’å½¢ï¼‰
 		if (key == "f") {
 			int faceIndexCount = 0;
-			// ”¼ŠpƒXƒy[ƒX‹æØ‚è‚Ås‚Ì‘±‚«‚ğ“Ç‚İ‚Ş
+			// åŠè§’ã‚¹ãƒšãƒ¼ã‚¹åŒºåˆ‡ã‚Šã§è¡Œã®ç¶šãã‚’èª­ã¿è¾¼ã‚€
 			string index_string;
 			while (getline(line_stream, index_string, ' ')) {
-				// ’¸“_ƒCƒ“ƒfƒbƒNƒX‚PŒÂ•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+				// é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼‘å€‹åˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 				std::istringstream index_stream(index_string);
 				unsigned short indexPosition, indexNormal, indexTexcoord;
-				// ’¸“_”Ô†
+				// é ‚ç‚¹ç•ªå·
 				index_stream >> indexPosition;
 
-				Material* material = mesh->GetMaterial();
-				index_stream.seekg(1, ios_base::cur);// ƒXƒ‰ƒbƒVƒ…‚ğ”ò‚Î‚·
-				// ƒ}ƒeƒŠƒAƒ‹AƒeƒNƒXƒ`ƒƒ‚ª‚ ‚éê‡
+				//Material* material = mesh->GetMaterial();
+				index_stream.seekg(1, ios_base::cur);// ã‚¹ãƒ©ãƒƒã‚·ãƒ¥ã‚’é£›ã°ã™
+				// ãƒãƒ†ãƒªã‚¢ãƒ«ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒã‚ã‚‹å ´åˆ
 				if (materials_.size() > 0) {
 					index_stream >> indexTexcoord;
-					index_stream.seekg(1, ios_base::cur);// ƒXƒ‰ƒbƒVƒ…‚ğ”ò‚Î‚·
+					index_stream.seekg(1, ios_base::cur);// ã‚¹ãƒ©ãƒƒã‚·ãƒ¥ã‚’é£›ã°ã™
 					index_stream >> indexNormal;
-					// ’¸“_ƒf[ƒ^‚Ì’Ç‰Á
+					// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 					Mesh::VertexPosNormalUv vertex{};
 					vertex.pos = positions[indexPosition - 1];
 					vertex.normal = normals[indexNormal - 1];
 					vertex.uv = texcoords[indexTexcoord - 1];
 					mesh->AddVertex(vertex);
 
-					// ƒGƒbƒW•½ŠŠ‰»—p‚Ìƒf[ƒ^‚ğ’Ç‰Á
+					// ã‚¨ãƒƒã‚¸å¹³æ»‘åŒ–ç”¨ã®ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ 
 					if (smoothing) {
-						// vƒL[iÀ•Wƒf[ƒ^j‚Ì”Ô†‚ÆA‘S‚Ä‡¬‚µ‚½’¸“_‚ÌƒCƒ“ƒfƒbƒNƒX‚ğƒZƒbƒg‚Å“o˜^‚·‚é
+						// vã‚­ãƒ¼ï¼ˆåº§æ¨™ãƒ‡ãƒ¼ã‚¿ï¼‰ã®ç•ªå·ã¨ã€å…¨ã¦åˆæˆã—ãŸé ‚ç‚¹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ã‚»ãƒƒãƒˆã§ç™»éŒ²ã™ã‚‹
 						mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
 					}
 					AddMinMaxVertex(vertex.pos);
@@ -291,69 +291,69 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 				else {
 					char c;
 					index_stream >> c;
-					// ƒXƒ‰ƒbƒVƒ…2˜A‘±‚Ìê‡A’¸“_”Ô†‚Ì‚İ
+					// ã‚¹ãƒ©ãƒƒã‚·ãƒ¥2é€£ç¶šã®å ´åˆã€é ‚ç‚¹ç•ªå·ã®ã¿
 					if (c == '/') {
-						// ’¸“_ƒf[ƒ^‚Ì’Ç‰Á
+						// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 						Mesh::VertexPosNormalUv vertex{};
 						vertex.pos = positions[indexPosition - 1];
 						vertex.normal = { 0, 0, 1 };
 						vertex.uv = { 0, 0 };
 						mesh->AddVertex(vertex);
 
-						//// ƒGƒbƒW•½ŠŠ‰»—p‚Ìƒf[ƒ^‚ğ’Ç‰Á
+						//// ã‚¨ãƒƒã‚¸å¹³æ»‘åŒ–ç”¨ã®ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ 
 						//if (smoothing) {
-						//	// vƒL[iÀ•Wƒf[ƒ^j‚Ì”Ô†‚ÆA‘S‚Ä‡¬‚µ‚½’¸“_‚ÌƒCƒ“ƒfƒbƒNƒX‚ğƒZƒbƒg‚Å“o˜^‚·‚é
+						//	// vã‚­ãƒ¼ï¼ˆåº§æ¨™ãƒ‡ãƒ¼ã‚¿ï¼‰ã®ç•ªå·ã¨ã€å…¨ã¦åˆæˆã—ãŸé ‚ç‚¹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ã‚»ãƒƒãƒˆã§ç™»éŒ²ã™ã‚‹
 						//	AddSmoothData(indexPosition, (unsigned short)GetVertexCount() - 1);
 						//}
 
 						AddMinMaxVertex(vertex.pos);
 					}
 					else {
-						index_stream.seekg(-1, ios_base::cur); // 1•¶š–ß‚é
+						index_stream.seekg(-1, ios_base::cur); // 1æ–‡å­—æˆ»ã‚‹
 						index_stream >> indexTexcoord;
-						index_stream.seekg(1, ios_base::cur); // ƒXƒ‰ƒbƒVƒ…‚ğ”ò‚Î‚·
+						index_stream.seekg(1, ios_base::cur); // ã‚¹ãƒ©ãƒƒã‚·ãƒ¥ã‚’é£›ã°ã™
 						index_stream >> indexNormal;
-						// ’¸“_ƒf[ƒ^‚Ì’Ç‰Á
+						// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 						Mesh::VertexPosNormalUv vertex{};
 						vertex.pos = positions[indexPosition - 1];
 						vertex.normal = normals[indexNormal - 1];
 						vertex.uv = { 0, 0 };
 						mesh->AddVertex(vertex);
 
-						// ƒGƒbƒW•½ŠŠ‰»—p‚Ìƒf[ƒ^‚ğ’Ç‰Á
+						// ã‚¨ãƒƒã‚¸å¹³æ»‘åŒ–ç”¨ã®ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ 
 						if (smoothing) {
-							// vƒL[iÀ•Wƒf[ƒ^j‚Ì”Ô†‚ÆA‘S‚Ä‡¬‚µ‚½’¸“_‚ÌƒCƒ“ƒfƒbƒNƒX‚ğƒZƒbƒg‚Å“o˜^‚·‚é
+							// vã‚­ãƒ¼ï¼ˆåº§æ¨™ãƒ‡ãƒ¼ã‚¿ï¼‰ã®ç•ªå·ã¨ã€å…¨ã¦åˆæˆã—ãŸé ‚ç‚¹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ã‚»ãƒƒãƒˆã§ç™»éŒ²ã™ã‚‹
 							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
 						}
 						AddMinMaxVertex(vertex.pos);
 					}
 				}
-				// ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^‚Ì’Ç‰Á
+				// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 				if (faceIndexCount >= 3) {
-					// lŠpŒ`ƒ|ƒŠƒSƒ“‚Ì4“_–Ú‚È‚Ì‚ÅA
-					// lŠpŒ`‚Ì0,1,2,3‚Ì“à 2,3,0‚ÅOŠpŒ`‚ğ\’z‚·‚é
-					mesh->AddIndex(indexCountTex - 1);
-					mesh->AddIndex(indexCountTex);
-					mesh->AddIndex(indexCountTex - 3);
+					// å››è§’å½¢ãƒãƒªã‚´ãƒ³ã®4ç‚¹ç›®ãªã®ã§ã€
+					// å››è§’å½¢ã®0,1,2,3ã®å†… 2,3,0ã§ä¸‰è§’å½¢ã‚’æ§‹ç¯‰ã™ã‚‹
+					mesh->AddIndex((unsigned short)indexCountTex - 1);
+					mesh->AddIndex((unsigned short)indexCountTex);
+					mesh->AddIndex((unsigned short)indexCountTex - 3);
 				}
 				else {
-					mesh->AddIndex(indexCountTex);
+					mesh->AddIndex((unsigned short)indexCountTex);
 				}
 				
 				indexCountTex++;
 				faceIndexCount++;
-				//// ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^‚Ì’Ç‰Á
+				//// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 				//indices.emplace_back((unsigned short)indices.size());
 			}
 		}
 	}
-	// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	file.close();
 
-	// ˆê“x‚¾‚¯Å‰‚Ì’¸“_‚ğ“o˜^‚·‚éƒtƒ‰ƒO‚ğƒIƒt
+	// ä¸€åº¦ã ã‘æœ€åˆã®é ‚ç‚¹ã‚’ç™»éŒ²ã™ã‚‹ãƒ•ãƒ©ã‚°ã‚’ã‚ªãƒ•
 	isFirstAddMinMax = false;
 
-	// ’¸“_–@ü‚Ì•½‹Ï‚É‚æ‚éƒGƒbƒW‚Ì•½ŠŠ‰»
+	// é ‚ç‚¹æ³•ç·šã®å¹³å‡ã«ã‚ˆã‚‹ã‚¨ãƒƒã‚¸ã®å¹³æ»‘åŒ–
 	if (smoothing) {
 		mesh->CalculateSmoothedVertexNormals();
 	}
@@ -361,12 +361,12 @@ void Model::LoadFromOBJInternal(const std::string& modelname, bool smoothing)
 
 void Model::CreateBuffers()
 {
-	// ƒƒbƒVƒ…‚Ìƒoƒbƒtƒ@¶¬
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	for (auto& m : meshes_) {
 		m->CreateBuffers();
 	}
 
-	// ƒ}ƒeƒŠƒAƒ‹‚Ì”’l‚ğ’è”ƒoƒbƒtƒ@‚É”½‰f
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°å€¤ã‚’å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«åæ˜ 
 	for (auto& m : materials_) {
 		m.second->Update();
 	}
@@ -375,7 +375,7 @@ void Model::CreateBuffers()
 
 void Model::AddMaterial(Material* material)
 {
-	// ƒRƒ“ƒeƒi‚É“o˜^
+	// ã‚³ãƒ³ãƒ†ãƒŠã«ç™»éŒ²
 	materials_.emplace(material->name, material);
 }
 
@@ -387,7 +387,7 @@ void Model::AddMinMaxVertex(Vector3 vertexPos)
 		isFirstAddMinMax = true;
 	}
 
-	// ¬‚³‚¢‚à‚Ì‚ğ‘ã“ü
+	// å°ã•ã„ã‚‚ã®ã‚’ä»£å…¥
 
 	// x
 	if (vertexPos.x <= minVertex_.x) {
@@ -402,7 +402,7 @@ void Model::AddMinMaxVertex(Vector3 vertexPos)
 		minVertex_.z = vertexPos.z;
 	}
 
-	// ‘å‚«‚¢‚à‚Ì‚ğ‘ã“ü
+	// å¤§ãã„ã‚‚ã®ã‚’ä»£å…¥
 
 	// x
 	if (vertexPos.x >= maxVertex_.x) {

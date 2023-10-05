@@ -1,38 +1,39 @@
 #pragma once
+
 #include <vector>
 #include <unordered_map>
 #include "Material.h"
 
-// ƒm[ƒh
+// ãƒãƒ¼ãƒ‰
 struct Node
 {
-	//–¼‘O
+	//åå‰
 	std::string name;
-	//ƒ[ƒJƒ‹•ÏŒ`s—ñ
+	//ãƒ­ãƒ¼ã‚«ãƒ«å¤‰å½¢è¡Œåˆ—
 	Matrix4 transform;
-	//ƒOƒ[ƒoƒ‹•ÏŒ`s—ñ
+	//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰å½¢è¡Œåˆ—
 	Matrix4 globalTransform;
-	//eƒm[ƒh
+	//è¦ªãƒãƒ¼ãƒ‰
 	Node* parent = nullptr;
-	//qƒm[ƒh
+	//å­ãƒãƒ¼ãƒ‰
 	std::vector<Node*>childrens;
 
 };
 
 class Mesh
 {
-private: // ƒGƒCƒŠƒAƒX
-	// Microsoft::WRL::‚ğÈ—ª
+private: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// Microsoft::WRL::ã‚’çœç•¥
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-public:// ƒTƒuƒNƒ‰ƒX
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 	friend class FbxLoader;
 	friend class FbxModel;
 	static const int sMAX_BONE_INDICES = 4;
 
-	// œ
+	// éª¨
 	struct Bone
 	{
-		//–¼‘O
+		//åå‰
 		std::string name;
 
 		Matrix4 matrix;
@@ -43,12 +44,12 @@ public:// ƒTƒuƒNƒ‰ƒX
 
 	};
 
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct VertexPosNormalUv
 	{
-		Vector3 pos; // xyzÀ•W
-		Vector3 normal; // –@üƒxƒNƒgƒ‹
-		Vector2 uv;  // uvÀ•W
+		Vector3 pos; // xyzåº§æ¨™
+		Vector3 normal; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+		Vector2 uv;  // uvåº§æ¨™
 
 		uint32_t boneIndex[sMAX_BONE_INDICES];
 		float boneWeight[sMAX_BONE_INDICES];
@@ -57,131 +58,131 @@ public:// ƒTƒuƒNƒ‰ƒX
 
 
 public:
-	// ƒfƒoƒCƒX‚ÌƒZƒbƒ^[
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ã‚»ãƒƒã‚¿ãƒ¼
 	static void SetDevice(ID3D12Device* device);
 
-	// •`‰æ
+	// æç”»
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void DrawFBX(ID3D12GraphicsCommandList* cmdList,Texture texHandle);
 
-	// ƒGƒbƒW•½ŠŠ‰»ƒf[ƒ^‚Ì’Ç‰Á
+	// ã‚¨ãƒƒã‚¸å¹³æ»‘åŒ–ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 	void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex);
 
-	// •½ŠŠ‰»‚³‚ê‚½’¸“_–@ü‚ÌŒvZ
+	// å¹³æ»‘åŒ–ã•ã‚ŒãŸé ‚ç‚¹æ³•ç·šã®è¨ˆç®—
 	void CalculateSmoothedVertexNormals();
 
 	/// <summary>
-	/// –¼‘O‚ğæ“¾
+	/// åå‰ã‚’å–å¾—
 	/// </summary>
-	/// <returns>–¼‘O</returns>
+	/// <returns>åå‰</returns>
 	const std::string& GetName() { return name_; }
 
 	/// <summary>
-	/// –¼‘O‚ğƒZƒbƒg
+	/// åå‰ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="name">–¼‘O</param>
+	/// <param name="name">åå‰</param>
 	void SetName(const std::string& name);
 
 	/// <summary>
-	/// ’¸“_ƒf[ƒ^‚Ì’Ç‰Á
+	/// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="vertex">’¸“_ƒf[ƒ^</param>
+	/// <param name="vertex">é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿</param>
 	void AddVertex(const VertexPosNormalUv& vertex);
 
 	/// <summary>
-	/// ’¸“_ƒCƒ“ƒfƒbƒNƒX‚Ì’Ç‰Á
+	/// é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="index">ƒCƒ“ƒfƒbƒNƒX</param>
+	/// <param name="index">ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹</param>
 	void AddIndex(unsigned short index);
 
-	// ’¸“_ƒf[ƒ^‚Ì”‚ğæ“¾
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®æ•°ã‚’å–å¾—
 	inline size_t GetVertexCount() { return vertices_.size(); }
 
 	/// <summary>
-	/// ƒ}ƒeƒŠƒAƒ‹‚Ìæ“¾
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«ã®å–å¾—
 	/// </summary>
-	/// <returns>ƒ}ƒeƒŠƒAƒ‹</returns>
+	/// <returns>ãƒãƒ†ãƒªã‚¢ãƒ«</returns>
 	Material* GetMaterial() { return material_; }
 
 	/// <summary>
-	/// ƒ}ƒeƒŠƒAƒ‹‚ÌŠ„‚è“–‚Ä
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«ã®å‰²ã‚Šå½“ã¦
 	/// </summary>
-	/// <param name="material">ƒ}ƒeƒŠƒAƒ‹</param>
+	/// <param name="material">ãƒãƒ†ãƒªã‚¢ãƒ«</param>
 	void SetMaterial(Material* material);
 
 	/// <summary>
-	/// ƒoƒbƒtƒ@‚Ì¶¬
+	/// ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	/// </summary>
 	void CreateBuffers();
 
 	/// <summary>
-	/// ’¸“_ƒoƒbƒtƒ@æ“¾
+	/// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡å–å¾—
 	/// </summary>
-	/// <returns>’¸“_ƒoƒbƒtƒ@</returns>
+	/// <returns>é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡</returns>
 	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView_; }
 
 	/// <summary>
-	/// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@æ“¾
+	/// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡å–å¾—
 	/// </summary>
-	/// <returns>ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@</returns>
+	/// <returns>ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡</returns>
 	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView_; }
 
 	/// <summary>
-	/// ’¸“_”z—ñ‚ğæ“¾
+	/// é ‚ç‚¹é…åˆ—ã‚’å–å¾—
 	/// </summary>
-	/// <returns>’¸“_”z—ñ</returns>
+	/// <returns>é ‚ç‚¹é…åˆ—</returns>
 	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices_; }
 
 	/// <summary>
-	/// ƒCƒ“ƒfƒbƒNƒX”z—ñ‚ğæ“¾
+	/// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒCƒ“ƒfƒbƒNƒX”z—ñ</returns>
+	/// <returns>ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—</returns>
 	inline const std::vector<unsigned short>& GetIndices() { return indices_; }
 
 private:
 
-	// ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+	// ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
 	static ID3D12Device* sDevice_;
 
-	// –¼‘O
+	// åå‰
 	std::string name_;
 
-	// ’¸“_ƒf[ƒ^”z—ñ
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿é…åˆ—
 	std::vector<VertexPosNormalUv> vertices_;
 
-	// ’¸“_ƒCƒ“ƒfƒbƒNƒX”z—ñ
+	// é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—
 	std::vector<unsigned short> indices_;
 
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> vertBuff_;
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> indexBuff_;
 
-	//ƒ{[ƒ“ƒoƒbƒtƒ@
+	//ãƒœãƒ¼ãƒ³ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> BoneBuff_;
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
 
-	// ’¸“_–@üƒXƒ€[ƒWƒ“ƒO—pƒf[ƒ^
+	// é ‚ç‚¹æ³•ç·šã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°ç”¨ãƒ‡ãƒ¼ã‚¿
 	std::unordered_map<unsigned short, std::vector<unsigned short>>smoothData_;
 
-	// ƒ}ƒeƒŠƒAƒ‹
+	// ãƒãƒ†ãƒªã‚¢ãƒ«
 	Material* material_ = nullptr;
 
-	// ƒ{[ƒ“
+	// ãƒœãƒ¼ãƒ³
 	std::unordered_map<std::string, Bone*> bones;
 
 	std::vector<Bone> vecBones;
 
-	// ƒm[ƒh
+	// ãƒãƒ¼ãƒ‰
 	Node* node = nullptr;
 
-	// ƒ}ƒbƒsƒ“ƒOÏ‚İƒAƒhƒŒƒX
+	// ãƒãƒƒãƒ”ãƒ³ã‚°æ¸ˆã¿ã‚¢ãƒ‰ãƒ¬ã‚¹
 	Bone* constMap = nullptr;
 };
 

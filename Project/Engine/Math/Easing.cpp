@@ -1,6 +1,7 @@
 #include "Easing.h"
 #include"math.h"
-//’Ç‰Á
+
+//è¿½åŠ 
 double Easing::In(double start, double end, double time, double max_time)
 {
 	time /= max_time;

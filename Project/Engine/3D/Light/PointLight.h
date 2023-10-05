@@ -1,13 +1,14 @@
 #pragma once
+
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4.h"
 
 class PointLight
 {
-public: // ƒTƒuƒNƒ‰ƒX
+public: // ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 
-// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferData
 	{
 		Vector3 lightpos;
@@ -18,63 +19,63 @@ public: // ƒTƒuƒNƒ‰ƒX
 		unsigned int active;
 	};
 
-public: // ƒƒ“ƒoŠÖ”
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// ƒ‰ƒCƒgÀ•W‚ğƒZƒbƒg
+	/// ãƒ©ã‚¤ãƒˆåº§æ¨™ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightpos">ƒ‰ƒCƒgÀ•W</param>
+	/// <param name="lightpos">ãƒ©ã‚¤ãƒˆåº§æ¨™</param>
 	inline void SetLightPos(const Vector3& lightpos) { lightpos_ = lightpos; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒgÀ•W‚ğæ“¾
+	/// ãƒ©ã‚¤ãƒˆåº§æ¨™ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒgÀ•W</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆåº§æ¨™</returns>
 	inline const Vector3& GetLightPos() { return lightpos_; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒgF‚ğƒZƒbƒg
+	/// ãƒ©ã‚¤ãƒˆè‰²ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightcolor">ƒ‰ƒCƒgF</param>
+	/// <param name="lightcolor">ãƒ©ã‚¤ãƒˆè‰²</param>
 	inline void SetLightColor(const Vector3& lightcolor) { lightcolor_ = lightcolor; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒgF‚ğæ“¾
+	/// ãƒ©ã‚¤ãƒˆè‰²ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒgF</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆè‰²</returns>
 	inline const Vector3& GetLightColor() { return lightcolor_; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒg‹——£Œ¸ŠŒW”‚ğƒZƒbƒg
+	/// ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightatten">ƒ‰ƒCƒg‹——£Œ¸ŠŒW”</param>
+	/// <param name="lightatten">ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°</param>
 	inline void SetLightAtten(const Vector3& lightAtten) { lightAtten_ = lightAtten; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒg‹——£Œ¸ŠŒW”‚ğæ“¾
+	/// ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒg‹——£Œ¸ŠŒW”</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°</returns>
 	inline const Vector3& GetLightAtten() { return lightAtten_; }
 
 	/// <summary>
-	/// —LŒøƒtƒ‰ƒO‚ğƒZƒbƒg
+	/// æœ‰åŠ¹ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="active">—LŒøƒtƒ‰ƒO</param>
+	/// <param name="active">æœ‰åŠ¹ãƒ•ãƒ©ã‚°</param>
 	inline void SetActive(bool active) { active_ = active; }
 
 	/// <summary>
-	/// —LŒøƒ`ƒFƒbƒN
+	/// æœ‰åŠ¹ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>—LŒøƒtƒ‰ƒO</returns>
+	/// <returns>æœ‰åŠ¹ãƒ•ãƒ©ã‚°</returns>
 	inline bool IsActive() { return active_; }
 
-private: // ƒƒ“ƒo•Ï”
-	// ƒ‰ƒCƒgÀ•Wiƒ[ƒ‹ƒhÀ•WŒnj
+private: // ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ©ã‚¤ãƒˆåº§æ¨™ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰
 	Vector3 lightpos_ = { 0,0,0 };
-	// ƒ‰ƒCƒgF
+	// ãƒ©ã‚¤ãƒˆè‰²
 	Vector3 lightcolor_ = { 1,1,1 };
-	// ƒ‰ƒCƒg‹——£Œ¸ŠŒW”
+	// ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°
 	Vector3 lightAtten_ = { 1.0f, 1.0f, 1.0f };
-	// —LŒøƒtƒ‰ƒO
+	// æœ‰åŠ¹ãƒ•ãƒ©ã‚°
 	bool active_ = false;
 };
 

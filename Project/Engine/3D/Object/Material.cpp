@@ -1,15 +1,16 @@
 #include "Material.h"
 #include "TextureManager.h"
+
 using namespace std;
 /// <summary>
-/// Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
+/// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å®Ÿä½“
 /// </summary>
-ID3D12Device* Material::device = nullptr;
+ID3D12Device* Material::device_ = nullptr;
 
 
 void Material::StaticInitialize(ID3D12Device* device)
 {
-	Material::device = device;
+	Material::device_ = device;
 }
 
 Material* Material::Create()
@@ -23,10 +24,10 @@ Material* Material::Create()
 
 void Material::LoadTexture(const std::string& directoryPath, const std::string& filename)
 {
-	// ƒtƒ@ƒCƒ‹ƒpƒX‚ğŒ‹‡
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’çµåˆ
 	string filepath = directoryPath + filename;
 
-	//// ƒ†ƒjƒR[ƒh•¶š—ñ‚É•ÏŠ·‚·‚é
+	//// ãƒ¦ãƒ‹ã‚³ãƒ¼ãƒ‰æ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹
 	//wchar_t wfilepath[128];
 	//int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 
@@ -47,7 +48,7 @@ void Material::Update()
 
 void Material::Initialize()
 {
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	CreateConstantBuffer();
 }
 
@@ -55,15 +56,15 @@ void Material::CreateConstantBuffer()
 {
 	HRESULT result;
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
 
-	// ƒ}ƒeƒŠƒAƒ‹—p’è”ƒoƒbƒtƒ@‚Ì¶¬
-	result = device->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
+	result = device_->CreateCommittedResource(
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -72,7 +73,7 @@ void Material::CreateConstantBuffer()
 
 	assert(SUCCEEDED(result));
 
-	// ƒ}ƒeƒŠƒAƒ‹—p’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }

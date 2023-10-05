@@ -1,4 +1,5 @@
 #pragma once
+
 #include <d3d12.h>
 #include<dxgi1_6.h>
 #include <wrl.h>
@@ -8,107 +9,107 @@
 
 class DirectXCommon
 {
-public:// ƒƒ“ƒoŠÖ”
-	// ‰Šú‰»
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// åˆæœŸåŒ–
 	void Initalize(WinApp* winApp);
 
-	// •`‰æ‘Oˆ—
+	// æç”»å‰å‡¦ç†
 	void PreDraw();
 
-	// •`‰æŒãˆ—
+	// æç”»å¾Œå‡¦ç†
 	void PostDraw();
 
 	/// <summary>
-	/// [“xƒoƒbƒtƒ@‚ÌƒNƒŠƒA
+	/// æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã®ã‚¯ãƒªã‚¢
 	/// </summary>
 	void ClearDepthBuffer();
 
-	// ƒfƒoƒCƒXæ“¾
+	// ãƒ‡ãƒã‚¤ã‚¹å–å¾—
 	ID3D12Device* GetDevice() const { return device_.Get();}
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒgæ“¾
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆå–å¾—
 	ID3D12GraphicsCommandList* GetCommandList()const { return commandList_.Get(); }
 	
-	// ƒoƒbƒNƒoƒbƒtƒ@‚Ì”‚ğæ“¾
+	// ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã®æ•°ã‚’å–å¾—
 	size_t GetBackBufferCount() const { return backBuffers_.size(); }
 
-	// ƒRƒ}ƒ“ƒhƒLƒ…ƒA‚ğæ“¾
+	// ã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ã‚¢ã‚’å–å¾—
 	ID3D12CommandQueue* GetCommandQueue()const { return commandQueue_.Get(); }
 
-	// ƒtƒFƒ“ƒX‚Ì—Ê‚ğ‘‚â‚·
+	// ãƒ•ã‚§ãƒ³ã‚¹ã®é‡ã‚’å¢—ã‚„ã™
 	inline void PreIncrimentFenceValue() { ++fenceVal_; }
 
-	// ƒtƒFƒ“ƒXæ“¾
+	// ãƒ•ã‚§ãƒ³ã‚¹å–å¾—
 	inline ID3D12Fence* GetFence() const { return fence_.Get(); }
 	inline uint64_t GetFenceValue() { return fenceVal_; }
 
-	// ƒRƒ}ƒ“ƒhƒAƒƒP[ƒ^‚ğæ“¾
+	// ã‚³ãƒãƒ³ãƒ‰ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿ã‚’å–å¾—
 	inline ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator_.Get(); }
 
 private:
-	// ƒfƒoƒCƒX‚Ì‰Šú‰»
+	// ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–
 	void InitalizeDevice();
 
-	// ƒRƒ}ƒ“ƒhŠÖ˜A‚Ì‰Šú‰»
+	// ã‚³ãƒãƒ³ãƒ‰é–¢é€£ã®åˆæœŸåŒ–
 	void InitialzeCommand();
 
-	// ƒXƒƒbƒvƒ`ƒF[ƒ“‚Ì‰Šú‰»
+	// ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ã®åˆæœŸåŒ–
 	void InitializeSwapchain(WinApp* winApp);
 
-	// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[‚Ì‰Šú‰»
+	// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ã®åˆæœŸåŒ–
 	void InitializeRenderTargetView();
 
-	// [“xƒoƒbƒtƒ@‚Ì‰Šú‰»
+	// æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã®åˆæœŸåŒ–
 	void InitializeDepthBuffer();
 
-	// ƒtƒFƒ“ƒX‚Ì‰Šú‰»
+	// ãƒ•ã‚§ãƒ³ã‚¹ã®åˆæœŸåŒ–
 	void InitializeFence();
 
-	// FPSŒÅ’è‰Šú‰»
+	// FPSå›ºå®šåˆæœŸåŒ–
 	void InitializeFixFPS();
 
-	// FPSŒÅ’èXV
+	// FPSå›ºå®šæ›´æ–°
 	void UpdateFixFPS();
 
 private:
 	// WindowsAPI
 	WinApp* winApp_ = nullptr;
-	// DirectX12ƒfƒoƒCƒX
+	// DirectX12ãƒ‡ãƒã‚¤ã‚¹
 	Microsoft::WRL::ComPtr<ID3D12Device> device_;
-	// DXGIƒtƒ@ƒNƒgƒŠ
+	// DXGIãƒ•ã‚¡ã‚¯ãƒˆãƒª
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_;
 
-	// ƒRƒ}ƒ“ƒhŠÖ˜A
+	// ã‚³ãƒãƒ³ãƒ‰é–¢é€£
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_ = nullptr;
 
-	// ƒXƒƒbƒvƒ`ƒF[ƒ“ŠÖ˜A
+	// ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³é–¢é€£
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_ = nullptr;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
 
-	// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[ŠÖ˜A
+	// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼é–¢é€£
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc_{};
 
-	// ƒoƒbƒNƒoƒbƒtƒ@
+	// ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_;
 
-	// [“xƒoƒbƒtƒ@ŠÖ˜A
+	// æ·±åº¦ãƒãƒƒãƒ•ã‚¡é–¢é€£
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff_;
 
-	// ƒŠƒ\[ƒXƒoƒŠƒA
+	// ãƒªã‚½ãƒ¼ã‚¹ãƒãƒªã‚¢
 	D3D12_RESOURCE_BARRIER barrierDesc_{};
 
-	// ƒtƒFƒ“ƒX
+	// ãƒ•ã‚§ãƒ³ã‚¹
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_ = nullptr;
 	uint64_t fenceVal_ = 0;
 
-	// Œ‹‰ÊŠm”F
+	// çµæœç¢ºèª
 	HRESULT result;
 
-	// ‹L˜^ŠÔ(FPSŒÅ’è—p)
+	// è¨˜éŒ²æ™‚é–“(FPSå›ºå®šç”¨)
 	std::chrono::steady_clock::time_point reference_;
 };
 

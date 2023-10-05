@@ -1,4 +1,5 @@
 #pragma once
+
 #include "BaseCollider.h"
 #include "Vector3.h"
 
@@ -6,13 +7,13 @@ class Object3d;
 
 struct RaycastHit
 {
-	// Õ“Ë‘Šè‚ÌƒIƒuƒWƒFƒNƒg
+	// è¡çªç›¸æ‰‹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	Object3d* object = nullptr;
-	// Õ“Ë‘Šè‚ÌƒRƒ‰ƒCƒ_[
+	// è¡çªç›¸æ‰‹ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼
 	BaseCollider* collider = nullptr;
-	// Õ“Ë“_
+	// è¡çªç‚¹
 	Vector3 inter;
-	// Õ“Ë“_‚Ü‚Å‚Ì‹——£
+	// è¡çªç‚¹ã¾ã§ã®è·é›¢
 	float distance = 0.0f;
 
 };

@@ -1,8 +1,9 @@
-﻿#include "Object3d.h"
+#include "Object3d.h"
 #include <d3dcompiler.h>
 #include "BaseCollider.h"
 #pragma comment(lib, "d3dcompiler.lib")
 #include "CollisionManager.h"
+
 //using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace std;
@@ -33,12 +34,12 @@ ShaderObj* Object3d::sPsShader_ = nullptr;
 //ComPtr<ID3DBlob> Object3d::sRootSigBlob_;
 //Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
 
-void Object3d::StaticInitialize(ID3D12Device* sDevice_)
+void Object3d::StaticInitialize(ID3D12Device* device)
 {
 	// nullptrチェック
-	assert(sDevice_);
+	assert(device);
 
-	Object3d::sDevice_ = sDevice_;
+	Object3d::sDevice_ = device;
 
 	// モデルのデバイスを生成
 	Model::SetDevice(sDevice_);
@@ -74,13 +75,13 @@ void Object3d::StaticInitialize(ID3D12Device* sDevice_)
 
 }
 
-void Object3d::PreDraw(ID3D12GraphicsCommandList* sCmdList_)
+void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
 	assert(Object3d::sCmdList_ == nullptr);
 
 	// コマンドリストをセット
-	Object3d::sCmdList_ = sCmdList_;
+	Object3d::sCmdList_ = cmdList;
 
 	// パイプラインステートの設定
 	sCmdList_->SetPipelineState(sPipelinestateNormal_.Get());

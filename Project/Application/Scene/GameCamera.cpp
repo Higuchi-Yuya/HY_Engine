@@ -2,11 +2,11 @@
 #include "JoyPadInput.h"
 #include "MathUtil.h"
 
+
 void GameCamera::Initialize(const WorldTransform* worldTransform)
 {
+	worldTransform;
 	viewProjection_.Initialize();
-
-	
 	worldTransform_.Initialize();
 	
 	//worldTransform_.parent_ = worldTransform;
@@ -19,19 +19,19 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 
 void GameCamera::TitleUpdate()
 {
-	// ƒJƒƒ‰‚ÌÀ•W‚ğ‘O‚ÉˆÚ“®
+	// ã‚«ãƒ¡ãƒ©ã®åº§æ¨™ã‚’å‰ã«ç§»å‹•
 	//viewProjection_.eye.z += 0.1f;
 
-	// ƒrƒ…[‚ÌXVˆ—
+	// ãƒ“ãƒ¥ãƒ¼ã®æ›´æ–°å‡¦ç†
 	viewProjection_.UpdateMatrix();
 }
 
 void GameCamera::GameUpdate()
 {
-	// ƒJƒƒ‰‰ñ“]
+	// ã‚«ãƒ¡ãƒ©å›è»¢
 	RotUpdate();
 
-	//ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“‚ğXV
+	//ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ã‚’æ›´æ–°
 	viewProjection_.UpdateMatrix();
 
 	ImGui::Begin("gameCamera");
@@ -68,7 +68,7 @@ void GameCamera::SetCameraPos(Vector3 pos)
 
 void GameCamera::RotUpdate()
 {
-	// RƒXƒeƒBƒbƒN‚ÅƒJƒƒ‰‰ñ“]
+	// Rã‚¹ãƒ†ã‚£ãƒƒã‚¯ã§ã‚«ãƒ¡ãƒ©å›è»¢
 	if (JoypadInput::GetStick(PadCode::RightStick).x > 450) {
 		if (aInfo >= 360) {
 			aInfo = 0;
@@ -92,9 +92,9 @@ void GameCamera::RotUpdate()
 	viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
 	viewProjection_.eye = ((viewProjection_.target + cameraFPos));// - viewProjection_.eye)* cameraEaseSpeed;
 	//viewProjection_.eye = rotPos;
-	// ƒvƒŒƒCƒ„[‚ÌÀ•W‚ğ’‹“_‚ÉƒZƒbƒg
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™ã‚’æ³¨è¦–ç‚¹ã«ã‚»ãƒƒãƒˆ
 	//viewProjection_.target = playerPos_;
-	// •ûŒüƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+	// æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 
 
 
@@ -106,10 +106,10 @@ void GameCamera::RotUpdate()
 	////cameraVecRot_.y = atan2f(dirVec.x, dirVec.z);
 	//worldTransform_.translation += dir_;
 
-	// s—ñ‚ğ‰Šú‰»
+	// è¡Œåˆ—ã‚’åˆæœŸåŒ–
 	worldTransform_.matWorld_.identity();
 
-	// s—ñ‚ğŒvZ
+	// è¡Œåˆ—ã‚’è¨ˆç®—
 	worldTransform_.UpdateMatrix();
 
 }

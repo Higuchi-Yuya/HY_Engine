@@ -1,63 +1,64 @@
 #pragma once
+
 #include "Sprite.h"
 #include "PostColorInversion.h"
 class PostEffect
 {
 public:
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     PostEffect();
 
-    // ‰Šú‰»
+    // åˆæœŸåŒ–
     void Initialize();
 
-    // •`‰æƒRƒ}ƒ“ƒh‚Ì”­s
+    // æç”»ã‚³ãƒãƒ³ãƒ‰ã®ç™ºè¡Œ
     void Draw(ID3D12GraphicsCommandList* cmdList);
     void Draw2(ID3D12GraphicsCommandList* cmdList);
 
     /// <summary>
-    /// ƒV[ƒ“•`‰æ‘Oˆ—
+    /// ã‚·ãƒ¼ãƒ³æç”»å‰å‡¦ç†
     /// </summary>
-    /// <param name="cmdList">ƒRƒ}ƒ“ƒhƒŠƒXƒg</param>
+    /// <param name="cmdList">ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ</param>
     void PreDrawScene(ID3D12GraphicsCommandList* cmdList);
 
     /// <summary>
-    /// ƒV[ƒ“•`‰æŒãˆ—
+    /// ã‚·ãƒ¼ãƒ³æç”»å¾Œå‡¦ç†
     /// </summary>
-    /// <param name="cmdList">ƒRƒ}ƒ“ƒhƒŠƒXƒg</param>
+    /// <param name="cmdList">ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ</param>
     void PostDrawScene(ID3D12GraphicsCommandList* cmdList);
 
-    // ƒfƒoƒCƒX‚ÌƒZƒbƒ^[
+    // ãƒ‡ãƒã‚¤ã‚¹ã®ã‚»ãƒƒã‚¿ãƒ¼
     static void SetDevice(ID3D12Device* device);
 
 private:
 
     /// <summary>
-    /// ’¸“_ƒoƒbƒtƒ@‚Ì¶¬
+    /// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
     /// </summary>
     void CreateVertBuff();
 
     /// <summary>
-    /// ƒeƒNƒXƒ`ƒƒ¶¬
+    /// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
     /// </summary>
     void CreateTex();
 
     /// <summary>
-    /// SRVì¬
+    /// SRVä½œæˆ
     /// </summary>
     void CreateSRV();
 
     /// <summary>
-    /// RTVì¬
+    /// RTVä½œæˆ
     /// </summary>
     void CreateRTV();
 
     /// <summary>
-    /// [“xƒoƒbƒtƒ@¶¬
+    /// æ·±åº¦ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
     /// </summary>
     void CreateDepthBuff();
 
     /// <summary>
-    /// DSVì¬
+    /// DSVä½œæˆ
     /// </summary>
     void CreateDSV();
 
@@ -65,55 +66,55 @@ private:
     void CreateGraphicsPipelineState();
 
 private:
-    // ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡
     Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_;
 
-    // ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+    // ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
     static ID3D12Device* sDevice_;
 
-    // ’¸“_”
+    // é ‚ç‚¹æ•°
     static const int kVertNum_ = 4;
 
-    // ’¸“_ƒf[ƒ^
+    // é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
     SpriteManager::Vertex vertices_[kVertNum_] = {
-    {{-1.0f,-1.0f, 0.0f },{0.0f,1.0f}}, // ¶‰º
-    {{-1.0f,+1.0f, 0.0f },{0.0f,0.0f}}, // ¶ã
-    {{+1.0f,-1.0f, 0.0f },{1.0f,1.0f}}, // ‰E‰º
-    {{+1.0f,+1.0f, 0.0f },{1.0f,0.0f}}, // ‰Eã
+    {{-1.0f,-1.0f, 0.0f },{0.0f,1.0f}}, // å·¦ä¸‹
+    {{-1.0f,+1.0f, 0.0f },{0.0f,0.0f}}, // å·¦ä¸Š
+    {{+1.0f,-1.0f, 0.0f },{1.0f,1.0f}}, // å³ä¸‹
+    {{+1.0f,+1.0f, 0.0f },{1.0f,0.0f}}, // å³ä¸Š
     };
 
-    // ’¸“_ƒ}ƒbƒv
+    // é ‚ç‚¹ãƒãƒƒãƒ—
     SpriteManager::Vertex* vertMap_ = nullptr;
 
-    // ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
     D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
-    // ’¸“_ƒoƒbƒtƒ@
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
     Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 
-    // ’è”ƒoƒbƒtƒ@
+    // å®šæ•°ãƒãƒƒãƒ•ã‚¡
     Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_ = nullptr;
 
-    // SRV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+    // SRVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
 
-    // [“xƒoƒbƒtƒ@
+    // æ·±åº¦ãƒãƒƒãƒ•ã‚¡
     Microsoft::WRL::ComPtr <ID3D12Resource>depthBuff_;
-    // RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+    // RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descHeapRTV_;
-    // DSV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+    // DSVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descHeapDSV_;
 
-    // ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒvƒ‰ƒCƒ“
+    // ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ãƒ—ãƒ©ã‚¤ãƒ³
     Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 
-    // ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+    // ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 
-    ShaderObj* vsShader_;// ’¸“_ƒVƒF[ƒ_[
-    ShaderObj* psShader_;// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[
+    ShaderObj* vsShader_;// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+    ShaderObj* psShader_;// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 
-    // ‰æ–ÊƒNƒŠƒAƒJƒ‰[
+    // ç”»é¢ã‚¯ãƒªã‚¢ã‚«ãƒ©ãƒ¼
     static const float clearColor_[4];
 
     HRESULT result;

@@ -5,21 +5,22 @@
 #include "CollisionAttribute.h"
 #include "JoyPadInput.h"
 
+
 Player* Player::Create(Model* model)
 {
-	// 3DƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
 	Player* instance = new Player();
 	if (instance == nullptr) {
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	if (!instance->Initialize()) {
 		delete instance;
 		assert(0);
 	}
 
-	// ƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	// ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	if (model) {
 		instance->SetModel(model);
 	}
@@ -38,8 +39,8 @@ bool Player::Initialize()
 		return false;
 	}
 	//input->Initialize();
-	// ƒRƒ‰ƒCƒ_[‚Ì’Ç‰Á
-	float radius = 0.6f;
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®è¿½åŠ 
+
 
 	frontW_.Initialize();
 	frontW_.translation = { 0,0,1 };
@@ -48,14 +49,14 @@ bool Player::Initialize()
 	bulletModel_.reset(Model::LoadFromOBJ("sphere",true));
 	cameraWorld_.Initialize();
 
-	// ƒvƒŒƒCƒ„[‚ÌHP‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPã®åˆæœŸåŒ–
 	playerHitPoint_ = playerHitPointMax_;
 
-	// ƒvƒŒƒCƒ„[‚ÌƒeƒNƒXƒ`ƒƒƒnƒ“ƒhƒ‹‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«ã®åˆæœŸåŒ–
 	textureHandleHpBar_.reset(TextureManager::Load2DTextureP("hpBar.png"));
 	textureHandleHpInside_.reset(TextureManager::Load2DTextureP("hpInside.png"));
 
-	// ƒvƒŒƒCƒ„[‚ÌƒXƒvƒ‰ƒCƒg‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
 	playerHpBar_ = std::make_unique<Sprite>();
 	playerHpBar_->Initialize(textureHandleHpBar_.get());
 	playerHpBar_->SetAnchorPoint({ 0,0 });
@@ -69,37 +70,37 @@ bool Player::Initialize()
 
 void Player::Update()
 {
-	// ¶‚«‚Ä‚¢‚éŠÔ‚ÌXVˆ—
+	// ç”Ÿãã¦ã„ã‚‹é–“ã®æ›´æ–°å‡¦ç†
 	if (IsAlive_){
 
-		// ˆÚ“®‚ÌXVˆ—
+		// ç§»å‹•ã®æ›´æ–°å‡¦ç†
 		MoveUpdate();
 
-		// UŒ‚ŠÖ”
+		// æ”»æ’ƒé–¢æ•°
 		Attack();
 
-		// ƒvƒŒƒCƒ„[‚ÌHP‚ª‚OˆÈ‰º‚È‚çƒvƒŒƒCƒ„[‚ª€‚Ê
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPãŒï¼ä»¥ä¸‹ãªã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ­»ã¬
 		if (playerHitPoint_ <= 0) {
 			IsAlive_ = false;
 		}
 	}
 	
 
-	//’eXV
+	//å¼¾æ›´æ–°
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Update();
 	}
 
 	
 
-	// s—ñ‚ÌXV‚È‚Ç
+	// è¡Œåˆ—ã®æ›´æ–°ãªã©
 	Object3d::Update();
 }
 
 void Player::Draw(ViewProjection* view)
 {
 	Object3d::Draw(view);
-	//’e•`‰æ
+	//å¼¾æç”»
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(view);
 	}
@@ -113,9 +114,9 @@ void Player::OnCollision()
 
 const Vector3 Player::GetWorldPosition() const
 {
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 worldPos;
-	//ƒ[ƒ‹ƒhs—ñˆÚ“®¬•ª‚ğæ“¾(ƒ[ƒ‹ƒhÀ•W)
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ç§»å‹•æˆåˆ†ã‚’å–å¾—(ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™)
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
@@ -166,7 +167,7 @@ void Player::pushBackOnCol()
 
 	Vector3 move;
 
-	// ’n–Ê”»’è‚µ‚«‚¢’l
+	// åœ°é¢åˆ¤å®šã—ãã„å€¤
 	const float threshold = cosf(Vector3::Deg2Rad(50.0f));
 
 	if (-threshold < cos && cos < threshold) {
@@ -204,17 +205,17 @@ void Player::Draw2DFront()
 
 void Player::Reset()
 {
-	// ƒ[ƒ‹ƒh•ÏŠ·ƒf[ƒ^‚ÌƒŠƒZƒbƒg
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ãƒ‡ãƒ¼ã‚¿ã®ãƒªã‚»ãƒƒãƒˆ
 	worldTransform_.translation = { 0,0,0 };
 	worldTransform_.rotation = { 0,0,0 };
 
-	// ƒvƒŒƒCƒ„[‚ÌHP‚ÌƒŠƒZƒbƒg
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPã®ãƒªã‚»ãƒƒãƒˆ
 	playerHitPoint_ = playerHitPointMax_;
 
-	// ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğ•œŠˆ
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’å¾©æ´»
 	IsAlive_ = true;
 
-	// ƒvƒŒƒCƒ„[‚ÌHPƒXƒvƒ‰ƒCƒg‚Ìî•ñ‚ğƒŠƒZƒbƒg
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æƒ…å ±ã‚’ãƒªã‚»ãƒƒãƒˆ
 	pHpInsidePos_ = { 20,50 };
 	pHpInsideSize_ = { 500,70 };
 }
@@ -223,7 +224,7 @@ void Player::MoveUpdate()
 {
 	Matrix4 mathMat;
 
-	// ˆÚ“®ƒxƒNƒgƒ‹‚ğY²ü‚è‚ÌŠp“x‚Å‰ñ“]
+	// ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’Yè»¸å‘¨ã‚Šã®è§’åº¦ã§å›è»¢
 
 	Vector3 vectorX = { 0.01f,0,0 };
 	vectorX = MathUtil::MatVector(worldTransform_.matWorld_,vectorX);
@@ -241,16 +242,16 @@ void Player::MoveUpdate()
 	Vector2 joyStickInfoL = { 0,0 };
 	Vector2 joyStickInfoR = { 0,0 };
 
-	// Œü‚¢‚Ä‚é•ûŒü‚ÉˆÚ“®
+	// å‘ã„ã¦ã‚‹æ–¹å‘ã«ç§»å‹•
 
 
 	moveVel_ = { 0,0,0 };
 	frontVec_ = { 0,0,0 };
-	// ƒJƒƒ‰‚Ì‘OƒxƒNƒgƒ‹
+	// ã‚«ãƒ¡ãƒ©ã®å‰ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 cameForward = worldTransform_.translation - bGameCamera->GetView().eye;
 	cameForward.y = 0.0f;
 
-	// ƒJƒƒ‰‚Ì‰EƒxƒNƒgƒ‹
+	// ã‚«ãƒ¡ãƒ©ã®å³ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 up = { 0, 1, 0 };
 	Vector3 cameRight = Vector3::Cross(cameForward, up);
 
@@ -284,11 +285,11 @@ void Player::MoveUpdate()
 			worldTransform_.rotation.y = atan2f(frontVec_.x, frontVec_.z);
 		}
 
-		// ˆÚ“®ƒxƒNƒgƒ‹•ûŒü‚ÉˆÚ“®
+		// ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«æ–¹å‘ã«ç§»å‹•
 		worldTransform_.translation += moveVel_;
 	}
 
-	// ƒJƒƒ‰‚Ì‰ñ“]—p‚Ì‚à‚Ì‚É‚©‚è‚ÉƒRƒs[
+	// ã‚«ãƒ¡ãƒ©ã®å›è»¢ç”¨ã®ã‚‚ã®ã«ã‹ã‚Šã«ã‚³ãƒ”ãƒ¼
 	cameraWorld_.translation = worldTransform_.translation;
 	cameraWorld_.rotation.y += MathUtil::DegreeToRadian(rot.y);
 	cameraWorld_.UpdateMatrix();
@@ -317,7 +318,7 @@ void Player::MoveUpdate()
 
 	ImGui::End();
 
-	// ƒXƒvƒ‰ƒCƒg‚Ìƒ|ƒWƒVƒ‡ƒ“‚âƒTƒCƒY‚Ì•ÏX
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚„ã‚µã‚¤ã‚ºã®å¤‰æ›´
 	playerHpBar_->SetPosition(pHpBarPos_);
 	playerHpInside_->SetPosition(pHpInsidePos_);
 	playerHpBar_->SetSize(pHpBarSize_);
@@ -325,13 +326,13 @@ void Player::MoveUpdate()
 
 
 	frontW_.UpdateMatrix();
-	// ƒ[ƒ‹ƒhs—ñXV
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—æ›´æ–°
 	UpdateWorldMatrix();
 }
 
 void Player::Attack()
 {
-	//ƒfƒXƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
+	//ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°ã®ç«‹ã£ãŸå¼¾ã‚’å‰Šé™¤
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 	bulletInterTimer--;
 	if (JoypadInput::GetButton(PadCode::ButtonA))//input_->PushKey(DIK_Y)) {
@@ -340,25 +341,25 @@ void Player::Attack()
 
 		if (bulletInterTimer <= 0) {
 
-			//’e‚Ì‘¬“x
+			//å¼¾ã®é€Ÿåº¦
 			const float kBulletSpeed = 0.3f;
 			Vector3 velocity;
 			Vector3 frontVec = { frontW_.matWorld_.m[3][0],frontW_.matWorld_.m[3][1] ,frontW_.matWorld_.m[3][2] };
 
 
-			// ©‹@‚©‚çÆ€ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒxƒNƒgƒ‹
+			// è‡ªæ©Ÿã‹ã‚‰ç…§æº–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ãƒ™ã‚¯ãƒˆãƒ«
 			velocity = frontVec - worldTransform_.translation;
 			velocity.normalize();
 			velocity *= kBulletSpeed;
 
-			//‘¬“xƒxƒNƒgƒ‹‚ğ©‹@‚ÌŒü‚«‚É‡‚í‚¹‚Ä‰ñ“]‚³‚¹‚é
+			//é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’è‡ªæ©Ÿã®å‘ãã«åˆã‚ã›ã¦å›è»¢ã•ã›ã‚‹
 			// velocity = velocity * worldTransform_.matWorld_;
 
-			//’e‚ğ¶¬‚µA‰Šú‰»
+			//å¼¾ã‚’ç”Ÿæˆã—ã€åˆæœŸåŒ–
 			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 			newBullet->Initialize(bulletModel_.get(), worldTransform_, velocity);
 
-			//’e‚ğ“o˜^‚·‚é
+			//å¼¾ã‚’ç™»éŒ²ã™ã‚‹
 			bullets_.push_back(std::move(newBullet));
 
 			bulletInterTimer = bulletInterval;
@@ -373,7 +374,7 @@ void Player::Attack()
 void Player::OnColHitPoint()
 {
 	playerHitPoint_ -= 1;
-	// HP‚ÌƒZƒbƒg
+	// HPã®ã‚»ãƒƒãƒˆ
 	float nowHp = playerHitPoint_ / playerHitPointMax_;
 	if (nowHp <= 0.05f) {
 		pHpInsideSize_.x = 500.0f * nowHp;
@@ -389,7 +390,7 @@ void Player::OnColHitPoint()
 		pHpInsideSize_ = { 500.0f * nowHp,70.0f };
 	}
 
-	// HP‚Ìƒ|ƒWƒVƒ‡ƒ“‚Ì‚¸‚ç‚µ
+	// HPã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã®ãšã‚‰ã—
 	float hpMovePos = 0;
 	hpMovePos = (1 - (nowHp)) * 100;
 	pHpInsidePos_.x = (20 + (hpMovePos * 0.3f));

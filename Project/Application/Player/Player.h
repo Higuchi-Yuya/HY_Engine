@@ -5,90 +5,91 @@
 #include "PlayerBullet.h"
 #include "Sprite.h"
 
+
 class Player:public Object3d
 {
 public:
-	// 3DƒIƒuƒWƒFƒNƒg¶¬
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	static Player* Create(Model* model = nullptr);
 
 public:
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Player();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	bool Initialize()override;
 
-	// –ˆƒtƒŒ[ƒ€ˆ—
+	// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 	void Update()override;
 
-	// •`‰æ
+	// æç”»
 	void Draw(ViewProjection* view)override;
 
-	// ƒvƒŒƒCƒ„[‚Ì2D•`‰æ‘O–Ê
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®2Dæç”»å‰é¢
 	void Draw2DFront();
 
-	// ƒŠƒZƒbƒgŠÖ”
+	// ãƒªã‚»ãƒƒãƒˆé–¢æ•°
 	void Reset();
 
-public:// ƒQƒbƒ^[
+public:// ã‚²ãƒƒã‚¿ãƒ¼
 
-	// ƒ|ƒWƒVƒ‡ƒ“‚ÌƒQƒbƒ^[
+	// ãƒã‚¸ã‚·ãƒ§ãƒ³ã®ã‚²ãƒƒã‚¿ãƒ¼
 	const Vector3 GetWorldPosition ()const;
 
-	// ƒJƒƒ‰—p‚Ìƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ìæ“¾
+	// ã‚«ãƒ¡ãƒ©ç”¨ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®å–å¾—
 	const WorldTransform *GetCameraWorld()const;
 
-	// ƒvƒŒƒCƒ„[‘O•û‚É‚ ‚éƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ìæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å‰æ–¹ã«ã‚ã‚‹ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®å–å¾—
 	const Vector3 GetFrontPos()const;
 
-	// ƒvƒŒƒCƒ„[‚Ì¶‚«‚Ä‚¢‚éƒtƒ‰ƒO‚Ìæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç”Ÿãã¦ã„ã‚‹ãƒ•ãƒ©ã‚°ã®å–å¾—
 	const bool GetIsAlive()const;
 
-public:// ƒZƒbƒ^[
+public:// ã‚»ãƒƒã‚¿ãƒ¼
 
-	// ƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ìî•ñ‚ğƒZƒbƒg
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®æƒ…å ±ã‚’ã‚»ãƒƒãƒˆ
 	void SetWorldTransInfo(WorldTransform worldTrans);
 
-	// ƒQ[ƒ€ƒJƒƒ‰‚ğƒZƒbƒg
+	// ã‚²ãƒ¼ãƒ ã‚«ãƒ¡ãƒ©ã‚’ã‚»ãƒƒãƒˆ
 	void SetGameCamera(GameCamera* gameCamera);
 
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
 
-public:// “–‚½‚è”»’è
+public:// å½“ãŸã‚Šåˆ¤å®š
 
-	// Õ“ËƒR[ƒ‹ƒoƒbƒNŠÖ”
+	// è¡çªæ™‚ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 	void OnCollision();
 
-	// ‰Ÿ‚µ–ß‚µÕ“Ë”»’èƒR[ƒ‹ƒoƒbƒNŠÖ”
+	// æŠ¼ã—æˆ»ã—è¡çªåˆ¤å®šã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 	void pushBackOnCol();
 
-	// ‘O•û‚É‚¢‚é“G‚Ì‘Ì‚Æ“–‚½‚Á‚½ê‡‚ÉˆÚ“®‘¬“x‚ğ‰º‚°‚é
+	// å‰æ–¹ã«ã„ã‚‹æ•µã®ä½“ã¨å½“ãŸã£ãŸå ´åˆã«ç§»å‹•é€Ÿåº¦ã‚’ä¸‹ã’ã‚‹
 	void OnColDownSpeed();
 
-	// ‘O•û‚É‚¢‚é“G‚Ì‘Ì‚Æ“–‚½‚Á‚Ä‚¢‚È‚¢ê‡‚ÉˆÚ“®‘¬“x‚ğã‚°‚é
+	// å‰æ–¹ã«ã„ã‚‹æ•µã®ä½“ã¨å½“ãŸã£ã¦ã„ãªã„å ´åˆã«ç§»å‹•é€Ÿåº¦ã‚’ä¸Šã’ã‚‹
 	void OnColUpSpeed();
 
 	/// <summary>
-	/// “–‚½‚è”»’èƒqƒbƒgƒ|ƒCƒ“ƒg
+	/// å½“ãŸã‚Šåˆ¤å®šãƒ’ãƒƒãƒˆãƒã‚¤ãƒ³ãƒˆ
 	/// </summary>
 	void OnColHitPoint();
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 	/// <summary>
-	/// ˆÚ“®‚ÌXVˆ—
+	/// ç§»å‹•ã®æ›´æ–°å‡¦ç†
 	/// </summary>
 	void MoveUpdate();
 
 	/// <summary>
-	/// UŒ‚ˆ—
+	/// æ”»æ’ƒå‡¦ç†
 	/// </summary>
 	void Attack();
 
-public:// ƒpƒuƒŠƒbƒN•Ï”
-	// Õ“Ë“_
+public:// ãƒ‘ãƒ–ãƒªãƒƒã‚¯å¤‰æ•°
+	// è¡çªç‚¹
 	Vector3 interPos;
-	// ”rËƒxƒNƒgƒ‹
+	// æ’æ–¥ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 rejectVec;
 
 
@@ -100,52 +101,52 @@ private:
 	float deadZone = 450;
 	Vector3 moveValue = { 0.1f,0.0f,0.1f };
 
-	//ƒvƒŒƒCƒ„[ŠÖ˜A
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é–¢é€£
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
-	// Ú’nƒtƒ‰ƒO
+	// æ¥åœ°ãƒ•ãƒ©ã‚°
 	bool onGround = true;
-	// —‰ºƒxƒNƒgƒ‹
+	// è½ä¸‹ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 fallV;
 
 	Vector3 frontVec_ = { 0,0,1 };
 
-	// ˆÚ“®ƒxƒNƒgƒ‹
+	// ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 moveVel_;
 	float moveSpeed_ = 0.2f;
 	float moveSpeedMax_ = 0.2f;
 	float moveSpeedMin_ = 0.05f;
 
-	// Ø‚è‚Ä‚­‚éƒJƒƒ‰
+	// å€Ÿã‚Šã¦ãã‚‹ã‚«ãƒ¡ãƒ©
 	GameCamera *bGameCamera;
 
-	// ’eŠÖ˜A
-	// ‘O‚É‚ ‚é‰¼‚Ìƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+	// å¼¾é–¢é€£
+	// å‰ã«ã‚ã‚‹ä»®ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
 	WorldTransform frontW_;
 
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 	std::unique_ptr<Model> bulletModel_ = nullptr;
 
-	// ’e‚ÌƒCƒ“ƒ^[ƒoƒ‹
+	// å¼¾ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«
 	float bulletInterval = 20;
 	float bulletInterTimer = 0;
 
-	// ƒAƒ^ƒbƒNƒtƒ‰ƒO
+	// ã‚¢ã‚¿ãƒƒã‚¯ãƒ•ãƒ©ã‚°
 	bool IsAttack_ = false;
 
-	// ¶‚«‚Ä‚¢‚é‚©ƒtƒ‰ƒO
+	// ç”Ÿãã¦ã„ã‚‹ã‹ãƒ•ãƒ©ã‚°
 	bool IsAlive_ = true;
 
-#pragma region ƒvƒŒƒCƒ„[‚ÌHPŠÖ˜A
-	// ƒvƒŒƒCƒ„[‚ÌHPŠÖ˜A
+#pragma region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPé–¢é€£
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPé–¢é€£
 	float playerHitPoint_ = 0;
 	float playerHitPointMax_ = 100;
 
-	// ƒvƒŒƒCƒ„[‚ÌHP‚ÌƒXƒvƒ‰ƒCƒg
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::unique_ptr<Sprite> playerHpBar_ = nullptr;
 	std::unique_ptr<Sprite> playerHpInside_ = nullptr;
 
-	// ƒvƒŒƒCƒ„[‚ÌHp‚ÌƒeƒNƒXƒ`ƒƒƒnƒ“ƒhƒ‹
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Hpã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«
 	std::unique_ptr<Texture> textureHandleHpBar_ = nullptr;
 	std::unique_ptr<Texture> textureHandleHpInside_ = nullptr;
 

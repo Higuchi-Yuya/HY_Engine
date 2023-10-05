@@ -551,6 +551,9 @@
     <ClInclude Include="Application\UI\OperationUI.h">
       <Filter>ヘッダー ファイル\Application\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\DirectXBase\WarningDisable.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -574,6 +577,7 @@
     <None Include="Resources\Shaders\Particle\ParticleShaderHeader.hlsli">
       <Filter>シェーダーファイル\Particle</Filter>
     </None>
+    <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">

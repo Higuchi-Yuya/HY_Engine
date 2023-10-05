@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Vector3.h"
 #include "Matrix4.h"
 
@@ -14,52 +15,52 @@ public:
 	Quaternion();
 	Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
-	// Quaternion‚ÌÏ
+	// Quaternionã®ç©
 	Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
 
-	// ’PˆÊQuaternion‚ğ•Ô‚·
+	// å˜ä½Quaternionã‚’è¿”ã™
 	Quaternion IdentityQuaternion();
 
-	// ‹¤–ğ‚ÌQuaternion‚ğ•Ô‚·
+	// å…±å½¹ã®Quaternionã‚’è¿”ã™
 	Quaternion Conjugate(const Quaternion& quaternion);
 
-	// Quaternion‚Ìnorm‚ğ•Ô‚·
+	// Quaternionã®normã‚’è¿”ã™
 	float Norm(const Quaternion& quaternion);
 
-	// ³‹K‰»‚µ‚½Quaternion‚ğ•Ô‚·
+	// æ­£è¦åŒ–ã—ãŸQuaternionã‚’è¿”ã™
 	Quaternion Normalize(const Quaternion& quaternion);
 
-	// ‹tQuaternion‚ğ•Ô‚·
+	// é€†Quaternionã‚’è¿”ã™
 	Quaternion Inverse(const Quaternion& quaternion);
 
-	// ”CˆÓ²‰ñ“]‚ğ•\‚·Quaternion‚Ì¶¬
+	// ä»»æ„è»¸å›è»¢ã‚’è¡¨ã™Quaternionã®ç”Ÿæˆ
 	Quaternion MakeAxisAngle(const Vector3& axis, float angle);
 
-	// ƒxƒNƒgƒ‹‚ğQuaternion‚Å‰ñ“]‚³‚¹‚½Œ‹‰Ê‚ÌƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+	// ãƒ™ã‚¯ãƒˆãƒ«ã‚’Quaternionã§å›è»¢ã•ã›ãŸçµæœã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 	Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 
-	// Quaternion‚©‚ç‰ñ“]s—ñ‚ğ‹‚ß‚é
+	// Quaternionã‹ã‚‰å›è»¢è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 	Matrix4 MakeRotateMatrix(const Quaternion& quaternion);
 
-	// Quaternion‚ğüŒ`•âŠÔ‚·‚éŠÖ”
+	// Quaternionã‚’ç·šå½¢è£œé–“ã™ã‚‹é–¢æ•°
 	Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, float t);
 
-	// Quaternion‚ğ‹…–ÊüŒ`•âŠÔ‚·‚éŠÖ”
+	// Quaternionã‚’çƒé¢ç·šå½¢è£œé–“ã™ã‚‹é–¢æ•°
 	Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t);
 
-	// u‚©‚çv‚Ö‚Ì‰ñ“]‚ğ¶¬
+	// uã‹ã‚‰vã¸ã®å›è»¢ã‚’ç”Ÿæˆ
 	Quaternion DirectionToDirection(const Vector3& u, const Vector3& v);
 
-	// dot ŠÖ”
+	// dot é–¢æ•°
 	float dot(const Quaternion& q1, const Quaternion& q2);
 
-	// length ŠÖ”
+	// length é–¢æ•°
 	float length(const Quaternion& q);
 
-	// ’P€‰‰Zq
+	// å˜é …æ¼”ç®—å­
 	Quaternion operator - (const Quaternion& q);
 
-	// ‘ã“ü‰‰ZqƒI[ƒo[ƒ[ƒh
+	// ä»£å…¥æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	Quaternion& operator+=(const Quaternion& q);
 	Quaternion& operator-=(const Quaternion& q);
 	Quaternion& operator/=(float s);
@@ -67,7 +68,7 @@ public:
 	Quaternion& operator*=(float s);
 };
 
-// 2€‰‰ZqƒI[ƒo[ƒ[ƒh
+// 2é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 const Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
 const Quaternion operator-(const Quaternion& q1, const Quaternion& q2);
 const Quaternion operator*(const Quaternion& q1, const Quaternion& q2);

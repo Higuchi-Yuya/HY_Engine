@@ -1,11 +1,12 @@
 #include "GameCollider.h"
 #include "Collision.h"
 
+
 void GameCollider::Initialize()
 {
-	// ƒp[ƒeƒBƒNƒ‹‚ÌƒeƒNƒXƒ`ƒƒ‚Ì‰Šú‰»
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®åˆæœŸåŒ–
 	particleTex_.reset(TextureManager::Load2DTextureP("effect.png"));
-	// ƒp[ƒeƒBƒNƒ‹‚Ìƒ}ƒl[ƒWƒƒ‚Ì‰Šú‰»
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒãƒãƒ¼ã‚¸ãƒ£ã®åˆæœŸåŒ–
 	particleMan_ = std::make_unique<ParticleManager>();
 	particleMan_->Initialize();
 	particleMan_->SetTextureHandle(particleTex_.get());
@@ -51,31 +52,31 @@ void GameCollider::Initialize()
 
 void GameCollider::Updata()
 {
-	//õ–½‚ªs‚«‚½“G‚Ìî•ñ‚ğ‘Síœ
+	//å¯¿å‘½ãŒå°½ããŸæ•µã®æƒ…å ±ã‚’å…¨å‰Šé™¤
 	enemysInfo_.erase(std::remove_if(enemysInfo_.begin(), enemysInfo_.end(), [](Enemy* x) {
 		return x->GetAlive() == false;
 		}), enemysInfo_.end());
 
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
 
-	// ƒvƒŒƒCƒ„[‚Ìî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 	Sphere p;
 	p.center = player_->worldTransform_.translation;
 	p.center.y += 1.0f;
 	p.radius = 1.0f;
 
-	// “–‚½‚è”»’èiƒGƒlƒ~[‘¤‚Ì”½‰j
+	// å½“ãŸã‚Šåˆ¤å®šï¼ˆã‚¨ãƒãƒŸãƒ¼å´ã®åå¿œï¼‰
 	for (auto& e : enemysInfo_) {
-		// ƒGƒlƒ~[‚Ìî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+		// ã‚¨ãƒãƒŸãƒ¼ã®æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 		Sphere sphereE;
 		sphereE.center = e->worldTransform_.translation;
 		sphereE.radius = 1.0f;
 
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
-			// ƒGƒlƒ~[‚ª‚í‚ğÔ‚­‚·‚éi‰¼j
+			// ã‚¨ãƒãƒŸãƒ¼ãŒã‚ã‚’èµ¤ãã™ã‚‹ï¼ˆä»®ï¼‰
 			e->worldTransform_.color = { 1,0,0,1 };
 			//e->SetAlive(false);
-			// ƒvƒŒƒCƒ„[‚Ìƒqƒbƒgƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ’ãƒƒãƒˆãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			isPlayerHit = true;
 
 		}
@@ -84,24 +85,24 @@ void GameCollider::Updata()
 			e->worldTransform_.color = { 1,1,1,1 };
 		}
 
-		// -------------“G‚ÆƒvƒŒƒCƒ„[‚Ì’e‚Ì“–‚½‚è”»’è------------ //
+		// -------------æ•µã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã®å½“ãŸã‚Šåˆ¤å®š------------ //
 		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
 
-			// ƒvƒŒƒCƒ„[‚Ì’e‚Ìî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã®æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 			Sphere pB;
 			pB.center = playerbullet->worldTransform_.translation;
 			pB.radius = 1.0f;
 
-			// ƒvƒŒƒCƒ„[‚Ì’e‚ÆƒGƒlƒ~[‚Ì“–‚½‚è”»’è
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã¨ã‚¨ãƒãƒŸãƒ¼ã®å½“ãŸã‚Šåˆ¤å®š
 			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
-				// ƒGƒlƒ~[‚ª€–S
+				// ã‚¨ãƒãƒŸãƒ¼ãŒæ­»äº¡
 				e->OnCollision();
-				// ’e‚ğÁ‚·
+				// å¼¾ã‚’æ¶ˆã™
 				playerbullet->OnCollision();
 			}
 		}
 
-		// ----------“G‚Æ“G“¯m‚Ì“–‚½‚è”»’è-------------- //
+		// ----------æ•µã¨æ•µåŒå£«ã®å½“ãŸã‚Šåˆ¤å®š-------------- //
 		for (auto& e2 : enemysInfo_) {
 			if (e2 != e) {
 				Sphere sphereE2;
@@ -115,11 +116,11 @@ void GameCollider::Updata()
 		}
 
 
-		// -----------ƒvƒŒƒCƒ„[‚Æ“G‚Ì“–‚½‚è”»’è------------- //
+		// -----------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨æ•µã®å½“ãŸã‚Šåˆ¤å®š------------- //
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, p, &e->interPos, &e->rejectVec)) {
 			e->pushBackOnCol();
 
-			// ƒvƒŒƒCƒ„[‚Ì‘O•ûî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‰æ–¹æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 			Sphere frontP;
 			frontP.center = player_->GetFrontPos();
 			//frontP.center.y += 1.0f;
@@ -132,7 +133,7 @@ void GameCollider::Updata()
 			}
 		}
 
-		// -----------“G‚ÆƒtƒB[ƒ‹ƒh‚ÌƒIƒuƒWƒFƒNƒg‚Ì“–‚½‚è”»’è------------- //
+		// -----------æ•µã¨ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å½“ãŸã‚Šåˆ¤å®š------------- //
 		for (auto obj : objectsInfo_) {
 			Sphere sphereE2;
 			sphereE2.center = obj->worldTransform_.translation;
@@ -145,45 +146,45 @@ void GameCollider::Updata()
 		}
 	}
 
-	// ƒtƒB[ƒ‹ƒh‚ÌƒIƒuƒWƒFƒNƒg‚Ì“–‚½‚è”»’è
+	// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å½“ãŸã‚Šåˆ¤å®š
 	for (auto obj : objectsInfo_) {
 		Sphere sphereObj;
 		sphereObj.center = obj->worldTransform_.translation;
 		sphereObj.center.y = 1.0f;
 		sphereObj.radius = 0.6f;
 
-		// -----------ƒvƒŒƒCƒ„[‚ÆƒtƒB[ƒ‹ƒh‚ÌƒIƒuƒWƒFƒNƒg‚Ì“–‚½‚è”»’è----------- //
+		// -----------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å½“ãŸã‚Šåˆ¤å®š----------- //
 		if (Collision::CheckSphere2Sphere(p, sphereObj, &player_->interPos, &player_->rejectVec)) {
 			player_->pushBackOnCol();
 		}
 
-		// -------------ƒvƒŒƒCƒ„[‚Ì’e‚ÆƒtƒB[ƒ‹ƒh‚ÌƒIƒuƒWƒFƒNƒg‚Ì“–‚½‚è”»’è------------ //
+		// -------------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã¨ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å½“ãŸã‚Šåˆ¤å®š------------ //
 		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
 
-			// ƒvƒŒƒCƒ„[‚Ì’e‚Ìî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã®æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 			Sphere pB;
 			pB.center = playerbullet->worldTransform_.translation;
 			pB.radius = playerbullet->worldTransform_.scale.x;
 
-			// ƒvƒŒƒCƒ„[‚Ì’e‚ÆƒGƒlƒ~[‚Ì“–‚½‚è”»’è
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã¨ã‚¨ãƒãƒŸãƒ¼ã®å½“ãŸã‚Šåˆ¤å®š
 			if (Collision::CheckSphere2Sphere(sphereObj, pB)) {
-				// ’e‚ğÁ‚·
+				// å¼¾ã‚’æ¶ˆã™
 				playerbullet->OnCollision();
 			}
 		}
 	}
 
-	// •Ç‚Æ‚Ì“–‚½‚è”»’è
+	// å£ã¨ã®å½“ãŸã‚Šåˆ¤å®š
 	for (size_t i = 0; i < 4; i++)
 	{
-		// ------------ƒvƒŒƒCƒ„[‚Æ•Ç‚Ì“–‚½‚è”»’è---------- //
+		// ------------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å£ã®å½“ãŸã‚Šåˆ¤å®š---------- //
 		if (Collision::CheckSphere2AABB(p, box_[i]->worldTransform_, &player_->interPos, &player_->rejectVec)) {
 			player_->pushBackOnCol();
 		}
 
-		// ------------“G‚Æ•Ç‚Ì“–‚½‚è”»’è----------- //
+		// ------------æ•µã¨å£ã®å½“ãŸã‚Šåˆ¤å®š----------- //
 		for (auto& e : enemysInfo_) {
-			// ƒGƒlƒ~[‚Ìî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+			// ã‚¨ãƒãƒŸãƒ¼ã®æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 			Sphere sphereE;
 			sphereE.center = e->worldTransform_.translation;
 			sphereE.radius = 1.0f;
@@ -194,16 +195,16 @@ void GameCollider::Updata()
 			}
 		}
 
-		// --------ƒvƒŒƒCƒ„[‚Ì’e‚Æ•Ç‚Ì“–‚½‚è”»’è---------- //
+		// --------ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã¨å£ã®å½“ãŸã‚Šåˆ¤å®š---------- //
 		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
 
-			// ƒvƒŒƒCƒ„[‚Ì’e‚Ìî•ñ‚ğƒXƒtƒBƒA‚Ì‚à‚Ì‚É“o˜^
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ã®æƒ…å ±ã‚’ã‚¹ãƒ•ã‚£ã‚¢ã®ã‚‚ã®ã«ç™»éŒ²
 			Sphere pB;
 			pB.center = playerbullet->worldTransform_.translation;
 			pB.radius = 1.0f;
 
 			if (Collision::CheckSphere2AABB(pB, box_[i]->worldTransform_)) {
-				// ’e‚ğÁ‚·
+				// å¼¾ã‚’æ¶ˆã™
 				playerbullet->OnCollision();
 			}
 		}
@@ -212,7 +213,7 @@ void GameCollider::Updata()
 	}
 
 	if (isPlayerHit == true) {
-		// ƒqƒbƒg‚Éˆê“xƒp[ƒeƒBƒNƒ‹‚ğo‚·
+		// ãƒ’ãƒƒãƒˆæ™‚ã«ä¸€åº¦ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‡ºã™
 		if (isPartile == false) {
 			OnColParticle();
 			player_->OnColHitPoint();
@@ -220,11 +221,11 @@ void GameCollider::Updata()
 		}
 
 	}
-	// ƒp[ƒeƒBƒNƒ‹‚ªo‚½‚ ‚ÆƒvƒŒƒCƒ„[‚Ì–³“GŠÔ‚Ìƒ^ƒCƒ}[‚ği‚ß‚é
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãŒå‡ºãŸã‚ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç„¡æ•µæ™‚é–“ã®ã‚¿ã‚¤ãƒãƒ¼ã‚’é€²ã‚ã‚‹
 	if (isPartile == true) {
 		playerHitTimer++;
 
-		// –³“GŠÔ‚ğ‰ß‚¬‚½‚çƒvƒŒƒCƒ„[‚Ì“–‚½‚è”»’è‚ğÄ‚Ñ‚Æ‚ê‚é‚æ‚¤‚É‚·‚é
+		// ç„¡æ•µæ™‚é–“ã‚’éããŸã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å½“ãŸã‚Šåˆ¤å®šã‚’å†ã³ã¨ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹
 		if (playerHitTimer > playerHitTimeMax) {
 			playerHitTimer = 0;
 			isPartile = false;
@@ -232,7 +233,7 @@ void GameCollider::Updata()
 		}
 	}
 
-	// ƒp[ƒeƒBƒNƒ‹‚ÌXVˆ—
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æ›´æ–°å‡¦ç†
 	particleMan_->Update();
 
 
@@ -240,49 +241,51 @@ void GameCollider::Updata()
 
 void GameCollider::OnColParticle()
 {
-	// “–‚½‚è”»’èiƒvƒŒƒCƒ„[‘¤‚Ì”½‰j
+	// å½“ãŸã‚Šåˆ¤å®šï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã®åå¿œï¼‰
 	for (int i = 0; i < particleNum; i++) {
-		// X,Y,Z‘S‚Ä{-5.0f,+5.0f}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		// X,Y,Zå…¨ã¦{-5.0f,+5.0f}ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		//const float md_pos = 0.0f;
 		Vector3 pos{};
 		//pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
 		//pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f + 5;
 		//pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
 
-		// ƒ|ƒWƒVƒ‡ƒ“‚ğƒvƒŒƒCƒ„[‚Ì’†SÀ•W‚ÉƒZƒbƒg
+		// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä¸­å¿ƒåº§æ¨™ã«ã‚»ãƒƒãƒˆ
 		pos = player_->worldTransform_.translation;
 		pos.y += 0.5f;
-		// X,Y,Z‘S‚Ä{-0.05f,+0.05f}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		// X,Y,Zå…¨ã¦{-0.05f,+0.05f}ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float md_vel = 0.1f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 
-		// d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ{-0.001f,0}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		// é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿{-0.001f,0}ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		Vector3 acc{};
 		const float md_acc = 0.003f;
 		acc.y = -(float)rand() / RAND_MAX * md_acc;
 
 		Vector3 angle = { 0,0,0 };
-		// ’Ç‰Á
+		// è¿½åŠ 
 		particleMan_->Add(ParticleManager::Type::Normal, 120, pos, vel, acc, angle, 0.2f, 0.0f, startColor_, endColor_);
 	}
 }
 
 void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection)
 {
-	// ----------------ƒp[ƒeƒBƒNƒ‹‚Ì•`‰æ‚Í‚±‚±‚©‚ç--------------- //
-
+	// ----------------ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æç”»ã¯ã“ã“ã‹ã‚‰--------------- //
+	commandList;
 	particleMan_->Draw(*viewProjection);
 
 
 
-	// ----------------ƒp[ƒeƒBƒNƒ‹‚Ì•`‰æ‚±‚±‚Ü‚Å----------------- //
+	// ----------------ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æç”»ã“ã“ã¾ã§----------------- //
 }
 
 void GameCollider::Draw3D(ViewProjection* viewProjection)
 {
+	ViewProjection* v = viewProjection;
+	v;
 	for (size_t i = 0; i < 4; i++)
 	{
 		//box_[i]->Draw(viewProjection);

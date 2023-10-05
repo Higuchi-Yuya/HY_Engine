@@ -1,5 +1,6 @@
 #include "Input.h"
 
+
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 
@@ -9,7 +10,7 @@ WinApp* Input::winApp_ = nullptr;
 
 void Input::StaticInitialize(WinApp* winApp)
 {
-	// Ø‚è‚Ä‚«‚½WinApp‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‹L˜^
+	// å€Ÿã‚Šã¦ããŸWinAppã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¨˜éŒ²
 	Input::winApp_ = winApp;
 }
 
@@ -17,130 +18,130 @@ void Input::Initialize()
 {
 	HRESULT result;
 
-	//DirectInput‚Ì‰Šú‰»
+	//DirectInputã®åˆæœŸåŒ–
 	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput_, nullptr);
 	assert(SUCCEEDED(result));
 
-	//ƒL[ƒ{[ƒhƒfƒoƒCƒX‚Ì¶¬
+	//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆ
 	result = directInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
 	assert(SUCCEEDED(result));
 
-	// ƒ}ƒEƒXƒfƒoƒCƒX‚Ì¶¬
+	// ãƒã‚¦ã‚¹ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆ
 	result = directInput_->CreateDevice(GUID_SysMouse, &devMouse_, NULL);
 	assert(SUCCEEDED(result));
 
-	// ƒL[ƒ{[ƒh“ü—Íƒf[ƒ^Œ`®‚ÌƒZƒbƒg
-	result = keyboard_->SetDataFormat(&c_dfDIKeyboard);//•W€Œ`®
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰å…¥åŠ›ãƒ‡ãƒ¼ã‚¿å½¢å¼ã®ã‚»ãƒƒãƒˆ
+	result = keyboard_->SetDataFormat(&c_dfDIKeyboard);//æ¨™æº–å½¢å¼
 	assert(SUCCEEDED(result));
 
-	// ƒL[ƒ{[ƒh”r‘¼§ŒäƒŒƒxƒ‹‚ÌƒZƒbƒg
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ’ä»–åˆ¶å¾¡ãƒ¬ãƒ™ãƒ«ã®ã‚»ãƒƒãƒˆ
 	result = keyboard_->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
-	// ƒ}ƒEƒX“ü—Íƒf[ƒ^Œ`®‚ÌƒZƒbƒg
-	result = devMouse_->SetDataFormat(&c_dfDIMouse2); // •W€Œ`®
+	// ãƒã‚¦ã‚¹å…¥åŠ›ãƒ‡ãƒ¼ã‚¿å½¢å¼ã®ã‚»ãƒƒãƒˆ
+	result = devMouse_->SetDataFormat(&c_dfDIMouse2); // æ¨™æº–å½¢å¼
 	assert(SUCCEEDED(result));
 
-	// ƒ}ƒEƒX”r‘¼§ŒäƒŒƒxƒ‹‚ÌƒZƒbƒg
+	// ãƒã‚¦ã‚¹æ’ä»–åˆ¶å¾¡ãƒ¬ãƒ™ãƒ«ã®ã‚»ãƒƒãƒˆ
 	result = devMouse_->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
 
 void Input::Update()
 {
-	// ‘O‰ñ‚ÌƒL[“ü—Í‚ğ•Û‘¶
+	// å‰å›ã®ã‚­ãƒ¼å…¥åŠ›ã‚’ä¿å­˜
 	memcpy(keyPre_, key_, sizeof(key_));
 
-	// ƒL[ƒ{[ƒhî•ñ‚Ìæ“¾ŠJn
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±ã®å–å¾—é–‹å§‹
 	keyboard_->Acquire();
 
-	// ‘SƒL[‚Ì“ü—Íó‘Ô‚ğæ“¾‚·‚é
+	// å…¨ã‚­ãƒ¼ã®å…¥åŠ›çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹
 	keyboard_->GetDeviceState(sizeof(key_), key_);
 
-	// ƒ}ƒEƒX“®ìŠJn
+	// ãƒã‚¦ã‚¹å‹•ä½œé–‹å§‹
 	devMouse_->Acquire(); 
 
-	// ‘O‰ñ‚Ì“ü—Í‚ğ•Û‘¶
+	// å‰å›ã®å…¥åŠ›ã‚’ä¿å­˜
 	mouseStatePre_ = mouseState_;
 
-	// ƒ}ƒEƒX‚Ì“ü—Í
+	// ãƒã‚¦ã‚¹ã®å…¥åŠ›
 	devMouse_->GetDeviceState(sizeof(mouseState_), &mouseState_);
 }
 
 bool Input::PushKey(BYTE keyNumber)
 {
-	// w’è‚µ‚½ƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚ê‚Îtrue‚ğ•Ô‚·
+	// æŒ‡å®šã—ãŸã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ã„ã‚Œã°trueã‚’è¿”ã™
 	if (key_[keyNumber]) {
 		return true;
 	}
 
-	// ‚»‚¤‚Å‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+	// ãã†ã§ãªã‘ã‚Œã°falseã‚’è¿”ã™
 	return false;
 }
 
 bool Input::TriggerKey(BYTE keyNumber)
 {
-	// w’èƒL[‚ğ‘OƒtƒŒ[ƒ€‚Å‰Ÿ‚µ‚Ä‚¢‚È‚­A¡‚ÌƒtƒŒ[ƒ€‚Å‰Ÿ‚µ‚Ä‚¢‚ê‚Îtrue‚ğ•Ô‚·
+	// æŒ‡å®šã‚­ãƒ¼ã‚’å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§æŠ¼ã—ã¦ã„ãªãã€ä»Šã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§æŠ¼ã—ã¦ã„ã‚Œã°trueã‚’è¿”ã™
 	if (!keyPre_[keyNumber] && key_[keyNumber]) {
 		return true;
 	}
 
-	// ‚»‚¤‚Å‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+	// ãã†ã§ãªã‘ã‚Œã°falseã‚’è¿”ã™
 	return false;
 }
 
 bool Input::ReleasedKey(BYTE keyNumber)
 {
-	// w’èƒL[‚ğ‘OƒtƒŒ[ƒ€‚Å‰Ÿ‚µ‚Ä‚¢‚ÄA¡‚ÌƒtƒŒ[ƒ€‚Å‰Ÿ‚µ‚Ä‚¢‚È‚¯‚ê‚Îtrue‚ğ•Ô‚·
+	// æŒ‡å®šã‚­ãƒ¼ã‚’å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§æŠ¼ã—ã¦ã„ã¦ã€ä»Šã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§æŠ¼ã—ã¦ã„ãªã‘ã‚Œã°trueã‚’è¿”ã™
 	if (keyPre_[keyNumber] && !key_[keyNumber]) {
 		return true;
 	}
 
-	// ‚»‚¤‚Å‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+	// ãã†ã§ãªã‘ã‚Œã°falseã‚’è¿”ã™
 	return false;
 }
 
 bool Input::PushMouseLeft()
 {
-	// 0‚Å‚È‚¯‚ê‚Î‰Ÿ‚µ‚Ä‚¢‚é
+	// 0ã§ãªã‘ã‚Œã°æŠ¼ã—ã¦ã„ã‚‹
 	if (mouseState_.rgbButtons[0]) {
 		return true;
 	}
 
-	// ‰Ÿ‚µ‚Ä‚¢‚È‚¢
+	// æŠ¼ã—ã¦ã„ãªã„
 	return false;
 }
 
 bool Input::PushMouseMiddle()
 {
-	// 0‚Å‚È‚¯‚ê‚Î‰Ÿ‚µ‚Ä‚¢‚é
+	// 0ã§ãªã‘ã‚Œã°æŠ¼ã—ã¦ã„ã‚‹
 	if (mouseState_.rgbButtons[2]) {
 		return true;
 	}
 
-	// ‰Ÿ‚µ‚Ä‚¢‚È‚¢
+	// æŠ¼ã—ã¦ã„ãªã„
 	return false;
 }
 
 bool Input::TriggerMouseLeft()
 {
-	// ‘O‰ñ‚ª0‚ÅA¡‰ñ‚ª0‚Å‚È‚¯‚ê‚ÎƒgƒŠƒK[
+	// å‰å›ãŒ0ã§ã€ä»Šå›ãŒ0ã§ãªã‘ã‚Œã°ãƒˆãƒªã‚¬ãƒ¼
 	if (!mouseStatePre_.rgbButtons[0] && mouseState_.rgbButtons[0]) {
 		return true;
 	}
 
-	// ƒgƒŠƒK[‚Å‚È‚¢
+	// ãƒˆãƒªã‚¬ãƒ¼ã§ãªã„
 	return false;
 }
 
 bool Input::TriggerMouseMiddle()
 {
-	// ‘O‰ñ‚ª0‚ÅA¡‰ñ‚ª0‚Å‚È‚¯‚ê‚ÎƒgƒŠƒK[
+	// å‰å›ãŒ0ã§ã€ä»Šå›ãŒ0ã§ãªã‘ã‚Œã°ãƒˆãƒªã‚¬ãƒ¼
 	if (!mouseStatePre_.rgbButtons[2] && mouseState_.rgbButtons[2]) {
 		return true;
 	}
 
-	// ƒgƒŠƒK[‚Å‚È‚¢
+	// ãƒˆãƒªã‚¬ãƒ¼ã§ãªã„
 	return false;
 }
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SpriteManager.h"
 #include "WorldTransform.h"
 #include "Matrix4.h"
@@ -8,162 +9,162 @@
 
 class Sprite
 {
-public:// ƒTƒuƒNƒ‰ƒX
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 
 	enum VertexNumber {
-		LB,	//¶‰º
-		LT,	//¶ã
-		RB,	//‰E‰º
-		RT,	//‰Eã
+		LB,	//å·¦ä¸‹
+		LT,	//å·¦ä¸Š
+		RB,	//å³ä¸‹
+		RT,	//å³ä¸Š
 	};
 
-public:// ƒƒ“ƒoŠÖ”
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Sprite();
 	Sprite(Texture textureNum, Vector2 position, Vector2 size, Vector4 color, Vector2 anchorPoint, bool isFlipX, bool isFlipY);
 
-	// ƒXƒvƒ‰ƒCƒgƒ}ƒl[ƒWƒƒ[‚ğØ‚è‚é
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’å€Ÿã‚Šã‚‹
 	static void StaticInitialize(SpriteManager* spriteManager);
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize(Texture* textureNum = nullptr, Vector2 position = { 0.0f,0.0f }, Vector2 size = { 100.0f,100.0f }, Vector4 color = { 1,1,1,1 });
 
-	// XVˆ—
+	// æ›´æ–°å‡¦ç†
 	void Updata(WorldTransform* parent = nullptr);
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
-	// À•Wİ’è
+	// åº§æ¨™è¨­å®š
 	void SetPosition(const Vector2& position) { position_ = position; }
 	
-	// À•W‚Ìæ“¾
+	// åº§æ¨™ã®å–å¾—
 	const Vector2& GetPosition()const { return position_; }
 
-	// ‰ñ“]‚Ìİ’è
+	// å›è»¢ã®è¨­å®š
 	void SetRotation(float rotation) { rotation_.z = rotation; }
 
-	// ‰ñ“]’l‚Ìæ“¾
+	// å›è»¢å€¤ã®å–å¾—
 	float GetRotation()const { return rotation_.z; }
 
-	// F‚Ìİ’è
+	// è‰²ã®è¨­å®š
 	void SetColor(const Vector4& color) { color_ = color; }
 
-	// F‚Ìæ“¾
+	// è‰²ã®å–å¾—
 	const Vector4& GetColor() const { return color_; }
 
-	// ƒTƒCƒY‚Ìİ’è
+	// ã‚µã‚¤ã‚ºã®è¨­å®š
 	void SetSize(const Vector2& size) { size_ = size; }
 
-	// ƒTƒCƒY‚Ìæ“¾
+	// ã‚µã‚¤ã‚ºã®å–å¾—
 	const Vector2& GetSize() const { return size_; }
 
-	// ƒXƒP[ƒ‹‚Ìİ’è
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã®è¨­å®š
 	void SetScale(const Vector3& scale) { scale_ = scale; }
 
-	// ƒXƒP[ƒ‹‚Ìæ“¾
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã®å–å¾—
 	const Vector3& GetScale() const { return scale_; }
 
-	// ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg‚Ìİ’è
+	// ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆã®è¨­å®š
 	void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint;}
 
-	// ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg‚Ìæ“¾
+	// ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆã®å–å¾—
 	const Vector2& GetAnchorPoint()const { return anchorPoint_; }
 
-	// ¶‰E”½“]‚Ìİ’è
+	// å·¦å³åè»¢ã®è¨­å®š
 	void SetFlipX(const bool& isFlipX) { isFlipX_ = isFlipX; }
 
-	// ¶‰E”½“]‚Ìæ“¾
+	// å·¦å³åè»¢ã®å–å¾—
 	const bool& GetFlipX()const { return isFlipX_; }
 
-	// ã‰º”½“]‚Ìİ’è
+	// ä¸Šä¸‹åè»¢ã®è¨­å®š
 	void SetFlipY(const bool& isFlipY) { isFlipY_ = isFlipY; }
 
-	// ã‰º”½“]‚Ìæ“¾
+	// ä¸Šä¸‹åè»¢ã®å–å¾—
 	const bool& GetFlipY()const { return isFlipY_; }
 
-	// ”ñ•\¦‚Ìİ’è
+	// éè¡¨ç¤ºã®è¨­å®š
 	void SetInvisible(const bool& invisible) { isInvisible_ = invisible; }
 
-	// ”ñ•\¦‚Ìƒtƒ‰ƒO‚Ìæ“¾
+	// éè¡¨ç¤ºã®ãƒ•ãƒ©ã‚°ã®å–å¾—
 	const bool& GetInvisible()const { return isInvisible_; }
 
-	// ƒeƒNƒXƒ`ƒƒ‚ÌØ‚èo‚µƒTƒCƒY‚Ìİ’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®åˆ‡ã‚Šå‡ºã—ã‚µã‚¤ã‚ºã®è¨­å®š
 	void SetRectSize(const Vector2& leftTopPos, const Vector2& rightDownPos) {
 		textureLeftTop_ = leftTopPos; textureSize_ = rightDownPos;
 	}
 
-	// ƒeƒNƒXƒ`ƒƒØ‚èo‚µ‚Ìİ’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£åˆ‡ã‚Šå‡ºã—ã®è¨­å®š
 	void SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }
 
-	// Ø‚èo‚µƒTƒCƒY‚Ìæ“¾
+	// åˆ‡ã‚Šå‡ºã—ã‚µã‚¤ã‚ºã®å–å¾—
 	const Vector2& GetTextureSize()const { return textureSize_; }
 
 
-public:// Ã“Iƒƒ“ƒo•Ï”
+public:// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
 
 	static SpriteManager* sSpriteManager_;
 
-private:// ƒvƒ‰ƒCƒx[ƒgƒƒ“ƒoŠÖ”
-	// ƒeƒNƒXƒ`ƒƒƒTƒCƒY‚ğƒCƒ[ƒW‚É‡‚í‚¹‚é
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ¡ãƒ³ãƒé–¢æ•°
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚µã‚¤ã‚ºã‚’ã‚¤ãƒ¡ãƒ¼ã‚¸ã«åˆã‚ã›ã‚‹
 	void AbjustTextureSize();
 
-protected:// ƒƒ“ƒo•Ï”
+protected:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
 	SpriteManager::Vertex vertices_[4] = {
-	{{  0.0f,100.0f, 0.0f },{0.0f,1.0f}}, // ¶‰º
-	{{  0.0f,  0.0f, 0.0f },{0.0f,0.0f}}, // ¶ã
-	{{100.0f,100.0f, 0.0f },{1.0f,1.0f}}, // ‰E‰º
-	{{100.0f,  0.0f, 0.0f },{1.0f,0.0f}}, // ‰Eã
+	{{  0.0f,100.0f, 0.0f },{0.0f,1.0f}}, // å·¦ä¸‹
+	{{  0.0f,  0.0f, 0.0f },{0.0f,0.0f}}, // å·¦ä¸Š
+	{{100.0f,100.0f, 0.0f },{1.0f,1.0f}}, // å³ä¸‹
+	{{100.0f,  0.0f, 0.0f },{1.0f,0.0f}}, // å³ä¸Š
 	};
 
-	// ’¸“_”
+	// é ‚ç‚¹æ•°
 	static const int kVertNum = 4;
 
-	Matrix4 matWorld_;	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	Matrix4 matWorld_;	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 
-	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	    // ‰ñ“]Šp
+	Vector3 rotation_ = { 0.0f,0.0f,0.0f };	    // å›è»¢è§’
 
-	Vector2 position_ = { 100.0f,100.0f };	// À•W
+	Vector2 position_ = { 100.0f,100.0f };	// åº§æ¨™
 	
-	Vector4 color_ = { 1,1,1,1 };	            // FiRGBAj
+	Vector4 color_ = { 1,1,1,1 };	            // è‰²ï¼ˆRGBAï¼‰
 	
-	Vector2 size_ = { 100.0f,100.0f };          // ƒXƒvƒ‰ƒCƒgƒTƒCƒY
+	Vector2 size_ = { 100.0f,100.0f };          // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚µã‚¤ã‚º
 	
-	Vector3 scale_ = { 1.0f,1.0f,0.0f };             // ƒXƒvƒ‰ƒCƒg‚ÌƒXƒP[ƒ‹
+	Vector3 scale_ = { 1.0f,1.0f,0.0f };             // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚¹ã‚±ãƒ¼ãƒ«
 
-	Vector2 anchorPoint_ = { 0.5f,0.5f };       // ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg(À•W•ÏŠ·‚ÌŠî€“_)
+	Vector2 anchorPoint_ = { 0.5f,0.5f };       // ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆ(åº§æ¨™å¤‰æ›ã®åŸºæº–ç‚¹)
 	
-	bool isFlipX_ = false;	                    // ¶‰E”½“]ƒtƒ‰ƒO
+	bool isFlipX_ = false;	                    // å·¦å³åè»¢ãƒ•ãƒ©ã‚°
 	
-	bool isFlipY_ = false;	                    // ã‰º”½“]ƒtƒ‰ƒO
+	bool isFlipY_ = false;	                    // ä¸Šä¸‹åè»¢ãƒ•ãƒ©ã‚°
 	
-	bool isInvisible_ = false;	                // ”ñ•\¦ƒtƒ‰ƒO
+	bool isInvisible_ = false;	                // éè¡¨ç¤ºãƒ•ãƒ©ã‚°
 
-	// ƒeƒNƒXƒ`ƒƒ¶ãÀ•W
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£å·¦ä¸Šåº§æ¨™
 	Vector2 textureLeftTop_ = { 0.0f,0.0f };
 
-	// ƒeƒNƒXƒ`ƒƒØ‚èo‚µƒTƒCƒY
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£åˆ‡ã‚Šå‡ºã—ã‚µã‚¤ã‚º
 	Vector2 textureSize_ = { 100.0f,100.0f };
 
-	// ƒeƒNƒXƒ`ƒƒ”Ô†
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·
 	Texture* textureIndex_;
 
 	SpriteManager::ConstBufferData* constMap_ = nullptr;
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
-	// ’¸“_ƒ}ƒbƒv
+	// é ‚ç‚¹ãƒãƒƒãƒ—
 	SpriteManager::Vertex* vertMap_ = nullptr;
 
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff_ = nullptr;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_ = nullptr;
 
-	// Œ‹‰ÊŠm”F
+	// çµæœç¢ºèª
 	HRESULT result;
 };
 

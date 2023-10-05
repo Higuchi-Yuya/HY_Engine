@@ -1,17 +1,18 @@
 #pragma once
+
 #include "CollisionTypes.h"
 #include "Object3d.h"
 #include "CollisionInfo.h"
 
 /// <summary>
-/// ƒRƒ‰ƒCƒ_[Šî’êƒNƒ‰ƒX
+/// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼åŸºåº•ã‚¯ãƒ©ã‚¹
 /// </summary>
 class BaseCollider
 {
 public:
 	friend class CollisionManager;
 	BaseCollider() = default;
-	// ‰¼‘zƒfƒXƒgƒ‰ƒNƒ^
+	// ä»®æƒ³ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~BaseCollider() = default;
 
 	//inline void SetObject(Object3d* object) {object3d_ = object;}
@@ -19,38 +20,38 @@ public:
 	//inline Object3d* GetObject3d() { return object3d_; }
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	virtual void Update(const Matrix4& worldPos) = 0;
 
-	// Œ`óƒ^ƒCƒvæ“¾
+	// å½¢çŠ¶ã‚¿ã‚¤ãƒ—å–å¾—
 	inline CollisionShapeType GetShapeType() { return shapeType_; }
 
 	/// <summary>
-	/// Õ“ËƒR[ƒ‹ƒoƒbƒNŠÖ”
+	/// è¡çªæ™‚ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 	/// </summary>
 	//inline void OnCollision(const CollisionInfo& info) { object3d_->OnCollision(info); }
 
 	/// <summary>
-	/// “–‚½‚è”»’è‘®«‚ğƒZƒbƒg
+	/// å½“ãŸã‚Šåˆ¤å®šå±æ€§ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="attribute">“–‚½‚è”»’è‘®«</param>
+	/// <param name="attribute">å½“ãŸã‚Šåˆ¤å®šå±æ€§</param>
 	inline void SetAttribute(unsigned short attribute) {
 		attribute_ = attribute;
 	}
 
 	/// <summary>
-	/// “–‚½‚è”»’è‘®«‚ğ’Ç‰Á
+	/// å½“ãŸã‚Šåˆ¤å®šå±æ€§ã‚’è¿½åŠ 
 	/// </summary>
-	/// <param name="attribute">“–‚½‚è”»’è‘®«</param>
+	/// <param name="attribute">å½“ãŸã‚Šåˆ¤å®šå±æ€§</param>
 	inline void AddAttribute(unsigned short attribute) {
 		attribute_ |= attribute;
 	}
 
 	/// <summary>
-	/// “–‚½‚è”»’è‘®«‚ğíœ
+	/// å½“ãŸã‚Šåˆ¤å®šå±æ€§ã‚’å‰Šé™¤
 	/// </summary>
-	/// <param name="attribute">“–‚½‚è”»’è‘®«</param>
+	/// <param name="attribute">å½“ãŸã‚Šåˆ¤å®šå±æ€§</param>
 	inline void RemoveAttribute(unsigned short attribute) {
 		attribute_ &= !attribute;
 	}
@@ -59,12 +60,12 @@ public:
 
 protected:
 	//Object3d* object3d_ = nullptr;
-	// Œ`óƒ^ƒCƒv
+	// å½¢çŠ¶ã‚¿ã‚¤ãƒ—
 	CollisionShapeType shapeType_ = SHAPE_UNKNOWN;
-	// “–‚½‚è”»’è‘®«
+	// å½“ãŸã‚Šåˆ¤å®šå±æ€§
 	unsigned short attribute_ = 0b1111111111111111;
 
-	//ˆÊ’u
+	//ä½ç½®
 	Matrix4 worldPos_;
 };
 

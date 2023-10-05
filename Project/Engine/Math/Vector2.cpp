@@ -1,6 +1,7 @@
 #include "Vector2.h"
 #include<cmath>  //sprt
 
+
 Vector2::Vector2() :x(0), y(0)
 {
 }
@@ -100,7 +101,7 @@ bool Vector2::operator<=(float num)
 	return x <= num && y <= num;
 }
 
-//Vector2 ƒNƒ‰ƒX‚É‘®‚³‚È‚¢ŠÖ”ŒQ
+//Vector2 ã‚¯ãƒ©ã‚¹ã«å±žã•ãªã„é–¢æ•°ç¾¤
 const Vector2 operator+(const Vector2& v1, const Vector2& v2)
 {
 	Vector2 temp(v1);

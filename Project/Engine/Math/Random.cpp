@@ -4,6 +4,7 @@
 #include <time.h>
 #include <random>
 
+
 void Random::Init()
 {
 	srand((uint32_t)time(nullptr));

@@ -3,11 +3,12 @@
 #include "MathUtil.h"
 #include "Easing.h"
 
+
 std::unique_ptr<Texture> Enemy::sParticleTex_ = nullptr;
 
 void Enemy::StaticInitialize()
 {
-	// ƒp[ƒeƒBƒNƒ‹‚ÌƒeƒNƒXƒ`ƒƒ‚Ì‰Šú‰»
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®åˆæœŸåŒ–
 	sParticleTex_.reset(TextureManager::Load2DTextureP("effect.png"));
 
 }
@@ -22,7 +23,7 @@ void Enemy::Initialize(Model* model, Player* player)
 	player_ = player;
 
 	Object3d::Initialize();
-	// ƒ‚ƒfƒ‹‚ÌƒZƒbƒg
+	// ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
 	if (model) {
 		SetModel(model);
 	}
@@ -33,12 +34,12 @@ void Enemy::Initialize(Model* model, Player* player)
 	//worldTransform_.scale.x = 1.0f;
 	worldTransform_.UpdateMatrix();
 
-	// ƒp[ƒeƒBƒNƒ‹‚Ìƒ}ƒl[ƒWƒƒ‚Ì‰Šú‰»
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒãƒãƒ¼ã‚¸ãƒ£ã®åˆæœŸåŒ–
 	particleMan_ = std::make_unique<ParticleManager>();
 	particleMan_->Initialize();
 	particleMan_->SetTextureHandle(sParticleTex_.get());
 
-	// ƒ‰ƒCƒt‚Ì‰Šú‰»
+	// ãƒ©ã‚¤ãƒ•ã®åˆæœŸåŒ–
 	nowLife_ = maxLife_;
 }
 
@@ -47,7 +48,7 @@ void Enemy::Update()
 	switch (nowState_)
 	{
 	case Enemy::State::Spawn:
-		// ƒXƒ|[ƒ“‚ÌÅ‰‚Ìƒ|ƒWƒVƒ‡ƒ“‚ªƒZƒbƒg‚³‚ê‚½‚ç
+		// ã‚¹ãƒãƒ¼ãƒ³ã®æœ€åˆã®ãƒã‚¸ã‚·ãƒ§ãƒ³ãŒã‚»ãƒƒãƒˆã•ã‚ŒãŸã‚‰
 		if (spawnFirstPos_ != 0) {
 			spawnTimer++;
 
@@ -57,13 +58,13 @@ void Enemy::Update()
 			//worldTransform_.translation = spawnEndPos_;
 			ParticleUpdate();
 
-			// ƒXƒ|[ƒ“‚ªI‚í‚Á‚½‚ç
+			// ã‚¹ãƒãƒ¼ãƒ³ãŒçµ‚ã‚ã£ãŸã‚‰
 			if (spawnTimer > spawnTimeMax) {
 				nowState_ = State::Alive;
 			}
 		}
 		else {
-			// Å‰‚ÌƒXƒ|[ƒ“ƒ|ƒWƒVƒ‡ƒ“‚ÌƒZƒbƒg
+			// æœ€åˆã®ã‚¹ãƒãƒ¼ãƒ³ãƒã‚¸ã‚·ãƒ§ãƒ³ã®ã‚»ãƒƒãƒˆ
 			spawnFirstPos_ = worldTransform_.translation;
 			spawnEndPos_ = spawnFirstPos_;
 			spawnEndPos_.y += 2.5f;
@@ -71,7 +72,7 @@ void Enemy::Update()
 		break;
 	case Enemy::State::Alive:
 		{
-			// ˆÚ“®‘Oƒ|ƒWƒVƒ‡ƒ“‚ğ‘ã“ü
+			// ç§»å‹•å‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ä»£å…¥
 			oldPos_ = worldTransform_.translation;
 
 			timer++;
@@ -79,10 +80,10 @@ void Enemy::Update()
 			if (timer > maxTime) {
 				timer = 0;
 			}
-			// Ø‚è‚Ä‚«‚½ƒvƒŒƒCƒ„[‚Ìƒ|ƒWƒVƒ‡ƒ“
+			// å€Ÿã‚Šã¦ããŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¸ã‚·ãƒ§ãƒ³
 			Vector3 playerPos = player_->worldTransform_.translation;
 			if (followTimer > followTimeMax) {
-				// ’Ç]‚ÌƒxƒNƒgƒ‹‚ÌXV
+				// è¿½å¾“ã®ãƒ™ã‚¯ãƒˆãƒ«ã®æ›´æ–°
 				Vector3 velo = playerPos - worldTransform_.translation;
 				followVec = velo.normalize() * followSpeed;
 				followTimer = 0;
@@ -92,7 +93,7 @@ void Enemy::Update()
 			worldTransform_.translation.y = 1.0f;
 			worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 
-			// €‚ñ‚¾‚çó‘Ô‚ğ•ÏX
+			// æ­»ã‚“ã ã‚‰çŠ¶æ…‹ã‚’å¤‰æ›´
 			if (IsAlive_ == false) {
 				nowState_ = State::Dead;
 			}
@@ -115,23 +116,22 @@ void Enemy::Update()
 	}
 
 	particleMan_->Update();
-	// s—ñ‚ÌXV‚È‚Ç
+	// è¡Œåˆ—ã®æ›´æ–°ãªã©
 	Object3d::Update();
 }
 
 void Enemy::ParticleUpdate()
 {
 	if (spawnTimer < spawnTimeMax - 30) {
-		// ƒXƒ|[ƒ“‚·‚é‚Æ‚«‚Ìƒp[ƒeƒBƒNƒ‹
+		// ã‚¹ãƒãƒ¼ãƒ³ã™ã‚‹ã¨ãã®ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 		for (int i = 0; i < particleNum; i++) {
 
 			Vector3 pos{};
-			// ƒ|ƒWƒVƒ‡ƒ“‚ğƒGƒlƒ~[‚Ì’†SÀ•W‚ÉƒZƒbƒg
+			// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ã‚¨ãƒãƒŸãƒ¼ã®ä¸­å¿ƒåº§æ¨™ã«ã‚»ãƒƒãƒˆ
 			pos = spawnFirstPos_;
 			pos.y += 1.5f;
 
-			// X,Y,Z‘S‚Ä‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
-			const float md_vel = 0.1f;
+			// X,Y,Zå…¨ã¦ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 			Vector3 vel{};
 
 			const float md_angle = 360.0f;
@@ -141,16 +141,16 @@ void Enemy::ParticleUpdate()
 			angle.z = randAngle;
 			angle.x += MathUtil::DegreeToRadian(angle.x);
 			angle.z += MathUtil::DegreeToRadian(angle.z);
-			// Šp“x‚Ì•ûŒü‚Éƒ|ƒWƒVƒ‡ƒ“‚ğƒZƒbƒg
+			// è§’åº¦ã®æ–¹å‘ã«ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ã‚»ãƒƒãƒˆ
 			pos.x = worldTransform_.translation.x + cos(angle.x) * 1.0f;
 			pos.z = worldTransform_.translation.z + sin(angle.z) * 1.0f;
 
-			// d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+			// é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 			Vector3 acc{};
 			const float md_acc = 0.0015f;
 			acc.y = (float)rand() / RAND_MAX * md_acc;
 
-			// ’Ç‰Á
+			// è¿½åŠ 
 			particleMan_->Add(ParticleManager::Type::EnemySpawn, 120, pos, vel, acc, angle, 0.2f, 0.0f, startColor_, endColor_);
 		}
 	}
@@ -169,36 +169,36 @@ void Enemy::DrawParticle(ViewProjection* view)
 
 void Enemy::OnCollision()
 {
-	// Œ»İ‚Ìƒ‰ƒCƒt‚ğˆê‚ÂŒ¸‚ç‚·
+	// ç¾åœ¨ã®ãƒ©ã‚¤ãƒ•ã‚’ä¸€ã¤æ¸›ã‚‰ã™
 	nowLife_--;
 
-	// ƒ‰ƒCƒt‚ª0ˆÈ‰º‚É‚È‚Á‚½‚ç€‚Ê
+	// ãƒ©ã‚¤ãƒ•ãŒ0ä»¥ä¸‹ã«ãªã£ãŸã‚‰æ­»ã¬
 	if (nowLife_ <= 0) {
 		IsAlive_ = false;
 	}
 
-	// “–‚½‚è”»’è
+	// å½“ãŸã‚Šåˆ¤å®š
 	for (int i = 0; i < particleNum; i++) {
-		// X,Y,Z‘S‚Ä{-5.0f,+5.0f}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		// X,Y,Zå…¨ã¦{-5.0f,+5.0f}ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		Vector3 pos{};
 
-		// ƒ|ƒWƒVƒ‡ƒ“‚ğƒvƒŒƒCƒ„[‚Ì’†SÀ•W‚ÉƒZƒbƒg
+		// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä¸­å¿ƒåº§æ¨™ã«ã‚»ãƒƒãƒˆ
 		pos = worldTransform_.translation;
 		//pos.y += 0.5f;
-		// X,Y,Z‘S‚Ä{-0.05f,+0.05f}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		// X,Y,Zå…¨ã¦{-0.05f,+0.05f}ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float md_vel = 0.15f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
 
-		// d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ{-0.001f,0}‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		// é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿{-0.001f,0}ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		Vector3 acc{};
 		const float md_acc = 0.003f;
 		acc.y = -(float)rand() / RAND_MAX * md_acc;
 
 		Vector3 angle = { 0,0,0 };
-		// ’Ç‰Á
+		// è¿½åŠ 
 		particleMan_->Add(ParticleManager::Type::Normal, 120, pos, vel, acc, angle, 0.2f, 0.0f, startColor_, endColor_);
 	}
 }
@@ -212,7 +212,7 @@ void Enemy::pushBackOnCol()
 
 	Vector3 move;
 
-	// ’n–Ê”»’è‚µ‚«‚¢’l
+	// åœ°é¢åˆ¤å®šã—ãã„å€¤
 	const float threshold = cosf(Vector3::Deg2Rad(30.0f));
 
 	if (-threshold < cos && cos < threshold) {
@@ -233,8 +233,8 @@ void Enemy::SetWorldTransInfo(WorldTransform worldTrans)
 
 void Enemy::SetWorldPos(Vector3 pos)
 {
-	// ƒ|ƒWƒVƒ‡ƒ“‚ğƒZƒbƒg
+	// ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ã‚»ãƒƒãƒˆ
 	worldTransform_.translation = pos;
-	// s—ñ‚ÌXV
+	// è¡Œåˆ—ã®æ›´æ–°
 	worldTransform_.UpdateMatrix();
 }

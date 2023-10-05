@@ -1,5 +1,6 @@
 #pragma once
-#define DIRECTINPUT_VERSION 0x0800	// DirectInput‚Ìƒo[ƒWƒ‡ƒ“w’è
+
+#define DIRECTINPUT_VERSION 0x0800	// DirectInputã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æŒ‡å®š
 #include "JoypadInput.h"
 #include "Input.h"
 #include "WinApp.h"
@@ -13,14 +14,14 @@ class InputManager : public Singleton<InputManager>
 private:
 	friend Singleton<InputManager>;
 	Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
-	// Ø‚è‚Ä‚­‚éWindowsAPI
+	// å€Ÿã‚Šã¦ãã‚‹WindowsAPI
 	static WinApp* winApp_;
 public:
 	void SetWinApp(WinApp* winApp);
 	void Init();
 	void Update();
 
-public: // ƒQƒbƒ^[
+public: // ã‚²ãƒƒã‚¿ãƒ¼
 	inline Microsoft::WRL::ComPtr<IDirectInput8> GetDirectInput() { return directInput_; }
 };
 

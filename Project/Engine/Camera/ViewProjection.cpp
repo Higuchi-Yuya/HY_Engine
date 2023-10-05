@@ -4,6 +4,7 @@
 #include "WinApp.h"
 #include "MathUtil.h"
 
+
 ID3D12Device* ViewProjection::sDevice_ = nullptr;
 
 void ViewProjection::StaticInitialize(ID3D12Device* device)
@@ -23,15 +24,15 @@ void ViewProjection::CreateConstBuffer()
 {
 	HRESULT result;
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXÝ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataViewProjection) + 0xff) & ~0xff);
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = sDevice_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
@@ -39,14 +40,14 @@ void ViewProjection::CreateConstBuffer()
 
 void ViewProjection::Map()
 {
-	// ’è”ƒoƒbƒtƒ@‚Æ‚Ìƒf[ƒ^ƒŠƒ“ƒN
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¨ã®ãƒ‡ãƒ¼ã‚¿ãƒªãƒ³ã‚¯
 	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }
 
 void ViewProjection::MoveEyeVector(const Vector3& move)
 {
-	// Ž‹“_À•W‚ðˆÚ“®‚µA”½‰f
+	// è¦–ç‚¹åº§æ¨™ã‚’ç§»å‹•ã—ã€åæ˜ 
 	Vector3 eye_moved = eye;
 
 	eye_moved.x += move.x;
@@ -58,7 +59,7 @@ void ViewProjection::MoveEyeVector(const Vector3& move)
 
 void ViewProjection::MoveVector(const Vector3& move)
 {
-	// Ž‹“_‚Æ’Ž‹“_À•W‚ðˆÚ“®‚µA”½‰f
+	// è¦–ç‚¹ã¨æ³¨è¦–ç‚¹åº§æ¨™ã‚’ç§»å‹•ã—ã€åæ˜ 
 	Vector3 eye_moved = eye;
 	Vector3 target_moved = target;
 
@@ -76,46 +77,46 @@ void ViewProjection::MoveVector(const Vector3& move)
 
 void ViewProjection::UpdateMatrix()
 {
-	// ƒrƒ…[s—ñ‚Ìì¬
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã®ä½œæˆ
 	matView_.ViewMat(eye, target, up);
-	// ŽË‰es—ñ‚Ìì¬
+	// å°„å½±è¡Œåˆ—ã®ä½œæˆ
 	matProjection_.ProjectionMat(fovAngleY, aspectRatio, nearZ, farZ);
 
-	// ’è”ƒoƒbƒtƒ@‚Ö‚Ì‘‚«ž‚Ý
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿
 	constMap_->view = matView_;
 	constMap_->projection = matProjection_;
 	constMap_->cameraPos = eye;
 
-	//Ž‹“_À•W
+	//è¦–ç‚¹åº§æ¨™
 	Vector3 eyePosition = eye;
-	//’Ž‹“_À•WX
+	//æ³¨è¦–ç‚¹åº§æ¨™X
 	Vector3 targetPosition = target;
-	//(‰¼‚Ì)ã•ûŒü
+	//(ä»®ã®)ä¸Šæ–¹å‘
 	Vector3 upVector = up;
 
-	//ƒJƒƒ‰ZŽ²(Ž‹“_•ûŒü)
+	//ã‚«ãƒ¡ãƒ©Zè»¸(è¦–ç‚¹æ–¹å‘)
 	Vector3 cameraAxisZ = targetPosition - eyePosition;
 
-	//ƒxƒNƒgƒ‹‚ð³‹K‰»
+	//ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–
 	cameraAxisZ.normalize();
 
-	//ƒJƒƒ‰‚ÌXŽ²(‰E•ûŒü)
+	//ã‚«ãƒ¡ãƒ©ã®Xè»¸(å³æ–¹å‘)
 	Vector3 cameraAxisX;
-	//XŽ²‚Íã•ûŒü¨ZŽ²‚ÌŠOÏ‚Å‹‚Ü‚é
+	//Xè»¸ã¯ä¸Šæ–¹å‘â†’Zè»¸ã®å¤–ç©ã§æ±‚ã¾ã‚‹
 	cameraAxisX = upVector.cross(cameraAxisZ);
-	//ƒxƒNƒgƒ‹‚ð³‹K‰»
+	//ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–
 	cameraAxisX.normalize();
 
-	//ƒJƒƒ‰‚ÌYŽ²(ã•ûŒü)
+	//ã‚«ãƒ¡ãƒ©ã®Yè»¸(ä¸Šæ–¹å‘)
 	Vector3 cameraAxisY;
-	//YŽ²‚Íã•ûŒü¨ZŽ²‚ÌŠOÏ‚Å‹‚Ü‚é
+	//Yè»¸ã¯ä¸Šæ–¹å‘â†’Zè»¸ã®å¤–ç©ã§æ±‚ã¾ã‚‹
 	cameraAxisY = cameraAxisZ.cross(cameraAxisX);
-	//ƒxƒNƒgƒ‹‚ð³‹K‰»
+	//ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–
 	cameraAxisY.normalize();
 
 	matBillboard_ = MathUtil::Matrix4Indecity();
 
-	//ƒrƒ‹ƒ{[ƒhs—ñ
+	//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰è¡Œåˆ—
 	matBillboard_.m[0][0] = cameraAxisX.x;
 	matBillboard_.m[0][1] = cameraAxisX.y;
 	matBillboard_.m[0][2] = cameraAxisX.z;
@@ -132,7 +133,7 @@ void ViewProjection::DebugCameraInitialze(Input* input)
 	Initialize();
 	assert(input);
 	input_ = input;
-	// ‰æ–ÊƒTƒCƒY‚É‘Î‚·‚é‘Š‘Î“I‚ÈƒXƒP[ƒ‹‚É’²®
+	// ç”»é¢ã‚µã‚¤ã‚ºã«å¯¾ã™ã‚‹ç›¸å¯¾çš„ãªã‚¹ã‚±ãƒ¼ãƒ«ã«èª¿æ•´
 	scaleX_ = 1.0f / (float)WinApp::window_width;
 	scaleY_ = 1.0f / (float)WinApp::window_height;
 
@@ -144,10 +145,10 @@ void ViewProjection::DebugCameraUpdate()
 	float angleX = 0;
 	float angleY = 0;
 
-	// ƒ}ƒEƒX‚Ì“ü—Í‚ðŽæ“¾
+	// ãƒžã‚¦ã‚¹ã®å…¥åŠ›ã‚’å–å¾—
 	Input::MouseMove mouseMove = input_->GetMouseMove();
 
-	// ƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚çƒJƒƒ‰‚ð‰ñ“]‚³‚¹‚é
+	// ãƒžã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ãŸã‚‰ã‚«ãƒ¡ãƒ©ã‚’å›žè»¢ã•ã›ã‚‹
 	if (input_->PushMouseLeft()) {
 		float dy = mouseMove.lX * scaleY_;
 		float dx = mouseMove.lY * scaleX_;
@@ -157,7 +158,7 @@ void ViewProjection::DebugCameraUpdate()
 		dirty = true;
 	}
 
-	// ƒ}ƒEƒX‚Ì’†ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚çƒJƒƒ‰‚ð•ÀsˆÚ“®‚³‚¹‚é
+	// ãƒžã‚¦ã‚¹ã®ä¸­ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ãŸã‚‰ã‚«ãƒ¡ãƒ©ã‚’ä¸¦è¡Œç§»å‹•ã•ã›ã‚‹
 	if (input_->PushMouseMiddle()) {
 		float dx = mouseMove.lX / 100.0f;
 		float dy = mouseMove.lY / 100.0f;
@@ -169,7 +170,7 @@ void ViewProjection::DebugCameraUpdate()
 		dirty = true;
 	}
 
-	// ƒzƒC[ƒ‹“ü—Í‚Å‹——£‚ð•ÏX
+	// ãƒ›ã‚¤ãƒ¼ãƒ«å…¥åŠ›ã§è·é›¢ã‚’å¤‰æ›´
 	if (mouseMove.lZ != 0) {
 		distance_ -= mouseMove.lZ / 100.0f;
 		distance_ = max(distance_, 1.0f);
@@ -177,28 +178,28 @@ void ViewProjection::DebugCameraUpdate()
 	}
 
 	if (dirty) {
-		// ’Ç‰Á‰ñ“]•ª‚Ì‰ñ“]s—ñ‚ð¶¬
+		// è¿½åŠ å›žè»¢åˆ†ã®å›žè»¢è¡Œåˆ—ã‚’ç”Ÿæˆ
 		Matrix4 matRotNew,matRotX,matRotY;
 		matRotNew.identity();
 		matRotX.rotateX(-angleX);
 		matRotY.rotateY(-angleY);
 		matRotNew = matRotX * matRotY;
-		// —ÝÏ‚Ì‰ñ“]s—ñ‚ð‡¬
-		// ¦‰ñ“]s—ñ‚ð—ÝÏ‚µ‚Ä‚¢‚­‚ÆAŒë·‚ÅƒXƒP[ƒŠƒ“ƒO‚ª‚©‚©‚éŠëŒ¯‚ª‚ ‚éˆ×
-		// ƒNƒH[ƒ^ƒjƒIƒ“‚ðŽg—p‚·‚é•û‚ª–]‚Ü‚µ‚¢
+		// ç´¯ç©ã®å›žè»¢è¡Œåˆ—ã‚’åˆæˆ
+		// â€»å›žè»¢è¡Œåˆ—ã‚’ç´¯ç©ã—ã¦ã„ãã¨ã€èª¤å·®ã§ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ãŒã‹ã‹ã‚‹å±é™ºãŒã‚ã‚‹ç‚º
+		// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’ä½¿ç”¨ã™ã‚‹æ–¹ãŒæœ›ã¾ã—ã„
 		matRot_ = matRotNew * matRot_;
 
-		// ’Ž‹“_‚©‚çŽ‹“_‚Ö‚ÌƒxƒNƒgƒ‹‚ÆAã•ûŒüƒxƒNƒgƒ‹
+		// æ³¨è¦–ç‚¹ã‹ã‚‰è¦–ç‚¹ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã€ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 		Vector3 vTargetEye = { 0.0f, 0.0f, -distance_};
 		Vector3 vUp = { 0.0f, 1.0f, 0.0f };
 
-		// ƒxƒNƒgƒ‹‚ð‰ñ“]
+		// ãƒ™ã‚¯ãƒˆãƒ«ã‚’å›žè»¢
 		vTargetEye = matRot_.transform(vTargetEye, matRot_);
 		vUp = matRot_.transformNotW(vUp, matRot_);
 
-		// ’Ž‹“_‚©‚ç‚¸‚ç‚µ‚½ˆÊ’u‚ÉŽ‹“_À•W‚ðŒˆ’è
-		const Vector3& target = this->target;
-		this->eye = { target.x + vTargetEye.x, target.y + vTargetEye.y,target.z + vTargetEye.z };
+		// æ³¨è¦–ç‚¹ã‹ã‚‰ãšã‚‰ã—ãŸä½ç½®ã«è¦–ç‚¹åº§æ¨™ã‚’æ±ºå®š
+		const Vector3& Target = this->target;
+		this->eye = { Target.x + vTargetEye.x, Target.y + vTargetEye.y,Target.z + vTargetEye.z };
 		this->up={ vUp.x, vUp.y, vUp.z };
 	}
 

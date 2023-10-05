@@ -5,41 +5,41 @@
 #include <DirectXMath.h>
 #include "WorldTransform.h"
 
-// ƒŒƒxƒ‹ƒf[ƒ^
+// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿
 struct LevelData {
 
 	struct ObjectData {
-		// ƒtƒ@ƒCƒ‹–¼
+		// ãƒ•ã‚¡ã‚¤ãƒ«å
 		std::string fileName;
-		// ƒ^ƒO–¼
+		// ã‚¿ã‚°å
 		std::string tagName;
-		// •½sˆÚ“®
+		// å¹³è¡Œç§»å‹•
 		Vector3 translation;
-		// ‰ñ“]Šp
+		// å›è»¢è§’
 		Vector3 rotation;
-		// ƒXƒP[ƒŠƒ“ƒO
+		// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 		Vector3 scaling;
 	};
 
-	// ƒIƒuƒWƒFƒNƒg”z—ñ
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé…åˆ—
 	std::vector<ObjectData> objects;
 };
 
-// ƒŒƒxƒ‹ƒf[ƒ^‚Ìƒ[ƒ_[
+// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ãƒ­ãƒ¼ãƒ€ãƒ¼
 class LevelLoader {
 
-public:// ’è”
-	// ƒfƒtƒHƒ‹ƒg‚Ì“Ç‚İ‚İƒfƒBƒŒƒNƒgƒŠ
+public:// å®šæ•°
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®èª­ã¿è¾¼ã¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 	static const std::string kDefaultBaseDirectory;
-	// ƒtƒ@ƒCƒ‹Šg’£q
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­
 	static const std::string kExtension;
 
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 
 	/// <summary>
-	/// ƒŒƒxƒ‹ƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+	/// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
 	/// </summary>
-	/// <param name="fileName">ƒtƒ@ƒCƒ‹–¼</param>
+	/// <param name="fileName">ãƒ•ã‚¡ã‚¤ãƒ«å</param>
 	static LevelData* LoadFile(const std::string& fileName);
 };
 

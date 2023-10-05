@@ -2,9 +2,10 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "ImGuiManager.h"
+
 class GameCamera
 {
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 	void Initialize(const WorldTransform* worldTransform);
 
 	void TitleUpdate();
@@ -17,20 +18,20 @@ public:// ƒƒ“ƒoŠÖ”
 
 	void SetCameraPos(Vector3 pos);
 
-private:// ƒvƒ‰ƒCƒx[ƒgƒƒ“ƒoŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ¡ãƒ³ãƒé–¢æ•°
 	void RotUpdate();
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	//ƒ[ƒ‹ƒh•ÏŠ·ƒf[ƒ^
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ãƒ‡ãƒ¼ã‚¿
 	WorldTransform worldTransform_;
-	//ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“
+	//ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³
 	ViewProjection viewProjection_;
-	// ’‹“_‚ÌYÀ•W‚ğ•ÏX‚·‚é’l
+	// æ³¨è¦–ç‚¹ã®Yåº§æ¨™ã‚’å¤‰æ›´ã™ã‚‹å€¤
 	Vector3 offSet;
 
 
-	// ‰ñ“]
+	// å›è»¢
 	float aInfo;
 	Vector3 angle_;
 	Vector3 cameraVecRot_;
@@ -42,7 +43,7 @@ private:// ƒƒ“ƒo•Ï”
 	Vector3 vel;
 	Vector3 rotSpeed_ = { 5,5,5 };
 
-	// ’‹“_‚Æ‚È‚éƒvƒŒƒCƒ„[‚ÌÀ•W
+	// æ³¨è¦–ç‚¹ã¨ãªã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™
 	Vector3 playerPos_;
 };
 

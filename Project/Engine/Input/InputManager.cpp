@@ -1,8 +1,9 @@
-﻿#include "InputManager.h"
+#include "InputManager.h"
 #include <cassert>
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 WinApp* InputManager::winApp_ = nullptr;
+
 
 void InputManager::SetWinApp(WinApp* winApp)
 {

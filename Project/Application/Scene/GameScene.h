@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Sprite.h"
 #include "Sound.h"
 #include "Object3d.h"
@@ -30,23 +31,23 @@ class TouchableObject;
 
 class GameScene
 {
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 	
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~GameScene();
 
-	// ‰Šú‰»ˆ—
+	// åˆæœŸåŒ–å‡¦ç†
 	void Initialize();
 
-	// XVˆ—
+	// æ›´æ–°å‡¦ç†
 	void Update();
 
-	// Imgui‚ÌXVˆ—
+	// Imguiã®æ›´æ–°å‡¦ç†
 	void ImguiUpdate();
 
 	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
 
-	// •`‰æˆ—
+	// æç”»å‡¦ç†
 	void Draw2DBack();
 
 	void Draw3D();
@@ -55,72 +56,72 @@ public:// ƒƒ“ƒoŠÖ”
 
 	void Draw2DFront();
 
-	// ƒŠƒZƒbƒgŠÖ”
+	// ãƒªã‚»ãƒƒãƒˆé–¢æ•°
 	void Reset();
 
-	// “G‚ÌƒŒƒxƒ‹ƒf[ƒ^‚ğ“Ç‚İ‚Ş
+	// æ•µã®ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
 	void LoadEnemy();
 
-private:// ƒTƒuƒNƒ‰ƒX
-	// ƒV[ƒ“ƒNƒ‰ƒXi‰¼j
+private:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	// ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹ï¼ˆä»®ï¼‰
 	enum class Scene {
 		Title,
 		Game,
 		Result,
 	};
 
-	// “G‚ÌƒEƒF[ƒu
+	// æ•µã®ã‚¦ã‚§ãƒ¼ãƒ–
 	enum EnemyWave {
 		wave01,
 		wave02,
 		wave03,
 	};
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 	/// <summary>
-	/// ƒ^ƒCƒgƒ‹ƒV[ƒ“‚ÌXVˆ—
+	/// ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã®æ›´æ–°å‡¦ç†
 	/// </summary>
 	void TitleUpdate();
 
 	/// <summary>
-	/// ƒQ[ƒ€ƒV[ƒ“‚ÌXVˆ—
+	/// ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®æ›´æ–°å‡¦ç†
 	/// </summary>
 	void GameSceneUpdate();
 
 	/// <summary>
-	/// ƒŠƒUƒ‹ƒgƒV[ƒ“‚ÌXVˆ—
+	/// ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³ã®æ›´æ–°å‡¦ç†
 	/// </summary>
 	void ResultSceneUpdate();
 
 	/// <summary>
-	/// ƒV[ƒ“ƒ`ƒFƒ“ƒW‚ÌXVˆ—
+	/// ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸ã®æ›´æ–°å‡¦ç†
 	/// </summary>
 	void SceneChageUpdate();
 
 	/// <summary>
-	/// ƒGƒlƒ~[‚ÌƒQ[ƒ€ƒV[ƒ“‚ÌXVˆ—
+	/// ã‚¨ãƒãƒŸãƒ¼ã®ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®æ›´æ–°å‡¦ç†
 	/// </summary>
 	void EnemyGameUpdate();
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	// “ü—Í
+	// å…¥åŠ›
 	std::unique_ptr<Input> input_ = nullptr;
 
-#pragma region ŒõŒ¹ŠÖ˜A
-	// ƒIƒuƒWƒFƒNƒg‹¤’Ê‚Ìƒ‰ƒCƒg‚Ì‰Šú‰»
+#pragma region å…‰æºé–¢é€£
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå…±é€šã®ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
 	std::unique_ptr<LightGroup> light = nullptr;
 
-	// •½sŒõŒ¹
+	// å¹³è¡Œå…‰æº
 	bool isActiveDirectional = false;
 
-	// “_ŒõŒ¹‚ÌƒXƒe[ƒ^ƒX
+	// ç‚¹å…‰æºã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 	float pointLightPos[3] = { 0,5,0 };
 	float pointLightColor[3] = { 1,1,1 };
 	float pointLightAtten[3] = { 0.0f,0.0f,0.001f };
 	bool isActivePoint = false;
 
-	// ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌƒXƒe[ƒ^ƒX
+	// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 	Vector3 spotLightDir = { 0,-1,0 };
 	Vector3 spotLightPos = { 0,50,0 };
 	Vector3 spotLightColor = { 1,1,1 };
@@ -128,7 +129,7 @@ private:// ƒƒ“ƒo•Ï”
 	Vector2 spotLightFactorAngle = { 20.0f,90.0f };
 	bool isActiveSpot = true;
 
-	// ŠÛ‰e‚ÌƒXƒe[ƒ^ƒX
+	// ä¸¸å½±ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 	Vector3 circleShadowCasterPos = { 0,0,0 };
 	Vector3 circleShadowDir = { 0,-1,0 };
 	Vector3 circleShadowAtten = { 1.5f,0.6f,0.0f };
@@ -139,25 +140,25 @@ private:// ƒƒ“ƒo•Ï”
 	Vector3 DiColor = { 0,1,0 };
 	Vector3 SpColor = { 0,0,1 };
 
-	// ƒtƒHƒO
+	// ãƒ•ã‚©ã‚°
 	std::unique_ptr<Fog> fog = nullptr;
 	bool isFogActive = true;
 #pragma endregion
 
 
-#pragma region ƒeƒNƒXƒ`ƒƒƒnƒ“ƒhƒ‹
+#pragma region ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«
 
 	std::unique_ptr<Texture> textureHandleDefu;
 	std::unique_ptr<Texture> titleFontTexHandle;
 	std::unique_ptr<Texture> titleBackTexHandle;
 	std::unique_ptr<Texture> titleButtonTexHandle;
 
-	// ƒtƒF[ƒhƒCƒ“ƒtƒF[ƒhƒAƒEƒg—p‚Ì‰æ‘œƒnƒ“ƒhƒ‹
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆç”¨ã®ç”»åƒãƒãƒ³ãƒ‰ãƒ«
 	std::unique_ptr<Texture> blackOutTexHandle_;
 #pragma endregion
 
 
-#pragma region ƒXƒvƒ‰ƒCƒg
+#pragma region ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 
 	std::unique_ptr<Sprite> spriteProvisional = nullptr;
 	std::unique_ptr<Sprite> titleKariFont = nullptr;
@@ -165,12 +166,12 @@ private:// ƒƒ“ƒo•Ï”
 	std::unique_ptr<Sprite> titleKariPressA = nullptr;
 	Vector2 spritePos;
 
-	// ƒtƒF[ƒhƒCƒ“ƒtƒF[ƒhƒAƒEƒg—p‚Ì‰æ‘œƒXƒvƒ‰ƒCƒg
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆç”¨ã®ç”»åƒã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::unique_ptr<Sprite> blackOut = nullptr;
 #pragma endregion
 
 
-#pragma region ƒ‚ƒfƒ‹
+#pragma region ãƒ¢ãƒ‡ãƒ«
 
 	std::unique_ptr<Model> playerModel_ = nullptr;
 	std::unique_ptr<Model> modelMedama_ = nullptr;
@@ -178,46 +179,46 @@ private:// ƒƒ“ƒo•Ï”
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	std::unique_ptr<Model> modelGround_ = nullptr;
 
-	// –Ø
+	// æœ¨
 	std::unique_ptr<Model> modelTreeBald_ = nullptr;
 	std::unique_ptr<Model> modelTreeNormal_ = nullptr;
 
-	// ƒtƒFƒ“ƒX
+	// ãƒ•ã‚§ãƒ³ã‚¹
 	std::unique_ptr<Model> modelFence_ = nullptr;
 	std::unique_ptr<Model> modelFencePost_ = nullptr;
 	std::unique_ptr<Model> modelLatticeDoor_ = nullptr;
 
-	// ‚¨•æ
+	// ãŠå¢“
 	std::unique_ptr<Model> modelGraveCross = nullptr;
 	std::unique_ptr<Model> modelGraveSquare = nullptr;
 
 #pragma endregion
 
 
-#pragma region ƒIƒuƒWƒFƒNƒgŠÖ˜A
+#pragma region ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé–¢é€£
 	bool isDissolve = false;
 #pragma endregion
 
 
-#pragma region ƒJƒƒ‰ŠÖ˜A
-	// ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“
+#pragma region ã‚«ãƒ¡ãƒ©é–¢é€£
+	// ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³
 	std::unique_ptr<GameCamera>gameCamera;
 #pragma endregion
 
 
-#pragma region ‰¹ŠÖ˜A
+#pragma region éŸ³é–¢é€£
 	Sound sound;
 	bool isActiveSound = false;
 	bool isStopSound = false;
 #pragma endregion
 
 
-#pragma region “–‚½‚è”»’è
+#pragma region å½“ãŸã‚Šåˆ¤å®š
 	std::unique_ptr < GameCollider> gameCollider;
 #pragma endregion
 
 
-#pragma region FBXƒ‚ƒfƒ‹‚ÌŠm”F
+#pragma region FBXãƒ¢ãƒ‡ãƒ«ã®ç¢ºèª
 	//std::unique_ptr<FbxModel> fbxmodel_;
 	WorldTransform fbxTrans_;
 	//std::unique_ptr<FbxAnimetion> modelAnim_;
@@ -228,22 +229,22 @@ private:// ƒƒ“ƒo•Ï”
 #pragma endregion
 
 
-#pragma region ƒvƒŒƒCƒ„[ŠÖ˜A
+#pragma region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é–¢é€£
 	std::unique_ptr<Player> player_;
 
 #pragma endregion
 
 
-#pragma region ƒGƒlƒ~[ŠÖ˜A
+#pragma region ã‚¨ãƒãƒŸãƒ¼é–¢é€£
 	std::vector<Enemy*>enemys_;
 #pragma endregion
 
 
-#pragma region ƒV[ƒ“ƒ`ƒFƒ“ƒWŠÖ˜A
-	// ƒV[ƒ“ŠÇ—
+#pragma region ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸é–¢é€£
+	// ã‚·ãƒ¼ãƒ³ç®¡ç†
 	Scene scene = Scene::Title;
 
-	// ƒuƒ‰ƒbƒNƒAƒEƒg‚Ì•Ï”
+	// ãƒ–ãƒ©ãƒƒã‚¯ã‚¢ã‚¦ãƒˆã®å¤‰æ•°
 	float blackAlpha = 0.0f;
 	bool sceneChangeFlag = false;
 	Scene oldScene = Scene::Title;
@@ -251,51 +252,51 @@ private:// ƒƒ“ƒo•Ï”
 #pragma endregion
 
 
-#pragma region ƒŒƒxƒ‹ƒf[ƒ^ŠÖ˜A
-	// ƒŒƒxƒ‹ƒf[ƒ^
+#pragma region ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿é–¢é€£
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿
 	std::unique_ptr<LevelData> levelData_;
 
-	// ƒŒƒxƒ‹ƒf[ƒ^‚É“o˜^‚·‚éƒ‚ƒfƒ‹‚Ì”z—ñ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã«ç™»éŒ²ã™ã‚‹ãƒ¢ãƒ‡ãƒ«ã®é…åˆ—
 	std::map<std::string, Model*> models;
-	// ƒŒƒxƒ‹ƒf[ƒ^‚É“o˜^‚·‚éƒIƒuƒWƒFƒNƒg‚Ì”z—ñ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã«ç™»éŒ²ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…åˆ—
 	std::vector<Object3d*> objects;
 
-	// ‚¨•æ‚ÌƒhƒA‚Ì”z—ñ
+	// ãŠå¢“ã®ãƒ‰ã‚¢ã®é…åˆ—
 	std::vector<Object3d*> latticeDoors_;
 
 #pragma endregion
 
 
-#pragma region “G‚ÌƒEƒF[ƒuŠÖ˜A
+#pragma region æ•µã®ã‚¦ã‚§ãƒ¼ãƒ–é–¢é€£
 
-	// ƒGƒlƒ~[‚ÌƒEƒG[ƒu‚ğŠÇ—‚·‚é‚à‚Ì
+	// ã‚¨ãƒãƒŸãƒ¼ã®ã‚¦ã‚¨ãƒ¼ãƒ–ã‚’ç®¡ç†ã™ã‚‹ã‚‚ã®
 	EnemyWave enemyWave_ = EnemyWave::wave01;
 
-	// ƒQ[ƒ€‚ÌƒEƒF[ƒu‚²‚Æ‚ÌŠÔ
+	// ã‚²ãƒ¼ãƒ ã®ã‚¦ã‚§ãƒ¼ãƒ–ã”ã¨ã®æ™‚é–“
 	float waveTimer_ = 0;
 	const float waveTimeMax_ = 120 * 60 / 3;
 
-	// ¡‚ÌƒEƒF[ƒu
+	// ä»Šã®ã‚¦ã‚§ãƒ¼ãƒ–
 	uint32_t waveTimeNum_ = 0;
 
-	// ƒGƒlƒ~[‚ÌƒXƒ|[ƒ“ŠÔ
+	// ã‚¨ãƒãƒŸãƒ¼ã®ã‚¹ãƒãƒ¼ãƒ³æ™‚é–“
 	float enemySpawnTimer_ = 0;
 
-	// ƒGƒlƒ~[‚ÌƒEƒF[ƒu‚²‚Æ‚ÌƒXƒ|[ƒ“ŠÔŠu
+	// ã‚¨ãƒãƒŸãƒ¼ã®ã‚¦ã‚§ãƒ¼ãƒ–ã”ã¨ã®ã‚¹ãƒãƒ¼ãƒ³é–“éš”
 	const float enemySpawnTimeMax1_ = 60 * 5;
 	const float enemySpawnTimeMax2_ = 60 * 4;
 	const float enemySpawnTimeMax3_ = 60 * 3;
 
-	// ’Š‘I‚·‚éƒGƒlƒ~[‚ÌƒXƒ|[ƒ“ƒpƒ^[ƒ“
+	// æŠ½é¸ã™ã‚‹ã‚¨ãƒãƒŸãƒ¼ã®ã‚¹ãƒãƒ¼ãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³
 	int randomWave01_ = 0;
 
-	// ƒEƒF[ƒu‚ªI‚í‚Á‚½‚Ì”»•Êƒtƒ‰ƒO
+	// ã‚¦ã‚§ãƒ¼ãƒ–ãŒçµ‚ã‚ã£ãŸæ™‚ã®åˆ¤åˆ¥ãƒ•ãƒ©ã‚°
 	bool IsEndWave = false;
 
 #pragma endregion
 
 
-#pragma region UIŠÖ˜A
+#pragma region UIé–¢é€£
 	std::unique_ptr<TimerUI>timerUi_;
 
 	std::unique_ptr<OperationUI> operationUi_;

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "BaseCollider.h"
 #include "CollisionPrimitive.h"
 
@@ -8,14 +9,14 @@
 
 class SphereCollider:public BaseCollider,public Sphere
 {
-private:// ƒGƒCƒŠƒAƒX
+private:// ã‚¨ã‚¤ãƒªã‚¢ã‚¹
 public:
 	SphereCollider(Vector3 offset = { 0,0,0 }, float radius = 1.0f) :offset_(offset), radius_(radius) {
-		// ‹…Œ`ó‚ğƒZƒbƒg
+		// çƒå½¢çŠ¶ã‚’ã‚»ãƒƒãƒˆ
 		shapeType_ = COLLISIONSHAPE_SPHERE;
 	}
 
-	// XV
+	// æ›´æ–°
 	void Update(const Matrix4& worldPos)override;
 	
 	inline const Vector3& GetOffset() { return offset_; }
@@ -24,12 +25,12 @@ public:
 
 	inline float GetRadius() { return radius_; }
 
-	inline void SetRadius(float radius) {radius_ = radius; }
+	inline void SetRadius(float Radius) {radius_ = Radius; }
 
 private:
-	// ƒIƒuƒWƒFƒNƒg’†S‚©‚ç‚ÌƒIƒtƒZƒbƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸­å¿ƒã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 	Vector3 offset_;
-	// ”¼Œa
+	// åŠå¾„
 	float radius_;
 };
 

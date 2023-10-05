@@ -1,4 +1,5 @@
 #pragma once
+
 #include <forward_list>
 #include "CollisionPrimitive.h"
 #include "RaycastHit.h"
@@ -9,39 +10,39 @@ class BaseCollider;
 
 class CollisionManager
 {
-public:// Ã“Iƒƒ“ƒoŠÖ”
+public:// é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 	static CollisionManager* GetInstance();
 
-public:// ƒƒ“ƒoŠÖ”
-	// ƒRƒ‰ƒCƒ_[‚Ì’Ç‰Á
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®è¿½åŠ 
 	inline void AddCollider(BaseCollider* collider) {
 		colliders_.push_front(collider);
 	}
 
-	// ƒRƒ‰ƒCƒ_[‚Ìíœ
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®å‰Šé™¤
 	inline void RemoveCollider(BaseCollider* collider) {
 		colliders_.remove(collider);
 	}
 
 
-	// ƒŒƒC‚ª”CˆÓ‚ÌƒRƒ‰ƒCƒ_[‚ÆŒğ‚í‚éê‡‚ÍtrueA‚»‚êˆÈŠO‚Ífalse
+	// ãƒ¬ã‚¤ãŒä»»æ„ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã¨äº¤ã‚ã‚‹å ´åˆã¯trueã€ãã‚Œä»¥å¤–ã¯false
 	bool Raycast(const Ray& ray, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
 
 
 	/// <summary>
-	/// ƒŒƒCƒLƒƒƒXƒg
+	/// ãƒ¬ã‚¤ã‚­ãƒ£ã‚¹ãƒˆ
 	/// </summary>
-	/// <param name="ray">ƒŒƒC</param>
-	/// <param name="hitInfo">‘ÎÛ‚ÌÕ“Ë‘®«</param>
-	/// <param name="hitInfo">Õ“Ëî•ñ</param>
-	/// <param name="maxDistance">Å‘å‹——£</param>
-	/// <returns>ƒŒƒC‚ª”CˆÓ‚ÌƒRƒ‰ƒCƒ_[‚ÆŒğ‚í‚éê‡‚ÍtrueA‚»‚êˆÈŠO‚Ífalse</returns>
+	/// <param name="ray">ãƒ¬ã‚¤</param>
+	/// <param name="hitInfo">å¯¾è±¡ã®è¡çªå±æ€§</param>
+	/// <param name="hitInfo">è¡çªæƒ…å ±</param>
+	/// <param name="maxDistance">æœ€å¤§è·é›¢</param>
+	/// <returns>ãƒ¬ã‚¤ãŒä»»æ„ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã¨äº¤ã‚ã‚‹å ´åˆã¯trueã€ãã‚Œä»¥å¤–ã¯false</returns>
 	bool Raycast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
 
-	// ‹…‚É‚æ‚éÕ“Ë‘SŒŸõ
-	void QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute = (unsigned short)0xffffffff);
+	// çƒã«ã‚ˆã‚‹è¡çªå…¨æ¤œç´¢
+	void QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute = (unsigned short)0xff);
 
-	// ‘S‚Ä‚ÌÕ“Ëƒ`ƒFƒbƒN
+	// å…¨ã¦ã®è¡çªãƒã‚§ãƒƒã‚¯
 	void CheckAllCollisions();
 
 private:
@@ -50,7 +51,7 @@ private:
 	~CollisionManager() = default;
 	CollisionManager& operator=(const CollisionManager&) = delete;
 
-	// ƒRƒ‰ƒCƒ_[‚ÌƒŠƒXƒg
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ãƒªã‚¹ãƒˆ
 	std::forward_list<BaseCollider*>colliders_;
 };
 

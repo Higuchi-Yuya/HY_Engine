@@ -1,27 +1,28 @@
 #pragma once
+
 #include "WorldTransform.h"
 
-// ‹…
+// çƒ
 struct Sphere
 {
-	// ’†SÀ•W
+	// ä¸­å¿ƒåº§æ¨™
 	Vector3 center = { 0,0,0 };
 
-	// ”¼Œa
+	// åŠå¾„
 	float radius = 1.0f;
 };
 
-// ƒ{ƒbƒNƒX
+// ãƒœãƒƒã‚¯ã‚¹
 struct Box
 {
-	// ’†SÀ•W
+	// ä¸­å¿ƒåº§æ¨™
 	Vector3 center = { 0,0,0 };
 
-	// ”¼Œa
+	// åŠå¾„
 	Vector3 minRadius = { 1,1,1 };
 	Vector3 maxRadius = { 1,1,1 };
 
-	// ’†S‚©‚ç‚Ì+‚Æ-‚Ì‚»‚ê‚¼‚ê‚Ì”¼Œa
+	// ä¸­å¿ƒã‹ã‚‰ã®+ã¨-ã®ãã‚Œãã‚Œã®åŠå¾„
 	Vector3 minCenterRadius = { 0,0,0 };
 	Vector3 maxCenterRadius = { 0,0,0 };
 };
@@ -29,39 +30,39 @@ struct Box
 // OBB
 struct OBB
 {
-	// ’†SÀ•W
+	// ä¸­å¿ƒåº§æ¨™
 	Vector3 centerPos = { 0,0,0 };
-	// •ûŒüƒxƒNƒgƒ‹ x,y,z
+	// æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ« x,y,z
 	Vector3 directionVector[3];
-	// ”¼Œa
+	// åŠå¾„
 	Vector3 minRadius = { 1,1,1 };
 	Vector3 maxRadius = { 1,1,1 };
 
-	// ²‚Ì’·‚³ x,y,z
+	// è»¸ã®é•·ã• x,y,z
 	float shaftLength[3];
 
 };
 
-// •½–Ê
+// å¹³é¢
 struct Plane
 {
-	// –@üƒxƒNƒgƒ‹
+	// æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 normal = { 0,1,0 };
 
-	// Œ´“_(0,0,0)‚©‚ç‚Ì‹——£
+	// åŸç‚¹(0,0,0)ã‹ã‚‰ã®è·é›¢
 	float distance = 0.0f;
 };
 
-// –@ü•t‚«OŠpŒ`iŒv‰ñ‚è‚ª•\–Êj
+// æ³•ç·šä»˜ãä¸‰è§’å½¢ï¼ˆæ™‚è¨ˆå›ã‚ŠãŒè¡¨é¢ï¼‰
 class Triangle
 {
 public:
-	// ’¸“_À•W‚R‚Â
+	// é ‚ç‚¹åº§æ¨™ï¼“ã¤
 	Vector3 p0;
 	Vector3 p1;
 	Vector3 p2;
 
-	// –@üƒxƒNƒgƒ‹
+	// æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 normal;
 
 	void ComputeNormal();
@@ -69,10 +70,10 @@ public:
 
 struct Ray
 {
-	// n“_À•W
+	// å§‹ç‚¹åº§æ¨™
 	Vector3 start = { 0,0,0 };
 
-	// •ûŒü
+	// æ–¹å‘
 	Vector3 dir = { 1,0,0 };
 };
 

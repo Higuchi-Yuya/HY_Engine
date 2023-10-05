@@ -1,4 +1,5 @@
-﻿#pragma once
+#pragma once
+
 #include <Windows.h>
 #include <wrl.h>
 #include <d3d12.h>
@@ -215,7 +216,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 衝突時コールバック関数
 	/// </summary>
-	virtual void OnCollision(const CollisionInfo&info){}
+
 
 public:// パブリック変数
 

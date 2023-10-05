@@ -2,15 +2,16 @@
 #include "MeshCollider.h"
 #include "CollisionAttribute.h"
 
+
 TouchableObject* TouchableObject::Create(Model* model)
 {
-	// ƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ð¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
 	TouchableObject* instance = new TouchableObject();
 	if (instance == nullptr) {
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	if (!instance->Initialize(model)) {
 		delete instance;
 		assert(0);
@@ -28,7 +29,7 @@ bool TouchableObject::Initialize(Model* model)
 
 	SetModel(model);
 
-	// ƒRƒ‰ƒCƒ_[‚Ì’Ç‰Á
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®è¿½åŠ 
 	MeshCollider* collider = new MeshCollider;
 	SetCollider(collider);
 	collider->ConstructTriangles(model);

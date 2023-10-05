@@ -1,37 +1,38 @@
 #include "MeshCollider.h"
 #include "Collision.h"
 
+
 void MeshCollider::ConstructTriangles(Model* model)
 {
-	// OŠpŒ`ƒŠƒXƒg‚ğƒNƒŠƒA
+	// ä¸‰è§’å½¢ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
 	triangles.clear();
 
-	// ƒ‚ƒfƒ‹‚Ì‚ÂƒƒbƒVƒ…ƒŠƒXƒg‚ğæ“¾
+	// ãƒ¢ãƒ‡ãƒ«ã®æŒã¤ãƒ¡ãƒƒã‚·ãƒ¥ãƒªã‚¹ãƒˆã‚’å–å¾—
 	const std::vector<Mesh*>& meshes = model->GetMeshes();
-	// Œ»İ‚ÌƒƒbƒVƒ…‚ÌŠJnOŠpŒ`”Ô†‚ğ“ü‚ê‚Ä‚¨‚­•Ï”i‚O‚Å‰Šú‰»j
+	// ç¾åœ¨ã®ãƒ¡ãƒƒã‚·ãƒ¥ã®é–‹å§‹ä¸‰è§’å½¢ç•ªå·ã‚’å…¥ã‚Œã¦ãŠãå¤‰æ•°ï¼ˆï¼ã§åˆæœŸåŒ–ï¼‰
 	int start = 0;
-	// ‘SƒƒbƒVƒ…‚É‚Â‚¢‚Ä‡‚Éˆ—‚·‚é
+	// å…¨ãƒ¡ãƒƒã‚·ãƒ¥ã«ã¤ã„ã¦é †ã«å‡¦ç†ã™ã‚‹
 	std::vector<Mesh*>::const_iterator it = meshes.cbegin();
 	for (; it != meshes.cend(); ++it) {
 		Mesh* mesh = *it;
 		const std::vector<Mesh::VertexPosNormalUv>& vertices = mesh->GetVertices();
 		const std::vector<unsigned short>& indices = mesh->GetIndices();
 
-		// ƒCƒ“ƒfƒbƒNƒX‚ÍAOŠpŒ`‚Ì”‚˜‚RŒÂ‚ ‚é‚Ì‚ÅA
-		// ‚»‚±‚©‚çƒƒbƒVƒ…“à‚ÌOŠpŒ`‚Ì”‚ğ‹tZ‚·‚é
+		// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯ã€ä¸‰è§’å½¢ã®æ•°ï½˜ï¼“å€‹ã‚ã‚‹ã®ã§ã€
+		// ãã“ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥å†…ã®ä¸‰è§’å½¢ã®æ•°ã‚’é€†ç®—ã™ã‚‹
 		size_t triangleNum = indices.size() / 3;
 
-		// Œ»İ‚ÌƒƒbƒVƒ…‚ÌOŠpŒ`‚Ì”‚¾‚¯AOŠpŒ`ƒŠƒXƒg‚ÉƒXƒy[ƒX‚ğ’Ç‰Á‚·‚é
+		// ç¾åœ¨ã®ãƒ¡ãƒƒã‚·ãƒ¥ã®ä¸‰è§’å½¢ã®æ•°ã ã‘ã€ä¸‰è§’å½¢ãƒªã‚¹ãƒˆã«ã‚¹ãƒšãƒ¼ã‚¹ã‚’è¿½åŠ ã™ã‚‹
 		triangles.resize(triangles.size() + triangleNum);
 
-		// ‘SOŠpŒ`‚É‚Â‚¢‚Ä‡‚Éˆ—‚·‚é
-		for (int i = 0; i < triangleNum; i++) {
-			// ¡‚©‚çŒvZ‚·‚éOŠpŒ`‚ÌQÆ
+		// å…¨ä¸‰è§’å½¢ã«ã¤ã„ã¦é †ã«å‡¦ç†ã™ã‚‹
+		for (size_t i = 0; i < triangleNum; i++) {
+			// ä»Šã‹ã‚‰è¨ˆç®—ã™ã‚‹ä¸‰è§’å½¢ã®å‚ç…§
 			Triangle& tri = triangles[start + i];
 			int idx0 = indices[i * 3 + 0];
 			int idx1 = indices[i * 3 + 1];
 			int idx2 = indices[i * 3 + 2];
-			// OŠpŒ`‚Ì3’¸“_‚ÌÀ•W‚ğ‘ã“ü
+			// ä¸‰è§’å½¢ã®3é ‚ç‚¹ã®åº§æ¨™ã‚’ä»£å…¥
 			tri.p0 = {
 				vertices[idx0].pos.x,
 				vertices[idx0].pos.y,
@@ -46,10 +47,10 @@ void MeshCollider::ConstructTriangles(Model* model)
 				vertices[idx2].pos.x,
 				vertices[idx2].pos.y,
 				vertices[idx2].pos.z };
-			// 3’¸“_‚©‚ç–@ü‚ğŒvZ
+			// 3é ‚ç‚¹ã‹ã‚‰æ³•ç·šã‚’è¨ˆç®—
 			tri.ComputeNormal();
 		}
-		// Ÿ‚ÌƒƒbƒVƒ…‚ÍA¡‚Ü‚Å‚ÌOŠpŒ`”Ô†‚ÌŸ‚©‚çg‚¤B
+		// æ¬¡ã®ãƒ¡ãƒƒã‚·ãƒ¥ã¯ã€ä»Šã¾ã§ã®ä¸‰è§’å½¢ç•ªå·ã®æ¬¡ã‹ã‚‰ä½¿ã†ã€‚
 		start += (int)triangleNum;
 	}
 
@@ -57,13 +58,14 @@ void MeshCollider::ConstructTriangles(Model* model)
 
 void MeshCollider::Update(const Matrix4& worldPos)
 {
-	// ƒ[ƒ‹ƒhs—ñ‚Ì‹ts—ñ‚ğŒvZ
+	worldPos;
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®é€†è¡Œåˆ—ã‚’è¨ˆç®—
 	invMatWorld = -invMatWorld;
 }
 
 bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter, Vector3* reject)
 {
-	// ƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒJƒ‹À•WŒn‚Å‚Ì‹…‚ğ“¾‚éi”¼Œa‚ÍXƒXƒP[ƒ‹‚ğQÆ)
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§ã®çƒã‚’å¾—ã‚‹ï¼ˆåŠå¾„ã¯Xã‚¹ã‚±ãƒ¼ãƒ«ã‚’å‚ç…§)
 	Sphere localSphere;
 	Matrix4 keisanM4;
 	Vector3 keisanV3;
@@ -84,7 +86,7 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter, Ve
 			}
 			if (reject) {
 				const Matrix4& matWorld = keisanM4.identity();
-				// ƒ[ƒ‹ƒhÀ•WŒn‚Å‚Ì”rËƒxƒNƒgƒ‹‚É•ÏŠ·
+				// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§ã®æ’æ–¥ãƒ™ã‚¯ãƒˆãƒ«ã«å¤‰æ›
 				*reject = Matrix4::transformNotW(*reject, matWorld);
 			}
 			return true;
@@ -97,30 +99,30 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3* inter, Ve
 
 bool MeshCollider::CheckCollisionRay(const Ray& ray, float* distance, Vector3* inter)
 {
-	// ƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒJƒ‹À•WŒn‚Å‚ÌƒŒƒC‚ğ“¾‚é
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§ã®ãƒ¬ã‚¤ã‚’å¾—ã‚‹
 	Ray localRay;
 	Matrix4 keisanM4;
 	Vector3 keisanV3;
 	localRay.start = keisanM4.transform(ray.start, invMatWorld);
 	localRay.dir = keisanM4.transformNotW(ray.dir, invMatWorld);
 
-	// ƒ[ƒJƒ‹À•WŒn‚ÅŒğ·‚ğƒ`ƒFƒbƒN
+	// ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§äº¤å·®ã‚’ãƒã‚§ãƒƒã‚¯
 	std::vector<Triangle>::const_iterator it = triangles.cbegin();
 
 	for (; it != triangles.cend(); ++it) {
 		const Triangle& triangle = *it;
 
 		Vector3 tempInter;
-		// ƒŒƒC‚ÆOŠpŒ`‚Ì“–‚½‚è”»’è
+		// ãƒ¬ã‚¤ã¨ä¸‰è§’å½¢ã®å½“ãŸã‚Šåˆ¤å®š
 		if (Collision::CheckRay2Triangle(localRay, triangle, nullptr, &tempInter)) {
 
 			const Matrix4& matWorld = keisanM4.identity();
 
-			// ƒ[ƒ‹ƒhÀ•WŒn‚Å‚ÌŒğ“_‚ğ“¾‚é
+			// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§ã®äº¤ç‚¹ã‚’å¾—ã‚‹
 			tempInter = keisanM4.transform(tempInter, matWorld);
 
 			if (distance) {
-				// Œğ“_‚ÆƒŒƒCn“_‚Ì‹——£‚ğŒvZ
+				// äº¤ç‚¹ã¨ãƒ¬ã‚¤å§‹ç‚¹ã®è·é›¢ã‚’è¨ˆç®—
 				Vector3 sub = tempInter - ray.start;
 				*distance = keisanV3.dot(sub, ray.dir);
 			}

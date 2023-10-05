@@ -1,11 +1,12 @@
 #pragma once
 
+
 enum CollisionShapeType
 {
-	SHAPE_UNKNOWN = -1,// –¢Ý’è
+	SHAPE_UNKNOWN = -1,// æœªè¨­å®š
 
-	COLLISIONSHAPE_SPHERE,// ‹…
-	COLLISIONSHAPE_MESH,// ƒƒbƒVƒ…
+	COLLISIONSHAPE_SPHERE,// çƒ
+	COLLISIONSHAPE_MESH,// ãƒ¡ãƒƒã‚·ãƒ¥
 };
 
 class CollisionTypes

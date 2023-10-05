@@ -1,4 +1,5 @@
 #pragma once
+
 #include"Vector3.h"
 #include "Vector4.h"
 #include"Matrix4.h"
@@ -9,115 +10,115 @@
 
 class ViewProjection
 {
-public:// ƒTƒuƒNƒ‰ƒX
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferDataViewProjection {
-		Matrix4 view;       // ƒ[ƒ‹ƒh ¨ ƒrƒ…[•ÏŠ·s—ñ
-		Matrix4 projection; // ƒrƒ…[ ¨ ƒvƒƒWƒFƒNƒVƒ‡ƒ“•ÏŠ·s—ñ
-		Vector3 cameraPos;  // ƒJƒƒ‰À•Wiƒ[ƒ‹ƒhÀ•Wj
+		Matrix4 view;       // ãƒ¯ãƒ¼ãƒ«ãƒ‰ â†’ ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—
+		Matrix4 projection; // ãƒ“ãƒ¥ãƒ¼ â†’ ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³å¤‰æ›è¡Œåˆ—
+		Vector3 cameraPos;  // ã‚«ãƒ¡ãƒ©åº§æ¨™ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ï¼‰
 	};
-public:// ƒƒ“ƒoŠÖ”
-	// Ã“I‰Šú‰»
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// é™çš„åˆæœŸåŒ–
 	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// s—ñ‚ğXV‚·‚é
+	/// è¡Œåˆ—ã‚’æ›´æ–°ã™ã‚‹
 	/// </summary>
 	void UpdateMatrix();
 
-	// ƒoƒbƒtƒ@‚ÌƒQƒbƒ^[
+	// ãƒãƒƒãƒ•ã‚¡ã®ã‚²ãƒƒã‚¿ãƒ¼
 	ID3D12Resource* GetBuff() { return constBuff_.Get(); }
 
-	// ƒfƒoƒbƒOƒJƒƒ‰‚Ì‰Šú‰»
+	// ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©ã®åˆæœŸåŒ–
 	void DebugCameraInitialze(Input* input);
 
-	// ƒfƒoƒbƒOƒJƒƒ‰‚ÌXVˆ—
+	// ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©ã®æ›´æ–°å‡¦ç†
 	void DebugCameraUpdate();
 
-	// ƒJƒƒ‰’‹“_‚Ü‚Å‚Ì‹——£‚ÌƒZƒbƒg
+	// ã‚«ãƒ¡ãƒ©æ³¨è¦–ç‚¹ã¾ã§ã®è·é›¢ã®ã‚»ãƒƒãƒˆ
 	void SetDistance(float distance) {
 		distance_ = distance;
 	}
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
-	// ‰~ü—¦
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
+	// å††å‘¨ç‡
 	const float PI = 3.141592f;
 
 	/// <summary>
-	/// ’è”ƒoƒbƒtƒ@¶¬
+	/// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	/// </summary>
 	void CreateConstBuffer();
 
 	/// <summary>
-	/// ƒ}ƒbƒsƒ“ƒO‚·‚é
+	/// ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹
 	/// </summary>
 	void Map();
 
-	// “x”‚©‚çƒ‰ƒWƒAƒ“‚É•ÏŠ·
+	// åº¦æ•°ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›
 	float ToRadian(float angle) { return angle * (PI / 180); }
 
-	// ƒxƒNƒgƒ‹‚É‚æ‚é‹“_ˆÚ“®
+	// ãƒ™ã‚¯ãƒˆãƒ«ã«ã‚ˆã‚‹è¦–ç‚¹ç§»å‹•
 	void MoveEyeVector(const Vector3& move);
 
-	// ƒxƒNƒgƒ‹‚É‚æ‚éˆÚ“®
+	// ãƒ™ã‚¯ãƒˆãƒ«ã«ã‚ˆã‚‹ç§»å‹•
 	void MoveVector(const Vector3& move);
 
 
 
-public:// ƒpƒuƒŠƒbƒN•Ï”
-#pragma region ƒrƒ…[s—ñ‚Ìİ’è
-	// ‹“_À•W
+public:// ãƒ‘ãƒ–ãƒªãƒƒã‚¯å¤‰æ•°
+#pragma region ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã®è¨­å®š
+	// è¦–ç‚¹åº§æ¨™
 	Vector3 eye = { 0, 0, -20.0f };
-	// ’‹“_À•W
+	// æ³¨è¦–ç‚¹åº§æ¨™
 	Vector3 target = { 0, 0, 0 };
-	// ã•ûŒüƒxƒNƒgƒ‹
+	// ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 up = { 0, 1, 0 };
 #pragma endregion
 
-#pragma region Ë‰es—ñ‚Ìİ’è
-	// ‚’¼•ûŒü‹–ìŠp
+#pragma region å°„å½±è¡Œåˆ—ã®è¨­å®š
+	// å‚ç›´æ–¹å‘è¦–é‡è§’
 	float fovAngleY = ToRadian(45.0f);
-	// ƒrƒ…[ƒ|[ƒg‚ÌƒAƒXƒyƒNƒg”ä
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
 	float aspectRatio = (float)WinApp::window_width / WinApp::window_height;
-	// [“xŒÀŠEiè‘O‘¤j
+	// æ·±åº¦é™ç•Œï¼ˆæ‰‹å‰å´ï¼‰
 	float nearZ = 0.1f;
-	// [“xŒÀŠEi‰œ‘¤j
+	// æ·±åº¦é™ç•Œï¼ˆå¥¥å´ï¼‰
 	float farZ = 1000.0f;
 #pragma endregion
 
-	// ƒrƒ…[s—ñ
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—
 	Matrix4 matView_;
-	// Ë‰es—ñ
+	// å°„å½±è¡Œåˆ—
 	Matrix4 matProjection_;
-	// ƒrƒ‹ƒ{[ƒhs—ñ
+	// ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰è¡Œåˆ—
 	Matrix4 matBillboard_;
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	// ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+	// ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
 	static ID3D12Device* sDevice_;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
-	// ƒ}ƒbƒsƒ“ƒOÏ‚İƒAƒhƒŒƒX
+	// ãƒãƒƒãƒ”ãƒ³ã‚°æ¸ˆã¿ã‚¢ãƒ‰ãƒ¬ã‚¹
 	ConstBufferDataViewProjection* constMap_ = nullptr;
 
-	// ƒfƒoƒbƒOƒJƒƒ‰‚É•K—v‚È•Ï”
-#pragma region ƒfƒoƒbƒOƒJƒƒ‰
-	// “ü—ÍƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
+	// ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©ã«å¿…è¦ãªå¤‰æ•°
+#pragma region ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©
+	// å…¥åŠ›ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
 	Input* input_;
-	// ƒJƒƒ‰’‹“_‚Ü‚Å‚Ì‹——£
+	// ã‚«ãƒ¡ãƒ©æ³¨è¦–ç‚¹ã¾ã§ã®è·é›¢
 	float distance_ = 3;
-	// ƒXƒP[ƒŠƒ“ƒO
+	// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 	float scaleX_ = 1.0f;
 	float scaleY_ = 1.0f;
-	// ‰ñ“]s—ñ
+	// å›è»¢è¡Œåˆ—
 	Matrix4 matRot_;
 #pragma endregion
 

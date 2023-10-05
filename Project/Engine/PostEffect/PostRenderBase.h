@@ -1,62 +1,63 @@
 #pragma once
+
 #include "Sprite.h"
 
 template<typename T> class Singleton;
 
 struct Handles
 {
-	D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle_ = D3D12_CPU_DESCRIPTOR_HANDLE(); //SRV‚Ìƒnƒ“ƒhƒ‹(CPU‘¤)
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle_ = D3D12_CPU_DESCRIPTOR_HANDLE(); //RTV‚Ìƒnƒ“ƒhƒ‹(CPU‘¤)
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuHandle_ = D3D12_CPU_DESCRIPTOR_HANDLE(); //DSV‚Ìƒnƒ“ƒhƒ‹(CPU‘¤)
+	D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle_ = D3D12_CPU_DESCRIPTOR_HANDLE(); //SRVã®ãƒãƒ³ãƒ‰ãƒ«(CPUå´)
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle_ = D3D12_CPU_DESCRIPTOR_HANDLE(); //RTVã®ãƒãƒ³ãƒ‰ãƒ«(CPUå´)
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuHandle_ = D3D12_CPU_DESCRIPTOR_HANDLE(); //DSVã®ãƒãƒ³ãƒ‰ãƒ«(CPUå´)
 };
 
 class PostRenderBase
 {
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 
 	/// <summary>
-	/// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ìì¬
+	/// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	/// </summary>
 	void CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap);
 
 	/// <summary>
-	/// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[‚Ìì¬
+	/// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	/// </summary>
 	void CreateRTV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap);
 
 	/// <summary>
-	/// [“xƒXƒeƒ“ƒVƒ‹ƒrƒ…[‚Ìì¬
+	/// æ·±åº¦ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	/// </summary>
 	void CreateDSV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap);
 
 	/// <summary>
-	/// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ìì¬
+	/// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®ä½œæˆ
 	/// </summary>
 	void DescriptorHeapInit();
 
-	// ƒfƒoƒCƒX‚ÌƒZƒbƒ^[
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ã‚»ãƒƒã‚¿ãƒ¼
 	static void SetDevice(ID3D12Device* device) { sDevice_ = device; }
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	// ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+	// ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
 	static ID3D12Device* sDevice_;
 
-	// SRV‚ÌÅ‘åŒÂ”
+	// SRVã®æœ€å¤§å€‹æ•°
 	const uint32_t maxSRVCount = 2056;
-	// RTV‚ÌÅ‘åŒÂ”
+	// RTVã®æœ€å¤§å€‹æ•°
 	const uint32_t maxRTVCount = 2056;
-	// DSV‚ÌÅ‘åŒÂ”
+	// DSVã®æœ€å¤§å€‹æ•°
 	const uint32_t maxDSVCount = 1;
 
-	// SRV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// SRVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
-	// RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descHeapRTV_;
-	// DSV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// DSVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descHeapDSV_;
 
-	// CPUƒnƒ“ƒhƒ‹‚Ì‚¸‚ê‚é—Ê
+	// CPUãƒãƒ³ãƒ‰ãƒ«ã®ãšã‚Œã‚‹é‡
 	uint32_t srvIncrementIndex_ = 0;
 	uint32_t rtvIncrementIndex_ = 0;
 	uint32_t dsvIncrementIndex_ = 0;

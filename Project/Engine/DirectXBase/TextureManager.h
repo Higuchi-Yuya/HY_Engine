@@ -11,51 +11,51 @@
 
 class TextureManager
 {
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 
-	// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 
-	// ƒtƒŠ[‚ÉƒpƒX‚ğw’è‚µ‚Äg‚¤—p‚ÌƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// ãƒ•ãƒªãƒ¼ã«ãƒ‘ã‚¹ã‚’æŒ‡å®šã—ã¦ä½¿ã†ç”¨ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	static Texture* LoadFreeTexture(const std::string& filePath = "NULL");
 
-	// 2D‚ÌƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
+	// 2Dã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
 	static Texture Load2DTexture(const std::string& fileName = "NULL");
 	static Texture* Load2DTextureP(const std::string fileName);
 
-	// ƒ‚ƒfƒ‹‚Ìƒ}ƒeƒŠƒAƒ‹ƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
+	// ãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ†ãƒªã‚¢ãƒ«ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
 	static Texture LoadTexture(std::string fileName);
 	static Texture* LoadTextureP(std::string fileName);
 
-	// ƒeƒNƒXƒ`ƒƒ‚Åˆê“x•K—v‚È‰Šú‰»
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã§ä¸€åº¦å¿…è¦ãªåˆæœŸåŒ–
 	static void StaticInitialize(DirectXCommon* dxcommon);
 
-	// ƒeƒNƒXƒ`ƒƒ‚ÅƒXƒ^ƒeƒBƒbƒN‚Ì•Ï”‚ğ‰ğ•ú
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã§ã‚¹ã‚¿ãƒ†ã‚£ãƒƒã‚¯ã®å¤‰æ•°ã‚’è§£æ”¾
 	static void StaticFinalize();
 
-public:// Ã“Iƒƒ“ƒo•Ï”
+public:// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
 	static uint32_t sSrvIncrementIndex;
 
-	// SRV‚ÌÅ‘åŒÂ”
+	// SRVã®æœ€å¤§å€‹æ•°
 	static const size_t sMaxSRVCount = 2056;
 
-	// ƒfƒtƒHƒ‹ƒgƒeƒNƒXƒ`ƒƒ2DŠi”[ƒfƒBƒŒƒNƒgƒŠ
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£2Dæ ¼ç´ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 	static std::string sDefault2DTextureDirectoryPath;
 
-	// SRVƒq[ƒv
+	// SRVãƒ’ãƒ¼ãƒ—
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> sSrvHeap;
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ìì¬
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ
 	static void CreateSRV(Texture& texture, ID3D12Resource* buffer);
 
-	// ƒRƒ}ƒ“ƒh‚ğˆê‰ñÏ‚ñ‚¾‚ ‚Æ‚É‰ğ•ú‚·‚éŠÖ”
+	// ã‚³ãƒãƒ³ãƒ‰ã‚’ä¸€å›ç©ã‚“ã ã‚ã¨ã«è§£æ”¾ã™ã‚‹é–¢æ•°
 	static void ExcuteComandList();
 
-private:// ƒƒ“ƒo•Ï”
-	// ƒeƒNƒXƒ`ƒƒƒŠƒ\[ƒXƒfƒXƒN
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒªã‚½ãƒ¼ã‚¹ãƒ‡ã‚¹ã‚¯
 	static D3D12_RESOURCE_DESC sTextureResourceDesc;
 
-	// DirextX‚ÌŠî”Õ‚ğØ‚è‚Ä‚­‚é
+	// DirextXã®åŸºç›¤ã‚’å€Ÿã‚Šã¦ãã‚‹
 	static DirectXCommon* sDxcommon_;
 };
 

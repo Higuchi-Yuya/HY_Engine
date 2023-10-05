@@ -4,100 +4,101 @@
 #include "Player.h"
 #include <ParticleManager.h>
 
+
 class Enemy:public Object3d
 {
-public:// ƒTƒuƒNƒ‰ƒX
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 	enum class State
 	{
-		Spawn,// ¶¬
-		Alive,// ¶‚«‚Ä‚¢‚é‚Æ‚«
-		Dead,// €‚ñ‚Å‚é
+		Spawn,// ç”Ÿæˆ
+		Alive,// ç”Ÿãã¦ã„ã‚‹ã¨ã
+		Dead,// æ­»ã‚“ã§ã‚‹æ™‚
 	};
 
 public:
 	/// <summary>
-	/// Ã“I‰Šú‰»
+	/// é™çš„åˆæœŸåŒ–
 	/// </summary>
 	static void StaticInitialize();
 
 	/// <summary>
-	/// Ã“I‰ğ•ú
+	/// é™çš„è§£æ”¾
 	/// </summary>
 	static void StaticFinalize();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize(Model* model,Player* player);
 
-	// –ˆƒtƒŒ[ƒ€ˆ—
+	// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 	void Update()override;
 
-	// ƒp[ƒeƒBƒNƒ‹‚ÌXVˆ—
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æ›´æ–°å‡¦ç†
 	void ParticleUpdate();
 
-	// •`‰æ
+	// æç”»
 	void Draw(ViewProjection* view)override;
 
-	// ƒp[ƒeƒBƒNƒ‹•`‰æ
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«æç”»
 	void DrawParticle(ViewProjection* view);
 
-	// Õ“ËƒR[ƒ‹ƒoƒbƒNŠÖ”
+	// è¡çªæ™‚ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 	void OnCollision();
 
-	// ‰Ÿ‚µ–ß‚µÕ“Ë”»’èƒR[ƒ‹ƒoƒbƒNŠÖ”
+	// æŠ¼ã—æˆ»ã—è¡çªåˆ¤å®šã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 	void pushBackOnCol();
 
-	// ¶‚«‚Ä‚¢‚é‚©‚ğæ“¾
+	// ç”Ÿãã¦ã„ã‚‹ã‹ã‚’å–å¾—
 	const bool GetAlive() { return IsAlive_; }
 
-	// €–Sƒ‚[ƒVƒ‡ƒ“‚ª‘S‚ÄI‚í‚Á‚Ä‚¢‚é‚©‚ğæ“¾
+	// æ­»äº¡ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãŒå…¨ã¦çµ‚ã‚ã£ã¦ã„ã‚‹ã‹ã‚’å–å¾—
 	const bool GetDeadMotionEnd() { return IsDeadMotionEnd; }
 
-	// ¡‚Ìó‘Ô‚ğæ“¾
+	// ä»Šã®çŠ¶æ…‹ã‚’å–å¾—
 	const State GetState() { return nowState_; }
 
-	// ˆÚ“®‘O‚Ìƒ|ƒWƒVƒ‡ƒ“‚Ìæ“¾
+	// ç§»å‹•å‰ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã®å–å¾—
 	const Vector3 GetOldPos() { return oldPos_; }
 
-	// ƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Ìî•ñ‚ğƒZƒbƒg
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã®æƒ…å ±ã‚’ã‚»ãƒƒãƒˆ
 	void SetWorldTransInfo(WorldTransform worldTrans);
 
-	// ƒ|ƒWƒVƒ‡ƒ“‚ÌƒZƒbƒg
+	// ãƒã‚¸ã‚·ãƒ§ãƒ³ã®ã‚»ãƒƒãƒˆ
 	void SetWorldPos(Vector3 pos);
 
 	/// <summary>
-	/// ¶‚«‚Ä‚¢‚é‚©ƒtƒ‰ƒO‚ÌƒZƒbƒg
+	/// ç”Ÿãã¦ã„ã‚‹ã‹ãƒ•ãƒ©ã‚°ã®ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="isAlive">¶‚«‚Ä‚¢‚é‚©ƒtƒ‰ƒO</param>
+	/// <param name="isAlive">ç”Ÿãã¦ã„ã‚‹ã‹ãƒ•ãƒ©ã‚°</param>
 	void SetAlive(bool isAlive) { IsAlive_ = isAlive; }
 
 public:
-	// Õ“Ë“_
+	// è¡çªç‚¹
 	Vector3 interPos;
-	// ”rËƒxƒNƒgƒ‹
+	// æ’æ–¥ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 rejectVec;
 
 private:
-	// Ø‚è‚Ä‚­‚éƒvƒŒƒCƒ„[‚Ìî•ñ‚ğˆê“I‚É•Û‘¶
+	// å€Ÿã‚Šã¦ãã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ±ã‚’ä¸€æ™‚çš„ã«ä¿å­˜
 	Player* player_ = nullptr;
 
-	// “–‚½‚Á‚½‚©‚Ç‚¤‚©
+	// å½“ãŸã£ãŸã‹ã©ã†ã‹
 	bool IsCollision = false;
 
-	// ¶‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	// ç”Ÿãã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsAlive_ = false;
 
-	// €–Sƒ‚[ƒVƒ‡ƒ“‚ªI‚í‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	// æ­»äº¡æ™‚ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚ã‚ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsDeadMotionEnd = false;
 
-	// ƒfƒBƒ]ƒ‹ƒuŠÖ˜A
+	// ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–é–¢é€£
 	float disoTimer_ = 0;
 	float disoTimeMax_ = 60 * 3;
 	float disoTimeLate_ = 0;
 
-	// ƒtƒ‰ƒO
+	// ãƒ•ãƒ©ã‚°
 	bool isH = false;
 
-	// ’Ç]ŠÖ˜A
+	// è¿½å¾“é–¢é€£
 	float followTimer = 0;
 	float followTimeMax = 20;
 	Vector3 followVec;
@@ -106,17 +107,17 @@ private:
 	float timer = 0;
 	float maxTime = 240;
 
-	// Œ»İ‚Ìó‘Ô
+	// ç¾åœ¨ã®çŠ¶æ…‹
 	State nowState_ = State::Spawn;
 
-	// ƒ‰ƒCƒt
+	// ãƒ©ã‚¤ãƒ•
 	uint32_t nowLife_ = 0;
 	const uint32_t maxLife_ = 3;
 
-	// ˆÚ“®‚·‚é‘O‚ÌŒÃ‚¢ƒ|ƒWƒVƒ‡ƒ“
+	// ç§»å‹•ã™ã‚‹å‰ã®å¤ã„ãƒã‚¸ã‚·ãƒ§ãƒ³
 	Vector3 oldPos_{};
 
-#pragma region ƒXƒ|[ƒ“ŠÖ˜A
+#pragma region ã‚¹ãƒãƒ¼ãƒ³é–¢é€£
 	float spawnTimer = 0;
 	float spawnTimeMax = 240;
 	float spawnTimeLate = 0;
@@ -127,18 +128,18 @@ private:
 #pragma endregion
 
 
-#pragma region ƒp[ƒeƒBƒNƒ‹
-	// ƒp[ƒeƒBƒNƒ‹‚ÌƒeƒNƒXƒ`ƒƒ
+#pragma region ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	static std::unique_ptr<Texture> sParticleTex_;
-	// ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£
 	std::unique_ptr<ParticleManager> particleMan_;
 
-	// ƒp[ƒeƒBƒNƒ‹‚ÌF
-	// F‚Ì‰Šú’l
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®è‰²
+	// è‰²ã®åˆæœŸå€¤
 	Vector4 startColor_ = { 1,0.05f,0.05f,1 };
-	// F‚ÌÅI’l
+	// è‰²ã®æœ€çµ‚å€¤
 	Vector4 endColor_ = { 0,0,0,0 };
-	// ˆê“x‚É‚¾‚·ƒp[ƒeƒBƒNƒ‹‚Ì”
+	// ä¸€åº¦ã«ã ã™ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æ•°
 	int particleNum = 15;
 
 #pragma endregion

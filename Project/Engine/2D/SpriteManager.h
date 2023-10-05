@@ -1,4 +1,5 @@
 #pragma once
+
 #include "DirectXCommon.h"
 #include "Texture.h"
 #include <DirectXMath.h>
@@ -13,51 +14,51 @@
 
 class SpriteManager
 {
-public:// ƒTƒuƒNƒ‰ƒX
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferData
 	{
-		Vector4 color;//F(RGBA)
-		Matrix4 mat;// 3D•ÏŠ·s—ñ
+		Vector4 color;//è‰²(RGBA)
+		Matrix4 mat;// 3Då¤‰æ›è¡Œåˆ—
 	};
 
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct Vertex
 	{
-		Vector3 pos; // xyzÀ•W
-		Vector2 uv;  // uvÀ•W
+		Vector3 pos; // xyzåº§æ¨™
+		Vector2 uv;  // uvåº§æ¨™
 	};
 
-public:// ƒƒ“ƒoŠÖ”
-	// ‰Šú‰»
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// åˆæœŸåŒ–
 	void Initialize(DirectXCommon* dxcommon);
 
-	// •`‰æ‘Oİ’è
+	// æç”»å‰è¨­å®š
 	void PreDraw();
 
-	// •`‰æŒãİ’è
+	// æç”»å¾Œè¨­å®š
 	void PostDraw();
 
-	// ƒeƒNƒXƒ`ƒƒ‚É•K—v‚ÈƒRƒ}ƒ“ƒhİ’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«å¿…è¦ãªã‚³ãƒãƒ³ãƒ‰è¨­å®š
 	void SetTextureCommands(Texture* index);
 
-	// ƒpƒCƒvƒ‰ƒCƒ“‚ÌƒAƒNƒZƒX
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã®ã‚¢ã‚¯ã‚»ã‚¹
 	ID3D12PipelineState *GetPipelineState() { return pipelineState_.Get(); }
 
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚ÌƒAƒNƒZƒX
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®ã‚¢ã‚¯ã‚»ã‚¹
 	ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
 
 public:
 	static DirectXCommon* sDxcommon_;
 private:
 	
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;		//ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;		//ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;		//ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆ
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;		//ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 
-	ShaderObj vsShader_;// ’¸“_ƒVƒF[ƒ_[
-	ShaderObj psShader_;// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[
+	ShaderObj vsShader_;// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	ShaderObj psShader_;// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 
-	// Œ‹‰ÊŠm”F
+	// çµæœç¢ºèª
 	HRESULT result = 0;
 };
 

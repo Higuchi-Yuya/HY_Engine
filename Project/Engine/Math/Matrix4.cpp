@@ -1,6 +1,7 @@
 #include "Matrix4.h"
 #include <cmath>
 
+
 const float EPSILON = 0.000001f;
 
 Matrix4::Matrix4()
@@ -12,7 +13,7 @@ Matrix4::Matrix4()
 		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
-	// ‘ã“ü
+	// ä»£å…¥
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			m[i][j] = result[i][j];
@@ -20,7 +21,7 @@ Matrix4::Matrix4()
 	}
 }
 
-// ‘ã“ü
+// ä»£å…¥
 Matrix4::Matrix4(float m00, float m01, float m02, float m03,
 	float m10, float m11, float m12, float m13,
 	float m20, float m21, float m22, float m23,
@@ -33,7 +34,7 @@ Matrix4::Matrix4(float m00, float m01, float m02, float m03,
 
 }
 
-//’PˆÊs—ñ‚ð‹‚ß‚é
+//å˜ä½è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::identity()
 {
 	const Matrix4 result
@@ -49,7 +50,7 @@ Matrix4 Matrix4::identity()
 	return *this;
 }
 
-// ‹ts—ñ‚ð‹‚ß‚é
+// é€†è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::MakeInverse()
 {
 	Matrix4 temp;
@@ -67,7 +68,7 @@ Matrix4 Matrix4::MakeInverse()
 	mat[3][7] = 1;
 
 	for (int n = 0; n < 4; n++) {
-		//Å‘å‚Ìâ‘Î’l‚ð’Tõ‚·‚é(‚Æ‚è‚ ‚¦‚¸‘ÎÛ¬•ª‚ðÅ‘å‚Æ‰¼’è‚µ‚Ä‚¨‚­)
+		//æœ€å¤§ã®çµ¶å¯¾å€¤ã‚’æŽ¢ç´¢ã™ã‚‹(ã¨ã‚Šã‚ãˆãšå¯¾è±¡æˆåˆ†ã‚’æœ€å¤§ã¨ä»®å®šã—ã¦ãŠã)
 		float max = abs(mat[n][n]);
 		int maxIndex = n;
 
@@ -78,12 +79,12 @@ Matrix4 Matrix4::MakeInverse()
 			}
 		}
 
-		//Å‘å‚Ìâ‘Î’l‚ª0‚¾‚Á‚½‚ç‹ts—ñ‚Í‹‚ß‚ç‚ê‚È‚¢
+		//æœ€å¤§ã®çµ¶å¯¾å€¤ãŒ0ã ã£ãŸã‚‰é€†è¡Œåˆ—ã¯æ±‚ã‚ã‚‰ã‚Œãªã„
 		if (abs(mat[maxIndex][n]) <= EPSILON) {
-			return temp; //‚Æ‚è‚ ‚¦‚¸’PˆÊs—ñ•Ô‚µ‚¿‚á‚¤
+			return temp; //ã¨ã‚Šã‚ãˆãšå˜ä½è¡Œåˆ—è¿”ã—ã¡ã‚ƒã†
 		}
 
-		//“ü‚ê‘Ö‚¦
+		//å…¥ã‚Œæ›¿ãˆ
 		if (n != maxIndex) {
 			for (int i = 0; i < 8; i++) {
 				float f = mat[maxIndex][i];
@@ -92,21 +93,21 @@ Matrix4 Matrix4::MakeInverse()
 			}
 		}
 
-		//Š|‚¯‚½‚ç1‚É‚È‚é’l‚ðŽZo
+		//æŽ›ã‘ãŸã‚‰1ã«ãªã‚‹å€¤ã‚’ç®—å‡º
 		float mul = 1 / mat[n][n];
 
-		//Š|‚¯‚é
+		//æŽ›ã‘ã‚‹
 		for (int i = 0; i < 8; i++) {
 			mat[n][i] *= mul;
 		}
 
-		//‘¼‘S•”0‚É‚·‚é
+		//ä»–å…¨éƒ¨0ã«ã™ã‚‹
 		for (int i = 0; i < 4; i++) {
 			if (n == i) {
 				continue;
 			}
 
-			float mul = -mat[i][n];
+			mul = -mat[i][n];
 
 			for (int j = 0; j < 8; j++) {
 				mat[i][j] += mat[n][j] * mul;
@@ -126,7 +127,7 @@ Matrix4 Matrix4::MakeInverse()
 	return *this;
 }
 
-//Šg‘åk¬s—ñ‚ð‹‚ß‚é
+//æ‹¡å¤§ç¸®å°è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::scale(const Vector3& s)
 {
 	float result[4][4]
@@ -137,7 +138,7 @@ Matrix4 Matrix4::scale(const Vector3& s)
 		0.0f,0.0f,0.0f,1.0f
 	};
 
-	// ‘ã“ü
+	// ä»£å…¥
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			m[i][j] = result[i][j];
@@ -147,7 +148,7 @@ Matrix4 Matrix4::scale(const Vector3& s)
 	return *this;
 }
 
-// x Ž²Žü‚è‚Ì‰ñ“]s—ñ‚ð‹‚ß‚é
+// x è»¸å‘¨ã‚Šã®å›žè»¢è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::rotateX(float angle)
 {
 	float sin = std::sin(angle);
@@ -161,7 +162,7 @@ Matrix4 Matrix4::rotateX(float angle)
 		0.0f,0.0f,0.0f,1.0f
 	};
 
-	// ‘ã“ü
+	// ä»£å…¥
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			m[i][j] = result[i][j];
@@ -171,7 +172,7 @@ Matrix4 Matrix4::rotateX(float angle)
 	return *this;
 }
 
-// y Ž²Žü‚è‚Ì‰ñ“]s—ñ‚ð‹‚ß‚é
+// y è»¸å‘¨ã‚Šã®å›žè»¢è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::rotateY(float angle)
 {
 	float sin = std::sin(angle);
@@ -185,7 +186,7 @@ Matrix4 Matrix4::rotateY(float angle)
 		0.0f,0.0f,0.0f,1.0f
 	};
 
-	// ‘ã“ü
+	// ä»£å…¥
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			m[i][j] = result[i][j];
@@ -195,7 +196,7 @@ Matrix4 Matrix4::rotateY(float angle)
 	return *this;
 }
 
-// z Ž²Žü‚è‚Ì‰ñ“]s—ñ‚ð‹‚ß‚é
+// z è»¸å‘¨ã‚Šã®å›žè»¢è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::rotateZ(float angle)
 {
 	float sin = std::sin(angle);
@@ -209,7 +210,7 @@ Matrix4 Matrix4::rotateZ(float angle)
 		0.0f,0.0f,0.0f,1.0f
 	};
 
-	// ‘ã“ü
+	// ä»£å…¥
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			m[i][j] = result[i][j];
@@ -219,7 +220,7 @@ Matrix4 Matrix4::rotateZ(float angle)
 	return *this;
 }
 
-// ‚š‚˜‚™Ž²‡‚É‰ñ“]s—ñ‚ðˆê‹C‚ÉŠ|‚¯‚Ä‹‚ß‚é
+// ï½šï½˜ï½™è»¸é †ã«å›žè»¢è¡Œåˆ—ã‚’ä¸€æ°—ã«æŽ›ã‘ã¦æ±‚ã‚ã‚‹
 Matrix4 Matrix4::rotation(Vector3 angle)
 {
 	Matrix4 Rot, RotX, RotY, RotZ;
@@ -243,7 +244,7 @@ Matrix4 Matrix4::rotation(Vector3 angle)
 	return *this;
 }
 
-// •½sˆÚ“®s—ñ‚ð‹‚ß‚é
+// å¹³è¡Œç§»å‹•è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹
 Matrix4 Matrix4::translate(const Vector3& t)
 {
 	float result[4][4]
@@ -254,7 +255,7 @@ Matrix4 Matrix4::translate(const Vector3& t)
 		t.x ,t.y ,t.z ,1.0f
 	};
 
-	// ‘ã“ü
+	// ä»£å…¥
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			m[i][j] = result[i][j];
@@ -264,7 +265,7 @@ Matrix4 Matrix4::translate(const Vector3& t)
 	return *this;
 }
 
-// À•W•ÏŠ·iƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯ŽZj‚ðs‚¤transform ŠÖ”‚ðì¬‚·‚é@(“§Ž‹•ÏŠ·‚É‚à‘Î‰ž‚µ‚Ä‚¢‚é)
+// åº§æ¨™å¤‰æ›ï¼ˆãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æŽ›ã‘ç®—ï¼‰ã‚’è¡Œã†transform é–¢æ•°ã‚’ä½œæˆã™ã‚‹ã€€(é€è¦–å¤‰æ›ã«ã‚‚å¯¾å¿œã—ã¦ã„ã‚‹)
 Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m)
 {
 	float W = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
@@ -278,7 +279,7 @@ Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m)
 	return result;
 }
 
-// À•W•ÏŠ·iƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯ŽZj‚ðs‚¤transform ŠÖ”‚ðì¬‚·‚é
+// åº§æ¨™å¤‰æ›ï¼ˆãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æŽ›ã‘ç®—ï¼‰ã‚’è¡Œã†transform é–¢æ•°ã‚’ä½œæˆã™ã‚‹
 Vector3 Matrix4::transformNotW(const Vector3& v, const Matrix4& m)
 {
 	Vector3 result
@@ -291,7 +292,7 @@ Vector3 Matrix4::transformNotW(const Vector3& v, const Matrix4& m)
 	return result;
 }
 
-// ƒrƒ…[s—ñ‚Ìì¬
+// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã®ä½œæˆ
 Matrix4 Matrix4::ViewMat(Vector3 eye, Vector3 target, Vector3 up)
 {
 	Vector3 zaxis = target - eye;
@@ -315,7 +316,7 @@ Matrix4 Matrix4::ViewMat(Vector3 eye, Vector3 target, Vector3 up)
 	return *this;
 }
 
-// ŽË‰es—ñ‚Ìì¬
+// å°„å½±è¡Œåˆ—ã®ä½œæˆ
 Matrix4 Matrix4::ProjectionMat(float fovAngleY, float aspectRatio, float nearZ, float farZ)
 {
 	float h = 1 / tanf(fovAngleY / 2);
@@ -448,7 +449,7 @@ Matrix4 Matrix4::operator-() const
 	
 }
 
-// ‘ã“ü‰‰ŽZŽq@*=@ƒI[ƒo[ƒ[ƒhŠÖ”is—ñ‚Æs—ñ‚ÌÏj
+// ä»£å…¥æ¼”ç®—å­ã€€*=ã€€ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰é–¢æ•°ï¼ˆè¡Œåˆ—ã¨è¡Œåˆ—ã®ç©ï¼‰
 Matrix4& Matrix4::operator*=(const Matrix4& m1)
 {
 	Matrix4 result;
@@ -472,13 +473,13 @@ Matrix4& Matrix4::operator*=(const Matrix4& m1)
 	return *this;
 }
 
-// ‚Q€‰‰ŽZŽq@*@‚ÌƒI[ƒo[ƒ[ƒhŠÖ”is—ñ‚Æs—ñ‚ÌÏj
+// ï¼’é …æ¼”ç®—å­ã€€*ã€€ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰é–¢æ•°ï¼ˆè¡Œåˆ—ã¨è¡Œåˆ—ã®ç©ï¼‰
 Matrix4 Matrix4::operator*(const Matrix4& m1)
 {
 	return *this *= m1;
 }
 
-// ‚Q€‰‰ŽZŽq@*@‚ÌƒI[ƒo[ƒ[ƒhŠÖ”iƒxƒNƒgƒ‹‚Æs—ñ‚ÌÏj
+// ï¼’é …æ¼”ç®—å­ã€€*ã€€ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰é–¢æ•°ï¼ˆãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®ç©ï¼‰
 Vector3 operator*(const Vector3& v, const Matrix4& m)
 {
 	float W = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];

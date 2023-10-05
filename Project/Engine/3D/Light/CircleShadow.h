@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
@@ -7,9 +8,9 @@
 
 class CircleShadow
 {
-public: // ƒTƒuƒNƒ‰ƒX
+public: // ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferData
 	{
 		Vector3 dir;
@@ -23,94 +24,94 @@ public: // ƒTƒuƒNƒ‰ƒX
 		float pad3;
 	};
 
-public: // ƒƒ“ƒoŠÖ”
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// •ûŒü‚ğƒZƒbƒg
+	/// æ–¹å‘ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightdir">•ûŒü</param>
+	/// <param name="lightdir">æ–¹å‘</param>
 	inline void SetDir(const Vector3& dir) { dir_ = dir; dir_.normalize(); }
 
 	/// <summary>
-	/// ƒ‰ƒCƒg•ûŒü‚ğæ“¾
+	/// ãƒ©ã‚¤ãƒˆæ–¹å‘ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒg•ûŒü</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆæ–¹å‘</returns>
 	inline const Vector3& GetDir() { return dir_; }
 
 	/// <summary>
-	/// ƒLƒƒƒXƒ^[À•W‚ğƒZƒbƒg
+	/// ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightpos">ƒLƒƒƒXƒ^[À•W</param>
+	/// <param name="lightpos">ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™</param>
 	inline void SetCasterPos(const Vector3& casterPos) { casterPos_ = casterPos; }
 
 	/// <summary>
-	/// ƒLƒƒƒXƒ^[À•W‚ğæ“¾
+	/// ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒLƒƒƒXƒ^[À•W</returns>
+	/// <returns>ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™</returns>
 	inline const Vector3& GetCasterPos() { return casterPos_; }
 
 	/// <summary>
-	/// ƒLƒƒƒXƒ^[‚Æƒ‰ƒCƒg‚Ì‹——£‚ğƒZƒbƒg
+	/// ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã¨ãƒ©ã‚¤ãƒˆã®è·é›¢ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightpos">ƒLƒƒƒXƒ^[‚Æƒ‰ƒCƒg‚Ì‹——£</param>
+	/// <param name="lightpos">ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã¨ãƒ©ã‚¤ãƒˆã®è·é›¢</param>
 	inline void SetDistanceCasterLight(float distanceCasterLight) { distanceCasterLight_ = distanceCasterLight; }
 
 	/// <summary>
-	/// ƒLƒƒƒXƒ^[‚Æƒ‰ƒCƒg‚Ì‹——£‚ğæ“¾
+	/// ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã¨ãƒ©ã‚¤ãƒˆã®è·é›¢ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒLƒƒƒXƒ^[‚Æƒ‰ƒCƒg‚Ì‹——£</returns>
+	/// <returns>ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã¨ãƒ©ã‚¤ãƒˆã®è·é›¢</returns>
 	inline float GetDistanceCasterLight() { return distanceCasterLight_; }
 
 	/// <summary>
-	/// ‹——£Œ¸ŠŒW”‚ğƒZƒbƒg
+	/// è·é›¢æ¸›è¡°ä¿‚æ•°ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightatten">ƒ‰ƒCƒg‹——£Œ¸ŠŒW”</param>
+	/// <param name="lightatten">ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°</param>
 	inline void SetAtten(const Vector3& atten) { atten_ = atten; }
 
 	/// <summary>
-	/// ‹——£Œ¸ŠŒW”‚ğæ“¾
+	/// è·é›¢æ¸›è¡°ä¿‚æ•°ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒg‹——£Œ¸ŠŒW”</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆè·é›¢æ¸›è¡°ä¿‚æ•°</returns>
 	inline const Vector3& GetAtten() { return atten_; }
 
 	/// <summary>
-	/// Œ¸ŠŠp“x‚ğƒZƒbƒg
+	/// æ¸›è¡°è§’åº¦ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightFactorAngle">x:Œ¸ŠŠJnŠp“x y:Œ¸ŠI—¹Šp“x[degree]</param>
+	/// <param name="lightFactorAngle">x:æ¸›è¡°é–‹å§‹è§’åº¦ y:æ¸›è¡°çµ‚äº†è§’åº¦[degree]</param>
 	inline void SetFactorAngle(const Vector2& factorAngle) {
 		factorAngleCos_.x = cosf(DirectX::XMConvertToRadians(factorAngle.x));
 		factorAngleCos_.y = cosf(DirectX::XMConvertToRadians(factorAngle.y));
 	}
 
 	/// <summary>
-	/// Œ¸ŠŠp“x‚ğæ“¾
+	/// æ¸›è¡°è§’åº¦ã‚’å–å¾—
 	/// </summary>
-	/// <returns>Œ¸ŠŠp“x</returns>
+	/// <returns>æ¸›è¡°è§’åº¦</returns>
 	inline const Vector2& GetFactorAngleCos() { return factorAngleCos_; }
 
 	/// <summary>
-	/// —LŒøƒtƒ‰ƒO‚ğƒZƒbƒg
+	/// æœ‰åŠ¹ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="active">—LŒøƒtƒ‰ƒO</param>
+	/// <param name="active">æœ‰åŠ¹ãƒ•ãƒ©ã‚°</param>
 	inline void SetActive(bool active) { active_ = active; }
 
 	/// <summary>
-	/// —LŒøƒ`ƒFƒbƒN
+	/// æœ‰åŠ¹ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>—LŒøƒtƒ‰ƒO</returns>
+	/// <returns>æœ‰åŠ¹ãƒ•ãƒ©ã‚°</returns>
 	inline bool IsActive() { return active_; }
 
-private: // ƒƒ“ƒo•Ï”
-	// •ûŒüi’PˆÊƒxƒNƒgƒ‹j
+private: // ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// æ–¹å‘ï¼ˆå˜ä½ãƒ™ã‚¯ãƒˆãƒ«ï¼‰
 	Vector3 dir_ = { 1,0,0 };
-	// ƒLƒƒƒXƒ^[‚Æƒ‰ƒCƒg‚Ì‹——£
+	// ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼ã¨ãƒ©ã‚¤ãƒˆã®è·é›¢
 	float distanceCasterLight_ = 100.0f;
-	// ƒLƒƒƒXƒ^[À•Wiƒ[ƒ‹ƒhÀ•WŒnj
+	// ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ï¼‰
 	Vector3 casterPos_ = { 0,0,0 };
-	// ‹——£Œ¸ŠŒW”
+	// è·é›¢æ¸›è¡°ä¿‚æ•°
 	Vector3 atten_ = { 0.5f, 0.6f, 0.0f };
-	// Œ¸ŠŠp“x
+	// æ¸›è¡°è§’åº¦
 	Vector2 factorAngleCos_ = { 0.2f, 0.5f };
-	// —LŒøƒtƒ‰ƒO
+	// æœ‰åŠ¹ãƒ•ãƒ©ã‚°
 	bool active_ = false;
 };
 

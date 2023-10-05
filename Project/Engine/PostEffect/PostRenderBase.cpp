@@ -1,24 +1,25 @@
 #include "PostRenderBase.h"
 
+
 ID3D12Device* PostRenderBase::sDevice_ = nullptr;
 
 void PostRenderBase::CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
 {
-
+	descHeap;
 	D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle = descHeapSRV_->GetCPUDescriptorHandleForHeapStart();
 
 	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	srvCpuHandle.ptr += (SIZE_T)(descriptorSize * srvIncrementIndex_);
 
-	// ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[Ý’è
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	// srvÝ’è\‘¢‘Ì
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼è¨­å®š
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	// srvè¨­å®šæ§‹é€ ä½“
 	srvDesc.Format = buffer->GetDesc().Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	// 2DƒeƒNƒXƒ`ƒƒ
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	// 2Dãƒ†ã‚¯ã‚¹ãƒãƒ£
 	srvDesc.Texture2D.MipLevels = 1;
 
-	// ƒnƒ“ƒhƒ‹‚ÌŽw‚·ˆÊ’u‚ÉƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[ì¬
+	// ãƒãƒ³ãƒ‰ãƒ«ã®æŒ‡ã™ä½ç½®ã«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ä½œæˆ
 	sDevice_->CreateShaderResourceView(buffer, &srvDesc, srvCpuHandle);
 
 	srvIncrementIndex_++;
@@ -26,41 +27,45 @@ void PostRenderBase::CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* des
 
 void PostRenderBase::CreateRTV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
 {
+	descHeap;
+	buffer;
 }
 
 void PostRenderBase::CreateDSV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
 {
+	buffer;
+	descHeap;
 }
 
 void PostRenderBase::DescriptorHeapInit()
 {
 	HRESULT result;
 
-	// SRV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒvÝ’è
+	// SRVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—è¨­å®š
 	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
 	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	srvDescHeapDesc.NumDescriptors = maxSRVCount;
 
-	// SRV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚ð¶¬
+	// SRVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’ç”Ÿæˆ
 	result = sDevice_->CreateDescriptorHeap(&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV_));
 	assert(SUCCEEDED(result));
 
-	// RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒvÝ’è
+	// RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—è¨­å®š
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescHeapDesc{};
 	rtvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvDescHeapDesc.NumDescriptors = maxRTVCount;
 
-	// RTV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚ð¶¬
+	// RTVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’ç”Ÿæˆ
 	result = sDevice_->CreateDescriptorHeap(&rtvDescHeapDesc, IID_PPV_ARGS(&descHeapRTV_));
 	assert(SUCCEEDED(result));
 
-	// DSV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒvÝ’è
+	// DSVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—è¨­å®š
 	D3D12_DESCRIPTOR_HEAP_DESC DescHeapDesc{};
 	DescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	DescHeapDesc.NumDescriptors = 1;
 
-	// DSV—pƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚ðì¬
+	// DSVç”¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’ä½œæˆ
 	result = sDevice_->CreateDescriptorHeap(&DescHeapDesc, IID_PPV_ARGS(&descHeapDSV_));
 	assert(SUCCEEDED(result));
 }

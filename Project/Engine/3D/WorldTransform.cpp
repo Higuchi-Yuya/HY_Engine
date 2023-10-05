@@ -2,6 +2,7 @@
 #include<cassert>
 #include <d3dx12.h>
 
+
 ID3D12Device* WorldTransform::device_ = nullptr;
 
 void WorldTransform::StaticInitialize(ID3D12Device* device)
@@ -21,17 +22,17 @@ void WorldTransform::CreateConstBuffer()
 {
 	assert(device_);
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXÝ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataWorldTransform) + 0xff) & ~0xff);
 
 	HRESULT result;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = device_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -43,8 +44,8 @@ void WorldTransform::CreateConstBuffer()
 
 void WorldTransform::Map()
 {
-	//’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//ƒ}ƒbƒsƒ“ƒO
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒžãƒƒãƒ”ãƒ³ã‚°
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//ãƒžãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 }
 
@@ -56,7 +57,7 @@ void WorldTransform::UpdateMatrix()
 
 	matTrans.identity();
 
-	//Šes—ñŒvŽZ
+	//å„è¡Œåˆ—è¨ˆç®—
 	matScale.scale(scale);
 	matRot.identity();
 	matRotZ.rotateZ(rotation.z);
@@ -74,7 +75,7 @@ void WorldTransform::UpdateMatrix()
 		matWorld_ *= parent_->matWorld_;
 	}
 
-	//’è”ƒoƒbƒtƒ@‚É“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«è»¢é€
 	constMap_->color = color;
 	constMap_->matWorld = matWorld_;
 }

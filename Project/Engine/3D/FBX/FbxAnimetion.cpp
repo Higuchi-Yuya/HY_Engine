@@ -1,6 +1,7 @@
 #include "FbxAnimetion.h"
 #include <cassert>
 
+
 const std::string FbxAnimetion::baseDirectory = "Resources/3D_Resources/FBX_File/";
 const std::string FbxAnimetion::defaultTextureFileName = "white1x1.png";
 
@@ -14,25 +15,25 @@ FbxAnimetion::~FbxAnimetion()
 
 void FbxAnimetion::Load(const std::string& failPath)
 {
-	// ƒ‚ƒfƒ‹‚Æ“¯‚¶–¼‘O‚ÌƒtƒHƒ‹ƒ_‚©‚ç“Ç‚İ‚Ş
+	// ãƒ¢ãƒ‡ãƒ«ã¨åŒã˜åå‰ã®ãƒ•ã‚©ãƒ«ãƒ€ã‹ã‚‰èª­ã¿è¾¼ã‚€
 	const std::string directoryPath = baseDirectory + failPath + "/";
-	// Šg’£q.fbx‚ğ•t‰Á
+	// æ‹¡å¼µå­.fbxã‚’ä»˜åŠ 
 	const std::string fileName = failPath + ".fbx";
-	// ˜AŒ‹‚µ‚Äƒtƒ‹ƒpƒX‚ğ“¾‚é
+	// é€£çµã—ã¦ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’å¾—ã‚‹
 	const std::string fullpath = directoryPath + fileName;
 
 	UINT flag = 0;
-	flag |= aiProcess_Triangulate;//OŠp–Ê‰»
-	flag |= aiProcess_CalcTangentSpace;//ÚüƒxƒNƒgƒ‹¶¬
-	flag |= aiProcess_GenSmoothNormals;//ƒXƒ€[ƒWƒ“ƒOƒxƒNƒgƒ‹¶¬
-	flag |= aiProcess_GenUVCoords;//”ñƒ}ƒbƒsƒ“ƒO‚ğ“KØ‚ÈUVÀ•W‚É•ÏŠ·
-	flag |= aiProcess_RemoveRedundantMaterials;//ç’·‚Èƒ}ƒeƒŠƒAƒ‹‚ğíœ
-	flag |= aiProcess_OptimizeMeshes;//ƒƒbƒVƒ…”‚ğÅ“K‰»
-	flag |= aiProcess_MakeLeftHanded;//ƒm[ƒh‚ğ¶èÀ•WŒn‚É
+	flag |= aiProcess_Triangulate;//ä¸‰è§’é¢åŒ–
+	flag |= aiProcess_CalcTangentSpace;//æ¥ç·šãƒ™ã‚¯ãƒˆãƒ«ç”Ÿæˆ
+	flag |= aiProcess_GenSmoothNormals;//ã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°ãƒ™ã‚¯ãƒˆãƒ«ç”Ÿæˆ
+	flag |= aiProcess_GenUVCoords;//éãƒãƒƒãƒ”ãƒ³ã‚°ã‚’é©åˆ‡ãªUVåº§æ¨™ã«å¤‰æ›
+	flag |= aiProcess_RemoveRedundantMaterials;//å†—é•·ãªãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰Šé™¤
+	flag |= aiProcess_OptimizeMeshes;//ãƒ¡ãƒƒã‚·ãƒ¥æ•°ã‚’æœ€é©åŒ–
+	flag |= aiProcess_MakeLeftHanded;//ãƒãƒ¼ãƒ‰ã‚’å·¦æ‰‹åº§æ¨™ç³»ã«
 
 	mScene = aiImportFile(fullpath.c_str(), flag);
 
-	// ƒtƒ@ƒCƒ‹–¼‚ğw’è‚µ‚ÄFBXƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŒ‡å®šã—ã¦FBXãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 	if (!mScene) {
 		assert(0);
 	}

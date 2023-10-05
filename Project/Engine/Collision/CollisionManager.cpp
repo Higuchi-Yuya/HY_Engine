@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include "MeshCollider.h"
 
+
 CollisionManager* CollisionManager::GetInstance()
 {
 	static CollisionManager instance;
@@ -18,41 +19,41 @@ bool CollisionManager::Raycast(const Ray& ray, RaycastHit* hitInfo, float maxDis
 bool CollisionManager::Raycast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo, float maxDistance)
 {
 	bool result = false;
-	// ‘–¸—p‚ÌƒCƒeƒŒ[ƒ^
+	// èµ°æŸ»ç”¨ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
 	std::forward_list<BaseCollider*>::iterator it;
-	// ¡‚Ü‚Å‚ÅÅ‚à‹ß‚¢ƒRƒ‰ƒCƒ_[‚ğ‹L˜^‚·‚é‚½‚ß‚ÌƒCƒeƒŒ[ƒ^
+	// ä»Šã¾ã§ã§æœ€ã‚‚è¿‘ã„ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’è¨˜éŒ²ã™ã‚‹ãŸã‚ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
 	std::forward_list<BaseCollider*>::iterator it_hit;
-	// ¡‚Ü‚Å‚ÅÅ‚à‹ß‚¢ƒRƒ‰ƒCƒ_[‚Ì‹——£‚ğ‹L˜^‚·‚é•Ï”
+	// ä»Šã¾ã§ã§æœ€ã‚‚è¿‘ã„ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®è·é›¢ã‚’è¨˜éŒ²ã™ã‚‹å¤‰æ•°
 	float distance = maxDistance;
-	// ¡‚Ü‚Å‚ÅÅ‚à‹ß‚¢ƒRƒ‰ƒCƒ_[‚Æ‚ÌŒğ“_‚ğ‹L˜^‚·‚é•Ï”
+	// ä»Šã¾ã§ã§æœ€ã‚‚è¿‘ã„ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã¨ã®äº¤ç‚¹ã‚’è¨˜éŒ²ã™ã‚‹å¤‰æ•°
 	Vector3 inter;
 
 	it = colliders_.begin();
 	for (; it != colliders_.end(); ++it) {
 		BaseCollider* colA = *it;
 
-		// ‘®«‚ª‡‚í‚È‚¯‚ê‚ÎƒXƒLƒbƒv
+		// å±æ€§ãŒåˆã‚ãªã‘ã‚Œã°ã‚¹ã‚­ãƒƒãƒ—
 		if (!(colA->attribute_ & attribute)) {
 			continue;
 		}
 
-		// ‹…‚Ìê‡
+		// çƒã®å ´åˆ
 		if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE) {
 			Sphere* sphere = dynamic_cast<Sphere*>(colA);
 			float tempDistance;
 			Vector3 tempInter;
-			// “–‚½‚ç‚È‚¯‚ê‚ÎœŠO
+			// å½“ãŸã‚‰ãªã‘ã‚Œã°é™¤å¤–
 			if (!Collision::CheckRay2Sphere(ray, *sphere, &tempDistance, &tempInter))continue;
-			// ‹——£‚ªÅ¬‚Å‚È‚¯‚ê‚ÎœŠO
+			// è·é›¢ãŒæœ€å°ã§ãªã‘ã‚Œã°é™¤å¤–
 			if (tempDistance >= distance)continue;
-			// ¡‚Ü‚Å‚ÅÅ‚à‹ß‚¢‚Ì‚Å‹L˜^‚ğ‚Æ‚é
+			// ä»Šã¾ã§ã§æœ€ã‚‚è¿‘ã„ã®ã§è¨˜éŒ²ã‚’ã¨ã‚‹
 			result = true;
 			distance = tempDistance;
 			inter = tempInter;
 			it_hit = it;
 
 		}
-		// ƒƒbƒVƒ…‚Ìê‡
+		// ãƒ¡ãƒƒã‚·ãƒ¥ã®å ´åˆ
 		else if (colA->GetShapeType() == COLLISIONSHAPE_MESH) {
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 
@@ -83,17 +84,17 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 
 	std::forward_list<BaseCollider*>::iterator it;
 
-	// ‘S‚Ä‚ÌƒRƒ‰ƒCƒ_[‚Æ‘“–‚èƒ`ƒFƒbƒN
+	// å…¨ã¦ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã¨ç·å½“ã‚Šãƒã‚§ãƒƒã‚¯
 	it = colliders_.begin();
 	for (; it != colliders_.end(); ++it) {
 		BaseCollider* col = *it;
 
-		// ‘®«‚ª‡‚í‚È‚¯‚ê‚ÎƒXƒLƒbƒv
+		// å±æ€§ãŒåˆã‚ãªã‘ã‚Œã°ã‚¹ã‚­ãƒƒãƒ—
 		if (!(col->attribute_ & attribute)) {
 			continue;
 		}
 
-		// ‹…
+		// çƒ
 		if (col->GetShapeType() == COLLISIONSHAPE_SPHERE) {
 			Sphere* sphereB = dynamic_cast<Sphere*>(col);
 
@@ -101,20 +102,20 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 			Vector3 tempReject;
 			if (!Collision::CheckSphere2Sphere(sphere, *sphereB, &tempInter, &tempReject)) continue;
 
-			// Œğ·î•ñ‚ğƒZƒbƒg
+			// äº¤å·®æƒ…å ±ã‚’ã‚»ãƒƒãƒˆ
 			QueryHit info;
 			info.collider = col;
 			//info.object = col->GetObject3d();
 			info.inter = tempInter;
 			info.reject = tempReject;
 
-			// ƒNƒGƒŠ[ƒR[ƒ‹ƒoƒbƒNŒÄ‚Ño‚µ
+			// ã‚¯ã‚¨ãƒªãƒ¼ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å‘¼ã³å‡ºã—
 			if (!callback->OnQueryHit(info)) {
-				// –ß‚è’l‚ªfalse‚Ìê‡AŒp‘±‚¹‚¸I—¹
+				// æˆ»ã‚Šå€¤ãŒfalseã®å ´åˆã€ç¶™ç¶šã›ãšçµ‚äº†
 				return;
 			}
 		}
-		// ƒƒbƒVƒ…
+		// ãƒ¡ãƒƒã‚·ãƒ¥
 		else if (col->GetShapeType() == COLLISIONSHAPE_MESH) {
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(col);
 
@@ -122,16 +123,16 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 			Vector3 tempReject;
 			if (!meshCollider->CheckCollisionSphere(sphere, &tempInter, &tempReject)) continue;
 
-			// Œğ·î•ñ‚ğƒZƒbƒg
+			// äº¤å·®æƒ…å ±ã‚’ã‚»ãƒƒãƒˆ
 			QueryHit info;
 			info.collider = col;
 			//info.object = col->GetObject3d();
 			info.inter = tempInter;
 			info.reject = tempReject;
 
-			// ƒNƒGƒŠ[ƒR[ƒ‹ƒoƒbƒNŒÄ‚Ño‚µ
+			// ã‚¯ã‚¨ãƒªãƒ¼ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å‘¼ã³å‡ºã—
 			if (!callback->OnQueryHit(info)) {
-				// –ß‚è’l‚ªfalse‚Ìê‡AŒp‘±‚¹‚¸I—¹
+				// æˆ»ã‚Šå€¤ãŒfalseã®å ´åˆã€ç¶™ç¶šã›ãšçµ‚äº†
 				return;
 			}
 		}
@@ -143,7 +144,7 @@ void CollisionManager::CheckAllCollisions()
 	std::forward_list<BaseCollider*>::iterator itA;
 	std::forward_list<BaseCollider*>::iterator itB;
 
-	// ‘S‚Ä‚Ì‘g‚İ‡‚í‚¹‚É‚Â‚¢‚Ä‘“–‚½‚èƒ`ƒFƒbƒN
+	// å…¨ã¦ã®çµ„ã¿åˆã‚ã›ã«ã¤ã„ã¦ç·å½“ãŸã‚Šãƒã‚§ãƒƒã‚¯
 	itA = colliders_.begin();
 	for (; itA != colliders_.end(); ++itA) {
 		itB = itA;
@@ -152,14 +153,14 @@ void CollisionManager::CheckAllCollisions()
 			BaseCollider* colA = *itA;
 			BaseCollider* colB = *itB;
 
-			// ‚Æ‚à‚É‹…
+			// ã¨ã‚‚ã«çƒ
 			if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
 				colB->GetShapeType() == COLLISIONSHAPE_SPHERE) {
 				Sphere* SphereA = dynamic_cast<Sphere*>(colA);
 				Sphere* SphereB = dynamic_cast<Sphere*>(colB);
 				Vector3 inter;
 				if (Collision::CheckSphere2Sphere(*SphereA, *SphereB, &inter)) {
-					// Œã‚Å‚â‚é•”•ª------š
+					// å¾Œã§ã‚„ã‚‹éƒ¨åˆ†------â˜…
 					//colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
 					//colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
 				}

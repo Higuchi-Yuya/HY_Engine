@@ -1,7 +1,8 @@
 #pragma once
+
 #include "Vector3.h"
 
-//’Ç‰Á
+//è¿½åŠ 
 class Easing
 {
 public:

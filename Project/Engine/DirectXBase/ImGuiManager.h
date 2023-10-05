@@ -1,4 +1,5 @@
 #pragma once
+
 #include <imgui.h>
 #include "WinApp.h"
 #include "DirectXCommon.h"
@@ -8,19 +9,19 @@ public:
 	ImGuiManager();
 	~ImGuiManager();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize(WinApp *winApp, DirectXCommon *dxCommon);
 
-	// ImGuió•tŠJn
+	// ImGuiå—ä»˜é–‹å§‹
 	void Begin();
 
-	// ImGuió•tI—¹
+	// ImGuiå—ä»˜çµ‚äº†
 	void End();
 
-	// ‰æ–Ê‚Ö‚Ì•`‰æ
+	// ç”»é¢ã¸ã®æç”»
 	void Draw();
 
-	// Œãn––
+	// å¾Œå§‹æœ«
 	void Finalize();
 
 
@@ -29,6 +30,6 @@ public:
 private:
 	static DirectXCommon* sDxCommon;
 
-	// SRV—p‚ÌƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
+	// SRVç”¨ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_;
 };

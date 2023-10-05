@@ -1,4 +1,5 @@
 #pragma once
+
 #include<wrl.h>
 #include<d3dx12.h>
 #include<d3dcompiler.h>
@@ -7,46 +8,46 @@
 
 class ShaderObj
 {
-public:// ƒTƒuƒNƒ‰ƒX
-	//ƒ^ƒCƒv
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	//ã‚¿ã‚¤ãƒ—
 	enum class ShaderType
 	{
-		VS,//ƒo[ƒeƒNƒX
-		PS,//ƒsƒNƒZƒ‹
-		DS,//ƒhƒƒCƒ“
-		HS,//ƒnƒ‹
-		GS,//ƒWƒIƒƒgƒŠ
-		CS,//ƒRƒ“ƒsƒ…[ƒg
+		VS,//ãƒãƒ¼ãƒ†ã‚¯ã‚¹
+		PS,//ãƒ”ã‚¯ã‚»ãƒ«
+		DS,//ãƒ‰ãƒ¡ã‚¤ãƒ³
+		HS,//ãƒãƒ«
+		GS,//ã‚¸ã‚ªãƒ¡ãƒˆãƒª
+		CS,//ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ãƒˆ
 	};
 
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 
 	/// <summary>
-	/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 	/// </summary>
 	void Create(const std::string& fileName_, const std::string& entryPoint_, const std::string& target_, const ShaderType& type_);
 
 	/// <summary>
-	/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚ğæ“¾
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—
 	/// </summary>
 	D3D12_SHADER_BYTECODE* GetShader() {return &shaderBytecode;}
 
 	/// <summary>
-	/// ƒ^ƒCƒv
+	/// ã‚¿ã‚¤ãƒ—
 	/// </summary>
 	const ShaderType& GetType() { return type; }
 
-private:// ƒƒ“ƒo•Ï”
-	//ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
+	//ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
-	//ƒVƒF[ƒ_ƒoƒCƒgƒR[ƒh
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰
 	D3D12_SHADER_BYTECODE shaderBytecode{};
 
-	//ƒ^ƒCƒv
+	//ã‚¿ã‚¤ãƒ—
 	ShaderType type = ShaderType::VS;
 
-	// ƒfƒtƒHƒ‹ƒgƒVƒF[ƒ_[ƒtƒ@ƒCƒ‹Ši”[ƒfƒBƒŒƒNƒgƒŠ
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«æ ¼ç´ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 	static std::string sDefaultShaderDirectoryPath_;
 };
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Vector2.h"
 #include "Vector3.h"
 #include <cstdint>
@@ -7,27 +8,27 @@ namespace Random
 {
 	void Init();
 
-	// uint32_tŒ^‚Ì—”‚ğæ“¾
+	// uint32_tå‹ã®ä¹±æ•°ã‚’å–å¾—
 	int32_t Range(const int32_t min, const int32_t max);
 
-	// floatŒ^‚Ì—”‚ğæ“¾
+	// floatå‹ã®ä¹±æ•°ã‚’å–å¾—
 	float RangeF(const float min, const float max);
 
-	// Vec2Œ^‚Ì—”‚ğæ“¾
+	// Vec2å‹ã®ä¹±æ•°ã‚’å–å¾—
 	Vector2 RangeVec2(const float min, const float max, const bool isSameValue = false);
 
-	// Vec3Œ^‚Ì—”‚ğæ“¾
+	// Vec3å‹ã®ä¹±æ•°ã‚’å–å¾—
 	Vector3 RangeVec3(const float min, const float max, const bool isSameValue = false);
 
-	// Šm—¦‚Åtrue‚ğ•Ô‚·
+	// ç¢ºç‡ã§trueã‚’è¿”ã™
 	bool RangeB(const float rate);
 
-	// ƒ‰ƒ“ƒ_ƒ€‚ÌŠp“x‚ğ•Ô‚·
+	// ãƒ©ãƒ³ãƒ€ãƒ ã®è§’åº¦ã‚’è¿”ã™
 	float RangeAngle(const float min = 1.f, const float max = 360.f);
 
-	// ƒ‰ƒ“ƒ_ƒ€‚Ìƒ‰ƒWƒAƒ“‚ğ•Ô‚·
+	// ãƒ©ãƒ³ãƒ€ãƒ ã®ãƒ©ã‚¸ã‚¢ãƒ³ã‚’è¿”ã™
 	float RangeRadian(const float min = 0.01745f, const float max = 6.28319f);
 
-	// ƒ‰ƒ“ƒ_ƒ€‚Å‰~“à‚Ì“_‚ğ•Ô‚·
+	// ãƒ©ãƒ³ãƒ€ãƒ ã§å††å†…ã®ç‚¹ã‚’è¿”ã™
 	Vector2 RangeInCircle(const float minRadius, const float maxRadius);
 }

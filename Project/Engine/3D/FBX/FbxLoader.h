@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "FbxModel.h"
 #include "Texture.h"
 
@@ -15,108 +16,108 @@
 
 class FbxLoader
 {
-private: // ƒGƒCƒŠƒAƒX
-	// std::‚ğÈ—ª
+private: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// std::ã‚’çœç•¥
 	using string = std::string;
 
-public: // ’è”
-	// ƒ‚ƒfƒ‹Ši”[ƒ‹[ƒgƒpƒX
+public: // å®šæ•°
+	// ãƒ¢ãƒ‡ãƒ«æ ¼ç´ãƒ«ãƒ¼ãƒˆãƒ‘ã‚¹
 	static const string sBaseDirectory;
 
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 
 	/// <summary>
-	/// ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+	/// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
 	/// </summary>
-	/// <returns>ƒCƒ“ƒXƒ^ƒ“ƒX</returns>
+	/// <returns>ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹</returns>
 	static FbxLoader* GetInstance();
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
-	/// <param name="device">D3D12ƒfƒoƒCƒX</param>
+	/// <param name="device">D3D12ãƒ‡ãƒã‚¤ã‚¹</param>
 	void Initialize(ID3D12Device* device);
 
 	/// <summary>
-	/// Œãn––
+	/// å¾Œå§‹æœ«
 	/// </summary>
 	void Finalize();
 
 	/// <summary>
-	/// ƒtƒ@ƒCƒ‹‚©‚çFBXƒ‚ƒfƒ‹“Ç
+	/// ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰FBXãƒ¢ãƒ‡ãƒ«èª­è¾¼
 	/// </summary>
-	/// <param name="modelName">ƒ‚ƒfƒ‹–¼</param>
+	/// <param name="modelName">ãƒ¢ãƒ‡ãƒ«å</param>
 	FbxModel* LoadModelFromFile(const string& modelName);
 
 	void ParseSkin(FbxModel* model, aiMesh* fbxMesh);
 
 	void GetNodeNum(const aiNode* node, UINT32& num);
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 	
 	/// <summary>
-	/// Ä‹A“I‚Éƒm[ƒh\¬‚ğ‰ğÍ
+	/// å†å¸°çš„ã«ãƒãƒ¼ãƒ‰æ§‹æˆã‚’è§£æ
 	/// </summary>
-	/// <param name="model">“Ç‚İ‚İæƒ‚ƒfƒ‹ƒIƒuƒWƒFƒNƒg</param>
-	/// <param name="fbxNode">‰ğÍ‘ÎÛ‚Ìƒm[ƒh</param>
-	/// <param name="parent">eƒm[ƒh</param>
+	/// <param name="model">èª­ã¿è¾¼ã¿å…ˆãƒ¢ãƒ‡ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+	/// <param name="fbxNode">è§£æå¯¾è±¡ã®ãƒãƒ¼ãƒ‰</param>
+	/// <param name="parent">è¦ªãƒãƒ¼ãƒ‰</param>
 	void ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* parent = nullptr);
 
 	/// <summary>
-	/// ƒƒbƒVƒ…“Ç‚İæ‚è
+	/// ãƒ¡ãƒƒã‚·ãƒ¥èª­ã¿å–ã‚Š
 	/// </summary>
-	/// <param name="model">“Ç‚İ‚İæƒ‚ƒfƒ‹ƒIƒuƒWƒFƒNƒg</param>
-	/// <param name="fbxNode">‰ğÍ‘ÎÛ‚Ìƒm[ƒh</param>
+	/// <param name="model">èª­ã¿è¾¼ã¿å…ˆãƒ¢ãƒ‡ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+	/// <param name="fbxNode">è§£æå¯¾è±¡ã®ãƒãƒ¼ãƒ‰</param>
 	void ParseMesh(FbxModel* model, aiMesh* fbxNode);
 	
-	// ’¸“_À•W“Ç‚İæ‚è
+	// é ‚ç‚¹åº§æ¨™èª­ã¿å–ã‚Š
 	void ParseMeshVertices(FbxModel* model, aiMesh* fbxMesh);
 	
-	// –Êî•ñ“Ç‚İæ‚è
+	// é¢æƒ…å ±èª­ã¿å–ã‚Š
 	void ParseMeshFaces(FbxModel* model, aiMesh* fbxMesh);
 	
-	// ƒ}ƒeƒŠƒAƒ‹“Ç‚İæ‚è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿å–ã‚Š
 	void ParseMaterial(FbxModel* model, aiMesh* fbxMesh, aiMaterial* aimaterial);
 
-	// ƒfƒBƒŒƒNƒgƒŠ‚ğŠÜ‚ñ‚¾ƒtƒ@ƒCƒ‹ƒpƒX‚©‚çƒtƒ@ƒCƒ‹–¼‚ğ’Šo‚·‚é
+	// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å«ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŠ½å‡ºã™ã‚‹
 	std::string ExtractFileName(const std::string& path);
 
 	Texture LoadMatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene_, const std::string& modelName);
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	// private‚ÈƒRƒ“ƒXƒgƒ‰ƒNƒ^iƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“j
+	// privateãªã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ï¼‰
 	FbxLoader() = default;
-	// private‚ÈƒfƒXƒgƒ‰ƒNƒ^iƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“j
+	// privateãªãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ï¼‰
 	~FbxLoader() = default;
-	// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğ‹Ö~iƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“j
+	// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’ç¦æ­¢ï¼ˆã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ï¼‰
 	FbxLoader(const FbxLoader & obj) = delete;
-	// ƒRƒs[‘ã“ü‰‰Zq‚ğ‹Ö~iƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“j
+	// ã‚³ãƒ”ãƒ¼ä»£å…¥æ¼”ç®—å­ã‚’ç¦æ­¢ï¼ˆã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ï¼‰
 	void operator=(const FbxLoader & obj) = delete;
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX—p‚Ìƒ[ƒ_[
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”¨ã®ãƒ­ãƒ¼ãƒ€ãƒ¼
 	static FbxLoader* sFbxLoader_;
 
-	// D3D12ƒfƒoƒCƒXiØ‚è‚Ä—ˆ‚é‚à‚Ì‚Ì“ü‚ê•¨j
+	// D3D12ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦æ¥ã‚‹ã‚‚ã®ã®å…¥ã‚Œç‰©ï¼‰
 	ID3D12Device* device_ = nullptr;
 
-	// İ’è‚Ìó‘Ô‚ğ•\‚·ƒtƒ‰ƒO
+	// è¨­å®šã®çŠ¶æ…‹ã‚’è¡¨ã™ãƒ•ãƒ©ã‚°
 	const uint32_t flag_ =
-		aiProcess_Triangulate | //OŠp–Ê‰»
-		aiProcess_CalcTangentSpace | //ÚüƒxƒNƒgƒ‹¶¬
-		aiProcess_GenSmoothNormals | //ƒXƒ€[ƒWƒ“ƒOƒxƒNƒgƒ‹¶¬
-		aiProcess_GenUVCoords | //”ñƒ}ƒbƒsƒ“ƒO‚ğ“KØ‚ÈUVÀ•W‚É•ÏŠ·
-		aiProcess_RemoveRedundantMaterials | //ç’·‚Èƒ}ƒeƒŠƒAƒ‹‚ğíœ
-		aiProcess_OptimizeMeshes | //ƒƒbƒVƒ…”‚ğÅ“K‰»
-		aiProcess_MakeLeftHanded | //ƒm[ƒh‚ğ¶èÀ•WŒn‚É
-		aiProcess_GenBoundingBoxes | //AABB‚ğ¶¬
-		aiProcess_JoinIdenticalVertices |//ƒCƒ“ƒfƒbƒNƒX‚ğ¶¬
-		aiProcess_LimitBoneWeights;//Še’¸“_‚ª‰e‹¿‚ğó‚¯‚éƒ{[ƒ“‚ğ4‚É§ŒÀ
+		(uint32_t)aiProcess_Triangulate | //ä¸‰è§’é¢åŒ–
+		(uint32_t)aiProcess_CalcTangentSpace | //æ¥ç·šãƒ™ã‚¯ãƒˆãƒ«ç”Ÿæˆ
+		(uint32_t)aiProcess_GenSmoothNormals | //ã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°ãƒ™ã‚¯ãƒˆãƒ«ç”Ÿæˆ
+		(uint32_t)aiProcess_GenUVCoords | //éãƒãƒƒãƒ”ãƒ³ã‚°ã‚’é©åˆ‡ãªUVåº§æ¨™ã«å¤‰æ›
+		(uint32_t)aiProcess_RemoveRedundantMaterials | //å†—é•·ãªãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰Šé™¤
+		(uint32_t)aiProcess_OptimizeMeshes | //ãƒ¡ãƒƒã‚·ãƒ¥æ•°ã‚’æœ€é©åŒ–
+		(uint32_t)aiProcess_MakeLeftHanded | //ãƒãƒ¼ãƒ‰ã‚’å·¦æ‰‹åº§æ¨™ç³»ã«
+		(uint32_t)aiProcess_GenBoundingBoxes | //AABBã‚’ç”Ÿæˆ
+		(uint32_t)aiProcess_JoinIdenticalVertices |//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ç”Ÿæˆ
+		(uint32_t)aiProcess_LimitBoneWeights;//å„é ‚ç‚¹ãŒå½±éŸ¿ã‚’å—ã‘ã‚‹ãƒœãƒ¼ãƒ³ã‚’4ã«åˆ¶é™
 
-	// ƒV[ƒ“
+	// ã‚·ãƒ¼ãƒ³
 	const aiScene* mScene_;
 
-	// ƒeƒNƒXƒ`ƒƒ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	Texture textureHandle_;
 };
 

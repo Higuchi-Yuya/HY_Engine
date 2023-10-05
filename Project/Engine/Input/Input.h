@@ -1,11 +1,12 @@
 #pragma once
+
 #include <windows.h>
 #include <wrl.h>
-#define DIRECTINPUT_VERSION 0x0800 //DirectInput‚Ìƒo[ƒWƒ‡ƒ“Žw’è
+#define DIRECTINPUT_VERSION 0x0800 //DirectInputã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æŒ‡å®š
 #include <dinput.h>
 #include "WinApp.h"
 
-// “ü—Í
+// å…¥åŠ›
 class Input
 {
 
@@ -15,88 +16,88 @@ public:
 		LONG lY;
 		LONG lZ;
 	};
-public: // ƒƒ“ƒoŠÖ”
-	// Ã“I‰Šú‰»
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
+	// é™çš„åˆæœŸåŒ–
 	static void StaticInitialize(WinApp* winApp);
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize();
 
-	// XV
+	// æ›´æ–°
 	void Update();
 
 	/// <summary>
-	/// ƒL[‚Ì‰Ÿ‚µ‚½‚©‚ðƒ`ƒFƒbƒN(’·‰Ÿ‚µ)
+	/// ã‚­ãƒ¼ã®æŠ¼ã—ãŸã‹ã‚’ãƒã‚§ãƒƒã‚¯(é•·æŠ¼ã—)
 	/// </summary>
-	/// <param name="keyNumber">ƒL[”Ô†(DIK_0 “™)</param>
-	/// <returns>‰Ÿ‚³‚ê‚Ä‚¢‚é‚©</returns>
+	/// <param name="keyNumber">ã‚­ãƒ¼ç•ªå·(DIK_0 ç­‰)</param>
+	/// <returns>æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹</returns>
 	bool PushKey(BYTE keyNumber);
 
 	/// <summary>
-	/// ƒL[‚ÌƒgƒŠƒK[‚ðƒ`ƒFƒbƒN(‰Ÿ‚µ‚½uŠÔ)
+	/// ã‚­ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯(æŠ¼ã—ãŸçž¬é–“)
 	/// </summary>
-	/// <param name="keyNumber">ƒL[”Ô†(DIK_0 “™)</param>
-	/// <returns>ƒgƒŠƒK[‚©</returns>
+	/// <param name="keyNumber">ã‚­ãƒ¼ç•ªå·(DIK_0 ç­‰)</param>
+	/// <returns>ãƒˆãƒªã‚¬ãƒ¼ã‹</returns>
 	bool TriggerKey(BYTE keyNumber);
 
 	/// <summary>
-	/// ƒL[‚ÌƒgƒŠƒK[‚ðƒ`ƒFƒbƒN(—£‚µ‚½uŠÔ)
+	/// ã‚­ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯(é›¢ã—ãŸçž¬é–“)
 	/// </summary>
-	/// <param name="keyNumber">ƒL[”Ô†(DIK_0 “™)</param>
-	/// <returns>ƒgƒŠƒK[‚©</returns>
+	/// <param name="keyNumber">ã‚­ãƒ¼ç•ªå·(DIK_0 ç­‰)</param>
+	/// <returns>ãƒˆãƒªã‚¬ãƒ¼ã‹</returns>
 	bool ReleasedKey(BYTE keyNumber);
 
 	/// <summary>
-	/// ƒL[‚Ì¶ƒ{ƒ^ƒ“‰Ÿ‰º‚ðƒ`ƒFƒbƒN
+	/// ã‚­ãƒ¼ã®å·¦ãƒœã‚¿ãƒ³æŠ¼ä¸‹ã‚’ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>‰Ÿ‚³‚ê‚Ä‚¢‚é‚©</returns>
+	/// <returns>æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹</returns>
 	bool PushMouseLeft();
 
 	/// <summary>
-	/// ƒL[‚Ì’†ƒ{ƒ^ƒ“‰Ÿ‰º‚ðƒ`ƒFƒbƒN
+	/// ã‚­ãƒ¼ã®ä¸­ãƒœã‚¿ãƒ³æŠ¼ä¸‹ã‚’ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>‰Ÿ‚³‚ê‚Ä‚¢‚é‚©</returns>
+	/// <returns>æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹</returns>
 	bool PushMouseMiddle();
 
 	/// <summary>
-	/// ƒL[‚Ì¶ƒ{ƒ^ƒ“ƒgƒŠƒK[‚ðƒ`ƒFƒbƒN
+	/// ã‚­ãƒ¼ã®å·¦ãƒœã‚¿ãƒ³ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>ƒgƒŠƒK[‚©</returns>
+	/// <returns>ãƒˆãƒªã‚¬ãƒ¼ã‹</returns>
 	bool TriggerMouseLeft();
 
 	/// <summary>
-	/// ƒL[‚Ì’†ƒ{ƒ^ƒ“ƒgƒŠƒK[‚ðƒ`ƒFƒbƒN
+	/// ã‚­ãƒ¼ã®ä¸­ãƒœã‚¿ãƒ³ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>ƒgƒŠƒK[‚©</returns>
+	/// <returns>ãƒˆãƒªã‚¬ãƒ¼ã‹</returns>
 	bool TriggerMouseMiddle();
 
 	/// <summary>
-	/// ƒ}ƒEƒXˆÚ“®—Ê‚ðŽæ“¾
+	/// ãƒžã‚¦ã‚¹ç§»å‹•é‡ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ}ƒEƒXˆÚ“®—Ê</returns>
+	/// <returns>ãƒžã‚¦ã‚¹ç§»å‹•é‡</returns>
 	MouseMove GetMouseMove();
 
-private:// Ã“Iƒƒ“ƒo•Ï”
+private:// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	// DirectInput‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+	// DirectInputã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	Microsoft::WRL::ComPtr<IDirectInput8> directInput_ = nullptr;
 
-	// ƒL[ƒ{[ƒh‚ÌƒfƒoƒCƒX
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®ãƒ‡ãƒã‚¤ã‚¹
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 
-	// ‘SƒL[‚Ìó‘Ô
+	// å…¨ã‚­ãƒ¼ã®çŠ¶æ…‹
 	BYTE key_[256] = {};
 
-	// ‘O‰ñ‚Ì‘SƒL[‚Ìó‘Ô
+	// å‰å›žã®å…¨ã‚­ãƒ¼ã®çŠ¶æ…‹
 	BYTE keyPre_[256] = {};
 
-	// ƒ}ƒEƒX‚ÌƒfƒoƒCƒX
+	// ãƒžã‚¦ã‚¹ã®ãƒ‡ãƒã‚¤ã‚¹
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> devMouse_;
 
-	// ƒ}ƒEƒX‚Ìó‘Ô
+	// ãƒžã‚¦ã‚¹ã®çŠ¶æ…‹
 	DIMOUSESTATE2 mouseState_ = {};
 
-	// ƒ}ƒEƒX‚Ì‘O‚Ìó‘Ô
+	// ãƒžã‚¦ã‚¹ã®å‰ã®çŠ¶æ…‹
 	DIMOUSESTATE2 mouseStatePre_ = {};
 
 	// WindowsAPI

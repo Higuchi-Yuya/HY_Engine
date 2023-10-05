@@ -1,10 +1,11 @@
 #pragma once
 
+
 /// <summary>
-/// “–‚½‚è”»’è‘®«
+/// å½“ãŸã‚Šåˆ¤å®šå±žæ€§
 /// </summary>
 
-const unsigned short COLLISION_ATTR_LANDSHAPE = 0b1 << 0; // ’nŒ`
-const unsigned short COLLISION_ATTR_ALLIES = 0b1 << 1; // –¡•ûw‰c
-const unsigned short COLLISION_ATTR_ENEMYS = 0b1 << 2; // “Gw‰c
+const unsigned short COLLISION_ATTR_LANDSHAPE = 0b1 << 0; // åœ°å½¢
+const unsigned short COLLISION_ATTR_ALLIES = 0b1 << 1; // å‘³æ–¹é™£å–¶
+const unsigned short COLLISION_ATTR_ENEMYS = 0b1 << 2; // æ•µé™£å–¶
 

@@ -1,11 +1,12 @@
 #pragma once
 #include "Sprite.h"
 
+
 class OperationUI
 {
 private:
 
-	// ƒXƒvƒ‰ƒCƒg‚Ìƒ^ƒCƒv
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚¿ã‚¤ãƒ—
 	enum Type
 	{
 		AButtonUp,
@@ -20,39 +21,39 @@ private:
 		Size,
 	};
 private:
-	// ‘€ìƒXƒvƒ‰ƒCƒg
+	// æ“ä½œã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::vector<std::unique_ptr<Sprite>> sprites_;
 
-	// Aƒ{ƒ^ƒ“‚ÌƒeƒNƒXƒ`ƒƒ
+	// Aãƒœã‚¿ãƒ³ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unique_ptr<Texture> AbuttonTex_;
 
-	// LƒXƒeƒBƒbƒN‚ÌƒeƒNƒXƒ`ƒƒ
+	// Lã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unique_ptr<Texture> LstickTex_;
 
-	// ˆÚ“®‚ÌƒeƒLƒXƒgƒeƒNƒXƒ`ƒƒ
+	// ç§»å‹•ã®ãƒ†ã‚­ã‚¹ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unique_ptr<Texture> moveTextTex_;
 
-	// UŒ‚‚ÌƒeƒLƒXƒgƒeƒNƒXƒ`ƒƒ
+	// æ”»æ’ƒã®ãƒ†ã‚­ã‚¹ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unique_ptr<Texture> attackTextTex_;
 
-	// LƒXƒeƒBƒbƒN‚ÌƒfƒtƒHƒ‹ƒgƒ|ƒWƒVƒ‡ƒ“
+	// Lã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒã‚¸ã‚·ãƒ§ãƒ³
 	Vector2 LstickDefuPos_;
 
 public:
 	OperationUI();
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Init();
 
 	/// <summary>
-	/// XVˆ—
+	/// æ›´æ–°å‡¦ç†
 	/// </summary>
 	void Update();
 
 	/// <summary>
-	/// ƒXƒvƒ‰ƒCƒg‚Ì•`‰æ
+	/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æç”»
 	/// </summary>
 	void DrawFrontSprite();
 

@@ -3,72 +3,73 @@
 #include "Player.h"
 #include "ParticleManager.h"
 
+
 class GameCollider
 {
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// XVˆ—
+	/// æ›´æ–°å‡¦ç†
 	/// </summary>
 	void Updata();
 
 	/// <summary>
-	/// ƒGƒlƒ~[‚Æ“–‚½‚Á‚½‚çƒvƒŒƒCƒ„[‚Ì’†S‚Éƒp[ƒeƒBƒNƒ‹‚ğo‚·ˆ—
+	/// ã‚¨ãƒãƒŸãƒ¼ã¨å½“ãŸã£ãŸã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä¸­å¿ƒã«ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‡ºã™å‡¦ç†
 	/// </summary>
 	void OnColParticle();
 
 	/// <summary>
-	/// •`‰æˆ—
+	/// æç”»å‡¦ç†
 	/// </summary>
 	void Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection);
 
 	/// <summary>
-	/// •`‰æˆ—
+	/// æç”»å‡¦ç†
 	/// </summary>
 	void Draw3D(ViewProjection* viewProjection);
 
 	/// <summary>
-	/// ƒGƒlƒ~[‚Ìî•ñ‚ğƒxƒNƒ^[‚ÉŠi”[
+	/// ã‚¨ãƒãƒŸãƒ¼ã®æƒ…å ±ã‚’ãƒ™ã‚¯ã‚¿ãƒ¼ã«æ ¼ç´
 	/// </summary>
-	/// <param name="enemy">ƒGƒlƒ~[</param>
+	/// <param name="enemy">ã‚¨ãƒãƒŸãƒ¼</param>
 	void AddEnemy(Enemy* enemy);
 
 	/// <summary>
-	/// ƒIƒuƒWƒFƒNƒg‚Ìî•ñ‚ğƒxƒNƒ^[Œ^‚ÉŠi”[
+	/// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æƒ…å ±ã‚’ãƒ™ã‚¯ã‚¿ãƒ¼å‹ã«æ ¼ç´
 	/// </summary>
-	/// <param name="obj">ƒIƒuƒWƒFƒNƒg</param>
+	/// <param name="obj">ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
 	void AddObj(Object3d* obj);
 
 	/// <summary>
-	/// ƒvƒŒƒCƒ„[‚ğæ“¾‚·‚é
+	/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å–å¾—ã™ã‚‹
 	/// </summary>
-	/// <param name="player">ƒvƒŒƒCƒ„[</param>
+	/// <param name="player">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼</param>
 	void SetPlayer(Player* player);
 
 	/// <summary>
-	/// ƒŠƒZƒbƒgŠÖ”
+	/// ãƒªã‚»ãƒƒãƒˆé–¢æ•°
 	/// </summary>
 	void Reset();
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
 	int playerHitTimer = 0;
 	int playerHitTimeMax = 60;
 	bool isPlayerHit = false;
 	bool isPartile = false;
 
-	// ƒGƒlƒ~[‚Ì“–‚½‚è”»’è—p”z—ñ
+	// ã‚¨ãƒãƒŸãƒ¼ã®å½“ãŸã‚Šåˆ¤å®šç”¨é…åˆ—
 	std::vector<Enemy*>enemysInfo_;
-	// ƒvƒŒƒCƒ„[ƒoƒŒƒbƒg“–‚½‚è”»’è—p‚Ì”z—ñ
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒãƒ¬ãƒƒãƒˆå½“ãŸã‚Šåˆ¤å®šç”¨ã®é…åˆ—
 	std::list<std::unique_ptr<PlayerBullet>> bulletsInfo_;
-	// ƒIƒuƒWƒFƒNƒg“–‚½‚è”»’è—p‚Ì”z—ñ
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå½“ãŸã‚Šåˆ¤å®šç”¨ã®é…åˆ—
 	std::vector<Object3d*> objectsInfo_;
 
 	Player* player_ = nullptr;
@@ -76,18 +77,18 @@ private:// ƒƒ“ƒo•Ï”
 	std::unique_ptr<Model> boxModel_ = nullptr;
 	std::unique_ptr<Object3d> box_[4];
 
-#pragma region ƒp[ƒeƒBƒNƒ‹
-	// ƒp[ƒeƒBƒNƒ‹‚ÌƒeƒNƒXƒ`ƒƒ
+#pragma region ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unique_ptr<Texture> particleTex_;
-	// ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£
 	std::unique_ptr<ParticleManager> particleMan_;
 
-	// ƒp[ƒeƒBƒNƒ‹‚ÌF
-	// F‚Ì‰Šú’l
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®è‰²
+	// è‰²ã®åˆæœŸå€¤
 	Vector4 startColor_ = { 1,0,0,1 };
-	// F‚ÌÅI’l
+	// è‰²ã®æœ€çµ‚å€¤
 	Vector4 endColor_ = { 1,1,1,0 };
-	// ˆê“x‚É‚¾‚·ƒp[ƒeƒBƒNƒ‹‚Ì”
+	// ä¸€åº¦ã«ã ã™ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æ•°
 	int particleNum = 50;
 
 #pragma endregion

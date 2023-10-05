@@ -11,12 +11,13 @@
 
 #pragma comment(lib, "d3dcompiler.lib")
 
+
 using namespace std;
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
 /// <summary>
-/// Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
+/// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å®Ÿä½“
 /// </summary>
 const std::string FbxModel::kBaseDirectory_ = "Resources/";
 const std::string FbxModel::kDefaultModelName_ = "cube";
@@ -35,10 +36,10 @@ Microsoft::WRL::ComPtr<ID3D12Resource> FbxModel::constBuffNothing_;
 
 void FbxModel::StaticInitialize() {
 
-	// ƒpƒCƒvƒ‰ƒCƒ“‰Šú‰»
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³åˆæœŸåŒ–
 	InitializeGraphicsPipeline();
 
-	// ƒ‰ƒCƒg¶¬
+	// ãƒ©ã‚¤ãƒˆç”Ÿæˆ
 	lightGroup_.reset(LightGroup::Create());
 }
 
@@ -57,39 +58,39 @@ void FbxModel::StaticFainalize()
 void FbxModel::InitializeGraphicsPipeline() {
 	HRESULT result = S_FALSE;
 
-	ComPtr<ID3DBlob> errorBlob; // ƒGƒ‰[ƒIƒuƒWƒFƒNƒg
+	ComPtr<ID3DBlob> errorBlob; // ã‚¨ãƒ©ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 
 
-	// ’¸“_ƒVƒF[ƒ_‚Ì“Ç‚İ‚İ‚ÆƒRƒ“ƒpƒCƒ‹
+	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã®èª­ã¿è¾¼ã¿ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	sVsShader_ = new ShaderObj;
 	sVsShader_->Create("FBX/FBXVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
-	// ƒWƒIƒƒgƒŠƒVƒF[ƒ_‚Ì“Ç‚İ‚İ‚ÆƒRƒ“ƒpƒCƒ‹
+	// ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ã®èª­ã¿è¾¼ã¿ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	sGsShader_ = new ShaderObj;
 	sGsShader_->Create("FBX/FBXGS.hlsl", "main", "gs_5_0", ShaderObj::ShaderType::GS);
 
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚Ì“Ç‚İ‚İ‚ÆƒRƒ“ƒpƒCƒ‹
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã®èª­ã¿è¾¼ã¿ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	sPsShader_ = new ShaderObj;
 	sPsShader_->Create("FBX/FBXPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
-	// ’¸“_ƒŒƒCƒAƒEƒg
+	// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-	  {// xyÀ•W(1s‚Å‘‚¢‚½‚Ù‚¤‚ªŒ©‚â‚·‚¢)
+	  {// xyåº§æ¨™(1è¡Œã§æ›¸ã„ãŸã»ã†ãŒè¦‹ã‚„ã™ã„)
 	   "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT,
 	   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-	  {// –@üƒxƒNƒgƒ‹(1s‚Å‘‚¢‚½‚Ù‚¤‚ªŒ©‚â‚·‚¢)
+	  {// æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«(1è¡Œã§æ›¸ã„ãŸã»ã†ãŒè¦‹ã‚„ã™ã„)
 	   "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT,
 	   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-	  {// uvÀ•W(1s‚Å‘‚¢‚½‚Ù‚¤‚ªŒ©‚â‚·‚¢)
+	  {// uvåº§æ¨™(1è¡Œã§æ›¸ã„ãŸã»ã†ãŒè¦‹ã‚„ã™ã„)
 	   "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT,
 	   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 
-	  {//‰e‹¿‚ğó‚¯‚éƒ{[ƒ“”Ô†
+	  {//å½±éŸ¿ã‚’å—ã‘ã‚‹ãƒœãƒ¼ãƒ³ç•ªå·
 		"BONEINDICES",0,DXGI_FORMAT_R32G32B32A32_UINT,0,
 		D3D12_APPEND_ALIGNED_ELEMENT,
 		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 	  },
-	  {//ƒ{[ƒ“‚ÌƒXƒLƒ“ƒEƒFƒCƒg(4‚Â)
+	  {//ãƒœãƒ¼ãƒ³ã®ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆ(4ã¤)
 		"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,
 		D3D12_APPEND_ALIGNED_ELEMENT,
 		D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
@@ -97,18 +98,18 @@ void FbxModel::InitializeGraphicsPipeline() {
 
 	};
 
-	// ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“‚Ì—¬‚ê‚ğİ’è
+	// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã®æµã‚Œã‚’è¨­å®š
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	gpipeline.VS = *sVsShader_->GetShader();
 	gpipeline.GS = *sGsShader_->GetShader();
 	gpipeline.PS = *sPsShader_->GetShader();
 
-	// ƒTƒ“ƒvƒ‹ƒ}ƒXƒN
-	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // •W€İ’è
-	// ƒ‰ƒXƒ^ƒ‰ƒCƒUƒXƒe[ƒg
+	// ã‚µãƒ³ãƒ—ãƒ«ãƒã‚¹ã‚¯
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // æ¨™æº–è¨­å®š
+	// ãƒ©ã‚¹ã‚¿ãƒ©ã‚¤ã‚¶ã‚¹ãƒ†ãƒ¼ãƒˆ
 	//gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 
-	// ƒ‰ƒXƒ^ƒ‰ƒCƒUƒXƒe[ƒg
+	// ãƒ©ã‚¹ã‚¿ãƒ©ã‚¤ã‚¶ã‚¹ãƒ†ãƒ¼ãƒˆ
 	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	gpipeline.RasterizerState.DepthClipEnable = true;
@@ -116,19 +117,19 @@ void FbxModel::InitializeGraphicsPipeline() {
 
 	// gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 	// gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-	//  ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒXƒe[ƒg
+	//  ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ã‚¹ãƒ†ãƒ¼ãƒˆ
 	//gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
-	//  ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒXƒe[ƒg
+	//  ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ã‚¹ãƒ†ãƒ¼ãƒˆ
 	gpipeline.DepthStencilState.DepthEnable = true;
 	gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 
-	// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ÌƒuƒŒƒ“ƒhİ’è
+	// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ–ãƒ¬ãƒ³ãƒ‰è¨­å®š
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
-	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA‘S‚Ä‚Ìƒ`ƒƒƒ“ƒlƒ‹‚ğ•`‰æ
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGAå…¨ã¦ã®ãƒãƒ£ãƒ³ãƒãƒ«ã‚’æç”»
 	blenddesc.BlendEnable = true;
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -138,28 +139,28 @@ void FbxModel::InitializeGraphicsPipeline() {
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
-	// ƒuƒŒƒ“ƒhƒXƒe[ƒg‚Ìİ’è
+	// ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚¹ãƒ†ãƒ¼ãƒˆã®è¨­å®š
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 	
-	// [“xƒoƒbƒtƒ@‚ÌƒtƒH[ƒ}ƒbƒg
+	// æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
-	// ’¸“_ƒŒƒCƒAƒEƒg‚Ìİ’è
+	// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®è¨­å®š
 	gpipeline.InputLayout.pInputElementDescs = inputLayout;
 	gpipeline.InputLayout.NumElements = _countof(inputLayout);
 
-	// }Œ`‚ÌŒ`óİ’èiOŠpŒ`j
+	// å›³å½¢ã®å½¢çŠ¶è¨­å®šï¼ˆä¸‰è§’å½¢ï¼‰
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	gpipeline.NumRenderTargets = 1;                       // •`‰æ‘ÎÛ‚Í2‚Â
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0`255w’è‚ÌRGBA
-	gpipeline.SampleDesc.Count = 1; // 1ƒsƒNƒZƒ‹‚É‚Â‚«1‰ñƒTƒ“ƒvƒŠƒ“ƒO
+	gpipeline.NumRenderTargets = 1;                       // æç”»å¯¾è±¡ã¯2ã¤
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0ï½255æŒ‡å®šã®RGBA
+	gpipeline.SampleDesc.Count = 1; // 1ãƒ”ã‚¯ã‚»ãƒ«ã«ã¤ã1å›ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
 
-	// ƒfƒXƒNƒŠƒvƒ^ƒŒƒ“ƒW
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ¬ãƒ³ã‚¸
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 ƒŒƒWƒXƒ^
+	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 ãƒ¬ã‚¸ã‚¹ã‚¿
 
-	// ƒ‹[ƒgƒpƒ‰ƒ[ƒ^
+	// ãƒ«ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	CD3DX12_ROOT_PARAMETER rootparams[7];
 	rootparams[0].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
@@ -169,20 +170,20 @@ void FbxModel::InitializeGraphicsPipeline() {
 	rootparams[5].InitAsConstantBufferView(4, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[6].InitAsConstantBufferView(5, 0, D3D12_SHADER_VISIBILITY_ALL);
 
-	// ƒXƒ^ƒeƒBƒbƒNƒTƒ“ƒvƒ‹
+	// ã‚¹ã‚¿ãƒ†ã‚£ãƒƒã‚¯ã‚µãƒ³ãƒ—ãƒ«
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’è
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®è¨­å®š
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	rootSignatureDesc.Init_1_0(
 		_countof(rootparams), rootparams, 1, &samplerDesc,
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
-	// ƒo[ƒWƒ‡ƒ“©“®”»’è‚ÌƒVƒŠƒAƒ‰ƒCƒY
+	// ãƒãƒ¼ã‚¸ãƒ§ãƒ³è‡ªå‹•åˆ¤å®šã®ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚º
 	result = D3DX12SerializeVersionedRootSignature(
 		&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ì¶¬
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®ç”Ÿæˆ
 	result = device_->CreateRootSignature(
 		0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(&sRootSignature_));
@@ -190,35 +191,35 @@ void FbxModel::InitializeGraphicsPipeline() {
 
 	gpipeline.pRootSignature = sRootSignature_.Get();
 
-	// ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“‚Ì¶¬
+	// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã®ç”Ÿæˆ
 	result = device_->CreateGraphicsPipelineState(
 		&gpipeline, IID_PPV_ARGS(&sPipelineState_));
 	assert(SUCCEEDED(result));
 
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDescNothing = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataInitialMatrix) + 0xff) & ~0xff);
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = device_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuffSkin_));
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = device_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDescNothing, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuffNothing_));
 
 	Matrix4 mathMat;
 	
 
-	//’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin_->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < MAX_BONES; i++) {
@@ -229,7 +230,7 @@ void FbxModel::InitializeGraphicsPipeline() {
 }
 
 FbxModel* FbxModel::Create() {
-	// ƒƒ‚ƒŠŠm•Û
+	// ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	FbxModel* instance = new FbxModel;
 	instance->Initialize();
 
@@ -237,30 +238,31 @@ FbxModel* FbxModel::Create() {
 }
 
 FbxModel* FbxModel::CreateFromFbx(const std::string& modelname, bool smoothing) {
-	// ƒƒ‚ƒŠŠm•Û
+	// ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	FbxModel* instance = new FbxModel;
 	instance->Initialize();
-
+	modelname;
+	smoothing;
 	return instance;
 }
 
 void FbxModel::PreDraw(ID3D12GraphicsCommandList* commandList) {
-	// PreDraw‚ÆPostDraw‚ªƒyƒA‚ÅŒÄ‚Î‚ê‚Ä‚¢‚È‚¯‚ê‚ÎƒGƒ‰[
+	// PreDrawã¨PostDrawãŒãƒšã‚¢ã§å‘¼ã°ã‚Œã¦ã„ãªã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼
 	assert(FbxModel::sCommandList_ == nullptr);
 
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğƒZƒbƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’ã‚»ãƒƒãƒˆ
 	sCommandList_ = commandList;
 
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚Ìİ’è
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã®è¨­å®š
 	commandList->SetPipelineState(sPipelineState_.Get());
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’è
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®è¨­å®š
 	commandList->SetGraphicsRootSignature(sRootSignature_.Get());
-	// ƒvƒŠƒ~ƒeƒBƒuŒ`ó‚ğİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–å½¢çŠ¶ã‚’è¨­å®š
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void FbxModel::PostDraw() {
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğ‰ğœ
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã‚’è§£é™¤
 	sCommandList_ = nullptr;
 }
 
@@ -274,38 +276,38 @@ FbxModel::~FbxModel() {
 }
 
 void FbxModel::Initialize() {
-	// ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	// ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	//LoadModelFromFile(modelname);
 
-	// ƒƒbƒVƒ…‚Ìƒ}ƒeƒŠƒAƒ‹ƒ`ƒFƒbƒN
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒãƒ†ãƒªã‚¢ãƒ«ãƒã‚§ãƒƒã‚¯
 	for (auto& m : meshes_) {
-		// ƒ}ƒeƒŠƒAƒ‹‚ÌŠ„‚è“–‚Ä‚ª‚È‚¢
+		// ãƒãƒ†ãƒªã‚¢ãƒ«ã®å‰²ã‚Šå½“ã¦ãŒãªã„
 		if (m->GetMaterial() == nullptr) {
 			if (defaultMaterial_ == nullptr) {
-				// ƒfƒtƒHƒ‹ƒgƒ}ƒeƒŠƒAƒ‹‚ğ¶¬
+				// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ç”Ÿæˆ
 				defaultMaterial_ = Material::Create();
 				defaultMaterial_->name = "no material";
 				materials_.emplace(defaultMaterial_->name, defaultMaterial_);
 			}
-			// ƒfƒtƒHƒ‹ƒgƒ}ƒeƒŠƒAƒ‹‚ğƒZƒbƒg
+			// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ã‚»ãƒƒãƒˆ
 			m->SetMaterial(defaultMaterial_);
 		}
 	}
 
-	// ƒƒbƒVƒ…‚Ìƒoƒbƒtƒ@¶¬
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	for (auto& m : meshes_) {
 		
 		Vector3 ambient_ = { 1.0f, 1.0f, 1.0f };
 		Vector3 diffuse_ = { 0.0f, 0.0f, 0.0f };
 		Vector3 specular_ = { 0.0f, 0.0f, 0.0f };
-		float alpha_ = 1.0f;
+		//float alpha_ = 1.0f;
 
 
 
 		m->CreateBuffers();
 	}
 
-	// ƒ}ƒeƒŠƒAƒ‹‚Ì”’l‚ğ’è”ƒoƒbƒtƒ@‚É”½‰f
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°å€¤ã‚’å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«åæ˜ 
 	for (auto& m : meshes_) {
 
 		m->material_->Update();
@@ -321,20 +323,20 @@ void FbxModel::Initialize() {
 	}
 
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(WorldTransform::ConstBufferDataWorldTransform) + 0xff) & ~0xff);
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	HRESULT result = device_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 
-	//’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
 	result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 
@@ -346,21 +348,21 @@ void FbxModel::Initialize() {
 
 void FbxModel::FbxUpdate(float frem)
 {
-	HRESULT result = S_FALSE;
-
+	//HRESULT result = S_FALSE;
+	frem;
 	//std::unordered_map<std::string, Mesh::Bone*> bones = model->GetBones();
 
-	////’è”ƒoƒbƒtƒ@‚Ö‚Ìƒf[ƒ^“]‘—
+	////å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ‡ãƒ¼ã‚¿è»¢é€
 	//ConstBufferDataSkin* constMapSkin = nullptr;
 	//result = constBuffSkin->Map(0, nullptr, (void**)&constMapSkin);
 	//for (int i = 0; i < bones.size(); i++) {
-	//	//¡‚Ìp¨s—ñ
+	//	//ä»Šã®å§¿å‹¢è¡Œåˆ—
 	//	XMMATRIX matCurrentPose;
-	//	//¡‚Ìp¨s—ñ‚ğæ“¾
+	//	//ä»Šã®å§¿å‹¢è¡Œåˆ—ã‚’å–å¾—
 	//	FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
-	//	//XMMATRIX‚É•ÏŠ·
+	//	//XMMATRIXã«å¤‰æ›
 	//	FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
-	//	//‡¬‚µ‚ÄƒXƒLƒjƒ“ƒOs—ñ‚É
+	//	//åˆæˆã—ã¦ã‚¹ã‚­ãƒ‹ãƒ³ã‚°è¡Œåˆ—ã«
 	//	constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
 	//}
 	//constBuffSkin->Unmap(0, nullptr);
@@ -370,22 +372,22 @@ void FbxModel::FbxUpdate(float frem)
 void FbxModel::Draw(
 	WorldTransform* worldTransform, ViewProjection* viewProjection) {
 
-	for (int i = 0; i < meshes_.size(); i++) {
+	for (size_t i = 0; i < meshes_.size(); i++) {
 
-		// ƒ‰ƒCƒg‚Ì•`‰æ
+		// ãƒ©ã‚¤ãƒˆã®æç”»
 		lightGroup_->Draw(sCommandList_,4);
 
-		// CBV‚ğƒZƒbƒgiƒ[ƒ‹ƒhs—ñj
+		// CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(1, worldTransform->GetBuff()->GetGPUVirtualAddress());
 
-		// CBV‚ğƒZƒbƒgiƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñj
+		// CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(2, viewProjection->GetBuff()->GetGPUVirtualAddress());
 
 		if (meshes_[i]->node) {
 
 			HRESULT result = S_FALSE;
 
-			//’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+			//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 			ConstBufferDataInitialMatrix* constMapSkin = nullptr;
 			result = constBuffNothing_->Map(0, nullptr, (void**)&constMapSkin);
 			constMapSkin->InitialMatrix = meshes_[i]->node->globalTransform;
@@ -397,36 +399,36 @@ void FbxModel::Draw(
 
 		}
 
-		// CBV‚ğƒZƒbƒgiƒ{[ƒ“s—ñj
+		// CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒœãƒ¼ãƒ³è¡Œåˆ—ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(4, constBuffSkin_->GetGPUVirtualAddress());
 
-		//CBV‚ğƒZƒbƒgiƒ|ƒŠƒSƒ“”šUj
+		//CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒãƒªã‚´ãƒ³çˆ†æ•£ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(6, constBuff_->GetGPUVirtualAddress());
 
-		// ‘SƒƒbƒVƒ…‚ğ•`‰æ
+		// å…¨ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æç”»
 		meshes_[i]->Draw(sCommandList_);
 	}
 }
 
 void FbxModel::Draw(WorldTransform* worldTransform, ViewProjection* viewProjection, Texture textureHadle) {
 
-	// ‘SƒƒbƒVƒ…‚ğ•`‰æ
+	// å…¨ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æç”»
 	for (auto& mesh : meshes_) {
 
-		// ƒ‰ƒCƒg‚Ì•`‰æ
+		// ãƒ©ã‚¤ãƒˆã®æç”»
 		lightGroup_->Draw(sCommandList_,4);
 
-		// CBV‚ğƒZƒbƒgiƒ[ƒ‹ƒhs—ñj
+		// CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(0, worldTransform->GetBuff()->GetGPUVirtualAddress());
 
-		// CBV‚ğƒZƒbƒgiƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñj
+		// CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(1, viewProjection->GetBuff()->GetGPUVirtualAddress());
 
 		if (mesh->node) {
 
 			HRESULT result = S_FALSE;
 
-			//’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+			//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 			ConstBufferDataInitialMatrix* constMapSkin = nullptr;
 			result = constBuffNothing_->Map(0, nullptr, (void**)&constMapSkin);
 			constMapSkin->InitialMatrix = mesh->node->globalTransform;
@@ -438,10 +440,10 @@ void FbxModel::Draw(WorldTransform* worldTransform, ViewProjection* viewProjecti
 
 		}
 
-		// CBV‚ğƒZƒbƒgiƒ{[ƒ“s—ñj
+		// CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒœãƒ¼ãƒ³è¡Œåˆ—ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(4, constBuffSkin_->GetGPUVirtualAddress());
 
-		//CBV‚ğƒZƒbƒgiƒ|ƒŠƒSƒ“”šUj
+		//CBVã‚’ã‚»ãƒƒãƒˆï¼ˆãƒãƒªã‚´ãƒ³çˆ†æ•£ï¼‰
 		sCommandList_->SetGraphicsRootConstantBufferView(6, constBuff_->GetGPUVirtualAddress());
 
 
@@ -451,10 +453,10 @@ void FbxModel::Draw(WorldTransform* worldTransform, ViewProjection* viewProjecti
 
 
 void FbxModel::ModelAnimation(float frame, aiAnimation* Animation, int BoneNum) {
-
+	BoneNum;
 	HRESULT result = S_FALSE;
 	Matrix4 mathMat;
-
+	
 	Matrix4 mxIdentity = mathMat.identity();
 	Node* pNode = &nodes_[0];
 
@@ -465,7 +467,7 @@ void FbxModel::ModelAnimation(float frame, aiAnimation* Animation, int BoneNum) 
 	FLOAT TimeInTicks = frame * TicksPerSecond;
 	FLOAT AnimationTime = fmod(TimeInTicks, (FLOAT)Animation->mDuration);
 
-	//’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBuffSkin_->Map(0, nullptr, (void**)&constMapSkin);
 
@@ -503,19 +505,19 @@ void FbxModel::ReadNodeHeirarchy(Mesh* mesh, aiAnimation* pAnimation, FLOAT Anim
 
 	if (pNodeAnim)
 	{
-		//ƒXƒP[ƒŠƒ“ƒO
+		//ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 		Vector3 vScaling = {};
 		CalcInterpolatedScaling(vScaling, AnimationTime, pNodeAnim);
 		Matrix4 mxScaling;
 		mxScaling = mathMat.scale(vScaling);
 
-		//‰ñ“]Šp
+		//å›è»¢è§’
 		Vector4 vRotationQ = {};
 		CalcInterpolatedRotation(vRotationQ, AnimationTime, pNodeAnim);
 		Quaternion qRota(vRotationQ.x, vRotationQ.y, vRotationQ.z, vRotationQ.w);
 		Matrix4 mxRotationM = qRota.MakeRotateMatrix(qRota);
 
-		//ˆÚ“®
+		//ç§»å‹•
 		Vector3 vTranslation = {};
 		CalcInterpolatedPosition(vTranslation, AnimationTime, pNodeAnim);
 		Matrix4 mxTranslationM;

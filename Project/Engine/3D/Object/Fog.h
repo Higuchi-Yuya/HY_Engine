@@ -1,4 +1,5 @@
 #pragma once
+
 #include"Vector3.h"
 #include "Vector4.h"
 #include<d3d12.h>
@@ -6,61 +7,61 @@
 
 class Fog
 {
-public:// ƒTƒuƒNƒ‰ƒX
-//’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+//å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferDataFog {
-		Vector4 fogColor; // fog‚ÌŠ|‚¯‚éF
-		bool isActiveFog; // ƒtƒHƒO‚ğŠ|‚¯‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-		float nearFog;	  // fog‚ÌŠJnˆÊ’u
-		float farFog;	  // fog‚ÌI—¹ˆÊ’u
+		Vector4 fogColor; // fogã®æ›ã‘ã‚‹è‰²
+		bool isActiveFog; // ãƒ•ã‚©ã‚°ã‚’æ›ã‘ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+		float nearFog;	  // fogã®é–‹å§‹ä½ç½®
+		float farFog;	  // fogã®çµ‚äº†ä½ç½®
 	};
-public:// ƒƒ“ƒoŠÖ”
-	// Ã“I‰Šú‰»
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// é™çš„åˆæœŸåŒ–
 	static void StaticInitialize(ID3D12Device* device);
 
 	static Fog* Create();
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// s—ñ‚ğXV‚·‚é
+	/// è¡Œåˆ—ã‚’æ›´æ–°ã™ã‚‹
 	/// </summary>
 	void UpdateMatrix();
 
-	// •`‰æ
+	// æç”»
 	void Draw(ID3D12GraphicsCommandList* cmdList,uint32_t fogRootIndex);
 
-	// ƒoƒbƒtƒ@‚ÌƒQƒbƒ^[
+	// ãƒãƒƒãƒ•ã‚¡ã®ã‚²ãƒƒã‚¿ãƒ¼
 	ID3D12Resource* GetBuff() { return constBuff_.Get(); }
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 	/// <summary>
-	/// ’è”ƒoƒbƒtƒ@¶¬
+	/// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	/// </summary>
 	void CreateConstBuffer();
 
 	/// <summary>
-	/// ƒ}ƒbƒsƒ“ƒO‚·‚é
+	/// ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹
 	/// </summary>
 	void Map();
 
-public:// ŠO‘¤‚©‚ç•ÏX‰Â”\‚È’l
+public:// å¤–å´ã‹ã‚‰å¤‰æ›´å¯èƒ½ãªå€¤
 	bool isActiveFog = false;
 	float nearFog = 0.0f;
 	float farFog = 50.0f;
 	Vector4 fogColor = { 1.0f,1.0f,1.0f,1.0f };
 
-private:// ƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
 	static ID3D12Device* sDevice_;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
-	// ƒ}ƒbƒsƒ“ƒOÏ‚İƒAƒhƒŒƒX
+	// ãƒãƒƒãƒ”ãƒ³ã‚°æ¸ˆã¿ã‚¢ãƒ‰ãƒ¬ã‚¹
 	ConstBufferDataFog* constMap_ = nullptr;
 
 };

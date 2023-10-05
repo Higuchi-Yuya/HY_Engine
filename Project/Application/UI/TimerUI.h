@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "WorldTransform.h"
+
 class TimerUI
 {
 private:
@@ -14,23 +15,23 @@ private:
 	};
 
 private:
-	// ƒ^ƒCƒ}[—p‚ÌƒXƒvƒ‰ƒCƒg
+	// ã‚¿ã‚¤ãƒãƒ¼ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	std::array<std::unique_ptr<Sprite>, Unit::Size> mTimerUnit;
 
-	// eƒ[ƒ‹ƒhî•ñ
+	// è¦ªãƒ¯ãƒ¼ãƒ«ãƒ‰æƒ…å ±
 	WorldTransform mParent;
 
-	// ƒXƒvƒ‰ƒCƒg‚ÌƒTƒCƒY‚âŠÔŠu
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚µã‚¤ã‚ºã‚„é–“éš”
 	float mTexSize = 128;
 	float mTexSpace = mTexSize - 16;
 
-	// ƒXƒvƒ‰ƒCƒg‚ÌŒ…
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æ¡
 	uint32_t dight = 0;
 
-	// ƒXƒvƒ‰ƒCƒg—p‚Ìƒiƒ“ƒo[ƒeƒNƒXƒ`ƒƒ
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç”¨ã®ãƒŠãƒ³ãƒãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unique_ptr<Texture> numberTex_;
 
-	// ƒ^ƒCƒ}[
+	// ã‚¿ã‚¤ãƒãƒ¼
 	int32_t gameTimer_ = 0;
 	int32_t remainTime_ = 60 * 3;
 

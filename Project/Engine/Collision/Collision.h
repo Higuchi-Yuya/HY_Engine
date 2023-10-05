@@ -1,42 +1,43 @@
 #pragma once
+
 #include "CollisionPrimitive.h"
 
 
 class Collision
 {
 public:
-	// ‹…‚Æ•½–Ê‚Ì“–‚½‚è”»’è
+	// çƒã¨å¹³é¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Vector3* inter = nullptr);
 
-	// ‹…‚Æ‹…
+	// çƒã¨çƒ
 	static bool CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB, Vector3* inter = nullptr, Vector3* reject = nullptr);
 	static bool CheckSphere2SphereOiOi(const Sphere& sphereA, const Sphere& sphereB, Vector3* inter = nullptr, Vector3* reject = nullptr);
 
-	// “_‚ÆOŠpŒ`‚ÌÅ‹ßÚ“_‚ğ‹‚ß‚é
+	// ç‚¹ã¨ä¸‰è§’å½¢ã®æœ€è¿‘æ¥ç‚¹ã‚’æ±‚ã‚ã‚‹
 	static void ClosestPtPoint2Triangle(const Vector3& point, const Triangle& triangle, Vector3* closest);
 
-	// ‹…‚ÆOŠpŒ`‚Ì“–‚½‚èƒ`ƒFƒbƒN
+	// çƒã¨ä¸‰è§’å½¢ã®å½“ãŸã‚Šãƒã‚§ãƒƒã‚¯
 	static bool CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, Vector3* inter = nullptr, Vector3* reject = nullptr);
 
-	// ƒŒƒC‚Æ•½–Ê‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨å¹³é¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckRay2Plane(const Ray& ray, const Plane& plane, float* distance = nullptr, Vector3* inter = nullptr);
 
-	// ƒŒƒC‚Æ–@ü•t‚«OŠpŒ`‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨æ³•ç·šä»˜ãä¸‰è§’å½¢ã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckRay2Triangle(const Ray& ray, const Triangle& triangle, float* distance = nullptr, Vector3* inter = nullptr);
 
-	// ƒŒƒC‚Æ‹…‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨çƒã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, Vector3* inter = nullptr);
 
-	// ‹…‚ÆAABB‚Ì“–‚½‚è”»’è
+	// çƒã¨AABBã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckSphere2AABB(const Sphere& sphere, const WorldTransform& transA, Vector3* inter = nullptr, Vector3* reject = nullptr);
 
-	// AABB‚Ì“–‚½‚è”»’è
+	// AABBã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckAABB(const WorldTransform& transA, const WorldTransform& transB);
 
-	// OBB‚Ì“–‚½‚è”»’è
+	// OBBã®å½“ãŸã‚Šåˆ¤å®š
 	static bool CheckOBB(const WorldTransform& obbA, const WorldTransform& obbB);
 
-	// OBB—p‚Ì•ª—£²‚É“Š‰e‚³‚ê‚½²¬•ª‚©‚ç“Š‰eü•ª’·‚ğZo
+	// OBBç”¨ã®åˆ†é›¢è»¸ã«æŠ•å½±ã•ã‚ŒãŸè»¸æˆåˆ†ã‹ã‚‰æŠ•å½±ç·šåˆ†é•·ã‚’ç®—å‡º
 	static float LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3 = 0);
 };
 

@@ -1,26 +1,27 @@
 #pragma once
+
 #include "Vector3.h"
 class Object3d;
 class BaseCollider;
 
 /// <summary>
-/// ƒNƒGƒŠ[‚É‚æ‚éî•ñ‚ğ“¾‚é‚½‚ß‚Ì\‘¢‘Ì
+/// ã‚¯ã‚¨ãƒªãƒ¼ã«ã‚ˆã‚‹æƒ…å ±ã‚’å¾—ã‚‹ãŸã‚ã®æ§‹é€ ä½“
 /// </summary>
 struct QueryHit
 {
-	// Õ“Ë‘Šè‚ÌƒIƒuƒWƒFƒNƒg
+	// è¡çªç›¸æ‰‹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	Object3d* object = nullptr;
-	// Õ“Ë‘Šè‚ÌƒRƒ‰ƒCƒ_[
+	// è¡çªç›¸æ‰‹ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼
 	BaseCollider* collider = nullptr;
-	// Õ“Ë“_
+	// è¡çªç‚¹
 	Vector3 inter;
-	// ”rËƒxƒNƒgƒ‹
+	// æ’æ–¥ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 reject;
 
 };
 
 /// <summary>
-/// ƒNƒGƒŠ[‚ÅŒğ·‚ğŒŸo‚µ‚½‚Ì“®ì‚ğ‹K’è‚·‚éƒNƒ‰ƒX
+/// ã‚¯ã‚¨ãƒªãƒ¼ã§äº¤å·®ã‚’æ¤œå‡ºã—ãŸæ™‚ã®å‹•ä½œã‚’è¦å®šã™ã‚‹ã‚¯ãƒ©ã‚¹
 /// </summary>
 class QueryCallback
 {
@@ -28,7 +29,7 @@ public:
 	QueryCallback() = default;
 	virtual ~QueryCallback() = default;
 
-	// Œğ·ƒR[ƒ‹ƒoƒbƒN
+	// äº¤å·®æ™‚ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
 	virtual bool OnQueryHit(const QueryHit& info) = 0;
 };
 

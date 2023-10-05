@@ -2,6 +2,7 @@
 #include<cassert>
 #include <d3dx12.h>
 
+
 ID3D12Device* Fog::sDevice_ = nullptr;
 
 void Fog::StaticInitialize(ID3D12Device* device)
@@ -12,11 +13,11 @@ void Fog::StaticInitialize(ID3D12Device* device)
 
 Fog* Fog::Create()
 {
-	// 3DƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ð¶¬
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
 	Fog* instance = new Fog();
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	instance->Initialize();
-	// ¶¬‚µ‚½ƒCƒ“ƒXƒ^ƒ“ƒX‚ð•Ô‚·
+	// ç”Ÿæˆã—ãŸã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¿”ã™
 	return instance;
 }
 
@@ -29,7 +30,7 @@ void Fog::Initialize()
 
 void Fog::UpdateMatrix()
 {
-	//’è”ƒoƒbƒtƒ@‚É“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã«è»¢é€
 	constMap_->isActiveFog = isActiveFog;
 	constMap_->fogColor = fogColor;
 	constMap_->nearFog = nearFog;
@@ -38,7 +39,7 @@ void Fog::UpdateMatrix()
 
 void Fog::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t fogRootIndex)
 {
-	// ’è”ƒoƒbƒtƒ@ƒrƒ…[‚ðƒZƒbƒg
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmdList->SetGraphicsRootConstantBufferView(fogRootIndex, constBuff_->GetGPUVirtualAddress());
 }
 
@@ -46,17 +47,17 @@ void Fog::CreateConstBuffer()
 {
 	assert(sDevice_);
 
-	// ƒq[ƒvƒvƒƒpƒeƒB
+	// ãƒ’ãƒ¼ãƒ—ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	// ƒŠƒ\[ƒXÝ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataFog) + 0xff) & ~0xff);
 
 	HRESULT result;
 
-	// ’è”ƒoƒbƒtƒ@‚Ì¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	result = sDevice_->CreateCommittedResource(
-		&heapProps, // ƒAƒbƒvƒ[ƒh‰Â”\
+		&heapProps, // ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰å¯èƒ½
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -68,7 +69,7 @@ void Fog::CreateConstBuffer()
 
 void Fog::Map()
 {
-	//’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//ƒ}ƒbƒsƒ“ƒO
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒžãƒƒãƒ”ãƒ³ã‚°
+	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//ãƒžãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 }

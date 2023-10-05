@@ -1,4 +1,5 @@
-#pragma region “Ç‚İ‚Şƒwƒbƒ_[
+#pragma region èª­ã¿è¾¼ã‚€ãƒ˜ãƒƒãƒ€ãƒ¼
+
 
 //#pragma comment(lib,"d3dcompiler.lib")
 
@@ -18,11 +19,11 @@
 #include "ParticleManager.h"
 #pragma endregion
 
-#pragma region ‚¨‚Ü‚¶‚È‚¢
-// @brief ƒRƒ“ƒ\[ƒ‹‰æ–Ê‚ÉƒtƒH[ƒ}ƒbƒg•t‚«•¶š—ñ‚Ì•\¦
-// @param format ƒtƒH[ƒ}ƒbƒg(%d‚Æ‚©%f‚Æ‚©‚Ì)
-// @param ‰Â•Ï’·ˆø”
-// @remarks ‚±‚ÌŠÖ”‚ÍƒfƒoƒbƒN—p‚Å‚·BƒfƒoƒbƒO‚É‚µ‚©“®ì‚µ‚Ü‚¹‚ñ
+#pragma region ãŠã¾ã˜ãªã„
+// @brief ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ç”»é¢ã«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆä»˜ãæ–‡å­—åˆ—ã®è¡¨ç¤º
+// @param format ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ(%dã¨ã‹%fã¨ã‹ã®)
+// @param å¯å¤‰é•·å¼•æ•°
+// @remarks ã“ã®é–¢æ•°ã¯ãƒ‡ãƒãƒƒã‚¯ç”¨ã§ã™ã€‚ãƒ‡ãƒãƒƒã‚°æ™‚ã«ã—ã‹å‹•ä½œã—ã¾ã›ã‚“
 void DebugOutputFormatString(const char* format, ...) {
 #ifdef _DEBUG
 	va_list valist;
@@ -39,7 +40,7 @@ struct D3DResouceLeakChecker
 {
 	~D3DResouceLeakChecker()
 	{
-		// ƒŠƒ\[ƒXƒŠ[ƒNƒ`ƒFƒbƒN
+		// ãƒªã‚½ãƒ¼ã‚¹ãƒªãƒ¼ã‚¯ãƒã‚§ãƒƒã‚¯
 		Microsoft::WRL::ComPtr<IDXGIDebug1>debug;
 		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
 			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
@@ -54,83 +55,83 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	D3DResouceLeakChecker leckCheck;
 
-#pragma region WindowsAPI‰Šú‰»ˆ—
-	// ƒ|ƒCƒ“ƒ^
+#pragma region WindowsAPIåˆæœŸåŒ–å‡¦ç†
+	// ãƒã‚¤ãƒ³ã‚¿
 	WinApp* winApp = nullptr;
 
-	// WindouwsAPI‚Ì‰Šú‰»
+	// WindouwsAPIã®åˆæœŸåŒ–
 	winApp = new WinApp();
 	winApp->Initialize();
 
 
 #pragma endregion
 
-#pragma region DirectX‰Šú‰»ˆ—
+#pragma region DirectXåˆæœŸåŒ–å‡¦ç†
 
 	////////////////////////////////////////////////////
-	//-------------DirectX12‰Šú‰»ˆ—‚±‚±‚©‚ç-----------//
+	//-------------DirectX12åˆæœŸåŒ–å‡¦ç†ã“ã“ã‹ã‚‰-----------//
 	//////////////////////////////////////////////////
 
-	// Commonƒ|ƒCƒ“ƒ^
+	// Commonãƒã‚¤ãƒ³ã‚¿
 	DirectXCommon* dxCommon = nullptr;
 
-	// DirectX‚Ì‰Šú‰»
+	// DirectXã®åˆæœŸåŒ–
 	dxCommon = new DirectXCommon();
 	dxCommon->Initalize(winApp);
 
-	// ImGui‚Ì‰Šú‰»
+	// ImGuiã®åˆæœŸåŒ–
 	ImGuiManager* imguiManager = new ImGuiManager();
 	imguiManager->Initialize(winApp,dxCommon);
 
-	// “ü—Í‚Ì‰Šú‰»
+	// å…¥åŠ›ã®åˆæœŸåŒ–
 	Input::StaticInitialize(winApp);
 
 	InputManager* inputManager = InputManager::GetInstance().get();
 	inputManager->SetWinApp(winApp);
 	inputManager->Init();
 
-	// ƒXƒvƒ‰ƒCƒg‚Ì‰Šú‰»
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
 	std::unique_ptr<SpriteManager> spriteManager = nullptr;
-	// ƒXƒvƒ‰ƒCƒg‹¤’Ê•”‚Ì‰Šú‰»
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå…±é€šéƒ¨ã®åˆæœŸåŒ–
 	spriteManager = std::make_unique<SpriteManager>();
 	spriteManager->Initialize(dxCommon);
 	
 	Sprite::StaticInitialize(spriteManager.get());
 
-	// ƒeƒNƒXƒ`ƒƒ‚Ì‰Šú‰»
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®åˆæœŸåŒ–
 	TextureManager::StaticInitialize(dxCommon);
 	
-	// ƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–
 	Object3d::StaticInitialize(dxCommon->GetDevice());
 
-	// ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“‚Ì‰Šú‰»
+	// ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
 	ViewProjection::StaticInitialize(dxCommon->GetDevice());
 
-	// ƒTƒEƒ“ƒh‚ÌÃ“I‚Ì‰Šú‰»
+	// ã‚µã‚¦ãƒ³ãƒ‰ã®é™çš„ã®åˆæœŸåŒ–
 	Sound::StaticInitialize();
 
-	// ƒ‰ƒCƒg‚ÌÃ“I‰Šú‰»
+	// ãƒ©ã‚¤ãƒˆã®é™çš„åˆæœŸåŒ–
 	LightGroup::StaticInititalize(dxCommon->GetDevice());
 
-	// ƒtƒHƒO‚ÌÃ“I‰Šú‰»
+	// ãƒ•ã‚©ã‚°ã®é™çš„åˆæœŸåŒ–
 	Fog::StaticInitialize(dxCommon->GetDevice());
 
-	// FBX‚Ì‰Šú‰»
+	// FBXã®åˆæœŸåŒ–
 	FbxModel::SetDevice(dxCommon->GetDevice());
 	FbxModel::StaticInitialize();
 
-	// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚Ì‰Šú‰»
+	// ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–
 	PostEffect::SetDevice(dxCommon->GetDevice());
 
-	// ƒp[ƒeƒBƒNƒ‹‚Ì‰Šú‰»
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®åˆæœŸåŒ–
 	ParticleManager::StaticInitialize(dxCommon->GetDevice());
 
 	/////////////////////////////////////////////////////////
-	//--------------DirectX12‰Šú‰»ˆ—@‚±‚±‚Ü‚Å-------------//
+	//--------------DirectX12åˆæœŸåŒ–å‡¦ç†ã€€ã“ã“ã¾ã§-------------//
 	///////////////////////////////////////////////////////
 #pragma endregion
 
-#pragma region ƒV[ƒ“‚Ég‚¤•Ï”‚Ì‰Šú‰»
+#pragma region ã‚·ãƒ¼ãƒ³ã«ä½¿ã†å¤‰æ•°ã®åˆæœŸåŒ–
 
 
 	GameScene* gameScene = new GameScene();
@@ -138,7 +139,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	gameScene->SetDxComon(dxCommon);
 
 	//PostEffect* postEffect = nullptr;
-	//// ‚©‚è‚É‚½‚¹‚é‚â‚Â
+	//// ã‹ã‚Šã«æŒãŸã›ã‚‹ã‚„ã¤
 	//PostColorInversion* post = nullptr;
 	//Texture tex = TextureManager::Load2DTexture("risu.jpg");
 
@@ -151,21 +152,21 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 #pragma endregion
 
-	//ƒQ[ƒ€ƒ‹[ƒv
+	//ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
 	while (true) {
-#pragma region ƒEƒBƒ“ƒhƒEƒƒbƒZ[ƒWˆ—
+#pragma region ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
 
-		// Windows‚ÌƒƒbƒZ[ƒWˆ—
+		// Windowsã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
 		if (winApp->ProcessMessage()) {
-			// ƒQ[ƒ€ƒ‹[ƒv‚ğ”²‚¯‚é
+			// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			break;
 		}
 
 #pragma endregion
 
-#pragma region DirectX–ˆƒtƒŒ[ƒ€ˆ—
+#pragma region DirectXæ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 		/////////////////////////////////////////////////////
-		//----------DireceX–ˆƒtƒŒ[ƒ€ˆ—@‚±‚±‚©‚ç------------//
+		//----------DireceXæ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†ã€€ã“ã“ã‹ã‚‰------------//
 		///////////////////////////////////////////////////
 
 		InputManager::GetInstance()->Update();
@@ -173,10 +174,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 
 		//////////////////////////////////////////////
-		//-------DireceX–ˆƒtƒŒ[ƒ€ˆ—@‚±‚±‚Ü‚Å--------//
+		//-------DireceXæ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†ã€€ã“ã“ã¾ã§--------//
 		////////////////////////////////////////////
-#pragma region IMGUI‚ÌXVˆ—
-	// ImGui‚ÌXVˆ—
+#pragma region IMGUIã®æ›´æ–°å‡¦ç†
+	// ImGuiã®æ›´æ–°å‡¦ç†
 		imguiManager->Begin();
 		gameScene->Update();
 		gameScene->ImguiUpdate();
@@ -196,68 +197,68 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 		//post->PostDrawScene(dxCommon->GetCommandList());
 
-#pragma region •`‰æˆ—
+#pragma region æç”»å‡¦ç†
 
 
 
-		//•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
+		//æç”»ã‚³ãƒãƒ³ãƒ‰ã“ã“ã‹ã‚‰
 		dxCommon->PreDraw();
 		
-#pragma region ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
-		// ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ
+#pragma region èƒŒæ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
+		// èƒŒæ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 
 		spriteManager->PreDraw();
-		//-----‚±‚±‚©‚ç ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
+		//-----ã“ã“ã‹ã‚‰ èƒŒæ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”» -----//
 		gameScene->Draw2DBack();
 
 		//post->Draw(dxCommon->GetCommandList());
 
-		//-----‚±‚±‚Ü‚Å ”wŒiƒXƒvƒ‰ƒCƒg•`‰æ -----//
+		//-----ã“ã“ã¾ã§ èƒŒæ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”» -----//
 		spriteManager->PostDraw();
-		// [“xƒoƒbƒtƒ@ƒNƒŠƒA
+		// æ·±åº¦ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 		dxCommon->ClearDepthBuffer();
 #pragma endregion
 
-#pragma region ‚R‚cƒ‚ƒfƒ‹•`‰æ
+#pragma region ï¼“ï¼¤ãƒ¢ãƒ‡ãƒ«æç”»
 		Object3d::PreDraw(dxCommon->GetCommandList());
-		//-----‚±‚±‚©‚ç 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
+		//-----ã“ã“ã‹ã‚‰ 3Dãƒ¢ãƒ‡ãƒ«ã®æç”» -----//
 		gameScene->Draw3D();
 
 		
-		//-----‚±‚±‚Ü‚Å 3Dƒ‚ƒfƒ‹‚Ì•`‰æ -----//
+		//-----ã“ã“ã¾ã§ 3Dãƒ¢ãƒ‡ãƒ«ã®æç”» -----//
 		Object3d::PostDraw();
 #pragma endregion
 		
-#pragma region ‘OŒiƒXƒvƒ‰ƒCƒg•`‰æ
-		// •`‰æ‘Oˆ—
+#pragma region å‰æ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
+		// æç”»å‰å‡¦ç†
 		spriteManager->PreDraw();
-		//-----‚±‚±‚©‚ç 2D•`‰æ -------//
+		//-----ã“ã“ã‹ã‚‰ 2Dæç”» -------//
 		gameScene->Draw2DFront();
 		
 
 
-		//-----‚±‚±‚Ü‚Å 2D•`‰æ -------//
-		// •`‰æŒãˆ—
+		//-----ã“ã“ã¾ã§ 2Dæç”» -------//
+		// æç”»å¾Œå‡¦ç†
 		spriteManager->PostDraw();
 #pragma endregion
 
-#pragma region IMGUI‚Ì•`‰æ
+#pragma region IMGUIã®æç”»
 		imguiManager->Draw();
 #pragma endregion
 
 
-		// •`‰æƒRƒ}ƒ“ƒh‚ÌI—¹
+		// æç”»ã‚³ãƒãƒ³ãƒ‰ã®çµ‚äº†
 		dxCommon->PostDraw();
 
 #pragma endregion
 	}
-#pragma region  WindowsAPIŒãn––
+#pragma region  WindowsAPIå¾Œå§‹æœ«
 
-	//‚à‚¤ƒNƒ‰ƒX‚Íg‚í‚È‚¢‚Ì‚Å“o˜^‚ğ‰ğœ‚·‚é
+	//ã‚‚ã†ã‚¯ãƒ©ã‚¹ã¯ä½¿ã‚ãªã„ã®ã§ç™»éŒ²ã‚’è§£é™¤ã™ã‚‹
 
-	// ƒQ[ƒ€ƒV[ƒ“‚Ì‰ğ•ú
+	// ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®è§£æ”¾
 	delete gameScene;
-	// ImGui‚Ìƒ}ƒl[ƒWƒƒ[‚ğ‰ğ•ú
+	// ImGuiã®ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’è§£æ”¾
 	imguiManager->Finalize();
 	delete imguiManager;
 
@@ -266,11 +267,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	Object3d::StaticFinalize();
 	FbxModel::StaticFainalize();
 
-	// WindouwsAPI‚ÌI—¹ˆ—
+	// WindouwsAPIã®çµ‚äº†å‡¦ç†
 	winApp->Finalize();
-	// WindouwsAPI‰ğ•ú
+	// WindouwsAPIè§£æ”¾
 	delete winApp;
-	// DirectXcommon‚Ì‰ğ•ú
+	// DirectXcommonã®è§£æ”¾
 	delete dxCommon;
 #pragma endregion
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
@@ -7,42 +8,42 @@
 #include <DirectXMath.h>
 #include <assimp/scene.h>
 
-// ”Šw•Ö—˜ŠÖ”‚Ü‚Æ‚ß
+// æ•°å­¦ä¾¿åˆ©é–¢æ•°ã¾ã¨ã‚
 namespace MathUtil
 {
-	// ‰~ü—¦
+	// å††å‘¨ç‡
 	static float PI = 3.141592f;
 
-	// ƒAƒVƒ“ƒv‚Ìƒ}ƒgƒŠƒbƒNƒX‚ğ©ì‚Ì‚à‚Ì‚É•ÏŠ·
+	// ã‚¢ã‚·ãƒ³ãƒ—ã®ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã‚’è‡ªä½œã®ã‚‚ã®ã«å¤‰æ›
 	Matrix4 AssimpMatToMat4(aiMatrix4x4 mat4);
 
-	// ƒAƒVƒ“ƒv‚ÌƒxƒNƒ^[‚R‚ğ©•ª‚ÌƒxƒNƒ^[‚R‚É•ÏŠ·
+	// ã‚¢ã‚·ãƒ³ãƒ—ã®ãƒ™ã‚¯ã‚¿ãƒ¼ï¼“ã‚’è‡ªåˆ†ã®ãƒ™ã‚¯ã‚¿ãƒ¼ï¼“ã«å¤‰æ›
 	Vector3 AssimpVec3ToVector3(aiVector3D assimpVec3);
 
-	// ƒAƒVƒ“ƒv‚ÌQuaternion‚ğVector4‚É•ÏŠ·
+	// ã‚¢ã‚·ãƒ³ãƒ—ã®Quaternionã‚’Vector4ã«å¤‰æ›
 	Vector4 AssimpQuaternionToVec4(aiQuaternion assimpaiQuaternion);
 
-	// ƒAƒVƒ“ƒv‚ÌQuaternion‚ğ©•ª‚ÌQuaternion‚É•ÏŠ·
+	// ã‚¢ã‚·ãƒ³ãƒ—ã®Quaternionã‚’è‡ªåˆ†ã®Quaternionã«å¤‰æ›
 	Quaternion AssimpQuaternion(aiQuaternion assimpaiQuaternion);
 
-	// ƒAƒVƒ“ƒv‚ÌQuaternion‚ğSlerp‚·‚é
+	// ã‚¢ã‚·ãƒ³ãƒ—ã®Quaternionã‚’Slerpã™ã‚‹
 	Vector4 AssimpQuaternionSlerp(aiQuaternion& assimpaiQuaternion, aiQuaternion& assimpaiQuaternion2, float t);
 
-	//ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z(o—ÍVector3)
+	//ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—(å‡ºåŠ›Vector3)
 	Vector3 MatVector(Matrix4 matrix4, Vector3 vector3);
 
-	// “x”‚©‚çƒ‰ƒWƒAƒ“
+	// åº¦æ•°ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³
 	float DegreeToRadian(float degree);
 
 	Vector3 DegreeToRadianVec3(Vector3 degree);
 
-	// sin”g‚Ì“®‚«‚ğì‚éŠÖ”
+	// sinæ³¢ã®å‹•ãã‚’ä½œã‚‹é–¢æ•°
 	float Sin_ZeroToOne(float pos, float maxCount, float nowCount, float swingWidth);
 
-	// ’PˆÊs—ñ‚ğæ“¾
+	// å˜ä½è¡Œåˆ—ã‚’å–å¾—
 	Matrix4 Matrix4Indecity();
 
-	// ’l‚ğMin‚ÆMax‚ÌŠÔ‚É§ŒÀ‚·‚éŠÖ”
+	// å€¤ã‚’Minã¨Maxã®é–“ã«åˆ¶é™ã™ã‚‹é–¢æ•°
 	template<typename T>
 	T Clamp(const T value, const T min = 0, const T max = 1)
 	{

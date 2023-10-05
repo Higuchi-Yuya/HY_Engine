@@ -1,37 +1,38 @@
 #pragma once
+
 #include "BaseCollider.h"
 #include "CollisionPrimitive.h"
 
 #include "Vector3.h"
 
 /// <summary>
-/// ƒƒbƒVƒ…Õ“Ë”»’èƒIƒuƒWƒFƒNƒg
+/// ãƒ¡ãƒƒã‚·ãƒ¥è¡çªåˆ¤å®šã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 /// </summary>
 class MeshCollider:public BaseCollider
 {
 public:
 	MeshCollider() {
-		// ƒƒbƒVƒ…Œ`ó‚ğƒZƒbƒg
+		// ãƒ¡ãƒƒã‚·ãƒ¥å½¢çŠ¶ã‚’ã‚»ãƒƒãƒˆ
 		shapeType_ = COLLISIONSHAPE_MESH;
 	}
 
 	/// <summary>
-	/// OŠpŒ`‚Ì”z—ñ‚ğ\’z‚·‚é
+	/// ä¸‰è§’å½¢ã®é…åˆ—ã‚’æ§‹ç¯‰ã™ã‚‹
 	/// </summary>
 	void ConstructTriangles(Model* model);
 
-	// XV
+	// æ›´æ–°
 	void Update(const Matrix4& worldPos)override;
 
-	// ‹…‚Æ‚Ì“–‚½‚è”»’è
+	// çƒã¨ã®å½“ãŸã‚Šåˆ¤å®š
 	bool CheckCollisionSphere(const Sphere& sphere, Vector3* inter = nullptr, Vector3* reject = nullptr);
 
-	// ƒŒƒC‚Æ‚Ì“–‚½‚è”»’è
+	// ãƒ¬ã‚¤ã¨ã®å½“ãŸã‚Šåˆ¤å®š
 	bool CheckCollisionRay(const Ray& ray, float* distance = nullptr, Vector3* inter = nullptr);
 
 private:
 	std::vector<Triangle>triangles;
-	// ƒ[ƒ‹ƒhs—ñ‚Ì‹ts—ñ
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®é€†è¡Œåˆ—
 	Matrix4 invMatWorld;
 };
 

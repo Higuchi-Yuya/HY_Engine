@@ -1,5 +1,6 @@
 #include "MathUtil.h"
 
+
 Matrix4 MathUtil::AssimpMatToMat4(aiMatrix4x4 mat4)
 {
 	Matrix4 assimp;

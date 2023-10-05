@@ -1,6 +1,7 @@
 #include "Util.h"
 #include <corecrt_math.h>
 
+
 uint32_t Util::GetDight(const uint32_t value)
 {
 	if (value == 0)
@@ -22,7 +23,7 @@ uint32_t Util::GetDightNumber(const int32_t value, const uint32_t dight)
 {
 	if (dight > GetDight(value) || dight == 0)
 	{
-		return -1;
+		return (uint32_t) - 1;
 	}
 
 	uint32_t num1 = (uint32_t)powf(10.f, (float)dight);

@@ -1,4 +1,5 @@
 #pragma once
+
 #include"Vector3.h"
 #include "Vector4.h"
 #include "TextureManager.h"
@@ -7,74 +8,74 @@
 
 class Dissolve
 {
-public:// ƒTƒuƒNƒ‰ƒX
-//’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+//å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferDataDissolve {
-		Vector4 dissolveColor; // ƒfƒBƒ]ƒ‹ƒu‚ÌÁ‚¦‚é‚ÌF
-		bool isActiveDissolve; // ƒtƒHƒO‚ğŠ|‚¯‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-		float dissolvePower;	  // ƒfƒBƒ]ƒ‹ƒu‚ÌÁ‚¦‚é‚Æ‚«‚ÌF‚Ì“x‡
-		float dissolveTime;    // ƒfƒBƒ]ƒ‹ƒu‚ÌÁ‚¦‚é‚Ü‚Å‚ÌŠÔ‚ÌŠ„‡
-		float dissolveSmoothMin;// ƒfƒBƒ]ƒ‹ƒuƒXƒ€[ƒX‚ÌÅ¬’l
+		Vector4 dissolveColor; // ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã®æ¶ˆãˆã‚‹æ™‚ã®è‰²
+		bool isActiveDissolve; // ãƒ•ã‚©ã‚°ã‚’æ›ã‘ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+		float dissolvePower;	  // ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã®æ¶ˆãˆã‚‹ã¨ãã®è‰²ã®åº¦åˆ
+		float dissolveTime;    // ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã®æ¶ˆãˆã‚‹ã¾ã§ã®æ™‚é–“ã®å‰²åˆ
+		float dissolveSmoothMin;// ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã‚¹ãƒ ãƒ¼ã‚¹ã®æœ€å°å€¤
 	};
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 	~Dissolve();
 
-	// Ã“I‰Šú‰»
+	// é™çš„åˆæœŸåŒ–
 	static void StaticInitialize(ID3D12Device* device);
 
 	static Dissolve* Create();
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// s—ñ‚ğXV‚·‚é
+	/// è¡Œåˆ—ã‚’æ›´æ–°ã™ã‚‹
 	/// </summary>
 	void UpdateMatrix();
 
-	// •`‰æ
+	// æç”»
 	void Draw(ID3D12GraphicsCommandList* cmdList, uint32_t dissolveRootIndex);
 
-	// ƒoƒbƒtƒ@‚ÌƒQƒbƒ^[
+	// ãƒãƒƒãƒ•ã‚¡ã®ã‚²ãƒƒã‚¿ãƒ¼
 	ID3D12Resource* GetBuff() { return constBuff_.Get(); }
 
-	// ƒeƒNƒXƒ`ƒƒ‚ÌƒZƒbƒg
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚»ãƒƒãƒˆ
 	void SetDissolveTexture(Texture* dissolveTex) { dissolveTex_ = dissolveTex; }
 
-private:// ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 	/// <summary>
-	/// ’è”ƒoƒbƒtƒ@¶¬
+	/// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	/// </summary>
 	void CreateConstBuffer();
 
 	/// <summary>
-	/// ƒ}ƒbƒsƒ“ƒO‚·‚é
+	/// ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹
 	/// </summary>
 	void Map();
 
-public:// ŠO‘¤‚©‚ç•ÏX‰Â”\‚È’l
+public:// å¤–å´ã‹ã‚‰å¤‰æ›´å¯èƒ½ãªå€¤
 	bool isActiveDissolve_ = false;
 	float dissolvePower_ = 10.0f;
 	float dissolveTime_ = 0.0f;
 	float dissolveSmoothMin_ = -0.5;
 	Vector4 dissolveColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
-private:// ƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
 	static ID3D12Device* sDevice_;
 
-	// ’è”ƒoƒbƒtƒ@
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 
-	// ƒ}ƒbƒsƒ“ƒOÏ‚İƒAƒhƒŒƒX
+	// ãƒãƒƒãƒ”ãƒ³ã‚°æ¸ˆã¿ã‚¢ãƒ‰ãƒ¬ã‚¹
 	ConstBufferDataDissolve* constMap_ = nullptr;
 
-	// ƒfƒtƒHƒ‹ƒg‚ÌƒfƒBƒ]ƒ‹ƒuƒeƒNƒXƒ`ƒƒ‚Ìƒ‹[ƒgƒpƒX
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ«ãƒ¼ãƒˆãƒ‘ã‚¹
 	static const std::string sDissolveTexBasePass_;
 
-	// ƒfƒBƒ]ƒ‹ƒu‚ÌƒeƒNƒXƒ`ƒƒ
+	// ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	Texture* dissolveTex_;
 };
 

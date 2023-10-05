@@ -1,16 +1,17 @@
 #pragma once
+
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4.h"
 
 class DirectionalLight
 {
-public:// ƒTƒuƒNƒ‰ƒX
+public:// ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 	struct ConstBufferData
 	{
-		Vector3 lightv;// ƒ‰ƒCƒg‚Ö‚Ì•ûŒü‚ğ•\‚·ƒxƒNƒgƒ‹
-		float pad1; // ƒpƒfƒBƒ“ƒO
-		Vector3 lightcolor;// ƒ‰ƒCƒg‚ÌF
+		Vector3 lightv;// ãƒ©ã‚¤ãƒˆã¸ã®æ–¹å‘ã‚’è¡¨ã™ãƒ™ã‚¯ãƒˆãƒ«
+		float pad1; // ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+		Vector3 lightcolor;// ãƒ©ã‚¤ãƒˆã®è‰²
 		unsigned int active;
 	};
 
@@ -19,49 +20,49 @@ public:
 	~DirectionalLight();
 
 	/// <summary>
-	/// ƒ‰ƒCƒg•ûŒü‚ğƒZƒbƒg
+	/// ãƒ©ã‚¤ãƒˆæ–¹å‘ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightdir">ƒ‰ƒCƒg•ûŒü</param>
+	/// <param name="lightdir">ãƒ©ã‚¤ãƒˆæ–¹å‘</param>
 	inline void SetLightDir(const Vector3& lightdir){lightdir_ = lightdir;lightdir_.normalize();};
 
 	/// <summary>
-	/// ƒ‰ƒCƒg•ûŒü‚ğæ“¾
+	/// ãƒ©ã‚¤ãƒˆæ–¹å‘ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒg•ûŒü</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆæ–¹å‘</returns>
 	inline const Vector3& GetLightDir() { return lightdir_; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒgF‚ğƒZƒbƒg
+	/// ãƒ©ã‚¤ãƒˆè‰²ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="lightcolor">ƒ‰ƒCƒgF</param>
+	/// <param name="lightcolor">ãƒ©ã‚¤ãƒˆè‰²</param>
 	inline void SetLightColor(const Vector3& lightcolor) { lightcolor_ = lightcolor; }
 
 	/// <summary>
-	/// ƒ‰ƒCƒgF‚ğæ“¾
+	/// ãƒ©ã‚¤ãƒˆè‰²ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒgF</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆè‰²</returns>
 	inline const Vector3& GetLightColor() { return lightcolor_; }
 
 	/// <summary>
-	/// —LŒøƒtƒ‰ƒO‚ğƒZƒbƒg
+	/// æœ‰åŠ¹ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="active">—LŒøƒtƒ‰ƒO</param>
+	/// <param name="active">æœ‰åŠ¹ãƒ•ãƒ©ã‚°</param>
 	inline void SetActive(bool active) { active_ = active; }
 
 	/// <summary>
-	/// —LŒøƒ`ƒFƒbƒN
+	/// æœ‰åŠ¹ãƒã‚§ãƒƒã‚¯
 	/// </summary>
-	/// <returns>—LŒøƒtƒ‰ƒO</returns>
+	/// <returns>æœ‰åŠ¹ãƒ•ãƒ©ã‚°</returns>
 	inline bool IsActive() { return active_; }
 
 private:
-	// ƒ‰ƒCƒgŒõü•ûŒüi’PˆÊƒxƒNƒgƒ‹j
+	// ãƒ©ã‚¤ãƒˆå…‰ç·šæ–¹å‘ï¼ˆå˜ä½ãƒ™ã‚¯ãƒˆãƒ«ï¼‰
 	Vector3 lightdir_ = { 1,0,0 };
 
-	// ƒ‰ƒCƒg‚ÌF
+	// ãƒ©ã‚¤ãƒˆã®è‰²
 	Vector3 lightcolor_ = { 1.0f,1.0f,1.0f };
 
-	// —LŒøƒtƒ‰ƒO
+	// æœ‰åŠ¹ãƒ•ãƒ©ã‚°
 	bool active_ = false;
 
 };

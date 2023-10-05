@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ViewProjection.h"
 #include "MathUtil.h"
 #include <d3d12.h>
@@ -7,32 +8,32 @@
 
 class ParticleManager
 {
-private: // ƒGƒCƒŠƒAƒX
-	// Microsoft::WRL::‚ğÈ—ª
+private: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// Microsoft::WRL::ã‚’çœç•¥
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-public: // ƒTƒuƒNƒ‰ƒX
-	//// ’¸“_ƒf[ƒ^\‘¢‘Ì
+public: // ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	//// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	//struct VertexPosNormalUv
 	//{
-	//	Vector3 pos; // xyzÀ•W
-	//	Vector3 normal; // –@üƒxƒNƒgƒ‹
-	//	vextor2 uv;  // uvÀ•W
+	//	Vector3 pos; // xyzåº§æ¨™
+	//	Vector3 normal; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+	//	vextor2 uv;  // uvåº§æ¨™
 	//};
 	
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct VertexPos
 	{
-		Vector3 pos; // xyzÀ•W
+		Vector3 pos; // xyzåº§æ¨™
 		float scale;
 		Vector4 color;
 	};
 
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferData
 	{
-		//Vector4 color;	// F (RGBA)
-		Matrix4 mat;	// 3D•ÏŠ·s—ñ
-		Matrix4 matBillboard;//ƒrƒ‹ƒ{[ƒhs—ñ
+		//Vector4 color;	// è‰² (RGBA)
+		Matrix4 mat;	// 3Då¤‰æ›è¡Œåˆ—
+		Matrix4 matBillboard;//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰è¡Œåˆ—
 	};
 
 	enum class Type
@@ -41,153 +42,153 @@ public: // ƒTƒuƒNƒ‰ƒX
 		EnemySpawn,
 	};
 
-	//ƒp[ƒeƒBƒNƒ‹ˆê—±
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ä¸€ç²’
 	struct Particle
 	{
-		// ‚Ç‚Ì‚æ‚¤‚É“®‚­‚Ì‚©‚Ìƒ^ƒCƒv
+		// ã©ã®ã‚ˆã†ã«å‹•ãã®ã‹ã®ã‚¿ã‚¤ãƒ—
 		Type type;
 
-		// À•W
+		// åº§æ¨™
 		Vector3 position = {};
 
-		// ‘¬“x
+		// é€Ÿåº¦
 		Vector3 velocity = {};
 
-		// ‰Á‘¬“x
+		// åŠ é€Ÿåº¦
 		Vector3 accel = {};
 
-		// Šp“x
+		// è§’åº¦
 		Vector3 angle = {};
 
-		// ƒXƒP[ƒ‹
+		// ã‚¹ã‚±ãƒ¼ãƒ«
 		float scale = 1.0f;
-		// ‰Šú’l
+		// åˆæœŸå€¤
 		float startScale = 1.0f;
-		// ÅI’l
+		// æœ€çµ‚å€¤
 		float endScale = 0.0f;
 
-		// Œ»İƒtƒŒ[ƒ€
+		// ç¾åœ¨ãƒ•ãƒ¬ãƒ¼ãƒ 
 		int frame = 0;
-		// I—¹ƒtƒŒ[ƒ€
+		// çµ‚äº†ãƒ•ãƒ¬ãƒ¼ãƒ 
 		int numFrame = 0;
 
-		// F
+		// è‰²
 		Vector4 color = {};
-		// F‚Ì‰Šú’l
+		// è‰²ã®åˆæœŸå€¤
 		Vector4 startColor = {};
-		// F‚ÌÅI’l
+		// è‰²ã®æœ€çµ‚å€¤
 		Vector4 endColor = {};
 
 	};
 
-public: // Ã“Iƒƒ“ƒoŠÖ”
+public: // é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// Ã“I‰Šú‰»
+	/// é™çš„åˆæœŸåŒ–
 	/// </summary>
-	/// <param name="device">ƒfƒoƒCƒX</param>
-	/// <param name="window_width">‰æ–Ê•</param>
-	/// <param name="window_height">‰æ–Ê‚‚³</param>
+	/// <param name="device">ãƒ‡ãƒã‚¤ã‚¹</param>
+	/// <param name="window_width">ç”»é¢å¹…</param>
+	/// <param name="window_height">ç”»é¢é«˜ã•</param>
 	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
-	/// Ã“II—¹ˆ—
+	/// é™çš„çµ‚äº†å‡¦ç†
 	/// </summary>
 	static void StaticFinalize();
 
 	/// <summary>
-	/// •`‰æ‘Oˆ—
+	/// æç”»å‰å‡¦ç†
 	/// </summary>
-	/// <param name="cmdList">•`‰æƒRƒ}ƒ“ƒhƒŠƒXƒg</param>
+	/// <param name="cmdList">æç”»ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ</param>
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
-	/// •`‰æŒãˆ—
+	/// æç”»å¾Œå‡¦ç†
 	/// </summary>
 	static void PostDraw();
 
-private: // Ã“Iƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒX
-	static ID3D12Device* device;
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
-	static ID3D12GraphicsCommandList* cmdList;
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+private: // é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹
+	static ID3D12Device* device_;
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
+	static ID3D12GraphicsCommandList* cmdList_;
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	static ComPtr<ID3D12RootSignature> rootsignature;
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgƒIƒuƒWƒFƒNƒg
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> vertBuff;
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
 	D3D12_VERTEX_BUFFER_VIEW vbView;
 
-private:// Ã“Iƒƒ“ƒoŠÖ”
+private:// é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 
 	/// <summary>
-	/// ƒOƒ‰ƒtƒBƒbƒNƒpƒCƒvƒ‰ƒCƒ“¶¬
+	/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	/// </summary>
-	/// <returns>¬”Û</returns>
+	/// <returns>æˆå¦</returns>
 	static void InitializeGraphicsPipeline();
 
 	/// <summary>
-	/// ’¸“_ƒoƒbƒtƒ@‚Ì¶¬
+	/// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	/// </summary>
 	void InitializeVerticeBuff();
 
-public: // ƒƒ“ƒoŠÖ”
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
 
 	/// <summary>
-	/// ‰Šú‰»ˆ—
+	/// åˆæœŸåŒ–å‡¦ç†
 	/// </summary>
 	void Initialize();
 
 	/// <summary>
-	/// –ˆƒtƒŒ[ƒ€ˆ—
+	/// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 	/// </summary>
 	void Update();
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	void Draw(const ViewProjection& view);
 
 	/// <summary>
-	/// ƒp[ƒeƒBƒNƒ‹‚ÌƒeƒNƒXƒ`ƒƒ‚ÌƒZƒbƒg
+	/// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚»ãƒƒãƒˆ
 	/// </summary>
-	/// <param name="textureHandle">ƒeƒNƒXƒ`ƒƒƒnƒ“ƒhƒ‹</param>
+	/// <param name="textureHandle">ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«</param>
 	void SetTextureHandle(Texture *textureHandle);
 
 	/// <summary>
-	/// ƒp[ƒeƒBƒNƒ‹‘S‘Ì‚ÌƒTƒCƒY‚ğæ“¾
+	/// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«å…¨ä½“ã®ã‚µã‚¤ã‚ºã‚’å–å¾—
 	/// </summary>
 	/// <returns></returns>
 	size_t GetParticlesListSize() { return Particles.size(); }
 
 	/// <summary>
-	/// ƒC[ƒWƒ“ƒOƒp[ƒeƒBƒNƒ‹iout)
+	/// ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ï¼ˆout)
 	/// </summary>
-	/// <param name="Type">ƒp[ƒeƒBƒNƒ‹‚Ì“®‚«‚Ìƒ^ƒCƒv</param>
-	/// <param name="life">õ–½(ƒC[ƒWƒ“ƒO‚È‚ñ‚ÅƒXƒs[ƒh‚É‚àŠÖŒW‚·‚é)</param>
-	/// <param name="position">‰ŠúÀ•W</param>
-	/// <param name="velocity">‘¬“x</param>
-	/// <param name="accel">‰Á‘¬“x</param>
-	/// <param name="startScale">‰ŠúƒTƒCƒY</param>
-	/// <param name="endScale">ÅIƒTƒCƒY</param>
-	/// <param name="startColor">‰ŠúF</param>
-	/// <param name="endColor">ÅIF</param>
+	/// <param name="Type">ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®å‹•ãã®ã‚¿ã‚¤ãƒ—</param>
+	/// <param name="life">å¯¿å‘½(ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãªã‚“ã§ã‚¹ãƒ”ãƒ¼ãƒ‰ã«ã‚‚é–¢ä¿‚ã™ã‚‹)</param>
+	/// <param name="position">åˆæœŸåº§æ¨™</param>
+	/// <param name="velocity">é€Ÿåº¦</param>
+	/// <param name="accel">åŠ é€Ÿåº¦</param>
+	/// <param name="startScale">åˆæœŸã‚µã‚¤ã‚º</param>
+	/// <param name="endScale">æœ€çµ‚ã‚µã‚¤ã‚º</param>
+	/// <param name="startColor">åˆæœŸè‰²</param>
+	/// <param name="endColor">æœ€çµ‚è‰²</param>
 	void Add(Type type, int life, Vector3 position,Vector3 velocity, Vector3 accel,Vector3 angle,float startScale, float endScale, Vector4 startColor, Vector4 endColor);
 
 	void AllDelete() { Particles.clear(); }
 
-private: // ƒƒ“ƒo•Ï”
+private: // ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	ComPtr<ID3D12Resource> constBuff; // ’è”ƒoƒbƒtƒ@
+	ComPtr<ID3D12Resource> constBuff; // å®šæ•°ãƒãƒƒãƒ•ã‚¡
 
-	// ƒ[ƒJƒ‹ƒ[ƒ‹ƒh•ÏŠ·s—ñ
+	// ãƒ­ãƒ¼ã‚«ãƒ«ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
 	Matrix4 matWorld;
 
-	//ƒp[ƒeƒBƒNƒ‹”z—ñ
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«é…åˆ—
 	std::list<Particle>Particles;
 
-	// ƒp[ƒeƒBƒNƒ‹‚ÌƒeƒNƒXƒ`ƒƒ
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	Texture *textureHandle_ = nullptr;
 };
 

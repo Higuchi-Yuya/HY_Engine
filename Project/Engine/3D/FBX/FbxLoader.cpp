@@ -3,6 +3,7 @@
 #include "MathUtil.h"
 
 
+
 FbxLoader* FbxLoader::sFbxLoader_;
 const std::string FbxLoader::sBaseDirectory = "Resources/3D_Resources/FBX_File/";
 
@@ -18,10 +19,10 @@ FbxLoader* FbxLoader::GetInstance()
 
 void FbxLoader::Initialize(ID3D12Device* device)
 {
-	// ˆø”‚©‚çƒƒ“ƒo•Ï”‚É‘ã“ü
+	// å¼•æ•°ã‹ã‚‰ãƒ¡ãƒ³ãƒå¤‰æ•°ã«ä»£å…¥
 	device_ = device;
 
-	// FBXƒ‚ƒfƒ‹‚Åg‚¤ƒfƒoƒCƒX‚à‚±‚±‚ÅƒZƒbƒg
+	// FBXãƒ¢ãƒ‡ãƒ«ã§ä½¿ã†ãƒ‡ãƒã‚¤ã‚¹ã‚‚ã“ã“ã§ã‚»ãƒƒãƒˆ
 	FbxModel::SetDevice(device);
 }
 
@@ -32,41 +33,41 @@ void FbxLoader::Finalize()
 
 FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 {
-	// ƒ}ƒgƒŠƒbƒNƒXŒ^‚ÌŠÖ”‚ğ—˜—p‚·‚é
+	// ãƒãƒˆãƒªãƒƒã‚¯ã‚¹å‹ã®é–¢æ•°ã‚’åˆ©ç”¨ã™ã‚‹
 	Matrix4 mathMat;
 
-	// ƒ‚ƒfƒ‹‚Æ“¯‚¶–¼‘O‚ÌƒtƒHƒ‹ƒ_‚©‚ç“Ç‚İ‚Ş
+	// ãƒ¢ãƒ‡ãƒ«ã¨åŒã˜åå‰ã®ãƒ•ã‚©ãƒ«ãƒ€ã‹ã‚‰èª­ã¿è¾¼ã‚€
 	const string directoryPath = sBaseDirectory + modelName + "/";
-	// Šg’£q.fbx‚ğ•t‰Á
+	// æ‹¡å¼µå­.fbxã‚’ä»˜åŠ 
 	const string fileName = modelName + ".fbx";
-	// ˜AŒ‹‚µ‚Äƒtƒ‹ƒpƒX‚ğ“¾‚é
+	// é€£çµã—ã¦ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’å¾—ã‚‹
 	const string fullpath = directoryPath + fileName;
 
-	// FBXƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İA‚»‚Ìî•ñ‚ğƒV[ƒ“‚ÉƒCƒ“ƒ|[ƒg‚·‚é
+	// FBXãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã€ãã®æƒ…å ±ã‚’ã‚·ãƒ¼ãƒ³ã«ã‚¤ãƒ³ãƒãƒ¼ãƒˆã™ã‚‹
 	mScene_ = aiImportFile(fullpath.c_str(), flag_);
 
-	// ƒV[ƒ“‚ª¶¬‚Å‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©Šm”F
+	// ã‚·ãƒ¼ãƒ³ãŒç”Ÿæˆã§ãã¦ã„ã‚‹ã‹ã©ã†ã‹ç¢ºèª
 	if (!mScene_) {
 		assert(0);
 	}
 
-	// ƒ‚ƒfƒ‹¶¬
+	// ãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	FbxModel* model = new FbxModel();
 	model->name_ = modelName;
 
-	// FBXƒm[ƒh‚Ì”‚ğæ“¾
+	// FBXãƒãƒ¼ãƒ‰ã®æ•°ã‚’å–å¾—
 	UINT32 nodeCount = 0;
 	GetNodeNum(mScene_->mRootNode, nodeCount);
 
-	// ‚ ‚ç‚©‚¶‚ß•K—v”•ª‚Ìƒƒ‚ƒŠ‚ğŠm•Û‚·‚é‚±‚Æ‚ÅAƒAƒhƒŒƒX‚ª‚¸‚ê‚é‚Ì‚ğ—\–h
+	// ã‚ã‚‰ã‹ã˜ã‚å¿…è¦æ•°åˆ†ã®ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã™ã‚‹ã“ã¨ã§ã€ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒãšã‚Œã‚‹ã®ã‚’äºˆé˜²
 	model->nodes_.reserve(nodeCount);
 
 	model->globalInverseTransform_ = MathUtil::AssimpMatToMat4(mScene_->mRootNode->mTransformation);
 
-	// ƒ‹[ƒgƒm[ƒh‚©‚ç‡‚É‰ğÍ‚µ‚Äƒ‚ƒfƒ‹‚É—¬‚µ‚Ş
+	// ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã‹ã‚‰é †ã«è§£æã—ã¦ãƒ¢ãƒ‡ãƒ«ã«æµã—è¾¼ã‚€
 	ParseNodeRecursive(model, mScene_->mRootNode);
 
-	// FBXƒV[ƒ“‰ğ•ú
+	// FBXã‚·ãƒ¼ãƒ³è§£æ”¾
 	aiReleaseImport(mScene_);
 
 	for (size_t i = 0; i < model->nodes_.size(); i++)
@@ -89,7 +90,7 @@ FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 
 void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 {
-	// ƒ}ƒgƒŠƒbƒNƒXŒ^‚ÌŠÖ”‚ğ—˜—p‚·‚é
+	// ãƒãƒˆãƒªãƒƒã‚¯ã‚¹å‹ã®é–¢æ•°ã‚’åˆ©ç”¨ã™ã‚‹
 	Matrix4 mathMat;
 
 	auto& vertices = model->meshes_.back()->vertices_;
@@ -109,17 +110,17 @@ void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 
 		auto& meshBone = fbxMesh->mBones[i];
 
-		//ƒ{[ƒ“©‘Ì‚Ìƒm[ƒh‚Ì–¼‘O‚ğæ“¾
+		//ãƒœãƒ¼ãƒ³è‡ªä½“ã®ãƒãƒ¼ãƒ‰ã®åå‰ã‚’å–å¾—
 		const char* boneName = meshBone->mName.C_Str();
 
-		//V‚µ‚­ƒ{[ƒ“‚ğ’Ç‰Á‚µA’Ç‰Á‚µ‚½ƒ{[ƒ“‚ÌQÆ‚ğ“¾‚é
+		//æ–°ã—ããƒœãƒ¼ãƒ³ã‚’è¿½åŠ ã—ã€è¿½åŠ ã—ãŸãƒœãƒ¼ãƒ³ã®å‚ç…§ã‚’å¾—ã‚‹
 		Mesh::Bone bone;
 
 		bone.name = boneName;
 
-		//FBX‚©‚ç‰Šúp¨s—ñ‚ğæ“¾‚·‚é
+		//FBXã‹ã‚‰åˆæœŸå§¿å‹¢è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 
-		//‰Šúp¨s—ñ‚Ì‹ts—ñ‚ğ“¾‚é
+		//åˆæœŸå§¿å‹¢è¡Œåˆ—ã®é€†è¡Œåˆ—ã‚’å¾—ã‚‹
 		bone.offsetMatirx = MathUtil::AssimpMatToMat4(meshBone->mOffsetMatrix.Transpose());
 
 
@@ -138,22 +139,22 @@ void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 		}
 	}
 
-	//Še’¸“_‚É‚Â‚¢‚Äˆ—
+	//å„é ‚ç‚¹ã«ã¤ã„ã¦å‡¦ç†
 	for (size_t j = 0; j < vertices.size(); j++)
 	{
-		//’¸“_‚ÌƒEƒFƒCƒg‚©‚çÅ‚à‘å‚«‚¢4‚Â‚ğ‘I‘ğ
+		//é ‚ç‚¹ã®ã‚¦ã‚§ã‚¤ãƒˆã‹ã‚‰æœ€ã‚‚å¤§ãã„4ã¤ã‚’é¸æŠ
 		auto& weightList = weightLists[j];
 
 		size_t weightArrayIndex = 0;
-		//~‡ƒ\[ƒgÏ‚İ‚ÌƒEƒFƒCƒgƒŠƒXƒg‚©‚ç
+		//é™é †ã‚½ãƒ¼ãƒˆæ¸ˆã¿ã®ã‚¦ã‚§ã‚¤ãƒˆãƒªã‚¹ãƒˆã‹ã‚‰
 
 		for (auto& weightSet : weightList)
 		{
-			//’¸“_ƒf[ƒ^‚É‘‚«‚İ
+			//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã«æ›¸ãè¾¼ã¿
 			vertices[j].boneIndex[weightArrayIndex] = weightSet.index;
 			vertices[j].boneWeight[weightArrayIndex] = weightSet.weight;
 
-			//4‚Â‚É’B‚µ‚½‚çC—¹
+			//4ã¤ã«é”ã—ãŸã‚‰ä¿®äº†
 			if (++weightArrayIndex >= Mesh::sMAX_BONE_INDICES)
 			{
 				break;
@@ -178,12 +179,12 @@ void FbxLoader::GetNodeNum(const aiNode* node, UINT32& num)
 
 void FbxLoader::ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* parent)
 {
-	//// ƒm[ƒh–¼‚ğæ“¾
+	//// ãƒãƒ¼ãƒ‰åã‚’å–å¾—
 	//string name = fbxNode->GetName();
-	// ƒ‚ƒfƒ‹‚Éƒm[ƒh‚ğ’Ç‰Á
+	// ãƒ¢ãƒ‡ãƒ«ã«ãƒãƒ¼ãƒ‰ã‚’è¿½åŠ 
 	model->nodes_.emplace_back();
 	Node& node = model->nodes_.back();
-	// ƒm[ƒh–¼‚ğæ“¾
+	// ãƒãƒ¼ãƒ‰åã‚’å–å¾—
 	node.name = fbxNode->mName.C_Str();
 
 	node.transform =
@@ -194,12 +195,12 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* paren
 		fbxNode->mTransformation.d1, fbxNode->mTransformation.d2, fbxNode->mTransformation.d3, fbxNode->mTransformation.d4,
 	};
 
-	//ƒOƒ[ƒoƒ‹•ÏŒ`s—ñ‚ÌŒvZ
+	//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰å½¢è¡Œåˆ—ã®è¨ˆç®—
 	node.globalTransform = node.transform;
 
 	if (parent) {
 		node.parent = parent;
-		// e‚Ì•ÏŒ`‚ğæZ
+		// è¦ªã®å¤‰å½¢ã‚’ä¹—ç®—
 		node.globalTransform *= parent->globalTransform;
 	}
 
@@ -217,7 +218,7 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* paren
 		}
 	}
 
-	// qƒm[ƒh‚É‘Î‚µ‚ÄÄ‹AŒÄ‚Ño‚µ
+	// å­ãƒãƒ¼ãƒ‰ã«å¯¾ã—ã¦å†å¸°å‘¼ã³å‡ºã—
 	for (uint32_t i = 0; i < fbxNode->mNumChildren; i++) {
 		ParseNodeRecursive(model, fbxNode->mChildren[i], &node);
 	}
@@ -225,15 +226,15 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, aiNode* fbxNode, Node* paren
 
 void FbxLoader::ParseMesh(FbxModel* model, aiMesh* fbxNode)
 {
-	// ’¸“_À•W“Ç‚İæ‚è
+	// é ‚ç‚¹åº§æ¨™èª­ã¿å–ã‚Š
 	ParseMeshVertices(model, fbxNode);
-	// –Ê‚ğ\¬‚·‚éƒf[ƒ^‚Ì“Ç‚İæ‚è
+	// é¢ã‚’æ§‹æˆã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿å–ã‚Š
 	ParseMeshFaces(model, fbxNode);
-	// ƒ}ƒeƒŠƒAƒ‹‚Ì“Ç‚İæ‚è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ã®èª­ã¿å–ã‚Š
 	ParseMaterial(model, fbxNode, mScene_->mMaterials[fbxNode->mMaterialIndex]);
 
 	if (fbxNode->HasBones()) {
-		//ƒXƒLƒjƒ“ƒOî•ñ‚Ì“Ç‚İæ‚è
+		//ã‚¹ã‚­ãƒ‹ãƒ³ã‚°æƒ…å ±ã®èª­ã¿å–ã‚Š
 		ParseSkin(model, fbxNode);
 	}
 }
@@ -242,24 +243,24 @@ void FbxLoader::ParseMeshVertices(FbxModel* model, aiMesh* fbxMesh)
 {
 	auto& vertices = model->meshes_.back()->vertices_;
 
-	// ’¸“_À•Wƒf[ƒ^‚Ì”
+	// é ‚ç‚¹åº§æ¨™ãƒ‡ãƒ¼ã‚¿ã®æ•°
 	const int controlPointsCount = fbxMesh->mNumVertices;
 
-	// •K—v”‚¾‚¯’¸“_ƒf[ƒ^”z—ñ‚ğŠm•Û
+	// å¿…è¦æ•°ã ã‘é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿é…åˆ—ã‚’ç¢ºä¿
 	Mesh::VertexPosNormalUv vert{};
 	model->meshes_.back()->vertices_.resize(controlPointsCount, vert);
 
-	// FBXƒƒbƒVƒ…‚Ì‘S’¸“_À•W‚ğƒ‚ƒfƒ‹“à‚Ì”z—ñ‚ÉƒRƒs[‚·‚éB
+	// FBXãƒ¡ãƒƒã‚·ãƒ¥ã®å…¨é ‚ç‚¹åº§æ¨™ã‚’ãƒ¢ãƒ‡ãƒ«å†…ã®é…åˆ—ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ã€‚
 	for (int i = 0; i < controlPointsCount; i++) {
 		Mesh::VertexPosNormalUv& vertex = vertices[i];
-		// À•W‚ÌƒRƒs[
+		// åº§æ¨™ã®ã‚³ãƒ”ãƒ¼
 		aiVector3D position = fbxMesh->mVertices[i];
 
 		vertex.pos.x = position.x;
 		vertex.pos.y = position.y;
 		vertex.pos.z = position.z;
 
-		// –@ü‚ÌƒRƒs[
+		// æ³•ç·šã®ã‚³ãƒ”ãƒ¼
 		aiVector3D normal = fbxMesh->mNormals[i];
 
 		vertex.normal.x = normal.x;
@@ -274,12 +275,12 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, aiMesh* fbxMesh)
 	auto& vertices = model->meshes_.back()->vertices_;
 	auto& indices = model->meshes_.back()->indices_;
 
-	// –Ê‚Ì”
+	// é¢ã®æ•°
 	const int polygonCount = fbxMesh->mNumVertices;
 
 	aiVector3D zero3D(0.0f, 0.0f, 0.0f);
 
-	// –Ê‚²‚Æ‚Ìî•ñ“Ç‚İæ‚è
+	// é¢ã”ã¨ã®æƒ…å ±èª­ã¿å–ã‚Š
 	for (int i = 0; i < polygonCount; i++) {
 		aiVector3D* uv = (fbxMesh->HasTextureCoords(0)) ? &(fbxMesh->mTextureCoords[0][i]) : &zero3D;
 
@@ -288,11 +289,12 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, aiMesh* fbxMesh)
 
 	indices.resize(fbxMesh->mNumFaces * 3);
 
-	for (UINT i = 0; i < fbxMesh->mNumFaces; i++) {
+	for (uint32_t i = 0; i < fbxMesh->mNumFaces; i++) {
 		const aiFace& face = fbxMesh->mFaces[i];
 
-		for (UINT j = 0; j < face.mNumIndices; j++) {
-			indices[i * 3 + j] = face.mIndices[j];
+		for (uint32_t j = 0; j < face.mNumIndices; j++) {
+
+			indices[i * 3 + j] = (unsigned short)face.mIndices[j];
 		}
 
 	}
@@ -300,6 +302,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, aiMesh* fbxMesh)
 
 void FbxLoader::ParseMaterial(FbxModel* model, aiMesh* fbxMesh, aiMaterial* aimaterial)
 {
+	fbxMesh;
 	auto& material = model->meshes_.back()->material_;
 
 	material = Material::Create();
@@ -328,12 +331,12 @@ void FbxLoader::ParseMaterial(FbxModel* model, aiMesh* fbxMesh, aiMaterial* aima
 std::string FbxLoader::ExtractFileName(const std::string& path)
 {
 	size_t pos1;
-	// ‹æØ‚è•¶š '\\' ‚ªo‚Ä‚­‚éˆê”ÔÅŒã‚Ì•”•ª‚ğŒŸõ
+	// åŒºåˆ‡ã‚Šæ–‡å­— '\\' ãŒå‡ºã¦ãã‚‹ä¸€ç•ªæœ€å¾Œã®éƒ¨åˆ†ã‚’æ¤œç´¢
 	pos1 = path.rfind('\\');
 	if (pos1 != string::npos) {
 		return path.substr(pos1 + 1, path.size() - pos1 - 1);
 	}
-	// ‹æØ‚è•¶š '/' ‚ªo‚Ä‚­‚éˆê”ÔÅŒã‚Ì•”•ª‚ğŒŸõ
+	// åŒºåˆ‡ã‚Šæ–‡å­— '/' ãŒå‡ºã¦ãã‚‹ä¸€ç•ªæœ€å¾Œã®éƒ¨åˆ†ã‚’æ¤œç´¢
 	pos1 = path.rfind('/');
 	if (pos1 != string::npos) {
 		return path.substr(pos1 + 1, path.size() - pos1 - 1);
@@ -345,7 +348,7 @@ std::string FbxLoader::ExtractFileName(const std::string& path)
 Texture FbxLoader::LoadMatrixerialTextures(aiMaterial* cmatrix, aiTextureType type, std::string typeName, const aiScene* scene_, const std::string& modelName)
 {
 	Texture textures;
-
+	scene_;
 	for (size_t i = 0; i < cmatrix->GetTextureCount(type); i++)
 	{
 		aiString str;

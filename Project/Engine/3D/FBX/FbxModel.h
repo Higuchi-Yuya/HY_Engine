@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <string>
 #include <vector>
 #include <DirectXMath.h>
@@ -22,25 +23,25 @@
 class FbxModel
 {
 public:
-	// ƒtƒŒƒ“ƒhƒNƒ‰ƒX
+	// ãƒ•ãƒ¬ãƒ³ãƒ‰ã‚¯ãƒ©ã‚¹
 	friend class FbxLoader;
 
-public://’è”
+public://å®šæ•°
 	static const int MAX_BONE_INDICES = 4;
 
 
-public: // ƒTƒuƒNƒ‰ƒX
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+public: // ã‚µãƒ–ã‚¯ãƒ©ã‚¹
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct VertexPosNormalUvFbxSkin
 	{
-		DirectX::XMFLOAT3 pos; // xyzÀ•W
-		DirectX::XMFLOAT3 normal; // –@üƒxƒNƒgƒ‹
-		DirectX::XMFLOAT2 uv;  // uvÀ•W
+		DirectX::XMFLOAT3 pos; // xyzåº§æ¨™
+		DirectX::XMFLOAT3 normal; // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+		DirectX::XMFLOAT2 uv;  // uvåº§æ¨™
 
 		uint32_t boneIndex[MAX_BONE_INDICES];
 		float boneWeight[MAX_BONE_INDICES];
 	};
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferPolygonExplosion
 	{
 		float Destruction = 0.0f;
@@ -50,98 +51,98 @@ public: // ƒTƒuƒNƒ‰ƒX
 	};
 
 private:
-	// Microsoft::WRL::‚ğÈ—ª
+	// Microsoft::WRL::ã‚’çœç•¥
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 
 public:
 
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferData
 	{
-		Vector4 color;	// F (RGBA)
-		Matrix4 mat;	// ‚R‚c•ÏŠ·s—ñ
+		Vector4 color;	// è‰² (RGBA)
+		Matrix4 mat;	// ï¼“ï¼¤å¤‰æ›è¡Œåˆ—
 	};
 
-	//1ƒƒbƒVƒ…‚É‚Ä‚éƒ{[ƒ“‚ÌÅ‘åŒÂ”
+	//1ãƒ¡ãƒƒã‚·ãƒ¥ã«æŒã¦ã‚‹ãƒœãƒ¼ãƒ³ã®æœ€å¤§å€‹æ•°
 	static const int MAX_BONES = 128;
 
-	//’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘Ì
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct ConstBufferDataSkin {
 		Matrix4 bones[MAX_BONES];
 	};
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ª‚È‚¢ê‡
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒãªã„å ´åˆ
 	struct ConstBufferDataInitialMatrix {
 		Matrix4 InitialMatrix;
 	};
 
 
-	//’è”ƒoƒbƒtƒ@(ƒXƒLƒ“)
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡(ã‚¹ã‚­ãƒ³)
 	static Microsoft::WRL::ComPtr<ID3D12Resource> constBuffSkin_;
-	//’è”ƒoƒbƒtƒ@(ƒAƒjƒ[ƒVƒ‡ƒ“‚È‚µ)
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡(ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãªã—)
 	static Microsoft::WRL::ComPtr<ID3D12Resource> constBuffNothing_;
 
 private:
 	static const std::string kBaseDirectory_;
 	static const std::string kDefaultModelName_;
 
-private: // Ã“Iƒƒ“ƒo•Ï”
-	// ƒfƒXƒNƒŠƒvƒ^ƒTƒCƒY
+private: // é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚µã‚¤ã‚º
 	static uint32_t sDescriptorHandleIncrementSize_;
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	static ID3D12GraphicsCommandList* sCommandList_;
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
 	static Microsoft::WRL::ComPtr<ID3D12RootSignature> sRootSignature_;
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgƒIƒuƒWƒFƒNƒg
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	static Microsoft::WRL::ComPtr<ID3D12PipelineState> sPipelineState_;
-	// ƒ‰ƒCƒg
+	// ãƒ©ã‚¤ãƒˆ
 	static std::unique_ptr<LightGroup> lightGroup_;
-	// Ø‚è‚Ä‚­‚éƒfƒoƒCƒX
+	// å€Ÿã‚Šã¦ãã‚‹ãƒ‡ãƒã‚¤ã‚¹
 	static ID3D12Device* device_;
 
-	static ShaderObj* sVsShader_;// ’¸“_ƒVƒF[ƒ_[
-	static ShaderObj* sPsShader_;// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[
-	static ShaderObj* sGsShader_;// ƒWƒIƒƒgƒŠƒVƒF[ƒ_[
+	static ShaderObj* sVsShader_;// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	static ShaderObj* sPsShader_;// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	static ShaderObj* sGsShader_;// ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 
-public: // Ã“Iƒƒ“ƒoŠÖ”
+public: // é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 
 
-	// Ã“I‰Šú‰»
+	// é™çš„åˆæœŸåŒ–
 	static void StaticInitialize();
 
-	// Ã“II—¹ˆ—
+	// é™çš„çµ‚äº†å‡¦ç†
 	static void StaticFainalize();
 
-	// ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“‚Ì‰Šú‰»
+	// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã®åˆæœŸåŒ–
 	static void InitializeGraphicsPipeline();
 
-	// 3Dƒ‚ƒfƒ‹¶¬
+	// 3Dãƒ¢ãƒ‡ãƒ«ç”Ÿæˆ
 	static FbxModel* Create();
 
-	// OBJƒtƒ@ƒCƒ‹‚©‚çƒƒbƒVƒ…¶¬
+	// OBJãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ç”Ÿæˆ
 	static FbxModel* CreateFromFbx(const std::string& modelname, bool smoothing = false);
 
-	// Ø‚è‚Ä‚­‚éƒfƒoƒCƒX‚ğƒZƒbƒg
+	// å€Ÿã‚Šã¦ãã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚»ãƒƒãƒˆ
 	static void SetDevice(ID3D12Device* device) { device_ = device; }
 
-	// •`‰æ‘Oˆ—
+	// æç”»å‰å‡¦ç†
 	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
-	// •`‰æŒãˆ—
+	// æç”»å¾Œå‡¦ç†
 	static void PostDraw();
 
-public: // ƒƒ“ƒoŠÖ”
-	// ƒfƒXƒgƒ‰ƒNƒ^
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~FbxModel();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize();
 
 	void FbxUpdate(float frem);
 
 
-	// •`‰æ
+	// æç”»
 	//void Draw(
 	//	const WorldTransform& worldTransform, const ViewProjection& viewProjection);
 
@@ -172,7 +173,7 @@ public: // ƒƒ“ƒoŠÖ”
 
 	const void SetPolygonExplosion(ConstBufferPolygonExplosion polygonExplosion) { *constMap_ = polygonExplosion; }
 
-	// ƒƒbƒVƒ…ƒRƒ“ƒeƒi‚ğæ“¾
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠã‚’å–å¾—
 	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
 
 	Matrix4 GetLeftBonePos();
@@ -184,18 +185,18 @@ public: // ƒƒ“ƒoŠÖ”
 
 private:
 
-	// ƒm[ƒh”z—ñ
+	// ãƒãƒ¼ãƒ‰é…åˆ—
 	std::vector<Node> nodes_;
 
 	Matrix4 globalInverseTransform_;
 
-	// –¼‘O
+	// åå‰
 	std::string name_;
-	// ƒƒbƒVƒ…ƒRƒ“ƒeƒi
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠ
 	std::vector<Mesh*> meshes_;
-	// ƒ}ƒeƒŠƒAƒ‹ƒRƒ“ƒeƒi
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚³ãƒ³ãƒ†ãƒŠ
 	std::unordered_map<std::string, Material*> materials_;
-	// ƒfƒtƒHƒ‹ƒgƒ}ƒeƒŠƒAƒ‹
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ†ãƒªã‚¢ãƒ«
 	Material* defaultMaterial_ = nullptr;
 
 	Texture modelTextureHandle_;
@@ -205,7 +206,7 @@ private:
 
 	WorldTransform naosi_;
 
-	//’è”ƒoƒbƒtƒ@
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
 	ComPtr<ID3D12Resource> constBuff_;
 
 	ConstBufferPolygonExplosion* constMap_;

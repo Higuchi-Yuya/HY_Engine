@@ -1,9 +1,10 @@
 #include "OperationUI.h"
 #include "JoyPadInput.h"
 
+
 OperationUI::OperationUI()
 {
-	// ƒXƒvƒ‰ƒCƒg‚Ìƒ†ƒj[ƒNƒ|ƒCƒ“ƒ^ì‚è
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒ¦ãƒ‹ãƒ¼ã‚¯ãƒã‚¤ãƒ³ã‚¿ä½œã‚Š
 	for (uint32_t i = 0; i < Type::Size; i++){
 		sprites_.push_back(std::move(std::make_unique<Sprite>()));
 	}
@@ -13,7 +14,7 @@ void OperationUI::Init()
 {
 	LstickDefuPos_ = Vector2(100, 600);
 
-	// ƒXƒvƒ‰ƒCƒg‚Ìƒnƒ“ƒhƒ‹‚Ì‰Šú‰»
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«ã®åˆæœŸåŒ–
 	AbuttonTex_.reset(TextureManager::Load2DTextureP("UI/Abutton.png"));
 	LstickTex_.reset(TextureManager::Load2DTextureP("UI/Lstic.png"));
 	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/AttackText.png"));
@@ -22,31 +23,31 @@ void OperationUI::Init()
 	Vector3 AbuttonScale(1.0f, 1.0f, 0);
 	Vector3 LstickScale(1.5f, 1.5f, 0);
 
-	// Aƒ{ƒ^ƒ“ Up ‚Ì‰Šú‰»
+	// Aãƒœã‚¿ãƒ³ Up ã®åˆæœŸåŒ–
 	sprites_[AButtonUp]->Initialize(AbuttonTex_.get(),Vector2(100, 500), Vector2(49, 48));
 	sprites_[AButtonUp]->SetRectSize(Vector2(0, 0), Vector2(204, 200));
 	sprites_[AButtonUp]->SetScale(AbuttonScale);
 
-	// Aƒ{ƒ^ƒ“ Down ‚Ì‰Šú‰»
+	// Aãƒœã‚¿ãƒ³ Down ã®åˆæœŸåŒ–
 	sprites_[AButtonDown]->Initialize(AbuttonTex_.get(), Vector2(100, 500), Vector2(49, 48));
 	sprites_[AButtonDown]->SetRectSize(Vector2(204, 0), Vector2(408, 200));
 	sprites_[AButtonDown]->SetScale(AbuttonScale);
 
-	// LƒXƒeƒBƒbƒN ã ‚Ì‰Šú‰»
+	// Lã‚¹ãƒ†ã‚£ãƒƒã‚¯ ä¸Š ã®åˆæœŸåŒ–
 	sprites_[LstickCover]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(28, 48));
 	sprites_[LstickCover]->SetRectSize(Vector2(0, 0), Vector2(115, 200));
 	sprites_[LstickCover]->SetScale(LstickScale);
 
-	// LƒXƒeƒBƒbƒN ‰º ‚Ì‰Šú‰»
+	// Lã‚¹ãƒ†ã‚£ãƒƒã‚¯ ä¸‹ ã®åˆæœŸåŒ–
 	sprites_[LstickUnder]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(46, 48));
 	sprites_[LstickUnder]->SetRectSize(Vector2(115, 0), Vector2(308, 200));
 	sprites_[LstickUnder]->SetScale(LstickScale);
 
-	// UŒ‚ƒeƒLƒXƒg‚Ì‰Šú‰»
+	// æ”»æ’ƒãƒ†ã‚­ã‚¹ãƒˆã®åˆæœŸåŒ–
 	sprites_[AttackText]->Initialize(attackTextTex_.get(), Vector2(100, 500) + Vector2(100, -2),Vector2(360,120));
 	sprites_[AttackText]->SetScale(Vector3(0.3f, 0.3f, 0));
 
-	// ˆÚ“®ƒeƒLƒXƒg‚Ì‰Šú‰»
+	// ç§»å‹•ãƒ†ã‚­ã‚¹ãƒˆã®åˆæœŸåŒ–
 	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(100, 0), Vector2(272, 120));
 	sprites_[MoveText]->SetScale(Vector3(0.3f, 0.3f, 0));
 }

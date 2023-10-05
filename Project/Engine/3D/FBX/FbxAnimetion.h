@@ -1,4 +1,5 @@
 #pragma once
+
 #include<assimp/Importer.hpp>
 #include<assimp/scene.h>
 #include<assimp/postprocess.h>
@@ -18,10 +19,10 @@ public:
 
 	aiAnimation* GetAnimation(uint32_t AnimationNumber);
 
-public: // ’è”
-	// ƒ‚ƒfƒ‹Ši”[ƒ‹[ƒgƒpƒX
+public: // å®šæ•°
+	// ãƒ¢ãƒ‡ãƒ«æ ¼ç´ãƒ«ãƒ¼ãƒˆãƒ‘ã‚¹
 	static const std::string baseDirectory;
-	// ƒeƒNƒXƒ`ƒƒ‚ª‚È‚¢ê‡‚Ì•W€ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒãªã„å ´åˆã®æ¨™æº–ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«å
 	static const std::string defaultTextureFileName;
 
 private:

@@ -1,5 +1,6 @@
 #pragma once
 
+
 class Vector4
 {
 public:
@@ -8,22 +9,22 @@ public:
 	float z;
 	float w;
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	Vector4();								//—ëƒxƒNƒgƒ‹‚Æ‚·‚é
-	Vector4(float x, float y, float z, float w);		//x¬•ª,y¬•ª,z¬•ª ‚ğw’è‚µ‚Ä¶¬
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	Vector4();								//é›¶ãƒ™ã‚¯ãƒˆãƒ«ã¨ã™ã‚‹
+	Vector4(float x, float y, float z, float w);		//xæˆåˆ†,yæˆåˆ†,zæˆåˆ† ã‚’æŒ‡å®šã—ã¦ç”Ÿæˆ
 
-	//ƒƒ“ƒoŠÖ”
-	float length() const;					//ƒmƒ‹ƒ€(’·‚³)‚ğ‹‚ß‚é
-	Vector4& normalize();					//³‹K‰»‚·‚é
-	float dot(const Vector4& v) const;		//“àÏ‚ğ‹‚ß‚é
-	Vector4 cross(const Vector4& v) const;	//ŠOÏ‚ğ‹‚ß‚é
+	//ãƒ¡ãƒ³ãƒé–¢æ•°
+	float length() const;					//ãƒãƒ«ãƒ (é•·ã•)ã‚’æ±‚ã‚ã‚‹
+	Vector4& normalize();					//æ­£è¦åŒ–ã™ã‚‹
+	float dot(const Vector4& v) const;		//å†…ç©ã‚’æ±‚ã‚ã‚‹
+	Vector4 cross(const Vector4& v) const;	//å¤–ç©ã‚’æ±‚ã‚ã‚‹
 
 
-	//’P€‰‰ZqƒI[ƒo[ƒ[ƒh
+	//å˜é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	Vector4 operator+() const;
 	Vector4 operator-() const;
 
-	//‘ã“ü‰‰ZqƒI[ƒo[ƒ[ƒh
+	//ä»£å…¥æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	Vector4& operator+=(const Vector4& v);
 	Vector4& operator-=(const Vector4& v);
 	Vector4& operator*=(float s);
@@ -32,8 +33,8 @@ public:
 };
 
 
-//@2€‰‰ZqƒI[ƒo[ƒ[ƒh
-//@‚¢‚ë‚¢‚ë‚Èˆø”‚Ìƒpƒ^[ƒ“‚É‘Î‰(ˆø”‚Ì˜—ñ)‚·‚é‚½‚ßAˆÈ‰º‚Ì‚æ‚¤‚É€”õ‚µ‚Ä‚¢‚é
+//ã€€2é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
+//ã€€ã„ã‚ã„ã‚ãªå¼•æ•°ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã«å¯¾å¿œ(å¼•æ•°ã®åºåˆ—)ã™ã‚‹ãŸã‚ã€ä»¥ä¸‹ã®ã‚ˆã†ã«æº–å‚™ã—ã¦ã„ã‚‹
 const Vector4 operator+(const Vector4& v1, const Vector4& v2);
 const Vector4 operator-(const Vector4& v1, const Vector4& v2);
 const Vector4 operator*(const Vector4& v, float s);

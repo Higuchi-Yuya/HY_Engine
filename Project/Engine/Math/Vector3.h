@@ -1,4 +1,5 @@
 #pragma once
+
 #include <assimp/vector3.h>
 
 class Vector3
@@ -8,51 +9,51 @@ public:
 	float y;
 	float z;
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Vector3();
 	Vector3(float x, float y, float z);
 
-	//ƒƒ“ƒoŠÖ”
+	//ãƒ¡ãƒ³ãƒé–¢æ•°
 	float length()const;
 	float length(Vector3 v1)const;
 
-	Vector3& normalize(); // ³‹K‰»‚µ‚½ƒxƒNƒgƒ‹
-	static float dot(const Vector3& v, const Vector3& v2);// “ñ‚Â‚ÌƒxƒNƒgƒ‹‚Ì“àÏ
+	Vector3& normalize(); // æ­£è¦åŒ–ã—ãŸãƒ™ã‚¯ãƒˆãƒ«
+	static float dot(const Vector3& v, const Vector3& v2);// äºŒã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®å†…ç©
 	Vector3 cross(const Vector3& v)const;
-	Vector3 cross(const Vector3& v1, const Vector3& v2)const;// “ñ‚Â‚ÌƒxƒNƒgƒ‹‚ÌŠOÏ
-	static Vector3 Cross(const Vector3 v1, const Vector3 v2);		// “ñ‚Â‚ÌƒxƒNƒgƒ‹‚ÌŠOÏ
-	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;// “ñ‚Â‚ÌƒxƒNƒgƒ‹‚Ì‹——£
+	Vector3 cross(const Vector3& v1, const Vector3& v2)const;// äºŒã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®å¤–ç©
+	static Vector3 Cross(const Vector3 v1, const Vector3 v2);		// äºŒã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®å¤–ç©
+	Vector3 distanceFrom(const Vector3& v, const Vector3& v2)const;// äºŒã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®è·é›¢
 
-	// •âŠÔŠÖ”
-	// üŒ`•âŠÔ(1ŸŠÖ”•âŠÔ)
+	// è£œé–“é–¢æ•°
+	// ç·šå½¢è£œé–“(1æ¬¡é–¢æ•°è£œé–“)
 	static const Vector3 lerp(const Vector3& start, const Vector3& end, const float t);
 
-	//“x”–@‚ğŒÊ“x–@‚É•ÏŠ·‚·‚éŠÖ”
+	//åº¦æ•°æ³•ã‚’å¼§åº¦æ³•ã«å¤‰æ›ã™ã‚‹é–¢æ•°
 	static float Deg2Rad(float Deg) {
 		float PI = 3.141592f;
 		return Deg * PI / 180;
 
 	}
 
-	//ŒÊ“x–@‚ğ“x”–@‚É•ÏŠ·‚·‚éŠÖ”
+	//å¼§åº¦æ³•ã‚’åº¦æ•°æ³•ã«å¤‰æ›ã™ã‚‹é–¢æ•°
 	static float Rad2Deg(float rad) {
 		float PI = 3.141592f;
 		return rad / PI * 180;
 
 	}
 
-	//’P€‰‰ZqƒI[ƒo[ƒ[ƒh
+	//å˜é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	Vector3 operator+()const;
 	Vector3 operator-()const;
 
-	//‘ã“ü‰‰ZqƒI[ƒo[ƒ[ƒh
+	//ä»£å…¥æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	Vector3& operator+=(const Vector3& v);
 	Vector3& operator-=(const Vector3& v);
 	Vector3& operator*=(float s);
 	Vector3& operator*=(const Vector3& v);
 	Vector3& operator/=(float s);
 
-	// ”äŠr‰‰Zq‚ÌƒI[ƒo[ƒ[ƒh
+	// æ¯”è¼ƒæ¼”ç®—å­ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	//bool operator==(const Vector3 other);
 	//bool operator!=(const Vector3 other);
 	//bool operator>=(const Vector3 other);
@@ -64,8 +65,8 @@ public:
 };
 
 
-//2€‰‰ZqƒI[ƒo[ƒ[ƒh
-//¦‚¢‚ë‚ñ‚Èˆø”‚Ìƒpƒ^[ƒ“‚É‘Î‰(ˆø”‚Ì‡˜)‚·‚é‚½‚ßAˆÈ‰º‚Ì‚æ‚¤‚É€”õ‚µ‚Ä‚¢‚é
+//2é …æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
+//â€»ã„ã‚ã‚“ãªå¼•æ•°ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã«å¯¾å¿œ(å¼•æ•°ã®é †åº)ã™ã‚‹ãŸã‚ã€ä»¥ä¸‹ã®ã‚ˆã†ã«æº–å‚™ã—ã¦ã„ã‚‹
 const Vector3 operator+(const Vector3& v1, const Vector3& v2);
 const Vector3 operator-(const Vector3& v1, const Vector3& v2);
 const Vector3 operator*(const Vector3& v1, const Vector3& v2);

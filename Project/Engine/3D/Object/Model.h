@@ -1,93 +1,94 @@
 #pragma once
+
 #include "Mesh.h"
 
 class Model
 {
-private: // ƒGƒCƒŠƒAƒX
-	// Microsoft::WRL::‚ğÈ—ª
+private: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// Microsoft::WRL::ã‚’çœç•¥
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-public:// ƒƒ“ƒoŠÖ”
+public:// ãƒ¡ãƒ³ãƒé–¢æ•°
 	Model();
 	~Model();
 
-	// OBJƒtƒ@ƒCƒ‹‚©‚ç3Dƒ‚ƒfƒ‹‚ğ“Ç‚İ‚Ş
+	// OBJãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰3Dãƒ¢ãƒ‡ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 	static Model* LoadFromOBJ(const std::string& modelname,bool smoothing = false);
 
 	/// <summary>
-	/// ƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿
 	/// </summary>
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
-	// •`‰æ
+	// æç”»
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 
-	// ƒfƒoƒCƒX‚ÌƒZƒbƒ^[
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ã‚»ãƒƒã‚¿ãƒ¼
 	static void SetDevice(ID3D12Device* device);
 
 	/// <summary>
-	/// ƒƒbƒVƒ…ƒRƒ“ƒeƒi‚ğæ“¾
+	/// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠã‚’å–å¾—
 	/// </summary>
-	/// <returns>ƒƒbƒVƒ…ƒRƒ“ƒeƒi</returns>
+	/// <returns>ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠ</returns>
 	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
 	
 	/// <summary>
-	/// ƒ‚ƒfƒ‹“à‚Ìˆê”Ô¬‚³‚¢’¸“_ƒ|ƒWƒVƒ‡ƒ“‚Ìæ“¾
+	/// ãƒ¢ãƒ‡ãƒ«å†…ã®ä¸€ç•ªå°ã•ã„é ‚ç‚¹ãƒã‚¸ã‚·ãƒ§ãƒ³ã®å–å¾—
 	/// </summary>
 	/// <returns></returns>
 	inline const Vector3& GetMinVertex() { return minVertex_; }
 
 	/// <summary>
-	/// ƒ‚ƒfƒ‹“à‚Ìˆê”Ô‘å‚«‚¢’¸“_ƒ|ƒWƒVƒ‡ƒ“‚Ìæ“¾
+	/// ãƒ¢ãƒ‡ãƒ«å†…ã®ä¸€ç•ªå¤§ãã„é ‚ç‚¹ãƒã‚¸ã‚·ãƒ§ãƒ³ã®å–å¾—
 	/// </summary>
 	/// <returns></returns>
 	inline const Vector3& GetMaxVertex() { return maxVertex_; }
 
 private:
-	// Ã“I‚ÈŠÖ”“à‚Å‚Íƒƒ“ƒo•Ï”‚ğŒÄ‚Ño‚¹‚È‚¢‚½‚ßƒvƒ‰ƒCƒx[ƒgƒƒ“ƒoŠÖ”‚ÌƒpƒbƒP[ƒW‚ğì‚Á‚½
-	// LoadFromOBJ‚Ì’†g
+	// é™çš„ãªé–¢æ•°å†…ã§ã¯ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’å‘¼ã³å‡ºã›ãªã„ãŸã‚ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ¡ãƒ³ãƒé–¢æ•°ã®ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã‚’ä½œã£ãŸ
+	// LoadFromOBJã®ä¸­èº«
 	void LoadFromOBJInternal(const std::string& modelname, bool smoothing = false);
 
 	/// <summary>
-	/// Šeíƒoƒbƒtƒ@¶¬
+	/// å„ç¨®ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	/// </summary>
 	void CreateBuffers();
 
 	/// <summary>
-	/// ƒ}ƒeƒŠƒAƒ‹‚Ì“o˜^
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«ã®ç™»éŒ²
 	/// </summary>
 	/// <param name="material"></param>
 	void AddMaterial(Material* material);
 
 	/// <summary>
-	/// ƒ‚ƒfƒ‹“à‚Ì’¸“_‚ÅÅ‚à‘å‚«‚¢‚Ì‚Æ¬‚³‚¢’¸“_‚ğ“o˜^
+	/// ãƒ¢ãƒ‡ãƒ«å†…ã®é ‚ç‚¹ã§æœ€ã‚‚å¤§ãã„ã®ã¨å°ã•ã„é ‚ç‚¹ã‚’ç™»éŒ²
 	/// </summary>
 	/// <param name="vertexPos"></param>
 	void AddMinMaxVertex(Vector3 vertexPos);
 
-private:// ƒƒ“ƒo•Ï”
+private:// ãƒ¡ãƒ³ãƒå¤‰æ•°
 
-	// –¼‘O
+	// åå‰
 	std::string name_;
 
-	// ƒƒbƒVƒ…ƒRƒ“ƒeƒi
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠ
 	std::vector<Mesh*> meshes_;
 
-	// ƒ}ƒeƒŠƒAƒ‹ƒRƒ“ƒeƒi
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚³ãƒ³ãƒ†ãƒŠ
 	std::unordered_map<std::string, Material*> materials_;
 
-	// ƒfƒtƒHƒ‹ƒgƒ}ƒeƒŠƒAƒ‹
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ†ãƒªã‚¢ãƒ«
 	Material* defaultMaterial_ = nullptr;
 
-	// ƒfƒoƒCƒXiØ‚è‚Ä‚­‚éj
+	// ãƒ‡ãƒã‚¤ã‚¹ï¼ˆå€Ÿã‚Šã¦ãã‚‹ï¼‰
 	static ID3D12Device* sDevice_;
 
-	// ƒ‚ƒfƒ‹“à‚É‚ ‚éÅ‚à¬‚³‚¢’¸“_
+	// ãƒ¢ãƒ‡ãƒ«å†…ã«ã‚ã‚‹æœ€ã‚‚å°ã•ã„é ‚ç‚¹
 	bool isFirstAddMinMax;
 	Vector3 minVertex_;
 
-	// ƒ‚ƒfƒ‹“à‚É‚ ‚éÅ‚à‘å‚«‚¢’¸“_
+	// ãƒ¢ãƒ‡ãƒ«å†…ã«ã‚ã‚‹æœ€ã‚‚å¤§ãã„é ‚ç‚¹
 	Vector3 maxVertex_;
 
 

@@ -2,9 +2,10 @@
 #include "Util.h"
 #include "WinApp.h"
 
+
 TimerUI::TimerUI()
 {
-	// ƒ^ƒCƒ}[—p‚ÌƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
+	// ã‚¿ã‚¤ãƒãƒ¼ç”¨ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
 	numberTex_.reset(TextureManager::Load2DTextureP("NumberSheet.png"));
 }
 
@@ -15,7 +16,7 @@ void TimerUI::Init()
 	mParent.scale = Vector3(0.8f,0.8f,1.0f);
 	mParent.UpdateMatrix();
 
-	// ƒ^ƒCƒ}[‚ÌƒXƒvƒ‰ƒCƒg‚Ì‰Šú‰»
+	// ã‚¿ã‚¤ãƒãƒ¼ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
 	for (uint32_t i = 0; i < mTimerUnit.size(); i++)
 	{
 		mTimerUnit[i] = std::make_unique<Sprite>();
@@ -30,10 +31,10 @@ void TimerUI::Init()
 
 void TimerUI::Update()
 {
-	// ƒ^ƒCƒ}[‚Ì”š‚É‡‚í‚¹‚ÄƒeƒNƒXƒ`ƒƒ‚Ìİ’è‚ğ•ÏX
+	// ã‚¿ã‚¤ãƒãƒ¼ã®æ•°å­—ã«åˆã‚ã›ã¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®šã‚’å¤‰æ›´
 	TextureSetting();
 
-	// ƒ^ƒCƒ}[‚Ì”š‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğ‰¡‚É‚¸‚ç‚·
+	// ã‚¿ã‚¤ãƒãƒ¼ã®æ•°å­—ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’æ¨ªã«ãšã‚‰ã™
 	for (uint32_t i = 0; i < mTimerUnit.size(); i++)
 	{
 		float offset = (dight - 1) * ((mTexSpace * mTimerUnit[i]->GetScale().x) / 2.f);
@@ -45,7 +46,7 @@ void TimerUI::Update()
 
 void TimerUI::DrawFrontSprite()
 {
-	// ƒ^ƒCƒ}[‚Ì”š‚Ì•`‰æ
+	// ã‚¿ã‚¤ãƒãƒ¼ã®æ•°å­—ã®æç”»
 	for (uint32_t i = 0; i < dight; i++)
 	{
 		mTimerUnit[i]->Draw();
@@ -54,7 +55,7 @@ void TimerUI::DrawFrontSprite()
 
 void TimerUI::Reset()
 {
-	// ƒ^ƒCƒ}[‚Ì”š‚ÌƒŠƒZƒbƒg
+	// ã‚¿ã‚¤ãƒãƒ¼ã®æ•°å­—ã®ãƒªã‚»ãƒƒãƒˆ
 	gameTimer_ = 0;
 	remainTime_ = 0;
 }
@@ -71,7 +72,7 @@ void TimerUI::TextureSetting()
 	
 	dight = Util::GetDight(remainTime_);
 
-	// 0‚Ì
+	// 0ã®æ™‚
 	if (remainTime_ <= 0)
 	{
 		for (uint32_t i = 0; i < mTimerUnit.size(); i++)
@@ -83,10 +84,10 @@ void TimerUI::TextureSetting()
 
 	for (uint32_t i = 0; i < dight; i++)
 	{
-		// Œ»İ‚ÌŒ…‚Ì”‚ğæ“¾
+		// ç¾åœ¨ã®æ¡ã®æ•°ã‚’å–å¾—
 		uint32_t num = Util::GetDightNumber(remainTime_, dight - i);
 
-		// •S‚ÌŒ…‚©‚çƒeƒNƒXƒ`ƒƒ[ƒZƒbƒg‚·‚é
+		// ç™¾ã®æ¡ã‹ã‚‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ã‚»ãƒƒãƒˆã™ã‚‹
 		mTimerUnit[i]->SetRectSize(
 			Vector2(0 + num * mTexSize, 0), Vector2(128 + num * mTexSize, mTexSize));
 	}

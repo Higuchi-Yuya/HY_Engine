@@ -10,6 +10,7 @@
 #include "FbxLoader.h"
 #include "Random.h"
 
+
 GameScene::~GameScene()
 {
 	models.clear();
@@ -33,14 +34,14 @@ GameScene::~GameScene()
 void GameScene::Initialize()
 {
 	Random::Init();
-	// “ü—Í‚Ì‰Šú‰»
+	// å…¥åŠ›ã®åˆæœŸåŒ–
 	input_ = std::make_unique<Input>();
 	input_->Initialize();
 	Enemy::StaticInitialize();
-#pragma region ƒ‰ƒCƒg‚Ì‰Šú‰»
-	// ƒ‰ƒCƒg‚Ì¶¬
+#pragma region ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
+	// ãƒ©ã‚¤ãƒˆã®ç”Ÿæˆ
 	light.reset(LightGroup::Create());
-	// ƒ‰ƒCƒgİ’è
+	// ãƒ©ã‚¤ãƒˆè¨­å®š
 	light->SetDirLightActive(0, true);
 	light->SetDirLightActive(1, false);
 	light->SetDirLightActive(2, false);
@@ -57,11 +58,11 @@ void GameScene::Initialize()
 
 	light->SetCircleShadowActive(0, true);
 
-	// 3DƒIƒuƒWƒFƒNƒg‚Éƒ‰ƒCƒg‚ğƒZƒbƒg
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ©ã‚¤ãƒˆã‚’ã‚»ãƒƒãƒˆ
 	Object3d::SetLight(light.get());
 #pragma endregion
 
-#pragma region ƒtƒHƒO
+#pragma region ãƒ•ã‚©ã‚°
 	fog.reset(Fog::Create());
 	fog->nearFog = 10;
 	fog->farFog = 100;
@@ -69,99 +70,99 @@ void GameScene::Initialize()
 	Object3d::SetFog(fog.get());
 #pragma endregion
 
-#pragma region ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
-	// ƒeƒNƒXƒ`ƒƒƒnƒ“ƒhƒ‹‚Ì“Ç‚İ‚İ
+#pragma region ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«ã®èª­ã¿è¾¼ã¿
 
-	// ‰¼‚ÌƒXƒvƒ‰ƒCƒg‚Ìƒnƒ“ƒhƒ‹
+	// ä»®ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 	textureHandleDefu.reset(TextureManager::Load2DTextureP("texture.png"));
 	
-	// ƒV[ƒ“ƒ`ƒFƒ“ƒW‚Åg‚¤ƒnƒ“ƒhƒ‹
+	// ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸ã§ä½¿ã†ãƒãƒ³ãƒ‰ãƒ«
 	blackOutTexHandle_.reset(TextureManager::Load2DTextureP("SceneChageTex.png"));
 
-	// ƒ^ƒCƒgƒ‹‚Ì•¶š‚Åg‚¤ƒnƒ“ƒhƒ‹i‰¼j
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®æ–‡å­—ã§ä½¿ã†ãƒãƒ³ãƒ‰ãƒ«ï¼ˆä»®ï¼‰
 	titleFontTexHandle.reset(TextureManager::Load2DTextureP("kariTitle.png"));
 
-	// ƒ^ƒCƒgƒ‹‚Ì”wŒi‚Åg‚¤ƒnƒ“ƒhƒ‹i‰¼j
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®èƒŒæ™¯ã§ä½¿ã†ãƒãƒ³ãƒ‰ãƒ«ï¼ˆä»®ï¼‰
 	titleBackTexHandle.reset(TextureManager::Load2DTextureP("titleBack.png"));
 
-	// ƒ^ƒCƒgƒ‹‚ÌAƒ{ƒ^ƒ“‰Ÿ‚·ƒtƒHƒ“ƒgi‰¼j
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®Aãƒœã‚¿ãƒ³æŠ¼ã™ãƒ•ã‚©ãƒ³ãƒˆï¼ˆä»®ï¼‰
 	titleButtonTexHandle.reset(TextureManager::Load2DTextureP("PressA.png"));
 
 
 #pragma endregion
 
-#pragma region ƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ
-	// ƒvƒŒƒCƒ„[‚Ìƒ‚ƒfƒ‹“Ç‚İ‚İ
+#pragma region ãƒ¢ãƒ‡ãƒ«ã®èª­ã¿è¾¼ã¿
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	playerModel_.reset(Model::LoadFromOBJ("chr_sword", true));
 
-	// “G‚Ìƒ‚ƒfƒ‹“Ç‚İ‚İ
+	// æ•µã®ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
 
-	// ”wŒiƒ‚ƒfƒ‹ŠÖ˜A
+	// èƒŒæ™¯ãƒ¢ãƒ‡ãƒ«é–¢é€£
 	modelSkydome_.reset(Model::LoadFromOBJ("skydome"));
 	modelGround_.reset(Model::LoadFromOBJ("ground"));
 
-	// –Ø
+	// æœ¨
 	modelTreeBald_.reset(Model::LoadFromOBJ("tree_bald"));
 	modelTreeNormal_.reset(Model::LoadFromOBJ("tree_Normal"));
 
-	// ƒtƒFƒ“ƒX
+	// ãƒ•ã‚§ãƒ³ã‚¹
 	modelFence_.reset(Model::LoadFromOBJ("fence"));
 	modelFencePost_.reset(Model::LoadFromOBJ("fencePost"));
 	modelLatticeDoor_.reset(Model::LoadFromOBJ("latticeDoor"));
 
-	// ‚¨•æ
+	// ãŠå¢“
 	modelGraveCross.reset(Model::LoadFromOBJ("grave_cross"));
 	modelGraveSquare.reset(Model::LoadFromOBJ("grave_square"));
 
 #pragma endregion
 
-#pragma region ƒTƒEƒ“ƒh“Ç‚İ‚İ
+#pragma region ã‚µã‚¦ãƒ³ãƒ‰èª­ã¿è¾¼ã¿
 	sound.SoundLoadWave("GameClear.wav");
 #pragma endregion
 
-#pragma region ƒXƒvƒ‰ƒCƒg‰Šú‰»
-	// ƒXƒvƒ‰ƒCƒg‚Ì‰Šú‰»
+#pragma region ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
 
-	// ‰¼‚ÌƒXƒvƒ‰ƒCƒg
+	// ä»®ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spriteProvisional = std::make_unique<Sprite>();
 	spriteProvisional->Initialize(textureHandleDefu.get(), { 200,200 }, { 150,150 }, { 0.5f,0.5f, 0.5f,1.0f });
 	spritePos = spriteProvisional->GetPosition();
 
-	// ƒV[ƒ“ƒ`ƒFƒ“ƒW—p‚ÌƒXƒvƒ‰ƒCƒg
+	// ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	blackOut = std::make_unique<Sprite>();
 	blackOut->Initialize(blackOutTexHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280 * 2,720 * 2 });
 	blackOut->SetColor({ 1,1,1,blackAlpha });
 
-	// ƒ^ƒCƒgƒ‹‚Ì•¶š—p‚ÌƒXƒvƒ‰ƒCƒg
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®æ–‡å­—ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	titleKariFont = std::make_unique<Sprite>();
 	titleKariFont->Initialize(titleFontTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 - 150 },{500,100});
 
-	// ƒ^ƒCƒgƒ‹‚Ìƒ{ƒ^ƒ“A‚ÌƒXƒvƒ‰ƒCƒg
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®ãƒœã‚¿ãƒ³Aã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	titleKariPressA = std::make_unique<Sprite>();
 	titleKariPressA->Initialize(titleButtonTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 + 200 },{250,50});
 
-	// ƒ^ƒCƒgƒ‹‚Ì”wŒi‚ÌƒXƒvƒ‰ƒCƒg
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®èƒŒæ™¯ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	titleKariBack = std::make_unique<Sprite>();
 	titleKariBack->Initialize(titleBackTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
 
 #pragma endregion
 
-#pragma region ƒvƒŒƒCƒ„[ŠÖ˜A‚Ì‰Šú‰»
+#pragma region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é–¢é€£ã®åˆæœŸåŒ–
 	player_ = std::make_unique<Player>();
 	player_.reset(Player::Create(playerModel_.get()));
 #pragma endregion
 
-#pragma region ƒRƒ‰ƒCƒ_[–{‘Ì‚Ì‰Šú‰»
+#pragma region ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æœ¬ä½“ã®åˆæœŸåŒ–
 	gameCollider = std::make_unique<GameCollider>();
 	gameCollider->Initialize();
 #pragma endregion
 
-#pragma region ƒ[ƒ_[—p‚Ì“Ç‚İ‚İ
-	// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+#pragma region ãƒ­ãƒ¼ãƒ€ãƒ¼ç”¨ã®èª­ã¿è¾¼ã¿
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	levelData_.reset(LevelLoader::LoadFile("field2"));
 
-	// ƒ‚ƒfƒ‹ƒf[ƒ^‚ğƒ‚ƒfƒ‹‚ÌƒŠƒXƒg‚É“o˜^
+	// ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ¢ãƒ‡ãƒ«ã®ãƒªã‚¹ãƒˆã«ç™»éŒ²
 	models.insert(std::make_pair("skydome", modelSkydome_.get()));
 	models.insert(std::make_pair("ground", modelGround_.get()));
 	models.insert(std::make_pair("chr_sword", playerModel_.get()));
@@ -175,18 +176,18 @@ void GameScene::Initialize()
 	models.insert(std::make_pair("grave_cross", modelGraveCross.get()));
 	models.insert(std::make_pair("grave_square", modelGraveSquare.get()));
 
-	// ƒŒƒxƒ‹ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğ¶¬A”z’u
-	//	‚Ü‚½AƒvƒŒƒCƒ„[‚Ì‰ŠúˆÊ’u‚âƒGƒlƒ~[‚Ì‰Šú
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€é…ç½®
+	//	ã¾ãŸã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸä½ç½®ã‚„ã‚¨ãƒãƒŸãƒ¼ã®åˆæœŸ
 	for (auto& objectData : levelData_->objects) {
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
 		if (it != models.end()) {
 			model = it->second;
 		}
 
-		// ƒ^ƒO–¼‚ªƒGƒlƒ~[‚È‚ç
-		#pragma region ƒGƒlƒ~[ŠÖ˜A‚Ì‰Šú‰»
+		// ã‚¿ã‚°åãŒã‚¨ãƒãƒŸãƒ¼ãªã‚‰
+		#pragma region ã‚¨ãƒãƒŸãƒ¼é–¢é€£ã®åˆæœŸåŒ–
 		if (objectData.tagName == "enemy")
 		{
 			WorldTransform w;
@@ -195,73 +196,73 @@ void GameScene::Initialize()
 			w.scale = objectData.scaling;
 			w.rotation = objectData.rotation;
 
-			// V‚µ‚¢“G‚Ì¶¬
+			// æ–°ã—ã„æ•µã®ç”Ÿæˆ
 			Enemy* newEnemy = new Enemy;
 			newEnemy->SetWorldTransInfo(w);
 			newEnemy->Initialize(modelMedama_.get(), player_.get());
 			newEnemy->UpdateWorldMatrix();
 
-			// ¡ì¬‚µ‚½“G‚ğ”z—ñ‚ÉŠi”[
+			// ä»Šä½œæˆã—ãŸæ•µã‚’é…åˆ—ã«æ ¼ç´
 			enemys_.push_back(newEnemy);
 		}
 #pragma endregion
 
-#pragma region ‚¨•æ‚ÌƒhƒA
+#pragma region ãŠå¢“ã®ãƒ‰ã‚¢
 		else if (objectData.tagName == "Door")
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			Object3d* newObject = Object3d::Create();
 			newObject->SetModel(model);
 
-			// À•W
+			// åº§æ¨™
 			Vector3 pos;
 			pos = objectData.translation;
 			newObject->worldTransform_.translation = pos;
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			Vector3 rot;
 			rot = objectData.rotation;
 			newObject->worldTransform_.rotation = rot;
 			newObject->worldTransform_.rotation.y += MathUtil::DegreeToRadian(180);
 
-			// ƒXƒP[ƒ‹
+			// ã‚¹ã‚±ãƒ¼ãƒ«
 			Vector3 scale;
 			scale = objectData.scaling;
 			newObject->worldTransform_.scale = scale;
 
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			latticeDoors_.push_back(newObject);
 		}
 #pragma endregion
 
 
-		// ‚»‚êˆÈŠO‚Ìƒ^ƒO–¼‚Ü‚½‚Í‚È‚µ‚Ìê‡
-		// •’Ê‚ÌƒIƒuƒWƒFƒNƒg‚Æ”»’f‚µ¶¬
+		// ãã‚Œä»¥å¤–ã®ã‚¿ã‚°åã¾ãŸã¯ãªã—ã®å ´åˆ
+		// æ™®é€šã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨åˆ¤æ–­ã—ç”Ÿæˆ
 		else 
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			Object3d* newObject = Object3d::Create();
 			newObject->SetModel(model);
 
-			// À•W
+			// åº§æ¨™
 			Vector3 pos;
 			pos = objectData.translation;
 			newObject->worldTransform_.translation = pos;
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			Vector3 rot;
 			rot = objectData.rotation;
 			newObject->worldTransform_.rotation = rot;
 
-			// ƒXƒP[ƒ‹
+			// ã‚¹ã‚±ãƒ¼ãƒ«
 			Vector3 scale;
 			scale = objectData.scaling;
 			newObject->worldTransform_.scale = scale;
 
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objects.push_back(newObject);
 
-			// ƒ^ƒO–¼‚ª•æ‚à‚µ‚­‚Í–Ø‚¾‚Á‚½‚çA“–‚½‚è”»’è‚ğ‚Â‚¯‚é
+			// ã‚¿ã‚°åãŒå¢“ã‚‚ã—ãã¯æœ¨ã ã£ãŸã‚‰ã€å½“ãŸã‚Šåˆ¤å®šã‚’ã¤ã‘ã‚‹
 			if (objectData.tagName == "tree"|| 
 				objectData.tagName == "grave") {
 				gameCollider->AddObj(newObject);
@@ -271,8 +272,8 @@ void GameScene::Initialize()
 	}
 #pragma endregion
 
-#pragma region ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“ŠÖ˜A‚Ì‰Šú‰»
-	// ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“‚Ì‰Šú‰»
+#pragma region ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³é–¢é€£ã®åˆæœŸåŒ–
+	// ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
 	gameCamera = std::make_unique<GameCamera>();
 	gameCamera->Initialize(player_->GetCameraWorld());
 	gameCamera->SetCameraFPos(player_->worldTransform_.translation);
@@ -283,7 +284,7 @@ void GameScene::Initialize()
 	player_->SetGameCamera(gameCamera.get());
 #pragma endregion
 
-#pragma region ƒRƒ‰ƒCƒ_[ŠÖ˜A‚Ì‰Šú‰»
+#pragma region ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼é–¢é€£ã®åˆæœŸåŒ–
 
 
 	for (auto e:enemys_){
@@ -293,7 +294,7 @@ void GameScene::Initialize()
 	gameCollider->SetPlayer(player_.get());
 #pragma endregion
 
-#pragma region UIŠÖ˜A‚Ì‰Šú‰»
+#pragma region UIé–¢é€£ã®åˆæœŸåŒ–
 	timerUi_ = std::make_unique<TimerUI>();
 	timerUi_->Init();
 
@@ -306,19 +307,19 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	// ƒV[ƒ“ƒ`ƒFƒ“ƒWˆ—
+	// ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸å‡¦ç†
 	SceneChageUpdate();
 
-	// ƒV[ƒ“‚Ì‚»‚ê‚¼‚ê‚ÌXVˆ—
+	// ã‚·ãƒ¼ãƒ³ã®ãã‚Œãã‚Œã®æ›´æ–°å‡¦ç†
 	switch (scene)
 	{
-	case GameScene::Scene::Title: // ƒ^ƒCƒgƒ‹ƒV[ƒ“
+	case GameScene::Scene::Title: // ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³
 		TitleUpdate();
 		break;
-	case GameScene::Scene::Game: // ƒQ[ƒ€ƒV[ƒ“
+	case GameScene::Scene::Game: // ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 		GameSceneUpdate();
 		break;
-	case GameScene::Scene::Result: // ƒŠƒUƒ‹ƒgƒV[ƒ“
+	case GameScene::Scene::Result: // ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³
 		ResultSceneUpdate();
 		break;
 	default:
@@ -331,7 +332,7 @@ void GameScene::Update()
 void GameScene::ImguiUpdate()
 {
 
-	// •\¦€–Ú‚Ì’Ç‰Á--------//
+	// è¡¨ç¤ºé …ç›®ã®è¿½åŠ --------//
 	ImGui::Begin("Sprite 1");
 
 	//ImGui::SetWindowPos(ImVec2(0, 0));
@@ -355,7 +356,7 @@ void GameScene::ImguiUpdate()
 	ImGui::SetNextWindowSize(ImVec2(500, 250));
 	ImGui::Begin("Light");
 
-	// •½sŒõŒ¹
+	// å¹³è¡Œå…‰æº
 	if (ImGui::TreeNode("DirectionalLight")) {
 		ImGui::Checkbox("Is Active", &isActiveDirectional);
 
@@ -367,7 +368,7 @@ void GameScene::ImguiUpdate()
 
 		ImGui::TreePop();
 	}
-	// ƒ|ƒCƒ“ƒgƒ‰ƒCƒg
+	// ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
 	if (ImGui::TreeNode("PointLight")) {
 		ImGui::Checkbox("Is Active", &isActivePoint);
 
@@ -384,7 +385,7 @@ void GameScene::ImguiUpdate()
 
 		ImGui::TreePop();
 	}
-	// ƒXƒ|ƒbƒgƒ‰ƒCƒg
+	// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆ
 	if (ImGui::TreeNode("spotLight")) {
 		ImGui::Checkbox("Is Active", &isActiveSpot);
 
@@ -398,7 +399,7 @@ void GameScene::ImguiUpdate()
 
 		ImGui::TreePop();
 	}
-	// ŠÛ‰e
+	// ä¸¸å½±
 	if (ImGui::TreeNode("circleShadow")) {
 		ImGui::Checkbox("Is Active", &isActiveCircleShadow);
 
@@ -417,7 +418,7 @@ void GameScene::ImguiUpdate()
 
 		ImGui::TreePop();
 	}
-	// ƒtƒHƒO
+	// ãƒ•ã‚©ã‚°
 	if (ImGui::TreeNode("Fog")) {
 		ImGui::Checkbox("Is Active", &isFogActive);
 
@@ -436,7 +437,7 @@ void GameScene::ImguiUpdate()
 
 	ImGui::End();
 
-	// “–‚½‚è”»’è-----------------------//
+	// å½“ãŸã‚Šåˆ¤å®š-----------------------//
 	//ImGui::Begin("Collision");
 	//ImGui::SetNextWindowSize(ImVec2(500, 100));
 
@@ -464,13 +465,13 @@ void GameScene::Draw2DBack()
 {
 	switch (scene)
 	{
-	case GameScene::Scene::Title: // ƒ^ƒCƒgƒ‹ƒV[ƒ“
+	case GameScene::Scene::Title: // ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³
 
 		break;
-	case GameScene::Scene::Game: // ƒQ[ƒ€ƒV[ƒ“
+	case GameScene::Scene::Game: // ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 
 		break;
-	case GameScene::Scene::Result: // ƒŠƒUƒ‹ƒgƒV[ƒ“
+	case GameScene::Scene::Result: // ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³
 
 		break;
 	default:
@@ -484,57 +485,57 @@ void GameScene::Draw3D()
 
 	switch (scene)
 	{
-	case GameScene::Scene::Title: // ƒ^ƒCƒgƒ‹ƒV[ƒ“
+	case GameScene::Scene::Title: // ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³
 
-		// ‚¨•æ‚ÌƒhƒA‚ÌƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+		// ãŠå¢“ã®ãƒ‰ã‚¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 		for (auto l: latticeDoors_){
 			l->Draw(&gameCamera->GetView());
 		}
 
-		// •’Ê‚ÌƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+		// æ™®é€šã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 		for (auto o : objects) {
 			o->Draw(&gameCamera->GetView());
 		}
 
 		break;
-	case GameScene::Scene::Game: // ƒQ[ƒ€ƒV[ƒ“
+	case GameScene::Scene::Game: // ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 
-		// ƒIƒuƒWƒFƒNƒgŠÖ˜A‚Ì•`‰æ
+		// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé–¢é€£ã®æç”»
 
-		// ƒvƒŒƒCƒ„[‚Ì•`‰æ
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æç”»
 		player_->Draw(&gameCamera->GetView());
 
-		// “G‚Ì•`‰æ
+		// æ•µã®æç”»
 		for (auto e : enemys_) {
 			e->Draw(&gameCamera->GetView());
 		}
 
-		// ‚¨•æ‚ÌƒhƒA‚ÌƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+		// ãŠå¢“ã®ãƒ‰ã‚¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 		for (auto l : latticeDoors_){
 			l->Draw(&gameCamera->GetView());
 		}
 
-		// •’Ê‚ÌƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+		// æ™®é€šã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 		for (auto o : objects) {
 			o->Draw(&gameCamera->GetView());
 		}
 		gameCollider->Draw3D(&gameCamera->GetView());
-		// FBXƒ‚ƒfƒ‹‚Ì•`‰æ
+		// FBXãƒ¢ãƒ‡ãƒ«ã®æç”»
 		FbxModel::PreDraw(commandList);
 
 
 		FbxModel::PostDraw();
 
 		ParticleManager::PreDraw(commandList);
-		// ƒp[ƒeƒBƒNƒ‹‚Ì•`‰æ
+		// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æç”»
 		DrawParticle();
-		// “G‚Ì•`‰æ
+		// æ•µã®æç”»
 		for (auto e : enemys_) {
 			e->DrawParticle(&gameCamera->GetView());
 		}
 		ParticleManager::PostDraw();
 		break;
-	case GameScene::Scene::Result: // ƒŠƒUƒ‹ƒgƒV[ƒ“
+	case GameScene::Scene::Result: // ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³
 
 		break;
 	default:
@@ -552,26 +553,26 @@ void GameScene::Draw2DFront()
 {
 	switch (scene)
 	{
-	case GameScene::Scene::Title: // ƒ^ƒCƒgƒ‹ƒV[ƒ“
+	case GameScene::Scene::Title: // ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³
 		//titleKariBack->Draw();
 		titleKariFont->Draw();
 		titleKariPressA->Draw();
 		
 		break;
-	case GameScene::Scene::Game: // ƒQ[ƒ€ƒV[ƒ“
+	case GameScene::Scene::Game: // ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 		//spriteProvisional->Draw();
 		player_->Draw2DFront();
 		timerUi_->DrawFrontSprite();
 		operationUi_->DrawFrontSprite();
 		break;
-	case GameScene::Scene::Result: // ƒŠƒUƒ‹ƒgƒV[ƒ“
+	case GameScene::Scene::Result: // ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³
 
 		break;
 	default:
 		break;
 	}
 
-	// ƒV[ƒ“ƒ`ƒFƒ“ƒW—p‚Ì‚ÌƒXƒvƒ‰ƒCƒg‚Ì•`‰æ
+	// ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸ç”¨ã®ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æç”»
 	blackOut->Draw();
 }
 
@@ -586,26 +587,26 @@ void GameScene::Reset()
 		break;
 	case GameScene::Scene::Result:
 
-		// ƒEƒF[ƒu‚ÌƒŠƒZƒbƒg
+		// ã‚¦ã‚§ãƒ¼ãƒ–ã®ãƒªã‚»ãƒƒãƒˆ
 		waveTimeNum_ = 0;
 		waveTimer_ = 0;
 
-		// ƒQ[ƒ€ƒRƒ‰ƒCƒ_[‚ÌƒŠƒZƒbƒg
+		// ã‚²ãƒ¼ãƒ ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ãƒªã‚»ãƒƒãƒˆ
 		gameCollider->Reset();
 
-		//	ƒGƒlƒ~[‚ğ‘Síœ
+		//	ã‚¨ãƒãƒŸãƒ¼ã‚’å…¨å‰Šé™¤
 		for (auto e : enemys_) {
 			delete e;
 		}
 		enemys_.clear();
 
-		// ƒGƒlƒ~[‚ÌÄ“Ç‚İ‚İ
+		// ã‚¨ãƒãƒŸãƒ¼ã®å†èª­ã¿è¾¼ã¿
 		LoadEnemy();
 
-		// ƒGƒlƒ~[‚ÌƒXƒ|[ƒ“‚·‚éŠÔŠu‚ğƒŠƒZƒbƒg
+		// ã‚¨ãƒãƒŸãƒ¼ã®ã‚¹ãƒãƒ¼ãƒ³ã™ã‚‹é–“éš”ã‚’ãƒªã‚»ãƒƒãƒˆ
 		enemySpawnTimer_ = 0;
 
-		// ƒvƒŒƒCƒ„[‚ÌƒŠƒZƒbƒg
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒªã‚»ãƒƒãƒˆ
 		player_->Reset();
 
 		break;
@@ -619,22 +620,22 @@ void GameScene::LoadEnemy()
 
 	switch (enemyWave_)
 	{
-	case GameScene::wave01:// ƒEƒF[ƒu‚O‚P‚Ì‚Ì“G‚ÌƒXƒ|[ƒ“ƒpƒ^[ƒ“’Š‘I
+	case GameScene::wave01:// ã‚¦ã‚§ãƒ¼ãƒ–ï¼ï¼‘ã®æ™‚ã®æ•µã®ã‚¹ãƒãƒ¼ãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³æŠ½é¸
 
 		randomWave01_ = Random::Range(1, 3);
 		
 		switch (randomWave01_)
 		{
 		case 1:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p1"));
 			break;
 		case 2:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p2"));
 			break;
 		case 3:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p3"));
 			break;
 		default:
@@ -642,21 +643,21 @@ void GameScene::LoadEnemy()
 		}
 
 		break;
-	case GameScene::wave02:// ƒEƒF[ƒu‚O‚Q‚Ì‚Ì“G‚ÌƒXƒ|[ƒ“ƒpƒ^[ƒ“’Š‘I
+	case GameScene::wave02:// ã‚¦ã‚§ãƒ¼ãƒ–ï¼ï¼’ã®æ™‚ã®æ•µã®ã‚¹ãƒãƒ¼ãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³æŠ½é¸
 		randomWave01_ = Random::Range(1, 3);
 
 		switch (randomWave01_)
 		{
 		case 1:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p1"));
 			break;
 		case 2:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p2"));
 			break;
 		case 3:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p3"));
 			break;
 		default:
@@ -664,22 +665,22 @@ void GameScene::LoadEnemy()
 		}
 
 		break;
-	case GameScene::wave03:// ƒEƒF[ƒu‚O‚R‚Ì‚Ì“G‚ÌƒXƒ|[ƒ“ƒpƒ^[ƒ“’Š‘I
+	case GameScene::wave03:// ã‚¦ã‚§ãƒ¼ãƒ–ï¼ï¼“ã®æ™‚ã®æ•µã®ã‚¹ãƒãƒ¼ãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³æŠ½é¸
 
 		randomWave01_ = Random::Range(1, 3);
 
 		switch (randomWave01_)
 		{
 		case 1:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p1"));
 			break;
 		case 2:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p2"));
 			break;
 		case 3:
-			// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+			// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p3"));
 			break;
 		default:
@@ -693,15 +694,15 @@ void GameScene::LoadEnemy()
 
 
 	for (auto& objectData : levelData_->objects) {
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
 		if (it != models.end()) {
 			model = it->second;
 		}
 
-		// ƒ^ƒO–¼‚ªƒGƒlƒ~[‚È‚ç
-#pragma region ƒGƒlƒ~[ŠÖ˜A‚Ì‰Šú‰»
+		// ã‚¿ã‚°åãŒã‚¨ãƒãƒŸãƒ¼ãªã‚‰
+#pragma region ã‚¨ãƒãƒŸãƒ¼é–¢é€£ã®åˆæœŸåŒ–
 		if (objectData.tagName == "enemy")
 		{
 			WorldTransform w;
@@ -710,15 +711,15 @@ void GameScene::LoadEnemy()
 			w.scale = objectData.scaling;
 			w.rotation = objectData.rotation;
 
-			// V‚µ‚¢“G‚Ì¶¬
+			// æ–°ã—ã„æ•µã®ç”Ÿæˆ
 			Enemy* newEnemy = new Enemy;
 			newEnemy->SetWorldTransInfo(w);
 			newEnemy->Initialize(modelMedama_.get(), player_.get());
 			newEnemy->UpdateWorldMatrix();
 
-			// ¡ì¬‚µ‚½“G‚ğ”z—ñ‚ÉŠi”[
+			// ä»Šä½œæˆã—ãŸæ•µã‚’é…åˆ—ã«æ ¼ç´
 			enemys_.push_back(newEnemy);
-			// ¡ì¬‚µ‚½“G‚ğ“–‚½‚è”»’è‚Éî•ñ‚ğ“o˜^
+			// ä»Šä½œæˆã—ãŸæ•µã‚’å½“ãŸã‚Šåˆ¤å®šã«æƒ…å ±ã‚’ç™»éŒ²
 			gameCollider->AddEnemy(newEnemy);
 		}
 #pragma endregion
@@ -727,13 +728,13 @@ void GameScene::LoadEnemy()
 
 void GameScene::TitleUpdate()
 {
-	// ƒpƒbƒh‚ÅAƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚©A‚à‚µ‚­‚ÍƒXƒy[ƒXƒL[‚ğ‰Ÿ‚µ‚½uŠÔ
+	// ãƒ‘ãƒƒãƒ‰ã§Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã‹ã€ã‚‚ã—ãã¯ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã‚’æŠ¼ã—ãŸç¬é–“
 	if (JoypadInput::GetButtonDown(PadCode::ButtonA)||input_->TriggerKey(DIK_SPACE)) {
 		oldScene = Scene::Title;
 		sceneChangeFlag = true;
 	}
 
-#pragma region ƒ‰ƒCƒg‚ÌXVˆ—
+#pragma region ãƒ©ã‚¤ãƒˆã®æ›´æ–°å‡¦ç†
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
@@ -767,18 +768,18 @@ void GameScene::TitleUpdate()
 	}
 #pragma endregion
 
-	// ƒIƒuƒWƒFƒNƒg‚ÌXVˆ—
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ›´æ–°å‡¦ç†
 	for (auto o : objects) {
 		o->Update();
 	}
 
-	// ‚¨•æ‚ÌƒhƒA‚ÌƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+	// ãŠå¢“ã®ãƒ‰ã‚¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 	for (auto l : latticeDoors_)
 	{
 		l->Update();
 	}
 
-	// ƒJƒƒ‰‚ÌXVˆ—
+	// ã‚«ãƒ¡ãƒ©ã®æ›´æ–°å‡¦ç†
 	//gameCamera->GetView().eye.z += 0.1f;
 	gameCamera->TitleUpdate();
 
@@ -787,16 +788,16 @@ void GameScene::TitleUpdate()
 
 void GameScene::GameSceneUpdate()
 {
-	// “ü—Í‚ÌXV
+	// å…¥åŠ›ã®æ›´æ–°
 	input_->Update();
 
-	// ”š‚Ì0ƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚ç
+	// æ•°å­—ã®0ã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¦ã„ãŸã‚‰
 	if (input_->PushKey(DIK_0))
 	{
-		OutputDebugStringA("Hit 0\n");  // o—ÍƒEƒBƒ“ƒhƒE‚ÉuHit 0v‚Æ•\¦
+		OutputDebugStringA("Hit 0\n");  // å‡ºåŠ›ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ã€ŒHit 0ã€ã¨è¡¨ç¤º
 	}
 
-#pragma region ƒ‰ƒCƒg‚ÌXVˆ—
+#pragma region ãƒ©ã‚¤ãƒˆã®æ›´æ–°å‡¦ç†
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
@@ -844,11 +845,11 @@ void GameScene::GameSceneUpdate()
 		isStopSound = false;
 	}
 
-#pragma region ƒvƒŒƒCƒ„[‚ÌXVˆ—
-	// ƒvƒŒƒCƒ„[‚ÌXVˆ—
+#pragma region ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ›´æ–°å‡¦ç†
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ›´æ–°å‡¦ç†
 	player_->Update();
 
-	// ƒvƒŒƒCƒ„[‚ª€‚ñ‚¾‚ç‚Æ‚è‚ ‚¦‚¸ƒŠƒUƒ‹ƒg‰æ–Ê‚ÉˆÚs
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ­»ã‚“ã ã‚‰ã¨ã‚Šã‚ãˆãšãƒªã‚¶ãƒ«ãƒˆç”»é¢ã«ç§»è¡Œ
 	if (player_->GetIsAlive() == false) {
 		oldScene = Scene::Game;
 		sceneChangeFlag = true;
@@ -856,42 +857,42 @@ void GameScene::GameSceneUpdate()
 #pragma endregion
 
 
-#pragma region “G‚ÌXVˆ—ŠÖ˜A
+#pragma region æ•µã®æ›´æ–°å‡¦ç†é–¢é€£
 	
 	EnemyGameUpdate();
 #pragma endregion
 
 	
-	// ƒJƒƒ‰‚ÌXVˆ—
+	// ã‚«ãƒ¡ãƒ©ã®æ›´æ–°å‡¦ç†
 	gameCamera->SetCameraPos(player_->worldTransform_.translation);
 	gameCamera->GameUpdate();
 
-	// ‚¨•æ‚ÌƒhƒA‚ÌƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
+	// ãŠå¢“ã®ãƒ‰ã‚¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 	for (auto l : latticeDoors_){
 		l->Update();
 	}
 
-	// ƒIƒuƒWƒFƒNƒg‚ÌXVˆ—
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ›´æ–°å‡¦ç†
 	for (auto o : objects) {
 		o->Update();
 	}
 
-	// “–‚½‚è”»’èŠÖ˜A‚ÌXVˆ—
+	// å½“ãŸã‚Šåˆ¤å®šé–¢é€£ã®æ›´æ–°å‡¦ç†
 	gameCollider->Updata();
 
-	// ƒ‰ƒCƒg‚ÌXVˆ—
+	// ãƒ©ã‚¤ãƒˆã®æ›´æ–°å‡¦ç†
 	circleShadowCasterPos = player_->GetWorldPosition();
 	light->SetCircleShadowCasterPos(0, circleShadowCasterPos);
 	light->Update();
 
 
-	// ƒ^ƒCƒ}[‚ÌXVˆ—
+	// ã‚¿ã‚¤ãƒãƒ¼ã®æ›´æ–°å‡¦ç†
 	timerUi_->Update();
 
-	// ƒIƒyƒŒ[ƒVƒ‡ƒ“‚ÌXVˆ—
+	// ã‚ªãƒšãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°å‡¦ç†
 	operationUi_->Update();
 
-	//// “G‚ª‘S–Å‚µ‚½‚ç‚Æ‚è‚ ‚¦‚¸ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
+	//// æ•µãŒå…¨æ»…ã—ãŸã‚‰ã¨ã‚Šã‚ãˆãšã‚·ãƒ¼ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	//if (enemys_.size() <= 1) {
 	//	oldScene = Scene::Game;
 	//	sceneChangeFlag = true;
@@ -900,7 +901,7 @@ void GameScene::GameSceneUpdate()
 
 void GameScene::ResultSceneUpdate()
 {
-	// ƒpƒbƒh‚ÅAƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚©A‚à‚µ‚­‚ÍƒXƒy[ƒXƒL[‚ğ‰Ÿ‚µ‚½uŠÔ
+	// ãƒ‘ãƒƒãƒ‰ã§Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã‹ã€ã‚‚ã—ãã¯ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã‚’æŠ¼ã—ãŸç¬é–“
 	if (JoypadInput::GetButtonDown(PadCode::ButtonA) || input_->TriggerKey(DIK_SPACE)) {
 		oldScene = Scene::Result;
 		sceneChangeFlag = true;
@@ -920,7 +921,7 @@ void GameScene::SceneChageUpdate()
 				if (blackAlpha >= 1) {
 					blackAlpha = 1;
 					scene = Scene::Game;
-					// ‚±‚±‚ÉƒŠƒZƒbƒgŠÖ”‚ğ’u‚­
+					// ã“ã“ã«ãƒªã‚»ãƒƒãƒˆé–¢æ•°ã‚’ç½®ã
 				}
 			}
 			else if (oldScene == Scene::Result) {
@@ -941,14 +942,14 @@ void GameScene::SceneChageUpdate()
 					sceneChangeFlag = false;
 				}
 			}
-			// ƒQ[ƒ€ƒV[ƒ“‚©‚çƒŠƒUƒ‹ƒgƒV[ƒ“
+			// ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã‹ã‚‰ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³
 			else {
 				blackAlpha += 0.025f;
 				blackOut->SetColor({ 1,1,1,blackAlpha });
 				if (blackAlpha >= 1) {
 					blackAlpha = 1;
 					scene = Scene::Result;
-					// ‚±‚±‚ÉƒŠƒZƒbƒgŠÖ”‚ğ’u‚­
+					// ã“ã“ã«ãƒªã‚»ãƒƒãƒˆé–¢æ•°ã‚’ç½®ã
 				}
 			}
 			break;
@@ -969,10 +970,10 @@ void GameScene::SceneChageUpdate()
 
 					if (resultChange == false) {
 						scene = Scene::Game;
-						// ‚±‚±‚ÉƒŠƒZƒbƒgŠÖ”‚ğ’u‚­
+						// ã“ã“ã«ãƒªã‚»ãƒƒãƒˆé–¢æ•°ã‚’ç½®ã
 					}
 					else if (resultChange == true) {
-						// ‚±‚±‚ÉƒŠƒZƒbƒgŠÖ”‚ğ’u‚­
+						// ã“ã“ã«ãƒªã‚»ãƒƒãƒˆé–¢æ•°ã‚’ç½®ã
 						Reset();
 
 						scene = Scene::Title;
@@ -992,10 +993,10 @@ void GameScene::EnemyGameUpdate()
 {
 	enemySpawnTimer_++;
 
-	// ƒGƒlƒ~[‚ÌƒEƒF[ƒu‚ÌŠÔ‚ği‚ß‚é
+	// ã‚¨ãƒãƒŸãƒ¼ã®ã‚¦ã‚§ãƒ¼ãƒ–ã®æ™‚é–“ã‚’é€²ã‚ã‚‹
 	waveTimer_++;
 
-	// ƒGƒlƒ~[‚ÌƒEƒF[ƒu‚ÌŠÔ‚ªƒ}ƒbƒNƒX‚É‚È‚Á‚½‚çƒEƒF[ƒu‚ği‚ß‚é
+	// ã‚¨ãƒãƒŸãƒ¼ã®ã‚¦ã‚§ãƒ¼ãƒ–ã®æ™‚é–“ãŒãƒãƒƒã‚¯ã‚¹ã«ãªã£ãŸã‚‰ã‚¦ã‚§ãƒ¼ãƒ–ã‚’é€²ã‚ã‚‹
 	if (waveTimer_ >= waveTimeMax_) {
 		if (waveTimeNum_ < 3) {
 			waveTimeNum_++;
@@ -1015,11 +1016,11 @@ void GameScene::EnemyGameUpdate()
 			break;
 		}
 
-		// ƒEƒF[ƒu‚ÌŠÔ‚ğƒŠƒZƒbƒg
+		// ã‚¦ã‚§ãƒ¼ãƒ–ã®æ™‚é–“ã‚’ãƒªã‚»ãƒƒãƒˆ
 		waveTimer_ = 0;
 	}
 
-	// ƒGƒlƒ~[‚ÌŠÔ‚²‚Æ‚É‚í‚­ˆ— (–³ŒÀ•¦‚«)
+	// ã‚¨ãƒãƒŸãƒ¼ã®æ™‚é–“ã”ã¨ã«ã‚ãå‡¦ç† (ç„¡é™æ²¸ã)
 	switch (enemyWave_)
 	{
 	case GameScene::wave01:
@@ -1044,13 +1045,13 @@ void GameScene::EnemyGameUpdate()
 		break;
 	}
 
-	//õ–½‚ªs‚«‚½“G‚ğ‘Síœ
+	//å¯¿å‘½ãŒå°½ããŸæ•µã‚’å…¨å‰Šé™¤
 	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a)
 		{return a->GetDeadMotionEnd() == true; });
 	std::for_each(enemys_.begin(), it, [](Enemy* a) { delete a; });
 	enemys_.erase(enemys_.begin(), it);
 
-	//	“G‚ÌXVˆ—
+	//	æ•µã®æ›´æ–°å‡¦ç†
 	for (auto e : enemys_) {
 		e->Update();
 	}

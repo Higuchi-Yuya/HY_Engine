@@ -284,8 +284,8 @@ void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* 
 
 void GameCollider::Draw3D(ViewProjection* viewProjection)
 {
-	ViewProjection* v = viewProjection;
-	v;
+	[[maybe_unused]] ViewProjection* v = viewProjection;
+	
 	for (size_t i = 0; i < 4; i++)
 	{
 		//box_[i]->Draw(viewProjection);

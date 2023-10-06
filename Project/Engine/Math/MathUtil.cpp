@@ -88,7 +88,7 @@ Vector3 MathUtil::MatVector(Matrix4 matrix4, Vector3 vector3)
 
 float MathUtil::DegreeToRadian(float degree)
 {
-	float PI = 3.141592f;
+	PI = 3.141592f;
 	float result = degree * (PI / 180);
 
 	return result;
@@ -96,7 +96,7 @@ float MathUtil::DegreeToRadian(float degree)
 
 Vector3 MathUtil::DegreeToRadianVec3(Vector3 degree)
 {
-	float PI = 3.141592f;
+	PI = 3.141592f;
 	Vector3 result;
 	result.x = degree.x * (PI / 180);
 	result.y = degree.y * (PI / 180);
@@ -107,7 +107,7 @@ Vector3 MathUtil::DegreeToRadianVec3(Vector3 degree)
 
 float MathUtil::Sin_ZeroToOne(float pos, float maxCount, float nowCount, float swingWidth)
 {
-	float PI = 3.141592f;
+	PI = 3.141592f;
 	float result = pos + sin(PI * 2 / maxCount * nowCount) * swingWidth;
 	return result;
 }

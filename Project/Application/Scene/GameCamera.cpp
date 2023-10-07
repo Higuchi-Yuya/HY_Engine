@@ -1,7 +1,7 @@
 #include "GameCamera.h"
 #include "JoyPadInput.h"
 #include "MathUtil.h"
-
+#include "Easing.h"
 
 void GameCamera::Initialize(const WorldTransform* worldTransform)
 {
@@ -9,18 +9,61 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 	viewProjection_.Initialize();
 	worldTransform_.Initialize();
 	
+	viewProjection_.eye = { -0.8f,3,-65 };
+	viewProjection_.target = { -0.8f,0,0 };
+
 	//worldTransform_.parent_ = worldTransform;
 	worldTransform_.translation = { -15,15,-15 };
 	worldTransform_.UpdateMatrix();
 
 	offSet = { 0,5,0 };
 	
+	titleCameraState_ = titleCameraState_;
 }
 
 void GameCamera::TitleUpdate()
 {
-	// カメラの座標を前に移動
-	//viewProjection_.eye.z += 0.1f;
+	// イージングの処理
+	if (IsCanEase_ == true) {
+		switch (titleCameraState_)
+		{
+		// カメラの座標を前に移動
+		case GameCamera::FirstMove:
+		{
+			easeTimer_++;
+
+			// イージングの最初のポジション
+			Vector3 fEyePos = { -0.8f,3,-65 };
+			Vector3 fTargetPos = { -0.8f,0,0 };
+
+			// イージングの終わりのポジション
+			Vector3 eEyePos = { -0.8f,6,-20 };
+			Vector3 eTargetPos = { -0.8f,4,0 };
+
+			// カメラのポジションをイージングさせる
+			viewProjection_.eye = Easing::OutVec3(fEyePos, eEyePos, easeTimer_, easeTimeMax_);
+			viewProjection_.target = Easing::OutVec3(fTargetPos, eTargetPos, easeTimer_, easeTimeMax_);
+
+			// イージングが終了したら
+			if (easeTimer_ >= easeTimeMax_) {
+				easeTimer_ = 0;
+				// 次のイージングの処理に移動
+				titleCameraState_ = SecondMove;
+
+				IsEaseEnd_ = true;
+			}
+			break;
+		}
+		case GameCamera::SecondMove:
+
+
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
 
 	// ビューの更新処理
 	viewProjection_.UpdateMatrix();
@@ -54,6 +97,13 @@ void GameCamera::GameUpdate()
 	ImGui::End();
 }
 
+void GameCamera::Reset()
+{
+	titleCameraState_ = titleCameraState_;
+	IsCanEase_ = false;
+	IsEaseEnd_ = false;
+}
+
 void GameCamera::SetCameraFPos(Vector3 pos)
 {
 	playerPos_ = pos;
@@ -64,6 +114,11 @@ void GameCamera::SetCameraFPos(Vector3 pos)
 void GameCamera::SetCameraPos(Vector3 pos)
 {
 	playerPos_ = pos; 
+}
+
+void GameCamera::SetIsCanEase(bool IsCanEase)
+{
+	IsCanEase_ = IsCanEase;
 }
 
 void GameCamera::RotUpdate()

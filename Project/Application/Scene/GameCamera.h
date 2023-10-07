@@ -5,6 +5,15 @@
 
 class GameCamera
 {
+private:
+	// 状態
+	enum TitleCameraState
+	{
+		FirstMove,
+		SecondMove,
+
+	};
+
 public:// メンバ関数
 	void Initialize(const WorldTransform* worldTransform);
 
@@ -12,11 +21,28 @@ public:// メンバ関数
 
 	void GameUpdate();
 
+	void Reset();
+
+public:// ゲッター
+
+	// ビュープロジェクションを取得
 	ViewProjection& GetView() { return viewProjection_; }
 
+	// タイトルのカメラの処理をするかどうか
+	bool& GetIsCanEase() { return IsCanEase_; }
+
+	// タイトルのカメラ処理が終わっているかを取得
+	bool& GetIsEaseEnd() { return IsEaseEnd_; }
+
+public:// セッター
+	// 最初にセットするカメラ情報
 	void SetCameraFPos(Vector3 pos);
 
+	// カメラのポジションをセット
 	void SetCameraPos(Vector3 pos);
+
+	// タイトルのカメラの更新処理を行うかをセット
+	void SetIsCanEase(bool IsCanEase);
 
 private:// プライベートメンバ関数
 	void RotUpdate();
@@ -45,5 +71,15 @@ private:// メンバ変数
 
 	// 注視点となるプレイヤーの座標
 	Vector3 playerPos_;
+
+	// 
+	TitleCameraState titleCameraState_;
+
+	// イージングのタイマー
+	float easeTimer_ = 0;
+	float easeTimeMax_ = 180;
+
+	bool IsCanEase_ = false;
+	bool IsEaseEnd_ = false;
 };
 

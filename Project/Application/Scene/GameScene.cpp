@@ -279,8 +279,7 @@ void GameScene::Initialize()
 	gameCamera->SetCameraFPos(player_->worldTransform_.translation);
 
 	
-	gameCamera->GetView().eye = { -0.8f,6,-55 };
-	gameCamera->GetView().target = { -0.8f,0,0 };
+
 	player_->SetGameCamera(gameCamera.get());
 #pragma endregion
 
@@ -402,13 +401,6 @@ void GameScene::ImguiUpdate()
 	// 丸影
 	if (ImGui::TreeNode("circleShadow")) {
 		ImGui::Checkbox("Is Active", &isActiveCircleShadow);
-
-		if (isActiveCircleShadow == true) {
-			light->SetCircleShadowActive(0, true);
-		}
-		else if (isActiveCircleShadow == false) {
-			light->SetCircleShadowActive(0, false);
-		}
 
 		ImGui::InputFloat3("circleShadowPos", &circleShadowCasterPos.x);
 		ImGui::InputFloat3("circleShadowDir", &circleShadowDir.x);
@@ -730,11 +722,11 @@ void GameScene::TitleUpdate()
 {
 	// パッドでAボタンを押すか、もしくはスペースキーを押した瞬間
 	if (JoypadInput::GetButtonDown(PadCode::ButtonA)||input_->TriggerKey(DIK_SPACE)) {
-		oldScene = Scene::Title;
-		sceneChangeFlag = true;
+		gameCamera->SetIsCanEase(true);
 	}
 
 #pragma region ライトの更新処理
+	isActiveCircleShadow = false;
 	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
 	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
 	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
@@ -766,6 +758,12 @@ void GameScene::TitleUpdate()
 	else if (isActiveSpot == false) {
 		light->SetSpotLightActive(0, false);
 	}
+	if (isActiveCircleShadow == true) {
+		light->SetCircleShadowActive(0, true);
+	}
+	else if (isActiveCircleShadow == false) {
+		light->SetCircleShadowActive(0, false);
+	}
 #pragma endregion
 
 	// オブジェクトの更新処理
@@ -774,6 +772,11 @@ void GameScene::TitleUpdate()
 	}
 
 	// お墓のドアのオブジェクトの描画
+	if (gameCamera->GetIsCanEase() == true) {
+		latticeDoors_[0]->worldTransform_.rotation.y -= MathUtil::DegreeToRadian(2);
+		latticeDoors_[1]->worldTransform_.rotation.y += MathUtil::DegreeToRadian(2);
+	}
+
 	for (auto l : latticeDoors_)
 	{
 		l->Update();
@@ -782,6 +785,11 @@ void GameScene::TitleUpdate()
 	// カメラの更新処理
 	//gameCamera->GetView().eye.z += 0.1f;
 	gameCamera->TitleUpdate();
+
+	if (gameCamera->GetIsEaseEnd() == true) {
+		oldScene = Scene::Title;
+		sceneChangeFlag = true;
+	}
 
 	light->Update();
 }
@@ -828,6 +836,12 @@ void GameScene::GameSceneUpdate()
 	}
 	else if (isActiveSpot == false) {
 		light->SetSpotLightActive(0, false);
+	}
+	if (isActiveCircleShadow == true) {
+		light->SetCircleShadowActive(0, true);
+	}
+	else if (isActiveCircleShadow == false) {
+		light->SetCircleShadowActive(0, false);
 	}
 #pragma endregion
 

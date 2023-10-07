@@ -9,6 +9,7 @@ public:
 	static double In(double start, double end, double time, double max_time);
 
 	static double Out(double start, double end, double time, double max_time);
+	static Vector3 OutVec3(Vector3 start, Vector3 end, double time, double max_time);
 
 	static double InOut(double start, double end, double time, double max_time);
 

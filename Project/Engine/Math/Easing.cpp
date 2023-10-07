@@ -16,6 +16,18 @@ double Easing::Out(double start, double end, double time, double max_time)
 	return start + (move * (1 - (1 - time) * (1 - time)));
 }
 
+Vector3 Easing::OutVec3(Vector3 start, Vector3 end, double time, double max_time)
+{
+	Vector3 Vec;
+	double x = Out(static_cast <double>(start.x), static_cast <double>(end.x), time, max_time);
+	double y = Out(static_cast <double>(start.y), static_cast <double>(end.y), time, max_time);
+	double z = Out(static_cast <double>(start.z), static_cast <double>(end.z), time, max_time);
+
+	Vec = { (float)x,(float)y,(float)z };
+
+	return Vec;
+}
+
 double Easing::InOut(double start, double end, double time, double max_time)
 {
 	time /= max_time;

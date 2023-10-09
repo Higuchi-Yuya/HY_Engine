@@ -29,6 +29,9 @@ public:
 	// プレイヤーの2D描画前面
 	void Draw2DFront();
 
+	// Imguiの描画
+	void DrawImgui();
+
 	// リセット関数
 	void Reset();
 

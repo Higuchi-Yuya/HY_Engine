@@ -33,7 +33,10 @@ private:
 
 	// タイマー
 	int32_t gameTimer_ = 0;
-	int32_t remainTime_ = 60 * 3;
+	int32_t remainTime_ = 60 * 2;
+
+	// 時間が終了しているかどうかのフラグ
+	bool IsTimeEnd_ = false;
 
 private:
 	void TextureSetting();
@@ -44,6 +47,11 @@ public:
 	void Update();
 	void DrawFrontSprite();
 
+	void DrawImgui();
+
 	void Reset();
+
+public:
+	bool GetIsTimeEnd() { return IsTimeEnd_; }
 };
 

@@ -88,6 +88,11 @@ void GameScene::Initialize()
 	// タイトルのAボタン押すフォント（仮）
 	titleButtonTexHandle.reset(TextureManager::Load2DTextureP("PressA.png"));
 
+	// リザルト画面のゲームオーバーのフォント
+	resultGameOverFontHandle_.reset(TextureManager::Load2DTextureP("Result/GameOverFont.png"));
+
+	// リザルト画面のゲームクリアのフォント
+	resultGameClearFontHandle_.reset(TextureManager::Load2DTextureP("Result/GameClearFont.png"));
 
 #pragma endregion
 
@@ -145,6 +150,14 @@ void GameScene::Initialize()
 	// タイトルの背景のスプライト
 	titleKariBack = std::make_unique<Sprite>();
 	titleKariBack->Initialize(titleBackTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 }, { 1280,720 });
+
+	// リザルトのゲームオーバーフォントスプライト
+	resultGameOverFont_ = std::make_unique<Sprite>();
+	resultGameOverFont_->Initialize(resultGameOverFontHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2-100 }, { 500,200 });
+
+	// リザルトのゲームクリアフォントスプライト
+	resultGameClearFont_ = std::make_unique<Sprite>();
+	resultGameClearFont_->Initialize(resultGameClearFontHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2-100 }, { 500,200 });
 
 #pragma endregion
 
@@ -451,6 +464,12 @@ void GameScene::ImguiUpdate()
 	ImGui::Checkbox("Is Stop", &isStopSound);
 
 	ImGui::End();
+
+	// 時間のImgui
+	timerUi_->DrawImgui();
+
+	// プレイヤーのimgui
+	player_->DrawImgui();
 }
 
 void GameScene::Draw2DBack()
@@ -558,6 +577,15 @@ void GameScene::Draw2DFront()
 		operationUi_->DrawFrontSprite();
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
+		titleKariBack->Draw();
+		titleKariPressA->Draw();
+
+		if (IsGameClear_ == true) {
+			resultGameClearFont_->Draw();
+		}
+		else {
+			resultGameOverFont_->Draw();
+		}
 
 		break;
 	default:
@@ -579,7 +607,11 @@ void GameScene::Reset()
 		break;
 	case GameScene::Scene::Result:
 
+		// ゲームクリアのフラグリセット
+		IsGameClear_ = false;
+
 		// ウェーブのリセット
+		enemyWave_ = EnemyWave::wave01;
 		waveTimeNum_ = 0;
 		waveTimer_ = 0;
 
@@ -600,6 +632,12 @@ void GameScene::Reset()
 
 		// プレイヤーのリセット
 		player_->Reset();
+
+		// 時間のリセット
+		timerUi_->Reset();
+
+		// カメラのリセット
+		gameCamera->Reset();
 
 		break;
 	default:
@@ -777,6 +815,13 @@ void GameScene::TitleUpdate()
 		latticeDoors_[1]->worldTransform_.rotation.y += MathUtil::DegreeToRadian(2);
 	}
 
+	if (gameCamera->GetIsEaseEnd() == true) {
+		oldScene = Scene::Title;
+		sceneChangeFlag = true;
+		latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(0-90);
+		latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(180-90);
+	}
+
 	for (auto l : latticeDoors_)
 	{
 		l->Update();
@@ -786,10 +831,7 @@ void GameScene::TitleUpdate()
 	//gameCamera->GetView().eye.z += 0.1f;
 	gameCamera->TitleUpdate();
 
-	if (gameCamera->GetIsEaseEnd() == true) {
-		oldScene = Scene::Title;
-		sceneChangeFlag = true;
-	}
+
 
 	light->Update();
 }
@@ -905,6 +947,13 @@ void GameScene::GameSceneUpdate()
 
 	// オペレーションの更新処理
 	operationUi_->Update();
+
+	// 制限時間が過ぎたらクリア
+	if (timerUi_->GetIsTimeEnd() == true) {
+		oldScene = Scene::Game;
+		sceneChangeFlag = true;
+		IsGameClear_ = true;
+	}
 
 	//// 敵が全滅したらとりあえずシーンを切り替える
 	//if (enemys_.size() <= 1) {

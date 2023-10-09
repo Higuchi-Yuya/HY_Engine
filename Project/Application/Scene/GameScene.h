@@ -155,6 +155,10 @@ private:// メンバ変数
 
 	// フェードインフェードアウト用の画像ハンドル
 	std::unique_ptr<Texture> blackOutTexHandle_;
+
+	// リザルト画面のスプライト
+	std::unique_ptr<Texture> resultGameOverFontHandle_ = nullptr;
+	std::unique_ptr<Texture> resultGameClearFontHandle_ = nullptr;
 #pragma endregion
 
 
@@ -164,6 +168,10 @@ private:// メンバ変数
 	std::unique_ptr<Sprite> titleKariFont = nullptr;
 	std::unique_ptr<Sprite> titleKariBack = nullptr;
 	std::unique_ptr<Sprite> titleKariPressA = nullptr;
+
+	std::unique_ptr<Sprite> resultGameOverFont_ = nullptr;
+	std::unique_ptr<Sprite> resultGameClearFont_ = nullptr;
+
 	Vector2 spritePos;
 
 	// フェードインフェードアウト用の画像スプライト
@@ -249,6 +257,9 @@ private:// メンバ変数
 	bool sceneChangeFlag = false;
 	Scene oldScene = Scene::Title;
 	bool resultChange = false;
+
+	// ゲームクリアしているかどうか
+	bool IsGameClear_ = false;
 #pragma endregion
 
 
@@ -274,7 +285,7 @@ private:// メンバ変数
 
 	// ゲームのウェーブごとの時間
 	float waveTimer_ = 0;
-	const float waveTimeMax_ = 120 * 60 / 3;
+	const float waveTimeMax_ = 60 * 30;
 
 	// 今のウェーブ
 	uint32_t waveTimeNum_ = 0;

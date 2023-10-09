@@ -99,9 +99,12 @@ void GameCamera::GameUpdate()
 
 void GameCamera::Reset()
 {
-	titleCameraState_ = titleCameraState_;
+	titleCameraState_ = FirstMove;
 	IsCanEase_ = false;
 	IsEaseEnd_ = false;
+
+	viewProjection_.eye = { -0.8f,3,-65 };
+	viewProjection_.target = { -0.8f,0,0 };
 }
 
 void GameCamera::SetCameraFPos(Vector3 pos)

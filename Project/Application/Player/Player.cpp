@@ -203,6 +203,20 @@ void Player::Draw2DFront()
 	
 }
 
+void Player::DrawImgui()
+{
+	// 表示項目の追加--------//
+	ImGui::Begin("Player");
+
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat("HitPoint", &playerHitPoint_, 0, playerHitPointMax_);
+
+
+	ImGui::End();
+}
+
 void Player::Reset()
 {
 	// ワールド変換データのリセット
@@ -373,7 +387,7 @@ void Player::Attack()
 
 void Player::OnColHitPoint()
 {
-	playerHitPoint_ -= 1;
+	playerHitPoint_ -= 2;
 	// HPのセット
 	float nowHp = playerHitPoint_ / playerHitPointMax_;
 	if (nowHp <= 0.05f) {

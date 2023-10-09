@@ -1,7 +1,7 @@
 #include "TimerUI.h"
 #include "Util.h"
 #include "WinApp.h"
-
+#include "ImGuiManager.h"
 
 TimerUI::TimerUI()
 {
@@ -53,11 +53,27 @@ void TimerUI::DrawFrontSprite()
 	}
 }
 
+void TimerUI::DrawImgui()
+{
+	// 表示項目の追加--------//
+	ImGui::Begin("Time");
+
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputInt("remainTime", &remainTime_, 0, 120);
+
+
+	ImGui::End();
+}
+
 void TimerUI::Reset()
 {
 	// タイマーの数字のリセット
 	gameTimer_ = 0;
-	remainTime_ = 0;
+	remainTime_ = 60 * 2;
+
+	IsTimeEnd_ = false;
 }
 
 void TimerUI::TextureSetting()
@@ -79,6 +95,9 @@ void TimerUI::TextureSetting()
 		{
 			mTimerUnit[i]->SetRectSize(Vector2(0, 0), Vector2(128, 128));
 		}
+
+		// 時間が終了したときのフラグをオン
+		IsTimeEnd_ = true;
 		return;
 	}
 

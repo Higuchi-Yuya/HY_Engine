@@ -313,5 +313,12 @@ private:// メンバ変数
 	std::unique_ptr<OperationUI> operationUi_;
 #pragma endregion
 
+
+#pragma region タイトル関連
+	// スプライトを消すフラグ
+	bool IsTitleAlpha_ = false;
+	float titleAlpha_ = 1;
+#pragma endregion
+
 };
 

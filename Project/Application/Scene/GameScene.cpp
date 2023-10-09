@@ -153,11 +153,11 @@ void GameScene::Initialize()
 
 	// リザルトのゲームオーバーフォントスプライト
 	resultGameOverFont_ = std::make_unique<Sprite>();
-	resultGameOverFont_->Initialize(resultGameOverFontHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2-100 }, { 500,200 });
+	resultGameOverFont_->Initialize(resultGameOverFontHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2-100 }, { 500,250 });
 
 	// リザルトのゲームクリアフォントスプライト
 	resultGameClearFont_ = std::make_unique<Sprite>();
-	resultGameClearFont_->Initialize(resultGameClearFontHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2-100 }, { 500,200 });
+	resultGameClearFont_->Initialize(resultGameClearFontHandle_.get(), { WinApp::window_width / 2,WinApp::window_height / 2-100 }, { 500,250 });
 
 #pragma endregion
 
@@ -601,6 +601,8 @@ void GameScene::Reset()
 	switch (scene)
 	{
 	case GameScene::Scene::Title:
+		titleKariFont->SetColor(Vector4(1, 1, 1, 1));
+		titleKariPressA->SetColor(Vector4(1, 1, 1, 1));
 		break;
 	case GameScene::Scene::Game:
 
@@ -639,6 +641,8 @@ void GameScene::Reset()
 		// カメラのリセット
 		gameCamera->Reset();
 
+		IsTitleAlpha_ = false;
+		titleAlpha_ = 1;
 		break;
 	default:
 		break;
@@ -761,6 +765,7 @@ void GameScene::TitleUpdate()
 	// パッドでAボタンを押すか、もしくはスペースキーを押した瞬間
 	if (JoypadInput::GetButtonDown(PadCode::ButtonA)||input_->TriggerKey(DIK_SPACE)) {
 		gameCamera->SetIsCanEase(true);
+		IsTitleAlpha_ = true;
 	}
 
 #pragma region ライトの更新処理
@@ -820,6 +825,17 @@ void GameScene::TitleUpdate()
 		sceneChangeFlag = true;
 		latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(0-90);
 		latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(180-90);
+	}
+
+	// スプライトのアルファを下げる処理
+	if (IsTitleAlpha_ == true) {
+		titleAlpha_ -= 0.05f;
+		titleKariFont->SetColor(Vector4(1, 1, 1, titleAlpha_));
+		titleKariPressA->SetColor(Vector4(1, 1, 1, titleAlpha_));
+	}
+	else {
+		titleKariFont->SetColor(Vector4(1, 1, 1, 1));
+		titleKariPressA->SetColor(Vector4(1, 1, 1, 1));
 	}
 
 	for (auto l : latticeDoors_)
@@ -982,9 +998,11 @@ void GameScene::SceneChageUpdate()
 				blackAlpha += 0.025f;
 				blackOut->SetColor({ 1,1,1,blackAlpha });
 				if (blackAlpha >= 1) {
+					// ここにリセット関数を置く
+					Reset();
 					blackAlpha = 1;
 					scene = Scene::Game;
-					// ここにリセット関数を置く
+					
 				}
 			}
 			else if (oldScene == Scene::Result) {

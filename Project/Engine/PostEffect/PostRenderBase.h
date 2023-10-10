@@ -13,28 +13,51 @@ struct Handles
 
 class PostRenderBase
 {
+public:
+	static PostRenderBase* GetInstance()
+	{
+		static PostRenderBase* postRenderBase = new PostRenderBase;
+		return postRenderBase;
+	};
+
+	static void Destroy()
+	{
+		delete GetInstance();
+	}
+
 public:// メンバ関数
 
 	/// <summary>
 	/// シェーダリソースビューの作成
 	/// </summary>
-	void CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap);
+	void CreateSRV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle);
 
 	/// <summary>
 	/// レンダーターゲットビューの作成
 	/// </summary>
-	void CreateRTV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap);
+	void CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle);
 
 	/// <summary>
 	/// 深度ステンシルビューの作成
 	/// </summary>
-	void CreateDSV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap);
+	void CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuHandle);
 
 	/// <summary>
 	/// デスクリプタヒープの作成
 	/// </summary>
 	void DescriptorHeapInit();
 
+public:// ゲッター
+	// SRVデスクのゲッター
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDesc() {return descHeapSRV_;}
+
+	// RTVデスクのゲッター
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetRtvDesc() { return descHeapRTV_; }
+
+	// DSVデスクのゲッター
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetDsvDesc() { return descHeapDSV_; }
+
+public:
 	// デバイスのセッター
 	static void SetDevice(ID3D12Device* device) { sDevice_ = device; }
 
@@ -51,7 +74,7 @@ private:// メンバ変数
 	const uint32_t maxDSVCount = 1;
 
 	// SRV用デスクリプタヒープ
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descHeapSRV_;
 	// RTV用デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descHeapRTV_;
 	// DSV用デスクリプタヒープ

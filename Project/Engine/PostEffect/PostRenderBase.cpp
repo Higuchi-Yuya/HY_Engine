@@ -3,14 +3,16 @@
 
 ID3D12Device* PostRenderBase::sDevice_ = nullptr;
 
-void PostRenderBase::CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
+void PostRenderBase::CreateSRV(ID3D12Resource* buffer,D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle)
 {
-	descHeap;
-	D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle = descHeapSRV_->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE SrvCpuHandle = descHeapSRV_->GetCPUDescriptorHandleForHeapStart();
 
 	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	srvCpuHandle.ptr += (SIZE_T)(descriptorSize * srvIncrementIndex_);
+	SrvCpuHandle.ptr += (SIZE_T)(descriptorSize * srvIncrementIndex_);
+
+	// ハンドルの情報を代入
+	srvCpuHandle = SrvCpuHandle;
 
 	// シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	// srv設定構造体
@@ -25,16 +27,50 @@ void PostRenderBase::CreateSRV(ID3D12Resource* buffer, ID3D12DescriptorHeap* des
 	srvIncrementIndex_++;
 }
 
-void PostRenderBase::CreateRTV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
+void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle)
 {
-	descHeap;
-	buffer;
+	D3D12_CPU_DESCRIPTOR_HANDLE RtvCpuHandle = descHeapRTV_->GetCPUDescriptorHandleForHeapStart();
+
+	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	RtvCpuHandle.ptr += (SIZE_T)(descriptorSize * rtvIncrementIndex_);
+
+	// ハンドルの情報を代入
+	rtvCpuHandle = RtvCpuHandle;
+
+	// レンダーターゲットビュー設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};	// rtv設定構造体
+
+	// シェーダの計算結果をSRGBに変換して書き込む
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+	// ハンドルの指す位置にレンダーターゲットビュー作成
+	sDevice_->CreateRenderTargetView(buffer, &rtvDesc, rtvCpuHandle);
+
+	rtvIncrementIndex_++;
 }
 
-void PostRenderBase::CreateDSV(ID3D12Resource* buffer, ID3D12DescriptorHeap* descHeap)
+void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuHandle)
 {
-	buffer;
-	descHeap;
+	D3D12_CPU_DESCRIPTOR_HANDLE DsvCpuHandle = descHeapDSV_->GetCPUDescriptorHandleForHeapStart();
+
+	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	DsvCpuHandle.ptr += (SIZE_T)(descriptorSize * dsvIncrementIndex_);
+
+	// ハンドルの情報を代入
+	dsvCpuHandle = DsvCpuHandle;
+
+	// デスクリプタヒープにDSV作成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+
+	// ハンドルの指す位置に深度ステンシルビュー作成
+	sDevice_->CreateDepthStencilView(buffer,&dsvDesc,dsvCpuHandle);
+
+	dsvIncrementIndex_++;
 }
 
 void PostRenderBase::DescriptorHeapInit()

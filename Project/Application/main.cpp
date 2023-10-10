@@ -17,6 +17,7 @@
 #include "InputManager.h"
 #include <dxgidebug.h>
 #include "ParticleManager.h"
+#include "PostRenderBase.h"
 #pragma endregion
 
 #pragma region おまじない
@@ -125,6 +126,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	// パーティクルの初期化
 	ParticleManager::StaticInitialize(dxCommon->GetDevice());
+
+	// ポストエフェクトレンダーベース
+	PostRenderBase::GetInstance()->SetDevice(dxCommon->GetDevice());
+	PostRenderBase::GetInstance()->DescriptorHeapInit();
 
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
@@ -266,6 +271,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	TextureManager::StaticFinalize();
 	Object3d::StaticFinalize();
 	FbxModel::StaticFainalize();
+	PostRenderBase::Destroy();
 
 	// WindouwsAPIの終了処理
 	winApp->Finalize();

@@ -360,6 +360,9 @@
     <ClCompile Include="Application\UI\OperationUI.cpp">
       <Filter>ソース ファイル\Application\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Bloom\PostEffectHighLumi.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -554,6 +557,9 @@
     <ClInclude Include="Engine\DirectXBase\WarningDisable.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Bloom\PostEffectHighLumi.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -578,6 +584,7 @@
       <Filter>シェーダーファイル\Particle</Filter>
     </None>
     <None Include=".editorconfig" />
+    <None Include="Resources\Shaders\PostEffect\Bloom\HighLumiHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -628,5 +635,7 @@
     <FxCompile Include="Resources\Shaders\Particle\ParticleVertexShader.hlsl">
       <Filter>シェーダーファイル\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl" />
   </ItemGroup>
 </Project>

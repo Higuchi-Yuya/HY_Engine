@@ -180,6 +180,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClCompile Include="Application\UI\TimerUI.cpp" />
     <ClCompile Include="Application\UI\OperationUI.cpp" />
     <ClCompile Include="Engine\PostEffect\Bloom\PostEffectHighLumi.cpp" />
+    <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -247,6 +248,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClInclude Include="Application\UI\TimerUI.h" />
     <ClInclude Include="Application\UI\OperationUI.h" />
     <ClInclude Include="Engine\PostEffect\Bloom\PostEffectHighLumi.h" />
+    <ClInclude Include="Engine\PostEffect\PostEffectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -328,8 +330,18 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffect\PostEffectPS (2).hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

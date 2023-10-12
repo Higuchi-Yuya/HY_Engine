@@ -396,7 +396,6 @@ void PostColorInversion::CreateGraphicsPipelineState()
 {
 	result = S_FALSE;
 
-
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 	// 頂点シェーダの読み込みとコンパイル

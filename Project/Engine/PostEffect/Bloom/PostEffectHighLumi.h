@@ -97,7 +97,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_ = nullptr;
 
     // 深度バッファ
-    Microsoft::WRL::ComPtr <ID3D12Resource>depthBuff_;
+    Microsoft::WRL::ComPtr <ID3D12Resource>depthBuff_ = nullptr;
 
     // グラフィックスパプライン
     Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
@@ -105,8 +105,8 @@ private:
     // ルートシグネチャ
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 
-    ShaderObj* vsShader_;// 頂点シェーダー
-    ShaderObj* psShader_;// ピクセルシェーダー
+    std::unique_ptr<ShaderObj> vsShader_;// 頂点シェーダー
+    std::unique_ptr<ShaderObj> psShader_;// ピクセルシェーダー
 
     // 画面クリアカラー
     static const float clearColor_[4];

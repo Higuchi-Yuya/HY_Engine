@@ -2,6 +2,7 @@
 
 ID3D12Device* PostEffectHighLumi::sDevice_ = nullptr;
 
+const float PostEffectHighLumi::clearColor_[4] = { 0.4f,1.0f,0.4f,0.0f };// ミドリっぽい色
 
 PostEffectHighLumi::PostEffectHighLumi()
 {
@@ -229,7 +230,7 @@ void PostEffectHighLumi::CreateRTV()
 
 void PostEffectHighLumi::CreateDSV()
 {
-	PostRenderBase::GetInstance()->CreateDSV(texBuff_.Get(), handles_.dsvCpuHandle_);
+	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_.dsvCpuHandle_);
 }
 
 void PostEffectHighLumi::CreateGraphicsPipelineState()
@@ -237,12 +238,14 @@ void PostEffectHighLumi::CreateGraphicsPipelineState()
 	result = S_FALSE;
 
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
-
+	
 	// 頂点シェーダの読み込みとコンパイル
-	vsShader_->Create("PostEffect/PostEffectVS (2).hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+	vsShader_ = std::make_unique<ShaderObj>();
+	vsShader_->Create("PostEffect/Bloom/HighLumiVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
 	// ピクセルシェーダの読み込みとコンパイル
-	psShader_->Create("PostEffect/PostEffectPS (2).hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+	psShader_ = std::make_unique<ShaderObj>();
+	psShader_->Create("PostEffect/Bloom/HighLumiPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =

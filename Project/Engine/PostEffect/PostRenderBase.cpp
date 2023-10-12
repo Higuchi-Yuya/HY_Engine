@@ -55,7 +55,7 @@ void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HAND
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE DsvCpuHandle = descHeapDSV_->GetCPUDescriptorHandleForHeapStart();
 
-	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	DsvCpuHandle.ptr += (SIZE_T)(descriptorSize * dsvIncrementIndex_);
 

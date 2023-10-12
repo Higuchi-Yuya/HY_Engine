@@ -18,6 +18,8 @@
 #include <dxgidebug.h>
 #include "ParticleManager.h"
 #include "PostRenderBase.h"
+#include "PostEffectManager.h"
+
 #pragma endregion
 
 #pragma region おまじない
@@ -127,9 +129,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	// パーティクルの初期化
 	ParticleManager::StaticInitialize(dxCommon->GetDevice());
 
-	// ポストエフェクトレンダーベース
+	// ポストエフェクトレンダーベースの初期化
 	PostRenderBase::GetInstance()->SetDevice(dxCommon->GetDevice());
 	PostRenderBase::GetInstance()->DescriptorHeapInit();
+	
+	// ポストエフェクトマネージャーの初期化
+	std::unique_ptr<PostEffectManager> postEffectManager = nullptr;
+	postEffectManager = std::make_unique<PostEffectManager>();
+	postEffectManager->SetDxCommon(dxCommon);
+	postEffectManager->Initialize();
 
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//
@@ -143,6 +151,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 	gameScene->Initialize();
 	gameScene->SetDxComon(dxCommon);
 
+	postEffectManager->SetGameScene(gameScene);
+
 	//PostEffect* postEffect = nullptr;
 	//// かりに持たせるやつ
 	//PostColorInversion* post = nullptr;
@@ -153,6 +163,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 	//post = new PostColorInversion();
 	//post->Initialize();
+
 
 
 #pragma endregion
@@ -197,10 +208,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//postEffect->PostDrawScene(dxCommon->GetCommandList());
 
 		//post->PreDrawScene(dxCommon->GetCommandList());
-		//
+		
 		//postEffect->Draw(dxCommon->GetCommandList());
 
 		//post->PostDrawScene(dxCommon->GetCommandList());
+
+		postEffectManager->BloomDrawSetting();
 
 #pragma region 描画処理
 
@@ -214,6 +227,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 		spriteManager->PreDraw();
 		//-----ここから 背景スプライト描画 -----//
+
 		gameScene->Draw2DBack();
 
 		//post->Draw(dxCommon->GetCommandList());
@@ -225,22 +239,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma endregion
 
 #pragma region ３Ｄモデル描画
-		Object3d::PreDraw(dxCommon->GetCommandList());
-		//-----ここから 3Dモデルの描画 -----//
-		gameScene->Draw3D();
 
-		
-		//-----ここまで 3Dモデルの描画 -----//
-		Object3d::PostDraw();
+
+		postEffectManager->EffectBloomDraw();
 #pragma endregion
 		
 #pragma region 前景スプライト描画
 		// 描画前処理
+		
 		spriteManager->PreDraw();
 		//-----ここから 2D描画 -------//
 		gameScene->Draw2DFront();
 		
-
 
 		//-----ここまで 2D描画 -------//
 		// 描画後処理

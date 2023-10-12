@@ -71,8 +71,6 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 
 	//// スクリーン
 	//InitializeGraphicsPipelineSCREEN();
-
-
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)

@@ -230,6 +230,8 @@ private:// メンバ変数
 	//std::unique_ptr<FbxModel> fbxmodel_;
 	WorldTransform fbxTrans_;
 	//std::unique_ptr<FbxAnimetion> modelAnim_;
+
+	// 借りてくるコモン
 	DirectXCommon* dxCommon_ = nullptr;
 
 	float frem = 0;

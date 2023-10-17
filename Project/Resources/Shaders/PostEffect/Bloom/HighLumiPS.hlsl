@@ -9,8 +9,8 @@ PSOutput main(VSOutput input)// : SV_TARGET
     float4 texColor = tex.Sample(smp, input.uv);
     
     float grayScale = texColor.r * 0.299f + texColor.g * 0.587f + texColor.b * 0.114f;
-    float extract = smoothstep(0.2f, 0.6f, grayScale);
-    float power = 2.0f;
+    float extract = smoothstep(0.1f, 0.6f, grayScale);
+    float power = 20.0f;
     
     float4 result = float4(texColor.rgb * extract * power, 1);
     

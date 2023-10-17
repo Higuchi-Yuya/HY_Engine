@@ -1,18 +1,21 @@
 #include "PostRenderBase.h"
-
+#include "PostEffectHandleManager.h"
 
 ID3D12Device* PostRenderBase::sDevice_ = nullptr;
 
-void PostRenderBase::CreateSRV(ID3D12Resource* buffer,D3D12_CPU_DESCRIPTOR_HANDLE srvCpuHandle)
+void PostRenderBase::CreateSRV(ID3D12Resource* buffer,D3D12_CPU_DESCRIPTOR_HANDLE& srvCpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE& srvGpuHandle)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE SrvCpuHandle = descHeapSRV_->GetCPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE SrvGpuHandle = descHeapSRV_->GetGPUDescriptorHandleForHeapStart();
 
 	uint32_t descriptorSize = sDevice_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	SrvCpuHandle.ptr += (SIZE_T)(descriptorSize * srvIncrementIndex_);
+	SrvGpuHandle.ptr += (SIZE_T)(descriptorSize * srvIncrementIndex_);
 
 	// ハンドルの情報を代入
 	srvCpuHandle = SrvCpuHandle;
+	srvGpuHandle = SrvGpuHandle;
 
 	// シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};	// srv設定構造体
@@ -27,7 +30,7 @@ void PostRenderBase::CreateSRV(ID3D12Resource* buffer,D3D12_CPU_DESCRIPTOR_HANDL
 	srvIncrementIndex_++;
 }
 
-void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuHandle)
+void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& rtvCpuHandle)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE RtvCpuHandle = descHeapRTV_->GetCPUDescriptorHandleForHeapStart();
 
@@ -51,7 +54,7 @@ void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HAND
 	rtvIncrementIndex_++;
 }
 
-void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuHandle)
+void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& dsvCpuHandle)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE DsvCpuHandle = descHeapDSV_->GetCPUDescriptorHandleForHeapStart();
 
@@ -99,9 +102,12 @@ void PostRenderBase::DescriptorHeapInit()
 	// DSV用のデスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC DescHeapDesc{};
 	DescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	DescHeapDesc.NumDescriptors = 1;
+	DescHeapDesc.NumDescriptors = maxDSVCount;
 
 	// DSV用デスクリプタヒープを作成
 	result = sDevice_->CreateDescriptorHeap(&DescHeapDesc, IID_PPV_ARGS(&descHeapDSV_));
 	assert(SUCCEEDED(result));
+
+	
+
 }

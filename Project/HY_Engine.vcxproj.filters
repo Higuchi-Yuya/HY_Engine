@@ -366,6 +366,15 @@
     <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Blur\GaussianBlur.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Composition\PostEffectComposition.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostEffectHandleManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -566,6 +575,15 @@
     <ClInclude Include="Engine\PostEffect\PostEffectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Blur\GaussianBlur.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Composition\PostEffectComposition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostEffectHandleManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -591,6 +609,8 @@
     </None>
     <None Include=".editorconfig" />
     <None Include="Resources\Shaders\PostEffect\Bloom\HighLumiHeader.hlsli" />
+    <None Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurHeader.hlsli" />
+    <None Include="Resources\Shaders\PostEffect\Composition\CompositionHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -643,5 +663,9 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiPS.hlsl" />
     <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Composition\CompositionPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Composition\CompositionVS.hlsl" />
   </ItemGroup>
 </Project>

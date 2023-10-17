@@ -1,5 +1,7 @@
 #pragma once
 #include "PostEffectHighLumi.h"
+#include "GaussianBlur.h"
+#include "PostEffectComposition.h"
 #include "GameScene.h"
 
 class PostEffectManager
@@ -8,6 +10,12 @@ private:// メンバー変数
 
 	// 高輝度抽出
 	std::unique_ptr<PostEffectHighLumi> postLumi_;
+
+	// ガウシアンブラー
+	std::unique_ptr<GaussianBlur>gaussianBlur_;
+
+	// 合成用のポストエフェクト
+	std::unique_ptr<PostEffectComposition>postComposition_;
 
 private:// 借りてくるもの
 

@@ -1,11 +1,11 @@
 #pragma once
 #include "PostRenderBase.h"
 
-class PostEffectHighLumi
+class PostEffectComposition
 {
 public:
     // コンストラクタ
-    PostEffectHighLumi();
+    PostEffectComposition();
 
     // 初期化
     void Initialize();
@@ -24,6 +24,8 @@ public:
     /// </summary>
     /// <param name="cmdList">コマンドリスト</param>
     void PostDrawScene(ID3D12GraphicsCommandList* cmdList);
+
+public:// セッター
 
     // デバイスのセッター
     static void SetDevice(ID3D12Device* device);
@@ -65,7 +67,7 @@ private:
 
 private:
     // テクスチャバッファ
-    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_[2];
 
     // デバイス（借りてくる）
     static ID3D12Device* sDevice_;
@@ -73,11 +75,8 @@ private:
     // 頂点数
     static const int kVertNum_ = 4;
 
-    // オリジナルシーンのハンドル
-    Handles orignalHandle_;
-
     // ハンドル
-    Handles handles_;
+    Handles handles_[2];
 
     // 頂点データ
     SpriteManager::Vertex vertices_[kVertNum_] = {

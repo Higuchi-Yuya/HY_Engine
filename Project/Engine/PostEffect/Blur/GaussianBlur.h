@@ -1,11 +1,11 @@
 #pragma once
 #include "PostRenderBase.h"
 
-class PostEffectHighLumi
+class GaussianBlur
 {
 public:
     // コンストラクタ
-    PostEffectHighLumi();
+    GaussianBlur();
 
     // 初期化
     void Initialize();
@@ -24,6 +24,8 @@ public:
     /// </summary>
     /// <param name="cmdList">コマンドリスト</param>
     void PostDrawScene(ID3D12GraphicsCommandList* cmdList);
+
+public:// セッター
 
     // デバイスのセッター
     static void SetDevice(ID3D12Device* device);
@@ -72,9 +74,6 @@ private:
 
     // 頂点数
     static const int kVertNum_ = 4;
-
-    // オリジナルシーンのハンドル
-    Handles orignalHandle_;
 
     // ハンドル
     Handles handles_;

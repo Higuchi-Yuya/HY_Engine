@@ -1,15 +1,15 @@
-#include "PostEffectHighLumi.h"
+#include "GaussianBlur.h"
 #include "PostEffectHandleManager.h"
 
-ID3D12Device* PostEffectHighLumi::sDevice_ = nullptr;
+ID3D12Device* GaussianBlur::sDevice_ = nullptr;
 
-const float PostEffectHighLumi::clearColor_[4] = { 0.4f,1.0f,0.4f,0.0f };// ミドリっぽい色
+const float GaussianBlur::clearColor_[4] = { 0.4f,1.0f,0.4f,0.0f };// ミドリっぽい色
 
-PostEffectHighLumi::PostEffectHighLumi()
+GaussianBlur::GaussianBlur()
 {
 }
 
-void PostEffectHighLumi::Initialize()
+void GaussianBlur::Initialize()
 {
 	CreateVertBuff();
 
@@ -25,21 +25,10 @@ void PostEffectHighLumi::Initialize()
 
 	CreateGraphicsPipelineState();
 
-	// オリジナルシーンのハンドルを作成
-	orignalHandle_.srvCpuHandle_ = PostRenderBase::GetInstance()->GetSrvDesc()->GetCPUDescriptorHandleForHeapStart();
-	orignalHandle_.srvGpuHandle_ = PostRenderBase::GetInstance()->GetSrvDesc()->GetGPUDescriptorHandleForHeapStart();
-
-	orignalHandle_.rtvCpuHandle_ = PostRenderBase::GetInstance()->GetRtvDesc()->GetCPUDescriptorHandleForHeapStart();
-
-	orignalHandle_.dsvCpuHandle_ = PostRenderBase::GetInstance()->GetDsvDesc()->GetCPUDescriptorHandleForHeapStart();
-
-	PostEffectHandleManager::SetPostEffectHandle("OriginalScene", orignalHandle_);
-
-	PostEffectHandleManager::SetPostEffectHandle("HighLumi", handles_);
-
+	PostEffectHandleManager::SetPostEffectHandle("GaussianBlur", handles_);
 }
 
-void PostEffectHighLumi::Draw(ID3D12GraphicsCommandList* cmdList)
+void GaussianBlur::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	// 定数バッファにデータ転送
 	SpriteManager::ConstBufferData* constMap = nullptr;
@@ -61,7 +50,7 @@ void PostEffectHighLumi::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	// SRVヒープ
-	ID3D12DescriptorHeap* ppHeaps[] = { PostRenderBase::GetInstance()->GetSrvDesc().Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { PostRenderBase::GetInstance()->GetSrvDesc().Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
@@ -77,7 +66,7 @@ void PostEffectHighLumi::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0); // 全ての頂点を使って描画
 }
 
-void PostEffectHighLumi::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
+void GaussianBlur::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 {
 	// リソースバリアを作成
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -111,7 +100,7 @@ void PostEffectHighLumi::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void PostEffectHighLumi::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
+void GaussianBlur::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
 {
 	// リソースバリアを作成
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -120,12 +109,12 @@ void PostEffectHighLumi::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
 	cmdList->ResourceBarrier(1, &resourceBarrier);
 }
 
-void PostEffectHighLumi::SetDevice(ID3D12Device* device)
+void GaussianBlur::SetDevice(ID3D12Device* device)
 {
 	sDevice_ = device;
 }
 
-void PostEffectHighLumi::CreateVertBuff()
+void GaussianBlur::CreateVertBuff()
 {
 	// 頂点バッファの設定
 	// ヒープ
@@ -174,7 +163,7 @@ void PostEffectHighLumi::CreateVertBuff()
 	assert(SUCCEEDED(result));
 }
 
-void PostEffectHighLumi::CreateTex()
+void GaussianBlur::CreateTex()
 {
 	// テクスチャリソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -202,7 +191,17 @@ void PostEffectHighLumi::CreateTex()
 	assert(SUCCEEDED(result));
 }
 
-void PostEffectHighLumi::CreateDepthBuff()
+void GaussianBlur::CreateSRV()
+{
+	PostRenderBase::GetInstance()->CreateSRV(texBuff_.Get(), handles_.srvCpuHandle_, handles_.srvGpuHandle_);
+}
+
+void GaussianBlur::CreateRTV()
+{
+	PostRenderBase::GetInstance()->CreateRTV(texBuff_.Get(), handles_.rtvCpuHandle_);
+}
+
+void GaussianBlur::CreateDepthBuff()
 {
 	// 深度バッファリソース設定
 	CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -232,34 +231,24 @@ void PostEffectHighLumi::CreateDepthBuff()
 	assert(SUCCEEDED(result));
 }
 
-void PostEffectHighLumi::CreateSRV()
-{
-	PostRenderBase::GetInstance()->CreateSRV(texBuff_.Get(), handles_.srvCpuHandle_,handles_.srvGpuHandle_);
-}
-
-void PostEffectHighLumi::CreateRTV()
-{
-	PostRenderBase::GetInstance()->CreateRTV(texBuff_.Get(), handles_.rtvCpuHandle_);
-}
-
-void PostEffectHighLumi::CreateDSV()
+void GaussianBlur::CreateDSV()
 {
 	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_.dsvCpuHandle_);
 }
 
-void PostEffectHighLumi::CreateGraphicsPipelineState()
+void GaussianBlur::CreateGraphicsPipelineState()
 {
 	result = S_FALSE;
 
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
-	
+
 	// 頂点シェーダの読み込みとコンパイル
 	vsShader_ = std::make_unique<ShaderObj>();
-	vsShader_->Create("PostEffect/Bloom/HighLumiVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+	vsShader_->Create("PostEffect/Bloom/GaussianBlurVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
 	// ピクセルシェーダの読み込みとコンパイル
 	psShader_ = std::make_unique<ShaderObj>();
-	psShader_->Create("PostEffect/Bloom/HighLumiPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+	psShader_->Create("PostEffect/Bloom/GaussianBlurPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =

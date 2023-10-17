@@ -169,6 +169,51 @@
     <Filter Include="ヘッダー ファイル\Application\UI">
       <UniqueIdentifier>{9ea442d4-7987-4f0f-b326-df571caa1d67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\Bloom">
+      <UniqueIdentifier>{cd71b6ba-82e6-4876-bea3-c69f0c88ef40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\Bloom\HighLumi">
+      <UniqueIdentifier>{8561b5b6-773f-47cd-ba9d-bd42b52df18e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\GaussianBlur">
+      <UniqueIdentifier>{dc74b682-a03c-4e14-856b-f9959d6e9370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\Composition">
+      <UniqueIdentifier>{5d72f22f-31c3-4132-8563-dc6fba4d8277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\HandlesManager">
+      <UniqueIdentifier>{99c433ca-1c1a-4dd1-bb1d-90c3954dda07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\PostEffectManager">
+      <UniqueIdentifier>{c91725bf-bebd-4d3d-92b6-248c4fec0412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\Bloom">
+      <UniqueIdentifier>{25c331cb-9a6e-4ada-a6b4-f2659cdea727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\Bloom\HighLumi">
+      <UniqueIdentifier>{3f02a9fc-2fda-4d57-9361-9bc0bc3ab7ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\GaussianBlur">
+      <UniqueIdentifier>{161600ae-7eb6-4fff-8861-64d70b860daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\Composition">
+      <UniqueIdentifier>{a810d3d8-9e99-46ca-bd4b-1b1ce2409bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\HandleManager">
+      <UniqueIdentifier>{cd9ac6d2-818d-4a33-a3ef-b7d8917900c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\PostEffectManager">
+      <UniqueIdentifier>{8b71494d-ced5-427a-b542-eee651fe1550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\PostEffect\Bloom">
+      <UniqueIdentifier>{633f9600-9e7c-4a8d-98ff-43a4a1984e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\PostEffect\Blur">
+      <UniqueIdentifier>{e596db7c-283e-48cc-a6bb-77dd8641cad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\PostEffect\Composition">
+      <UniqueIdentifier>{daa58dd8-9fed-4ab7-8aed-041d4c52f94e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -361,19 +406,19 @@
       <Filter>ソース ファイル\Application\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Bloom\PostEffectHighLumi.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\PostEffect\Bloom\HighLumi</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Blur\GaussianBlur.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\PostEffect\GaussianBlur</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Composition\PostEffectComposition.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\PostEffect\Composition</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostEffectHandleManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\PostEffect\HandlesManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect\PostEffectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -570,19 +615,19 @@
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Bloom\PostEffectHighLumi.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\PostEffect\PostEffectManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\PostEffect\Bloom\HighLumi</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Blur\GaussianBlur.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\PostEffect\GaussianBlur</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Composition\PostEffectComposition.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\PostEffect\Composition</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffectHandleManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\PostEffect\HandleManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostEffectManager.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect\PostEffectManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -608,9 +653,15 @@
       <Filter>シェーダーファイル\Particle</Filter>
     </None>
     <None Include=".editorconfig" />
-    <None Include="Resources\Shaders\PostEffect\Bloom\HighLumiHeader.hlsli" />
-    <None Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurHeader.hlsli" />
-    <None Include="Resources\Shaders\PostEffect\Composition\CompositionHeader.hlsli" />
+    <None Include="Resources\Shaders\PostEffect\Composition\CompositionHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect\Composition</Filter>
+    </None>
+    <None Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect\Blur</Filter>
+    </None>
+    <None Include="Resources\Shaders\PostEffect\Bloom\HighLumiHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect\Bloom</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -661,11 +712,23 @@
     <FxCompile Include="Resources\Shaders\Particle\ParticleVertexShader.hlsl">
       <Filter>シェーダーファイル\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurVS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Composition\CompositionPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Composition\CompositionVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Composition\CompositionPS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Composition\CompositionVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurPS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\GaussianBlurVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiPS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Bloom</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

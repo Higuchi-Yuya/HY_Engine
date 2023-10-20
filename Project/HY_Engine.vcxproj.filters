@@ -662,6 +662,9 @@
     <None Include="Resources\Shaders\PostEffect\Bloom\HighLumiHeader.hlsli">
       <Filter>シェーダーファイル\PostEffect\Bloom</Filter>
     </None>
+    <None Include="Resources\Shaders\Object\SilhouetteHeader.hlsli">
+      <Filter>シェーダーファイル\Objct</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -729,6 +732,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffect\Bloom\HighLumiVS.hlsl">
       <Filter>シェーダーファイル\PostEffect\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Object\SilhouettePS.hlsl">
+      <Filter>シェーダーファイル\Objct</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Object\SilhouetteVS.hlsl">
+      <Filter>シェーダーファイル\Objct</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

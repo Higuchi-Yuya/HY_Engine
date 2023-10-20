@@ -53,6 +53,10 @@ void Dissolve::UpdateMatrix()
 
 void Dissolve::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t dissolveRootIndex)
 {
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(dissolveRootIndex, constBuff_->GetGPUVirtualAddress());
 	if (isActiveDissolve_ == true) {

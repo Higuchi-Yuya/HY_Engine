@@ -46,6 +46,7 @@ public:
 		ADDITIONALPHA,  // 加算(透過あり)
 		SUBTRACTION,    // 減算
 		SCREEN,         // スクリーン
+		SILHOUETTE,     // シルエット
 		BLEND_NUMMAX,
 	};
 
@@ -123,6 +124,12 @@ public: // 静的メンバ関数
 	// スクリーン
 	static void InitializeGraphicsPipelineSCREEN();
 
+	// シルエット
+	static void InitializeGraphicsPipelineSilhouette();
+
+	// シルエット用のシェーダーオブジェクト
+	static void InitializeShaderSilhouette();
+
 	/// <summary>
 	/// ブレンドモード設定
 	/// </summary>
@@ -156,6 +163,9 @@ private: // 静的メンバ変数
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> sPipelinestateSCREEN_;
 
+	// パイプラインステートオブジェクト
+	static ComPtr<ID3D12PipelineState> sPipelinestateSilhouette_;
+
 	// インプットレイアウト
 	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
 	
@@ -166,7 +176,8 @@ private: // 静的メンバ変数
 	static ShaderObj *sVsShader_;// 頂点シェーダー
 	static ShaderObj *sPsShader_;// ピクセルシェーダー
 
-
+	static ShaderObj* sSilhouetteVsShader_;// 頂点シェーダー
+	static ShaderObj* sSilhouettePsShader_;// ピクセルシェーダー
 
 private:// 静的メンバ関数
 

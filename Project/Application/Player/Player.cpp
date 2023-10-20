@@ -68,6 +68,16 @@ bool Player::Initialize()
 	return true;
 }
 
+void Player::InitializeSilhouette()
+{
+	silhouetteModel_.reset(Model::LoadFromOBJ("chr_sword", true));
+
+	silhouetteObj_.Initialize();
+	silhouetteObj_.SetModel(silhouetteModel_.get());
+	
+	silhouetteObj_.worldTransform_.scale = { 0.89f,0.89f,0.899f };
+}
+
 void Player::Update()
 {
 	// 生きている間の更新処理
@@ -95,11 +105,30 @@ void Player::Update()
 
 	// 行列の更新など
 	Object3d::Update();
+
+	// プレイヤーと同じ情報を代入
+	silhouetteObj_.worldTransform_.translation = worldTransform_.translation;
+	silhouetteObj_.worldTransform_.rotation = worldTransform_.rotation;
+
+	silhouetteObj_.Update();
 }
 
 void Player::Draw(ViewProjection* view)
 {
+	// オブジェクト本体の描画
+	Object3d::SetBlendMode(BlendMode::SILHOUETTE);
 	Object3d::Draw(view);
+
+
+	Object3d::SetBlendMode(BlendMode::NORMAL);
+	Object3d::Draw(view);
+	// シルエット用の描画
+	//silhouetteObj_.SetBlendMode(BlendMode::SILHOUETTE);
+	//silhouetteObj_.Draw(view);
+
+	worldTransform_.scale = { 1,1,1 };
+	UpdateWorldMatrix();
+
 	//弾描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(view);
@@ -139,8 +168,6 @@ const bool Player::GetIsAlive() const
 	return IsAlive_;
 }
 
-
-
 void Player::SetWorldTransInfo(WorldTransform worldTrans)
 {
 	worldTransform_.translation = worldTrans.translation;
@@ -153,7 +180,12 @@ void Player::SetGameCamera(GameCamera* gameCamera)
 	bGameCamera = gameCamera;
 }
 
-const std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets() 
+void Player::SetSilhouetteModel(Model* model)
+{
+	silhouetteModel_.reset(model);
+}
+
+const std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
 {
 	return bullets_;
 }

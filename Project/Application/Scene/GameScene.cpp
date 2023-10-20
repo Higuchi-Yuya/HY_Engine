@@ -164,6 +164,7 @@ void GameScene::Initialize()
 #pragma region プレイヤー関連の初期化
 	player_ = std::make_unique<Player>();
 	player_.reset(Player::Create(playerModel_.get()));
+	player_->InitializeSilhouette();
 #pragma endregion
 
 #pragma region コライダー本体の初期化
@@ -513,8 +514,7 @@ void GameScene::Draw3D()
 
 		// オブジェクト関連の描画
 
-		// プレイヤーの描画
-		player_->Draw(&gameCamera->GetView());
+		
 
 		// 敵の描画
 		for (auto e : enemys_) {
@@ -531,6 +531,10 @@ void GameScene::Draw3D()
 			o->Draw(&gameCamera->GetView());
 		}
 		gameCollider->Draw3D(&gameCamera->GetView());
+
+		// プレイヤーの描画
+		player_->Draw(&gameCamera->GetView());
+
 		// FBXモデルの描画
 		FbxModel::PreDraw(commandList);
 
@@ -545,6 +549,8 @@ void GameScene::Draw3D()
 			e->DrawParticle(&gameCamera->GetView());
 		}
 		ParticleManager::PostDraw();
+
+
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
 

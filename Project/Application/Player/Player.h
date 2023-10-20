@@ -20,6 +20,9 @@ public:
 	// 初期化
 	bool Initialize()override;
 
+	// シルエット初期化
+	void InitializeSilhouette();
+
 	// 毎フレーム処理
 	void Update()override;
 
@@ -56,6 +59,9 @@ public:// セッター
 
 	// ゲームカメラをセット
 	void SetGameCamera(GameCamera* gameCamera);
+
+	// モデルのセット
+	void SetSilhouetteModel(Model* model);
 
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
 
@@ -139,6 +145,10 @@ private:
 
 	// 生きているかフラグ
 	bool IsAlive_ = true;
+
+	// シルエット用のオブジェクト
+	Object3d silhouetteObj_;
+	std::unique_ptr<Model> silhouetteModel_;
 
 #pragma region プレイヤーのHP関連
 	// プレイヤーのHP関連

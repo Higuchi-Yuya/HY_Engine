@@ -22,6 +22,7 @@ ComPtr<ID3D12PipelineState> Object3d::sPipelinestateADDITION_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateADDITIONALPHA_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSUBTRACTION_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSCREEN_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSilhouette_ = nullptr;
 
 std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 
@@ -31,6 +32,9 @@ ComPtr<ID3DBlob> Object3d::sErrorBlob_;
 
 ShaderObj* Object3d::sVsShader_ = nullptr;
 ShaderObj* Object3d::sPsShader_ = nullptr;
+
+ShaderObj* Object3d::sSilhouetteVsShader_ = nullptr;
+ShaderObj* Object3d::sSilhouettePsShader_ = nullptr;
 //ComPtr<ID3DBlob> Object3d::sRootSigBlob_;
 //Object3d::BlendMode Object3d::blendMode = BlendMode::NORMAL;
 
@@ -55,6 +59,9 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 	// ルートシグネチャの初期化
 	InitializeRootSignature();
 
+	// シルエットのシェーダーオブジェクトの初期化
+	InitializeShaderSilhouette();
+
 	// パイプライン初期化
 
 	// ノーマル
@@ -71,6 +78,9 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 
 	//// スクリーン
 	//InitializeGraphicsPipelineSCREEN();
+
+	// シルエット
+	InitializeGraphicsPipelineSilhouette();
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -130,6 +140,7 @@ void Object3d::InitializeGraphicsPipelineNormal()
 	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 	// デプスステンシルステート
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	//gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER;
 
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
@@ -404,6 +415,77 @@ void Object3d::InitializeGraphicsPipelineSCREEN()
 	assert(SUCCEEDED(result));
 }
 
+void Object3d::InitializeGraphicsPipelineSilhouette()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = *sSilhouetteVsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = *sSilhouettePsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER;
+	gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = sRootsignature_.Get();
+
+	// グラフィックスパイプラインの生成
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateSilhouette_));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeShaderSilhouette()
+{
+	// 頂点シェーダの読み込みとコンパイル
+	sSilhouetteVsShader_ = new ShaderObj;
+	sSilhouetteVsShader_->Create("Object/SilhouetteVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+
+	// ピクセルシェーダの読み込みとコンパイル
+	sSilhouettePsShader_ = new ShaderObj;
+	sSilhouettePsShader_->Create("Object/SilhouettePS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+}
+
 void Object3d::InitializeRootSignature()
 {
 	HRESULT result = S_FALSE;
@@ -637,7 +719,8 @@ void Object3d::SetBlendMode(BlendMode mode)
 	case Object3d::SCREEN:// スクリーン
 		sCmdList_->SetPipelineState(sPipelinestateSCREEN_.Get());
 		break;
-
+	case Object3d::SILHOUETTE:// シルエット
+		sCmdList_->SetPipelineState(sPipelinestateSilhouette_.Get());
 	default:
 		break;
 	}
@@ -651,6 +734,7 @@ void Object3d::StaticFinalize()
 	sPipelinestateADDITIONALPHA_ = nullptr;
 	sPipelinestateSUBTRACTION_ = nullptr;
 	sPipelinestateSCREEN_ = nullptr;
+	sPipelinestateSilhouette_ = nullptr;
 
 	sInputLayout_.clear();
 }

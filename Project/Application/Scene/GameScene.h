@@ -56,6 +56,11 @@ public:// メンバ関数
 
 	void Draw2DFront();
 
+	/// <summary>
+	/// ブルームを掛けるオブジェクトの描画
+	/// </summary>
+	void DrawBloomObject();
+
 	// リセット関数
 	void Reset();
 
@@ -200,6 +205,9 @@ private:// メンバ変数
 	std::unique_ptr<Model> modelGraveCross = nullptr;
 	std::unique_ptr<Model> modelGraveSquare = nullptr;
 
+	// ランタン
+	std::unique_ptr<Model> modelWallRantern_ = nullptr;
+
 #pragma endregion
 
 
@@ -276,6 +284,9 @@ private:// メンバ変数
 
 	// お墓のドアの配列
 	std::vector<Object3d*> latticeDoors_;
+
+	// ランタンの配列
+	std::vector<Object3d*> ranterns_;
 
 #pragma endregion
 

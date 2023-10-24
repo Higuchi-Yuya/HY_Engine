@@ -10,6 +10,9 @@ void PostEffectManager::Initialize()
 
 	postComposition_ = std::make_unique<PostEffectComposition>();
 	postComposition_->Initialize();
+
+	postTarget_= std::make_unique<PostTarget>();
+	postTarget_->Initialize();
 }
 
 void PostEffectManager::EffectBloomDraw()
@@ -20,17 +23,27 @@ void PostEffectManager::EffectBloomDraw()
 void PostEffectManager::BloomDrawSetting()
 {
 
-#pragma region 高輝度抽出の描画
-	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
+	postTarget_->PreDrawScene(dxCommon_->GetCommandList());
 
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//-----ここから 3Dモデルの描画 -----//
 
 
+	gameScene_->DrawBloomObject();
 	gameScene_->Draw3D();
 
-
 	//-----ここまで 3Dモデルの描画 -----//
+	Object3d::PostDraw();
+
+	postTarget_->PostDrawScene(dxCommon_->GetCommandList());
+
+#pragma region 高輝度抽出の描画
+	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
+
+
+	Object3d::PreDraw(dxCommon_->GetCommandList());
+	gameScene_->DrawBloomObject();
+
 	Object3d::PostDraw();
 
 	postLumi_->PostDrawScene(dxCommon_->GetCommandList());
@@ -66,4 +79,5 @@ void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)
 	PostEffectHighLumi::SetDevice(dxCommon_->GetDevice());
 	GaussianBlur::SetDevice(dxCommon_->GetDevice());
 	PostEffectComposition::SetDevice(dxCommon_->GetDevice());
+	PostTarget::SetDevice(dxCommon_->GetDevice());
 }

@@ -420,6 +420,9 @@
     <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp">
       <Filter>ソース ファイル\Engine\PostEffect\PostEffectManager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostTarget.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -628,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostEffectManager.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect\PostEffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostTarget.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 
 ID3D12Device* PostEffectComposition::sDevice_ = nullptr;
 
-const float PostEffectComposition::clearColor_[4] = { 0.4f,1.0f,0.4f,0.0f };// ミドリっぽい色
+const float PostEffectComposition::clearColor_[4] = { 0.1f,0.1f,0.1f,0.0f };// ミドリっぽい色
 
 PostEffectComposition::PostEffectComposition()
 {

@@ -184,6 +184,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClCompile Include="Engine\PostEffect\Blur\GaussianBlur.cpp" />
     <ClCompile Include="Engine\PostEffect\Composition\PostEffectComposition.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffectHandleManager.cpp" />
+    <ClCompile Include="Engine\PostEffect\PostTarget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -255,6 +256,7 @@ copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll
     <ClInclude Include="Engine\PostEffect\Blur\GaussianBlur.h" />
     <ClInclude Include="Engine\PostEffect\Composition\PostEffectComposition.h" />
     <ClInclude Include="Engine\PostEffect\PostEffectHandleManager.h" />
+    <ClInclude Include="Engine\PostEffect\PostTarget.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

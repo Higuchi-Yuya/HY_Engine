@@ -28,6 +28,11 @@ GameScene::~GameScene()
 	}
 	latticeDoors_.clear();
 
+	for (auto o : ranterns_) {
+		delete o;
+	}
+	ranterns_.clear();
+
 	Enemy::StaticFinalize();
 }
 
@@ -120,6 +125,9 @@ void GameScene::Initialize()
 	modelGraveCross.reset(Model::LoadFromOBJ("grave_cross"));
 	modelGraveSquare.reset(Model::LoadFromOBJ("grave_square"));
 
+	// ランタン
+	modelWallRantern_.reset(Model::LoadFromOBJ("WallRantern"));
+
 #pragma endregion
 
 #pragma region サウンド読み込み
@@ -174,7 +182,7 @@ void GameScene::Initialize()
 
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("field2"));
+	levelData_.reset(LevelLoader::LoadFile("Scene"));
 
 	// モデルデータをモデルのリストに登録
 	models.insert(std::make_pair("skydome", modelSkydome_.get()));
@@ -189,6 +197,7 @@ void GameScene::Initialize()
 	models.insert(std::make_pair("latticeDoor", modelLatticeDoor_.get()));
 	models.insert(std::make_pair("grave_cross", modelGraveCross.get()));
 	models.insert(std::make_pair("grave_square", modelGraveSquare.get()));
+	models.insert(std::make_pair("WallRantern", modelWallRantern_.get()));
 
 	// レベルデータからオブジェクトを生成、配置
 	//	また、プレイヤーの初期位置やエネミーの初期
@@ -221,7 +230,8 @@ void GameScene::Initialize()
 		}
 #pragma endregion
 
-#pragma region お墓のドア
+		// タグ名がドアなら
+		#pragma region お墓のドア
 		else if (objectData.tagName == "Door")
 		{
 			// モデルを指定して3Dオブジェクトを生成
@@ -247,7 +257,35 @@ void GameScene::Initialize()
 			// 配列に登録
 			latticeDoors_.push_back(newObject);
 		}
-#pragma endregion
+		#pragma endregion
+
+		// タグ名がランタンなら
+		else if (objectData.tagName == "Rantern")
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			newObject->SetModel(model);
+
+			// 座標
+			Vector3 pos;
+			pos = objectData.translation;
+			newObject->worldTransform_.translation = pos;
+
+			// 回転角
+			Vector3 rot;
+			rot = objectData.rotation;
+			newObject->worldTransform_.rotation = rot;
+			//newObject->worldTransform_.rotation.y += MathUtil::DegreeToRadian(180);
+
+			// スケール
+			Vector3 scale;
+			scale = objectData.scaling;
+			newObject->worldTransform_.scale = scale;
+
+			// 配列に登録
+			ranterns_.push_back(newObject);
+		}
+
 
 
 		// それ以外のタグ名またはなしの場合
@@ -513,9 +551,6 @@ void GameScene::Draw3D()
 	case GameScene::Scene::Game: // ゲームシーン
 
 		// オブジェクト関連の描画
-
-		
-
 		// 敵の描画
 		for (auto e : enemys_) {
 			e->Draw(&gameCamera->GetView());
@@ -600,6 +635,30 @@ void GameScene::Draw2DFront()
 
 	// シーンチェンジ用ののスプライトの描画
 	blackOut->Draw();
+}
+
+void GameScene::DrawBloomObject()
+{
+	switch (scene)
+	{
+	case GameScene::Scene::Title:
+		// ランタンのオブジェクトの描画
+		for (auto L : ranterns_) {
+			L->Draw(&gameCamera->GetView());
+		}
+		break;
+	case GameScene::Scene::Game:
+		// ランタンのオブジェクトの描画
+		for (auto L : ranterns_) {
+			L->Draw(&gameCamera->GetView());
+		}
+
+		break;
+	case GameScene::Scene::Result:
+		break;
+	default:
+		break;
+	}
 }
 
 void GameScene::Reset()
@@ -818,6 +877,11 @@ void GameScene::TitleUpdate()
 	// オブジェクトの更新処理
 	for (auto o : objects) {
 		o->Update();
+	}
+
+	// オブジェクトの更新処理
+	for (auto L : ranterns_) {
+		L->Update();
 	}
 
 	// お墓のドアのオブジェクトの描画

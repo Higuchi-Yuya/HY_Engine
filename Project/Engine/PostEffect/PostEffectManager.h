@@ -2,6 +2,7 @@
 #include "PostEffectHighLumi.h"
 #include "GaussianBlur.h"
 #include "PostEffectComposition.h"
+#include "PostTarget.h"
 #include "GameScene.h"
 
 class PostEffectManager
@@ -16,6 +17,9 @@ private:// メンバー変数
 
 	// 合成用のポストエフェクト
 	std::unique_ptr<PostEffectComposition>postComposition_;
+
+	// ターゲットシーン
+	std::unique_ptr<PostTarget>postTarget_;
 
 private:// 借りてくるもの
 

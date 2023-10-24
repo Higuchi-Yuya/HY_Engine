@@ -3142,6 +3142,182 @@
                 ]
             },
             "file_name": "skydome"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐",
+            "transform": {
+                "translation": [
+                    29.650203704833984,
+                    26.046972274780273,
+                    4.860647201538086
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.001",
+            "transform": {
+                "translation": [
+                    29.833328247070312,
+                    -27.46742820739746,
+                    4.913179874420166
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.002",
+            "transform": {
+                "translation": [
+                    32.75645065307617,
+                    5.2146759033203125,
+                    4.860647201538086
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.003",
+            "transform": {
+                "translation": [
+                    32.75645065307617,
+                    -6.8176350593566895,
+                    4.860647201538086
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.004",
+            "transform": {
+                "translation": [
+                    10.658369064331055,
+                    -46.74229431152344,
+                    4.913179874420166
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.005",
+            "transform": {
+                "translation": [
+                    -10.18791389465332,
+                    -46.74229431152344,
+                    4.913179874420166
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.006",
+            "transform": {
+                "translation": [
+                    -29.64230728149414,
+                    -27.49518585205078,
+                    4.913179874420166
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
+        },
+        {
+            "type": "MESH",
+            "name": "円錐.007",
+            "transform": {
+                "translation": [
+                    -29.64230728149414,
+                    25.8835506439209,
+                    4.913179874420166
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "PointLight"
         }
     ]
 }

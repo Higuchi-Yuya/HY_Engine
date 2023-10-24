@@ -33,6 +33,11 @@ GameScene::~GameScene()
 	}
 	ranterns_.clear();
 
+	for (auto pL : pointLightsInfo_) {
+		delete pL;
+	}
+	pointLightsInfo_.clear();
+
 	Enemy::StaticFinalize();
 }
 
@@ -55,9 +60,7 @@ void GameScene::Initialize()
 	//pointLightPos[1] = 1.0f;
 	//pointLightPos[2] = 0.0f;
 
-	light->SetPointLightActive(0, false);
-	light->SetPointLightActive(1, false);
-	light->SetPointLightActive(2, false);
+
 
 	light->SetSpotLightActive(0, false);
 
@@ -286,7 +289,19 @@ void GameScene::Initialize()
 			ranterns_.push_back(newObject);
 		}
 
+		// タグ名がポイントライトなら
+		else if (objectData.tagName == "PointLight")
+		{
+			// ポイントライトの登録
+			WorldTransform* newWorldTrans = new WorldTransform();
+			newWorldTrans->Initialize();
 
+			newWorldTrans->translation = objectData.translation;
+
+			// 配列に登録
+			pointLightsInfo_.push_back(newWorldTrans);
+
+		}
 
 		// それ以外のタグ名またはなしの場合
 		// 普通のオブジェクトと判断し生成
@@ -323,6 +338,19 @@ void GameScene::Initialize()
 		
 	}
 #pragma endregion
+
+#pragma region ポイントライトのセット
+	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	{
+		// ポイントライトのフラグをアクティブに
+		light->SetPointLightActive((int)i, true);
+
+		// ポジションの情報をセット
+		light->SetPointLightPos((int)i, pointLightsInfo_[i]->translation);
+
+	}
+#pragma endregion
+
 
 #pragma region ビュープロジェクション関連の初期化
 	// ビュープロジェクションの初期化

@@ -274,6 +274,7 @@ private:// メンバ変数
 
 
 #pragma region レベルデータ関連
+
 	// レベルデータ
 	std::unique_ptr<LevelData> levelData_;
 
@@ -287,6 +288,9 @@ private:// メンバ変数
 
 	// ランタンの配列
 	std::vector<Object3d*> ranterns_;
+
+	// ポイントライト情報の配列
+	std::vector<WorldTransform*> pointLightsInfo_;
 
 #pragma endregion
 

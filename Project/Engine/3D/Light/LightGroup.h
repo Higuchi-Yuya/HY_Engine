@@ -12,7 +12,7 @@ public:// 定数
 	// 平行光源の数
 	static const int sDirLightNum = 3;
 	// 点光源の数
-	static const int sPointLightNum = 3;
+	static const int sPointLightNum = 15;
 	// スポットライトの数
 	static const int sSpotLightNum = 3;
 	// 丸影の数

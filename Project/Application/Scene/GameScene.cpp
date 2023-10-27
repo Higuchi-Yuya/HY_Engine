@@ -48,6 +48,7 @@ void GameScene::Initialize()
 	input_ = std::make_unique<Input>();
 	input_->Initialize();
 	Enemy::StaticInitialize();
+
 #pragma region ライトの初期化
 	// ライトの生成
 	light.reset(LightGroup::Create());
@@ -348,9 +349,13 @@ void GameScene::Initialize()
 		// ポジションの情報をセット
 		light->SetPointLightPos((int)i, pointLightsInfo_[i]->translation);
 
+		// ポイントライトのライトの減衰具合
+		light->SetPointLightAtten((int)i, pointLightAtten);
+
+		// ポイントライトのライトの色
+		light->SetPointLightColor((int)i, pointLightColor);
 	}
 #pragma endregion
-
 
 #pragma region ビュープロジェクション関連の初期化
 	// ビュープロジェクションの初期化
@@ -419,13 +424,6 @@ void GameScene::ImguiUpdate()
 
 	ImGui::SliderFloat2("position", &spritePos.x, 0.0f, 1200.0f, "%.1f");
 
-	//ImGui::InputFloat4("interpolate0", &interpolate0.x, "%.2f");
-	//ImGui::InputFloat4("interpolate1", &interpolate1.x, "%.2f");
-	//ImGui::InputFloat4("interpolate2", &interpolate2.x, "%.2f");
-	//ImGui::InputFloat4("interpolate3", &interpolate3.x, "%.2f");
-	//ImGui::InputFloat4("interpolate4", &interpolate4.x, "%.2f");
-	//ImGui::InputFloat4("directionTodirection", &dirToDir.x, "%.2f");
-
 	if (ImGui::Button("Reset")) {
 		spritePos = { 200.0f,200.0f };
 	}
@@ -449,18 +447,18 @@ void GameScene::ImguiUpdate()
 	}
 	// ポイントライト
 	if (ImGui::TreeNode("PointLight")) {
-		ImGui::Checkbox("Is Active", &isActivePoint);
+		//ImGui::Checkbox("Is Active", &isActivePoint);
 
-		if (isActivePoint == true) {
-			light->SetPointLightActive(0, true);
-		}
-		else if (isActivePoint == false) {
-			light->SetPointLightActive(0, false);
-		}
+		//if (isActivePoint == true) {
+		//	light->SetPointLightActive(0, true);
+		//}
+		//else if (isActivePoint == false) {
+		//	light->SetPointLightActive(0, false);
+		//}
 
 		ImGui::InputFloat3("pointLightPos", pointLightPos);
-		ImGui::ColorEdit3("pointLightColor", pointLightColor, ImGuiColorEditFlags_Float);
-		ImGui::InputFloat3("pointLightAtten", pointLightAtten);
+		ImGui::ColorEdit3("pointLightColor", &pointLightColor.x, ImGuiColorEditFlags_Float);
+		ImGui::SliderFloat3("pointLightAtten", &pointLightAtten.x,0,1);
 
 		ImGui::TreePop();
 	}
@@ -862,10 +860,11 @@ void GameScene::TitleUpdate()
 	}
 
 #pragma region ライトの更新処理
+	isActiveSpot = false;
 	isActiveCircleShadow = false;
-	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
-	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
-	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+	//light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+	light->SetPointLightColor(0, pointLightColor);
+	light->SetPointLightAtten(0, pointLightAtten);
 
 	light->SetSpotLightDir(0, spotLightDir);
 	light->SetSpotLightPos(0, spotLightPos);
@@ -962,12 +961,26 @@ void GameScene::GameSceneUpdate()
 	}
 
 #pragma region ライトの更新処理
-	light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
-	light->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
-	light->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+	isActiveSpot = true;
+	isActiveCircleShadow = true;
+	//light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	{
+		// ポイントライトのフラグをアクティブに
+		light->SetPointLightActive((int)i, true);
+
+		// ポイントライトのライトの減衰具合
+		light->SetPointLightAtten((int)i, pointLightAtten);
+
+		// ポイントライトのライトの色
+		light->SetPointLightColor((int)i, pointLightColor);
+	}
+
+	Vector3 spotPos = player_->GetWorldPosition();
+	spotPos.y += 10;
 
 	light->SetSpotLightDir(0, spotLightDir);
-	light->SetSpotLightPos(0, spotLightPos);
+	light->SetSpotLightPos(0, spotPos);
 	light->SetSpotLightColor(0, spotLightColor);
 	light->SetSpotLightAtten(0, spotLightAtten);
 	light->SetSpotLightFactorAngle(0, spotLightFactorAngle);

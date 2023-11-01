@@ -63,7 +63,11 @@ private:// メンバ変数
 	Vector3 cameraVecRot_;
 	Vector3 dirVec;
 	float velLength;
-	const Vector3 cameraFPos = { -15,5,-15 };;
+
+	// タイトルの最初のポジション
+	Vector3 titleCameraFPos_;
+	Vector3 titleCameraFTargetPos_;
+	const Vector3 cameraFPos = { -15,5,-15 };
 	Vector3 rotPos= { -15,15,-15 };
 	Vector3 rotNorm;
 	Vector3 vel;

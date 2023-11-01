@@ -41,7 +41,7 @@ void ViewProjection::CreateConstBuffer()
 void ViewProjection::Map()
 {
 	// 定数バッファとのデータリンク
-	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);
+	[[maybe_unused]] HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }
 

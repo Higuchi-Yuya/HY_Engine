@@ -410,7 +410,6 @@ void GameScene::Update()
 		break;
 	}
 	
-
 }
 
 void GameScene::ImguiUpdate()
@@ -460,6 +459,10 @@ void GameScene::ImguiUpdate()
 		ImGui::ColorEdit3("pointLightColor", &pointLightColor.x, ImGuiColorEditFlags_Float);
 		ImGui::SliderFloat3("pointLightAtten", &pointLightAtten.x,0,1);
 
+		ImGui::InputFloat("pointLightIndensity", &pointLightIndensity);
+		ImGui::InputFloat("pointLightRadius", &pointLightRadius);
+		ImGui::InputFloat("pointLightDecay", &pointLightDecay);
+
 		ImGui::TreePop();
 	}
 	// スポットライト
@@ -473,6 +476,9 @@ void GameScene::ImguiUpdate()
 		ImGui::InputFloat3("spotLightAtten", &spotLightAtten.x);
 		ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
 		ImGui::InputFloat2("spotLightFactorAngle", &spotLightFactorAngle.x);
+
+		ImGui::InputFloat("spotLightDownPosY", &spotDownPosY);
+
 
 		ImGui::TreePop();
 	}
@@ -578,9 +584,9 @@ void GameScene::Draw3D()
 
 		// オブジェクト関連の描画
 		// 敵の描画
-		for (auto e : enemys_) {
-			e->Draw(&gameCamera->GetView());
-		}
+		//for (auto e : enemys_) {
+		//	e->Draw(&gameCamera->GetView());
+		//}
 
 		// お墓のドアのオブジェクトの描画
 		for (auto l : latticeDoors_){
@@ -863,8 +869,21 @@ void GameScene::TitleUpdate()
 	isActiveSpot = false;
 	isActiveCircleShadow = false;
 	//light->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
-	light->SetPointLightColor(0, pointLightColor);
-	light->SetPointLightAtten(0, pointLightAtten);
+	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	{
+		// ポイントライトのフラグをアクティブに
+		light->SetPointLightActive((int)i, true);
+
+		// ポイントライトのライトの減衰具合
+		light->SetPointLightAtten((int)i, pointLightAtten);
+
+		// ポイントライトのライトの色
+		light->SetPointLightColor((int)i, pointLightColor);
+
+		light->SetPointLightIndensity((int)i, pointLightIndensity);
+		light->SetPointLightRadius((int)i, pointLightRadius);
+		light->SetPointLightDecay((int)i, pointLightDecay);
+	}
 
 	light->SetSpotLightDir(0, spotLightDir);
 	light->SetSpotLightPos(0, spotLightPos);
@@ -974,12 +993,19 @@ void GameScene::GameSceneUpdate()
 
 		// ポイントライトのライトの色
 		light->SetPointLightColor((int)i, pointLightColor);
+
+		light->SetPointLightIndensity((int)i, pointLightIndensity);
+		light->SetPointLightRadius((int)i, pointLightRadius);
+		light->SetPointLightDecay((int)i, pointLightDecay);
 	}
 
 	Vector3 spotPos = player_->GetWorldPosition();
-	spotPos.y += 10;
+	spotPos.y += 1;
+	Vector3 playerFrontVec = player_->GetFrontVec();
+	playerFrontVec.y -= spotDownPosY;
+	playerFrontVec.normalize();
 
-	light->SetSpotLightDir(0, spotLightDir);
+	light->SetSpotLightDir(0, playerFrontVec);
 	light->SetSpotLightPos(0, spotPos);
 	light->SetSpotLightColor(0, spotLightColor);
 	light->SetSpotLightAtten(0, spotLightAtten);

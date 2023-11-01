@@ -113,6 +113,7 @@ private: // メンバ変数
 	Vector3 lightAtten_ = { 1.0f, 1.0f, 1.0f };
 	// ライト減衰角度
 	Vector2 lightFactorAngleCos_ = { 0.2f, 0.5f };
+
 	// 有効フラグ
 	bool active_ = false;
 };

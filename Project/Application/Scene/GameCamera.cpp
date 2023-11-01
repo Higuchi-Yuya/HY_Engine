@@ -9,8 +9,11 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 	viewProjection_.Initialize();
 	worldTransform_.Initialize();
 	
-	viewProjection_.eye = { -0.8f,3,-65 };
-	viewProjection_.target = { -0.8f,0,0 };
+	titleCameraFPos_= { -0.8f,5.0f,-65 };
+	titleCameraFTargetPos_= { -0.8f,2,0 };
+
+	viewProjection_.eye = titleCameraFPos_;
+	viewProjection_.target = titleCameraFTargetPos_;
 
 	//worldTransform_.parent_ = worldTransform;
 	worldTransform_.translation = { -15,15,-15 };
@@ -33,8 +36,8 @@ void GameCamera::TitleUpdate()
 			easeTimer_++;
 
 			// イージングの最初のポジション
-			Vector3 fEyePos = { -0.8f,3,-65 };
-			Vector3 fTargetPos = { -0.8f,0,0 };
+			Vector3 fEyePos = titleCameraFPos_;
+			Vector3 fTargetPos = titleCameraFTargetPos_;
 
 			// イージングの終わりのポジション
 			Vector3 eEyePos = { -0.8f,6,-20 };

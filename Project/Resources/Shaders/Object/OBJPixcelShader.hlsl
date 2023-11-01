@@ -4,6 +4,35 @@ Texture2D<float4> tex : register(t0);  // 0番スロットに設定されたテクスチャ
 Texture2D<float4> dissolveTex : register(t1); // 1番スロットに設定されたテクスチャ
 SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
+float sqr(float x)
+{
+    return x * x;
+}
+
+float attenuate_no_cusp(float distance, float radius, float max_intensity, float falloff)
+{
+    float s = distance / radius;
+
+    if (s >= 1.0)
+        return 0.0;
+
+    float s2 = sqr(s);
+
+    return max_intensity * sqr(1 - s2) / (1 + falloff * s2);
+}
+
+float attenuate_cusp(float distance, float radius, float max_intensity, float falloff)
+{
+    float s = distance / radius;
+
+    if (s >= 1.0)
+        return 0.0;
+
+    float s2 = sqr(s);
+
+    return max_intensity * sqr(1 - s2) / (1 + falloff * s);
+}
+
 float4 main(VSOutput input) : SV_TARGET
 {	
 	// テクスチャマッピング
@@ -76,13 +105,15 @@ float4 main(VSOutput input) : SV_TARGET
 			// ライトへの方向ベクトル
 			float3 lightv = pointLights[i].lightpos - input.worldpos.xyz;
 			// ベクトルの長さ
-			float d = length(lightv);
+			float distance = length(lightv);
 			// 正規化し、単位ベクトルにする
 			lightv = normalize(lightv);
 
 			// 距離減衰係数
-			float atten = 1.0f / (pointLights[i].lightatten.x + pointLights[i].lightatten.y * d + pointLights[i].lightatten.z * d * d);
+			//float atten = 1.0f / (pointLights[i].lightatten.x + pointLights[i].lightatten.y * d + pointLights[i].lightatten.z * d * d);
 
+            float atten = pow(saturate(-distance / pointLights[i].lightRadius + 1.0f), pointLights[i].lightDecay);
+			
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(lightv, input.normal);
 			// 反射光ベクトル
@@ -94,8 +125,12 @@ float4 main(VSOutput input) : SV_TARGET
 			// 鏡面反射光
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 
+            float3 sColor = (ambient + diffuse + specular);
+			
+            float3 lightColor = pointLights[i].lightcolor * pointLights[i].lightIndensity;
+			
 			// 全て加算する
-            shadecolor.rgb += atten * (ambient + diffuse + specular) * pointLights[i].lightcolor;
+            shadecolor.rgb += sColor * lightColor * atten;
         }
 	}
 
@@ -104,12 +139,15 @@ float4 main(VSOutput input) : SV_TARGET
 		if (spotLights[i].active) {
 			// ライトへの方向ベクトル
 			float3 lightv = spotLights[i].lightpos - input.worldpos.xyz;
-			float d = length(lightv);
+			float distance = length(lightv);
 			lightv = normalize(lightv);
 
 			// 距離減衰係数
-			float atten = saturate(1.0f / (spotLights[i].lightatten.x + spotLights[i].lightatten.y * d + spotLights[i].lightatten.z * d * d));
-
+            float atten = saturate(1.0f / 
+			(spotLights[i].lightatten.x + 
+			spotLights[i].lightatten.y * distance + 
+			spotLights[i].lightatten.z * distance * distance));
+			
 			// 角度減衰
 			float cos = dot(lightv, spotLights[i].lightv);
 			// 減衰開始角度から、減衰終了角度にかけて減衰

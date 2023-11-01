@@ -128,11 +128,34 @@ public:// メンバ関数
 	void SetPointLightAtten(int index, const Vector3& lightAtten);
 
 	/// <summary>
+	/// ポイントライトの輝度
+	/// </summary>
+	/// <param name="index">ライト番号</param>
+	/// <param name="lightIdensity">光の輝度</param>
+	void SetPointLightIndensity(int index, const float lightIdensity);
+
+	/// <summary>
+	/// ポイントライトの光の届く最大距離
+	/// </summary>
+	/// <param name="index">ライト番号</param>
+	/// <param name="lightRadius">光の届く最大距離</param>
+	void SetPointLightRadius(int index, const float lightRadius);
+
+	/// <summary>
+	/// ポイントライトの減衰度
+	/// </summary>
+	/// <param name="index">ライト番号</param>
+	/// <param name="lightDecay">光の減衰度</param>
+	void SetPointLightDecay(int index, const float lightDecay);
+
+	/// <summary>
 	/// スポットライトの有効フラグをセット
 	/// </summary>
 	/// <param name="index">ライト番号</param>
 	/// <param name="active">有効フラグ</param>
 	void SetSpotLightActive(int index, bool active);
+
+
 
 	/// <summary>
 	/// スポットライトのライト方向をセット

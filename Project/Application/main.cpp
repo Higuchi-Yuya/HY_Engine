@@ -27,7 +27,7 @@
 // @param format フォーマット(%dとか%fとかの)
 // @param 可変長引数
 // @remarks この関数はデバック用です。デバッグ時にしか動作しません
-void DebugOutputFormatString(const char* format, ...) {
+void DebugOutputFormatString([[maybe_unused]] const char* format, ...) {
 #ifdef _DEBUG
 	va_list valist;
 	va_start(valist, format);

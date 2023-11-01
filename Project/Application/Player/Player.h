@@ -49,6 +49,9 @@ public:// ゲッター
 	// プレイヤー前方にあるワールドトランスフォームの取得
 	const Vector3 GetFrontPos()const;
 
+	// プレイヤーの前方のベクトルを取得
+	const Vector3 GetFrontVec()const;
+
 	// プレイヤーの生きているフラグの取得
 	const bool GetIsAlive()const;
 

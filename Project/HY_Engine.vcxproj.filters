@@ -421,7 +421,7 @@
       <Filter>ソース ファイル\Engine\PostEffect\PostEffectManager</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\PostTarget.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

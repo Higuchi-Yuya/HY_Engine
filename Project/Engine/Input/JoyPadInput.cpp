@@ -55,7 +55,7 @@ void JoypadInput::Init()
 	notificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
 	notificationFilter.dbcc_size = sizeof(notificationFilter);
 
-	HDEVNOTIFY notifyResult = RegisterDeviceNotification(
+	[[maybe_unused]] HDEVNOTIFY notifyResult = RegisterDeviceNotification(
 		winApp_->GetHwnd(), &notificationFilter,
 		DEVICE_NOTIFY_WINDOW_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
 	assert(!!notifyResult);

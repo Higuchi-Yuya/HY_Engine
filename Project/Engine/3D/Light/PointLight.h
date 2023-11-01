@@ -16,7 +16,11 @@ public: // サブクラス
 		Vector3 lightcolor;
 		float pad2;
 		Vector3 lightatten;
+		float lihgtIndensity;
+		float lightRadius;
+		float lightDecay;
 		unsigned int active;
+		float pad3;
 	};
 
 public: // メンバ関数
@@ -68,6 +72,45 @@ public: // メンバ関数
 	/// <returns>有効フラグ</returns>
 	inline bool IsActive() { return active_; }
 
+	/// <summary>
+	/// 光の輝度をセット
+	/// </summary>
+	/// <param name="indensity">光から照射点までの距離</param>
+	/// <returns></returns>
+	inline void SetIndensity(float indensity) { lightIndensity_ = indensity; }
+
+	/// <summary>
+	/// 光の輝度を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetIndensity() { return lightIndensity_; }
+
+	/// <summary>
+	/// 光の届く最大距離をセット
+	/// </summary>
+	/// <param name="radius">光の強さが最大強度の半分になる距離</param>
+	/// <returns></returns>
+	inline void SetRadius(float radius) { lightRadius_ = radius; }
+
+	/// <summary>
+	/// 光の届く最大距離を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetRadius() { return lightRadius_; }
+
+	/// <summary>
+	/// 光の減衰度をセット
+	/// </summary>
+	/// <param name="maxIdensity">光の最大強度</param>
+	/// <returns></returns>
+	inline void SetDecay(float decay) { lightDecay_ = decay; }
+
+	/// <summary>
+	/// 光の減衰度を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetDecay() { return lightDecay_; }
+
 private: // メンバ変数
 	// ライト座標（ワールド座標系）
 	Vector3 lightpos_ = { 0,0,0 };
@@ -77,5 +120,12 @@ private: // メンバ変数
 	Vector3 lightAtten_ = { 1.0f, 1.0f, 1.0f };
 	// 有効フラグ
 	bool active_ = false;
+
+	// 光の輝度
+	float lightIndensity_ = 4;
+	// 光の届く最大距離
+	float lightRadius_ = 3.5f;
+	// 光の減衰度
+	float lightDecay_ = 1;
 };
 

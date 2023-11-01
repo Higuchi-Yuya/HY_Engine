@@ -84,6 +84,9 @@ void LightGroup::TransferConstBuffer()
 			constMap_->pointLights[i].lightpos = pointLights_[i].GetLightPos();
 			constMap_->pointLights[i].lightcolor = pointLights_[i].GetLightColor();
 			constMap_->pointLights[i].lightatten = pointLights_[i].GetLightAtten();
+			constMap_->pointLights[i].lihgtIndensity = pointLights_[i].GetIndensity();
+			constMap_->pointLights[i].lightRadius = pointLights_[i].GetRadius();
+			constMap_->pointLights[i].lightDecay = pointLights_[i].GetDecay();
 		}
 		// ライトが無効ならライト色を0に
 		else {
@@ -210,6 +213,30 @@ void LightGroup::SetPointLightAtten(int index, const Vector3& lightAtten)
 	assert(0 <= index && index < sPointLightNum);
 
 	pointLights_[index].SetLightAtten(lightAtten);
+	dirty_ = true;
+}
+
+void LightGroup::SetPointLightIndensity(int index, const float lightIdensity)
+{
+	assert(0 <= index && index < sPointLightNum);
+
+	pointLights_[index].SetIndensity(lightIdensity);
+	dirty_ = true;
+}
+
+void LightGroup::SetPointLightRadius(int index, const float lightRadius)
+{
+	assert(0 <= index && index < sPointLightNum);
+
+	pointLights_[index].SetRadius(lightRadius);
+	dirty_ = true;
+}
+
+void LightGroup::SetPointLightDecay(int index, const float lightDecay)
+{
+	assert(0 <= index && index < sPointLightNum);
+
+	pointLights_[index].SetDecay(lightDecay);
 	dirty_ = true;
 }
 

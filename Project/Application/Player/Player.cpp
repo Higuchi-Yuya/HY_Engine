@@ -163,6 +163,19 @@ const Vector3 Player::GetFrontPos() const
 	return Vector3(frontW_.matWorld_.m[3][0], frontW_.matWorld_.m[3][1], frontW_.matWorld_.m[3][2]);
 }
 
+const Vector3 Player::GetFrontVec() const
+{
+	Vector3 velocity;
+	Vector3 frontVec = { frontW_.matWorld_.m[3][0],frontW_.matWorld_.m[3][1] ,frontW_.matWorld_.m[3][2] };
+
+
+	// 自機から照準オブジェクトへのベクトル
+	velocity = frontVec - worldTransform_.translation;
+	velocity.normalize();
+
+	return velocity;
+}
+
 const bool Player::GetIsAlive() const
 {
 	return IsAlive_;

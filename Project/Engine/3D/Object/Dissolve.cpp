@@ -92,7 +92,7 @@ void Dissolve::CreateConstBuffer()
 void Dissolve::Map()
 {
 	// 定数バッファのマッピング
-	HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
+	[[maybe_unused]] HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
 	assert(SUCCEEDED(result));
 
 	// 定数バッファの初期値を送る

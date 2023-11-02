@@ -149,13 +149,18 @@ public:// メンバ関数
 	void SetPointLightDecay(int index, const float lightDecay);
 
 	/// <summary>
+	/// ポイントライトの光から照射点の距離
+	/// </summary>
+	/// <param name="index">ライト番号</param>
+	/// <param name="lightDistance">光から照射点の距離</param>
+	void SetPointLightDistance(int index, const float lightDistance);
+
+	/// <summary>
 	/// スポットライトの有効フラグをセット
 	/// </summary>
 	/// <param name="index">ライト番号</param>
 	/// <param name="active">有効フラグ</param>
 	void SetSpotLightActive(int index, bool active);
-
-
 
 	/// <summary>
 	/// スポットライトのライト方向をセット

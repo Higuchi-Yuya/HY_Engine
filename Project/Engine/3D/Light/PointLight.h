@@ -111,6 +111,18 @@ public: // メンバ関数
 	/// <returns></returns>
 	inline float GetDecay() { return lightDecay_; }
 
+	/// <summary>
+	/// 光から照射点の距離
+	/// </summary>
+	/// <param name="distance"></param>
+	inline void SetDistance(float distance) { lightDistance_ = distance; }
+
+	/// <summary>
+	/// 光から照射点の距離を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetDistance() { return lightDistance_; }
+
 private: // メンバ変数
 	// ライト座標（ワールド座標系）
 	Vector3 lightpos_ = { 0,0,0 };
@@ -127,5 +139,7 @@ private: // メンバ変数
 	float lightRadius_ = 3.5f;
 	// 光の減衰度
 	float lightDecay_ = 1;
+	// 光から照射点の距離
+	float lightDistance_ = 1;
 };
 

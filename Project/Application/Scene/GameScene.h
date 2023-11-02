@@ -126,16 +126,17 @@ private:// メンバ変数
 	Vector3 pointLightAtten = { 0.12f,0.1f,0.02f };
 	bool isActivePoint = false;
 	float pointLightIndensity = 1;
-	float pointLightRadius = 20;
-	float pointLightDecay = 1;
+	float pointLightRadius = 50;
+	float pointLightDecay = 6;
+	float pointLightDistance = 10;
 
 	// スポットライトのステータス
 	Vector3 spotLightDir = { 0,0,0 };
 	Vector3 spotLightPos = { 0,50,0 };
 	Vector3 spotLightColor = { 1,1,1 };
 	Vector3 spotLightAtten = { 0.1f,0.1f,0.1f };
-	Vector2 spotLightFactorAngle = { 10.0f,20.0f };
-	float spotDownPosY = 0.5f;
+	Vector2 spotLightFactorAngle = { 10.0f,30.0f };
+	float spotDownPosY = 0.4f;
 
 	bool isActiveSpot = true;
 
@@ -255,6 +256,12 @@ private:// メンバ変数
 #pragma region プレイヤー関連
 	std::unique_ptr<Player> player_;
 
+	// プレイヤーのポイントライトの輝度
+	float playerPointLightIndensity = 0.8f;
+	// プレイヤーのポイントライトの範囲
+	float playerPointLightRadius_ = 2;
+	// プレイヤーのポイントライトの減衰値
+	float playerPointLightDecay_ = 1;
 #pragma endregion
 
 

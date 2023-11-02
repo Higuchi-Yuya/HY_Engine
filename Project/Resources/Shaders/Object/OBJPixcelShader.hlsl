@@ -114,6 +114,8 @@ float4 main(VSOutput input) : SV_TARGET
 
             float atten = pow(saturate(-distance / pointLights[i].lightRadius + 1.0f), pointLights[i].lightDecay);
 			
+            //float atten = attenuate_cusp(pointLights[i].lightDistance, pointLights[i].lightRadius, pointLights[i].lightIndensity, pointLights[i].lightDecay);
+			
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(lightv, input.normal);
 			// 反射光ベクトル

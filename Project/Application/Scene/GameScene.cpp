@@ -355,6 +355,9 @@ void GameScene::Initialize()
 		// ポイントライトのライトの色
 		light->SetPointLightColor((int)i, pointLightColor);
 	}
+
+	// プレイヤーのポイントライトをオン
+	light->SetPointLightActive((int)(pointLightsInfo_.size() + 1), true);
 #pragma endregion
 
 #pragma region ビュープロジェクション関連の初期化
@@ -462,6 +465,11 @@ void GameScene::ImguiUpdate()
 		ImGui::InputFloat("pointLightIndensity", &pointLightIndensity);
 		ImGui::InputFloat("pointLightRadius", &pointLightRadius);
 		ImGui::InputFloat("pointLightDecay", &pointLightDecay);
+		ImGui::InputFloat("pointLightDistance", &pointLightDistance);
+
+		ImGui::InputFloat("playerPointIndensity", &playerPointLightIndensity);
+		ImGui::InputFloat("playerPointRadius", &playerPointLightRadius_);
+		ImGui::InputFloat("playerPointDecay", &playerPointLightDecay_);
 
 		ImGui::TreePop();
 	}
@@ -1058,11 +1066,19 @@ void GameScene::GameSceneUpdate()
 	// プレイヤーの更新処理
 	player_->Update();
 
+	light->SetPointLightPos((int)(pointLightsInfo_.size() + 1), spotPos);
+
+	light->SetPointLightIndensity((int)(pointLightsInfo_.size() + 1), playerPointLightIndensity);
+	light->SetPointLightRadius((int)(pointLightsInfo_.size() + 1), playerPointLightRadius_);
+	light->SetPointLightDecay((int)(pointLightsInfo_.size() + 1), playerPointLightDecay_);
+
 	// プレイヤーが死んだらとりあえずリザルト画面に移行
 	if (player_->GetIsAlive() == false) {
 		oldScene = Scene::Game;
 		sceneChangeFlag = true;
 	}
+
+
 #pragma endregion
 
 

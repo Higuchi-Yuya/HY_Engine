@@ -240,6 +240,14 @@ void LightGroup::SetPointLightDecay(int index, const float lightDecay)
 	dirty_ = true;
 }
 
+void LightGroup::SetPointLightDistance(int index, const float lightDistance)
+{
+	assert(0 <= index && index < sPointLightNum);
+
+	pointLights_[index].SetDistance(lightDistance);
+	dirty_ = true;
+}
+
 void LightGroup::SetSpotLightActive(int index, bool active)
 {
 	assert(0 <= index && index < sSpotLightNum);

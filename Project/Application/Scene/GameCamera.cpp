@@ -106,8 +106,8 @@ void GameCamera::Reset()
 	IsCanEase_ = false;
 	IsEaseEnd_ = false;
 
-	viewProjection_.eye = { -0.8f,3,-65 };
-	viewProjection_.target = { -0.8f,0,0 };
+	viewProjection_.eye = titleCameraFPos_;
+	viewProjection_.target = titleCameraFTargetPos_;
 }
 
 void GameCamera::SetCameraFPos(Vector3 pos)

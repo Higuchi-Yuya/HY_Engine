@@ -10,7 +10,7 @@ PSOutput main(VSOutput input)// : SV_TARGET
     
     float grayScale = texColor.r * 0.299f + texColor.g * 0.587f + texColor.b * 0.114f;
     float extract = smoothstep(0.1f, 0.6f, grayScale);
-    float power = 20.0f;
+    float power = 10.0f;
     
     float4 result = float4(texColor.rgb * extract * power, 1);
     

@@ -122,19 +122,19 @@ private:// メンバ変数
 
 	// 点光源のステータス
 	float pointLightPos[3] = { 0,5,0 };
-	Vector3 pointLightColor = { 1.18f,1.14f,1.12f };
+	Vector3 pointLightColor = { 0.92f,0.684f,0.56f };
 	Vector3 pointLightAtten = { 0.12f,0.1f,0.02f };
 	bool isActivePoint = false;
 	float pointLightIndensity = 1;
-	float pointLightRadius = 50;
-	float pointLightDecay = 6;
+	float pointLightRadius = 100;
+	float pointLightDecay = 15.5f;
 	float pointLightDistance = 10;
 
 	// スポットライトのステータス
 	Vector3 spotLightDir = { 0,0,0 };
 	Vector3 spotLightPos = { 0,50,0 };
 	Vector3 spotLightColor = { 1,1,1 };
-	Vector3 spotLightAtten = { 0.1f,0.1f,0.1f };
+	Vector3 spotLightAtten = { 0.1f,0.1f,0.05f };
 	Vector2 spotLightFactorAngle = { 10.0f,30.0f };
 	float spotDownPosY = 0.4f;
 

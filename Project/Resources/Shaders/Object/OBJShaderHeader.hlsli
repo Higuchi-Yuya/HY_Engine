@@ -2,6 +2,7 @@ cbuffer WorldTransform : register(b0)
 {
 	float4 color; // 色（RGBA）
 	matrix world; // ３Ｄ変換行列
+    uint bloomActive;
 };
 
 cbuffer ViewProjection : register(b1)

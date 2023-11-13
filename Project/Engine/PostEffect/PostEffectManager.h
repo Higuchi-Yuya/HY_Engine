@@ -2,12 +2,16 @@
 #include "PostEffectHighLumi.h"
 #include "GaussianBlur.h"
 #include "PostEffectComposition.h"
+#include "HiguLumiTarget.h"
 #include "PostTarget.h"
 #include "GameScene.h"
 
 class PostEffectManager
 {
 private:// メンバー変数
+
+	// 高輝度抽出のターゲット
+	std::unique_ptr<HiguLumiTarget> higuLumiTarget_;
 
 	// 高輝度抽出
 	std::unique_ptr<PostEffectHighLumi> postLumi_;

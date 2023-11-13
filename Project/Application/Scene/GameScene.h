@@ -61,6 +61,11 @@ public:// メンバ関数
 	/// </summary>
 	void DrawBloomObject();
 
+	/// <summary>
+	/// 高輝度抽出するオブジェクトの描画
+	/// </summary>
+	void DrawHighLumiObj();
+
 	// リセット関数
 	void Reset();
 

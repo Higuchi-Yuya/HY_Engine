@@ -423,6 +423,9 @@
     <ClCompile Include="Engine\PostEffect\PostTarget.cpp">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Bloom\HiguLumiTarget.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect\Bloom\HighLumi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -634,6 +637,9 @@
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\PostTarget.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Bloom\HiguLumiTarget.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect\Bloom\HighLumi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

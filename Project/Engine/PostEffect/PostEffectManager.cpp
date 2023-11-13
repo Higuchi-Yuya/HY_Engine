@@ -2,6 +2,9 @@
 
 void PostEffectManager::Initialize()
 {
+	higuLumiTarget_ = std::make_unique<HiguLumiTarget>();
+	higuLumiTarget_->Initialize();
+
 	postLumi_ = std::make_unique<PostEffectHighLumi>();
 	postLumi_->Initialize();
 
@@ -37,6 +40,21 @@ void PostEffectManager::BloomDrawSetting()
 
 	postTarget_->PostDrawScene(dxCommon_->GetCommandList());
 
+
+
+	higuLumiTarget_->PreDrawScene(dxCommon_->GetCommandList());
+	Object3d::PreDraw(dxCommon_->GetCommandList());
+	//-----ここから 3Dモデルの描画 -----//
+
+
+	gameScene_->DrawHighLumiObj();
+	gameScene_->Draw3D();
+
+	//-----ここまで 3Dモデルの描画 -----//
+	Object3d::PostDraw();
+
+	higuLumiTarget_->PostDrawScene(dxCommon_->GetCommandList());
+
 #pragma region 高輝度抽出の描画
 	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
 
@@ -65,6 +83,8 @@ void PostEffectManager::BloomDrawSetting()
 	postComposition_->PostDrawScene(dxCommon_->GetCommandList());
 #pragma endregion
 	
+
+
 }
 
 void PostEffectManager::SetGameScene(GameScene* gameScene)
@@ -76,6 +96,7 @@ void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)
 {
 	dxCommon_ = dxCommon;
 
+	HiguLumiTarget::SetDevice(dxCommon_->GetDevice());
 	PostEffectHighLumi::SetDevice(dxCommon_->GetDevice());
 	GaussianBlur::SetDevice(dxCommon_->GetDevice());
 	PostEffectComposition::SetDevice(dxCommon_->GetDevice());

@@ -684,12 +684,44 @@ void GameScene::DrawBloomObject()
 	case GameScene::Scene::Title:
 		// ランタンのオブジェクトの描画
 		for (auto L : ranterns_) {
+			//L->worldTransform_.IsBloom_ = 0;
+			L->worldTransform_.UpdateMatrix();
 			L->Draw(&gameCamera->GetView());
 		}
 		break;
 	case GameScene::Scene::Game:
 		// ランタンのオブジェクトの描画
 		for (auto L : ranterns_) {
+			//L->worldTransform_.IsBloom_ = 0;
+			L->worldTransform_.UpdateMatrix();
+			L->Draw(&gameCamera->GetView());
+		}
+
+		break;
+	case GameScene::Scene::Result:
+		break;
+	default:
+		break;
+	}
+}
+
+void GameScene::DrawHighLumiObj()
+{
+	switch (scene)
+	{
+	case GameScene::Scene::Title:
+		// ランタンのオブジェクトの描画
+		for (auto L : ranterns_) {
+			L->worldTransform_.IsBloom_ = 1;
+			L->worldTransform_.UpdateMatrix();
+			L->Draw(&gameCamera->GetView());
+		}
+		break;
+	case GameScene::Scene::Game:
+		// ランタンのオブジェクトの描画
+		for (auto L : ranterns_) {
+			L->worldTransform_.IsBloom_ = 1;
+			L->worldTransform_.UpdateMatrix();
 			L->Draw(&gameCamera->GetView());
 		}
 

@@ -14,6 +14,8 @@ public:// サブクラス
 	struct ConstBufferDataWorldTransform {
 		Vector4 color;
 		Matrix4 matWorld;// 行列
+		unsigned int activeBloom;
+		float pad;
 	};
 public:// メンバ関数
 	// 静的初期化
@@ -65,6 +67,9 @@ public:// パブリック変数
 	// 一番小さい頂点と大きい頂点
 	Vector3 minVertex_;
 	Vector3 maxVertex_;
+
+	// ブルームなのかどうか
+	bool IsBloom_ = false;
 
 private:// メンバ変数
 	// デバイス（借りてくる）

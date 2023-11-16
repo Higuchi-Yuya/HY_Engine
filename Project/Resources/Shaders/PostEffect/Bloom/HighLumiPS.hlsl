@@ -8,7 +8,7 @@ float4 highLumiExtraction(float4 texColor)
 {
     float grayScale = texColor.r * 0.299f + texColor.g * 0.587f + texColor.b * 0.114f;
     float extract = smoothstep(0.1f, 0.6f, grayScale);
-    float power = 10.0f;
+    float power = 20.0f;
     
     float4 result = float4(texColor.rgb * extract * power, 1);
     
@@ -19,20 +19,18 @@ float4 main(VSOutput input) : SV_TARGET
 {
     PSOutput output;
     float4 texColor0 = tex.Sample(smp, input.uv);
-    float4 texcolor1 = tex1.Sample(smp, input.uv);
+    float4 texColor1 = tex1.Sample(smp, input.uv);
     
-    if (texcolor1.g >= 1.0f && texcolor1.b >= 1.0f)
+    if (texColor1.g >= 1.0f && texColor1.b >= 1.0f)
     {
         float4 highLumiColor = highLumiExtraction(texColor0);
-        
+  
         return highLumiColor;
-
     }
     else
     {
         float4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
         return black;
-
     }
     
    

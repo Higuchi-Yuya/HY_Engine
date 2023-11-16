@@ -130,8 +130,8 @@ private:// メンバ変数
 	Vector3 pointLightColor = { 0.92f,0.684f,0.56f };
 	Vector3 pointLightAtten = { 0.12f,0.1f,0.02f };
 	bool isActivePoint = false;
-	float pointLightIndensity = 1;
-	float pointLightRadius = 100;
+	float pointLightIndensity = 1.2f;
+	float pointLightRadius = 70;
 	float pointLightDecay = 15.5f;
 	float pointLightDistance = 10;
 
@@ -306,8 +306,11 @@ private:// メンバ変数
 	// ランタンの配列
 	std::vector<Object3d*> ranterns_;
 
+	// ランタンの高輝度用配列
+	std::vector<Object3d*> highLumiRanterns_;
+
 	// ポイントライト情報の配列
-	std::vector<WorldTransform*> pointLightsInfo_;
+	std::vector<WorldTransform> pointLightsInfo_;
 
 #pragma endregion
 

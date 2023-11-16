@@ -16,11 +16,25 @@ void PostEffectManager::Initialize()
 
 	postTarget_= std::make_unique<PostTarget>();
 	postTarget_->Initialize();
+
+	vignette_ = std::make_unique<Vignette>();
+	vignette_->Initialize();
+}
+
+void PostEffectManager::Update()
+{
+	vignette_->Update();
+}
+
+void PostEffectManager::ImguiUpdate()
+{
+	vignette_->ImguiUpdate();
 }
 
 void PostEffectManager::EffectBloomDraw()
 {
-	postComposition_->Draw(dxCommon_->GetCommandList());
+	
+	vignette_->Draw(dxCommon_->GetCommandList());
 }
 
 void PostEffectManager::BloomDrawSetting()
@@ -59,10 +73,10 @@ void PostEffectManager::BloomDrawSetting()
 	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
 
 
-	Object3d::PreDraw(dxCommon_->GetCommandList());
-	gameScene_->DrawBloomObject();
+	//Object3d::PreDraw(dxCommon_->GetCommandList());
+	//gameScene_->DrawBloomObject();
 
-	Object3d::PostDraw();
+	//Object3d::PostDraw();
 
 	postLumi_->PostDrawScene(dxCommon_->GetCommandList());
 #pragma endregion
@@ -83,7 +97,11 @@ void PostEffectManager::BloomDrawSetting()
 	postComposition_->PostDrawScene(dxCommon_->GetCommandList());
 #pragma endregion
 	
+	vignette_->PreDrawScene(dxCommon_->GetCommandList());
+	postComposition_->Draw(dxCommon_->GetCommandList());
+	
 
+	vignette_->PostDrawScene(dxCommon_->GetCommandList());
 
 }
 
@@ -101,4 +119,5 @@ void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)
 	GaussianBlur::SetDevice(dxCommon_->GetDevice());
 	PostEffectComposition::SetDevice(dxCommon_->GetDevice());
 	PostTarget::SetDevice(dxCommon_->GetDevice());
+	Vignette::SetDevice(dxCommon_->GetDevice());
 }

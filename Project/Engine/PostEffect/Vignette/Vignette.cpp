@@ -1,15 +1,16 @@
-#include "PostEffectHighLumi.h"
+#include "Vignette.h"
 #include "PostEffectHandleManager.h"
+#include "ImGuiManager.h"
 
-ID3D12Device* PostEffectHighLumi::sDevice_ = nullptr;
+ID3D12Device* Vignette::sDevice_ = nullptr;
 
-const float PostEffectHighLumi::clearColor_[4] = { 0.1f,0.1f,0.1f,0.0f };// ミドリっぽい色
+const float Vignette::clearColor_[4] = { 0.4f,1.0f,0.4f,0.0f };// ミドリっぽい色
 
-PostEffectHighLumi::PostEffectHighLumi()
+Vignette::Vignette()
 {
 }
 
-void PostEffectHighLumi::Initialize()
+void Vignette::Initialize()
 {
 	CreateVertBuff();
 
@@ -25,33 +26,47 @@ void PostEffectHighLumi::Initialize()
 
 	CreateGraphicsPipelineState();
 
-	// オリジナルシーンのハンドルを作成
-	orignalHandle_.srvCpuHandle_ = PostRenderBase::GetInstance()->GetSrvDesc()->GetCPUDescriptorHandleForHeapStart();
-	orignalHandle_.srvGpuHandle_ = PostRenderBase::GetInstance()->GetSrvDesc()->GetGPUDescriptorHandleForHeapStart();
+	PostEffectHandleManager::SetPostEffectHandle("Vignette", handles_);
 
-	orignalHandle_.rtvCpuHandle_ = PostRenderBase::GetInstance()->GetRtvDesc()->GetCPUDescriptorHandleForHeapStart();
 
-	orignalHandle_.dsvCpuHandle_ = PostRenderBase::GetInstance()->GetDsvDesc()->GetCPUDescriptorHandleForHeapStart();
-
-	//PostEffectHandleManager::SetPostEffectHandle("OriginalScene", orignalHandle_);
-
-	PostEffectHandleManager::SetPostEffectHandle("HighLumi0", handles_[0]);
-	PostEffectHandleManager::SetPostEffectHandle("HighLumi1", handles_[1]);
-
+	Update();
 }
 
-void PostEffectHighLumi::Draw(ID3D12GraphicsCommandList* cmdList)
+void Vignette::Update()
+{
+	constMap_->vignetteColor = vignetteColor_;
+	constMap_->vignetteRadius= vignetteRadius_;
+	constMap_->vignetteFeather = vignetteFeather_;
+}
+
+void Vignette::ImguiUpdate()
+{
+	// 表示項目の追加--------//
+	ImGui::Begin("Vignette");
+
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::ColorEdit4("vignetteColor", &vignetteColor_.x);
+
+	ImGui::SliderFloat("vignetteRadius", &vignetteRadius_, 0, 1);
+
+	ImGui::SliderFloat("vignetteFeather", &vignetteFeather_, 0, 1);
+
+	ImGui::End();
+}
+
+void Vignette::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	// 定数バッファにデータ転送
-	SpriteManager::ConstBufferData* constMap = nullptr;
-	Matrix4 mathMat;
+	//SpriteManager::ConstBufferData* constMap = nullptr;
+	//Matrix4 mathMat;
 
-	result = constBuff_->Map(0, nullptr, (void**)&constMap);
-	if (SUCCEEDED(result)) {
-		constMap->color = { 1,1,1,1 };
-		constMap->mat = mathMat.identity();
-		constBuff_->Unmap(0, nullptr);
-	}
+	//result = constBuff_->Map(0, nullptr, (void**)&constMap);
+	//if (SUCCEEDED(result)) {
+	//	constMap->color = { 1,1,1,1 };
+	//	constMap->mat = mathMat.identity();
+	//	constBuff_->Unmap(0, nullptr);
+	//}
 
 	// パイプラインステートの設定
 	// パイプラインステートとルートシグネチャの設定コマンド
@@ -62,87 +77,71 @@ void PostEffectHighLumi::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
 
 	// SRVヒープ
-	ID3D12DescriptorHeap* ppHeaps[] = { PostRenderBase::GetInstance()->GetSrvDesc().Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { PostRenderBase::GetInstance()->GetSrvDesc().Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	cmdList->SetGraphicsRootDescriptorTable(1, PostEffectHandleManager::GetPostEffectHandle("OriginalScene").srvGpuHandle_);
-	cmdList->SetGraphicsRootDescriptorTable(2, PostEffectHandleManager::GetPostEffectHandle("HiguLumiTarget").srvGpuHandle_);
+	// SRVヒープの先頭にあるSRVをルートパラメータ0番に設定
+	cmdList->SetGraphicsRootDescriptorTable(0, handles_.srvGpuHandle_);
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView_);
 
 	// 定数バッファビュー(CBV)の設定コマンド
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(1, constBuff_->GetGPUVirtualAddress());
 
 	// 描画コマンド
 	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0); // 全ての頂点を使って描画
 }
 
-void PostEffectHighLumi::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
+void Vignette::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 {
-	for (int i = 0; i < 2; i++) {
-		// リソースバリアを作成
-		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_[i].Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	// リソースバリアを作成
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-		// リソースバリアを変更（シェーダリソース）描画可能
-		cmdList->ResourceBarrier(1, &resourceBarrier);
-	}
+	// リソースバリアを変更（シェーダリソース）描画可能
+	cmdList->ResourceBarrier(1, &resourceBarrier);
+
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH[2];
-	for (int i = 0; i < 2; i++) {
-		rtvH[i] = handles_[i].rtvCpuHandle_;
-	}
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH =
+		handles_.rtvCpuHandle_;
 
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
-		handles_[0].dsvCpuHandle_;
+		handles_.dsvCpuHandle_;
 
 	// レンダーターゲットをセット
-	cmdList->OMSetRenderTargets(2, rtvH, false, &dsvH);
+	cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
 
-	CD3DX12_VIEWPORT viewPort[2];
-	CD3DX12_RECT rect[2];
+	// ビューポートの設定
+	CD3DX12_VIEWPORT viewPort = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::window_width, WinApp::window_height);
+	cmdList->RSSetViewports(1, &viewPort);
 
-	for (size_t i = 0; i < 2; i++)
-	{
-		// ビューポートの設定
-		viewPort[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::window_width, WinApp::window_height);
-		// シザリング矩形の設定
-		rect[i] = CD3DX12_RECT(0, 0, WinApp::window_width, WinApp::window_height);
-	}
-	cmdList->RSSetViewports(2, viewPort);
-	cmdList->RSSetScissorRects(2, rect);
-
+	// シザリング矩形の設定
+	CD3DX12_RECT rect = CD3DX12_RECT(0, 0, WinApp::window_width, WinApp::window_height);
+	cmdList->RSSetScissorRects(1, &rect);
 
 	// 全画面クリア
-	for (size_t i = 0; i < 2; i++)
-	{
-		cmdList->ClearRenderTargetView(rtvH[i], clearColor_, 0, nullptr);
-	}
-
+	cmdList->ClearRenderTargetView(rtvH, clearColor_, 0, nullptr);
 
 	// 深度バッファのクリア
 	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void PostEffectHighLumi::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
+void Vignette::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
 {
-	for (int i = 0; i < 2; i++) {
-		// リソースバリアを作成
-		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_[i].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	// リソースバリアを作成
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-		// リソースバリアを変更（描画可能シェーダーリソース）
-		cmdList->ResourceBarrier(1, &resourceBarrier);
-	}
+	// リソースバリアを変更（描画可能シェーダーリソース）
+	cmdList->ResourceBarrier(1, &resourceBarrier);
 }
 
-void PostEffectHighLumi::SetDevice(ID3D12Device* device)
+void Vignette::SetDevice(ID3D12Device* device)
 {
 	sDevice_ = device;
 }
 
-void PostEffectHighLumi::CreateVertBuff()
+void Vignette::CreateVertBuff()
 {
 	// 頂点バッファの設定
 	// ヒープ
@@ -178,7 +177,7 @@ void PostEffectHighLumi::CreateVertBuff()
 	CD3DX12_HEAP_PROPERTIES constHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
 	// リソースデスク
-	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(SpriteManager::ConstBufferData) + 0xff) & ~0xff);
+	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataVignette) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
 	result = sDevice_->CreateCommittedResource(
@@ -189,9 +188,13 @@ void PostEffectHighLumi::CreateVertBuff()
 		nullptr,
 		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
+
+	//定数バッファのマッピング
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
+	assert(SUCCEEDED(result));
 }
 
-void PostEffectHighLumi::CreateTex()
+void Vignette::CreateTex()
 {
 	// テクスチャリソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -208,20 +211,28 @@ void PostEffectHighLumi::CreateTex()
 	CD3DX12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor_);
 
 	// テクスチャバッファの生成
-	for (int i = 0; i < 2; i++) {
-		result = sDevice_->CreateCommittedResource(
-			&heapProp,
-			D3D12_HEAP_FLAG_NONE,
-			&texresDesc,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			&clearValue,
-			IID_PPV_ARGS(&texBuff_[i]));
+	result = sDevice_->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&texresDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		&clearValue,
+		IID_PPV_ARGS(&texBuff_));
 
-		assert(SUCCEEDED(result));
-	}
+	assert(SUCCEEDED(result));
 }
 
-void PostEffectHighLumi::CreateDepthBuff()
+void Vignette::CreateSRV()
+{
+	PostRenderBase::GetInstance()->CreateSRV(texBuff_.Get(), handles_.srvCpuHandle_, handles_.srvGpuHandle_);
+}
+
+void Vignette::CreateRTV()
+{
+	PostRenderBase::GetInstance()->CreateRTV(texBuff_.Get(), handles_.rtvCpuHandle_);
+}
+
+void Vignette::CreateDepthBuff()
 {
 	// 深度バッファリソース設定
 	CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -251,38 +262,24 @@ void PostEffectHighLumi::CreateDepthBuff()
 	assert(SUCCEEDED(result));
 }
 
-void PostEffectHighLumi::CreateSRV()
+void Vignette::CreateDSV()
 {
-	for (int i = 0; i < 2; i++) {
-		PostRenderBase::GetInstance()->CreateSRV(texBuff_[i].Get(), handles_[i].srvCpuHandle_, handles_[i].srvGpuHandle_);
-	}
+	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_.dsvCpuHandle_);
 }
 
-void PostEffectHighLumi::CreateRTV()
-{
-	for (int i = 0; i < 2; i++) {
-		PostRenderBase::GetInstance()->CreateRTV(texBuff_[i].Get(), handles_[i].rtvCpuHandle_);
-	}
-}
-
-void PostEffectHighLumi::CreateDSV()
-{
-	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_[0].dsvCpuHandle_);
-}
-
-void PostEffectHighLumi::CreateGraphicsPipelineState()
+void Vignette::CreateGraphicsPipelineState()
 {
 	result = S_FALSE;
 
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
-	
+
 	// 頂点シェーダの読み込みとコンパイル
 	vsShader_ = std::make_unique<ShaderObj>();
-	vsShader_->Create("PostEffect/Bloom/HighLumiVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+	vsShader_->Create("PostEffect/Vignette/VignetteVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
 	// ピクセルシェーダの読み込みとコンパイル
 	psShader_ = std::make_unique<ShaderObj>();
-	psShader_->Create("PostEffect/Bloom/HighLumiPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+	psShader_->Create("PostEffect/Vignette/VignettePS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
@@ -354,15 +351,11 @@ void PostEffectHighLumi::CreateGraphicsPipelineState()
 	// デスクリプタレンジ
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
 	descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);// t0 レジスタ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
-	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);// t1 レジスタ
-
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootParams[3];
-	rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
-	rootParams[2].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
+	CD3DX12_ROOT_PARAMETER rootParams[2];
+	rootParams[0].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[1].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT);

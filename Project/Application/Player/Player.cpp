@@ -46,6 +46,8 @@ bool Player::Initialize()
 	frontW_.translation = { 0,0,1 };
 	frontW_.parent_ = &worldTransform_;
 
+	//worldTransform_.scale = { 2,2,2 };
+
 	bulletModel_.reset(Model::LoadFromOBJ("sphere",true));
 	cameraWorld_.Initialize();
 

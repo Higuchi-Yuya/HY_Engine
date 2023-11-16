@@ -210,27 +210,6 @@ float4 main(VSOutput input) : SV_TARGET
 		}
 	}
 
-	// もしフォグがアクティブならフォグの処理をする
-	if (isActiveFog == true) {
-
-		// 距離の計算
-        float dis = distance(input.worldpos.xyz, cameraPos);
-
-		// フォグの距離によっての減衰を計算
-		//float rate = smoothstep(nearFog, farFog, dis);
-        float f = (farFog - dis) / (farFog - nearFog);
-        f = clamp(f, 0.0f, 1.0f);
-		
-		// フォグの色と求めたフォグの距離を掛けて最終的なフォグのカラーを算出
-		//float4 specialFogColor = rate * fogColor;
-
-		// オブジェクト色
-		float4 outputColor = color * shadecolor * texcolor;
-
-		// フォグを全体的なカラー処理に加算
-        return outputColor * f + fogColor * (1.0f - f);
-    }
-
 	// もしディゾルブがアクティブならディゾルブの処理をする
     if (isActiveDissolve == true)
     {
@@ -247,6 +226,27 @@ float4 main(VSOutput input) : SV_TARGET
         return outputColor + dissolveColor * dissolvePower * (1 - idensity);
     }
 	
+	// もしフォグがアクティブならフォグの処理をする
+    if (isActiveFog == true)
+    {
+
+		// 距離の計算
+        float dis = distance(input.worldpos.xyz, cameraPos);
+
+		// フォグの距離によっての減衰を計算
+		//float rate = smoothstep(nearFog, farFog, dis);
+        float f = (farFog - dis) / (farFog - nearFog);
+        f = clamp(f, 0.0f, 1.0f);
+		
+		// フォグの色と求めたフォグの距離を掛けて最終的なフォグのカラーを算出
+		//float4 specialFogColor = rate * fogColor;
+
+		// オブジェクト色
+        float4 outputColor = color * shadecolor * texcolor;
+
+		// フォグを全体的なカラー処理に加算
+        return outputColor * f + fogColor * (1.0f - f);
+    }
 
 	// テクスチャの色は使わず色を数値指定
 	return color * shadecolor * texcolor;

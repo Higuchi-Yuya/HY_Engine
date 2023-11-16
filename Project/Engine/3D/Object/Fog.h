@@ -50,8 +50,8 @@ private:// プライベート関数
 
 public:// 外側から変更可能な値
 	bool isActiveFog = false;
-	float nearFog = 0.0f;
-	float farFog = 50.0f;
+	float nearFog = 20.0f;
+	float farFog = 500.0f;
 	Vector4 fogColor = { 1.0f,1.0f,1.0f,1.0f };
 
 private:// メンバ変数

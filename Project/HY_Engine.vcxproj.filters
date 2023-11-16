@@ -214,6 +214,15 @@
     <Filter Include="シェーダーファイル\PostEffect\Composition">
       <UniqueIdentifier>{daa58dd8-9fed-4ab7-8aed-041d4c52f94e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\Vignette">
+      <UniqueIdentifier>{9213d531-e92c-41f5-8295-d1f363ce56f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\Vignette">
+      <UniqueIdentifier>{ceb400c0-fe48-4616-bee7-de5cbc25f29d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダーファイル\PostEffect\Vignette">
+      <UniqueIdentifier>{fd1a5a61-8524-4480-b8ef-d8d564e07596}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -425,6 +434,9 @@
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Bloom\HiguLumiTarget.cpp">
       <Filter>ソース ファイル\Engine\PostEffect\Bloom\HighLumi</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Vignette\Vignette.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect\Vignette</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -641,6 +653,9 @@
     <ClInclude Include="Engine\PostEffect\Bloom\HiguLumiTarget.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect\Bloom\HighLumi</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Vignette\Vignette.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect\Vignette</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -676,6 +691,9 @@
     </None>
     <None Include="Resources\Shaders\Object\SilhouetteHeader.hlsli">
       <Filter>シェーダーファイル\Objct</Filter>
+    </None>
+    <None Include="Resources\Shaders\PostEffect\Vignette\VignetteHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect\Vignette</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -750,6 +768,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Object\SilhouetteVS.hlsl">
       <Filter>シェーダーファイル\Objct</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Vignette\VignettePS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Vignette\VignetteVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Vignette</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -33,9 +33,14 @@ GameScene::~GameScene()
 	}
 	ranterns_.clear();
 
-	for (auto pL : pointLightsInfo_) {
-		delete pL;
+	for (auto o : highLumiRanterns_) {
+		delete o;
 	}
+	ranterns_.clear();
+
+	//for (auto pL : pointLightsInfo_) {
+	//	delete pL;
+	//}
 	pointLightsInfo_.clear();
 
 	Enemy::StaticFinalize();
@@ -107,7 +112,7 @@ void GameScene::Initialize()
 
 #pragma region モデルの読み込み
 	// プレイヤーのモデル読み込み
-	playerModel_.reset(Model::LoadFromOBJ("chr_sword", true));
+	playerModel_.reset(Model::LoadFromOBJ("CharacterYomawari", true));
 
 	// 敵のモデル読み込み
 	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
@@ -268,37 +273,43 @@ void GameScene::Initialize()
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
+			Object3d* newObj2= Object3d::Create();
 			newObject->SetModel(model);
+			newObj2->SetModel(model);
 
 			// 座標
 			Vector3 pos;
 			pos = objectData.translation;
 			newObject->worldTransform_.translation = pos;
+			newObj2->worldTransform_.translation = pos;
 
 			// 回転角
 			Vector3 rot;
 			rot = objectData.rotation;
 			newObject->worldTransform_.rotation = rot;
+			newObj2->worldTransform_.rotation = rot;
 			//newObject->worldTransform_.rotation.y += MathUtil::DegreeToRadian(180);
 
 			// スケール
 			Vector3 scale;
 			scale = objectData.scaling;
 			newObject->worldTransform_.scale = scale;
+			newObj2->worldTransform_.scale = scale;
 
 			// 配列に登録
 			ranterns_.push_back(newObject);
+			highLumiRanterns_.push_back(newObj2);
 		}
-
+		
 		// タグ名がポイントライトなら
 		else if (objectData.tagName == "PointLight")
 		{
 			// ポイントライトの登録
-			WorldTransform* newWorldTrans = new WorldTransform();
-			newWorldTrans->Initialize();
+			WorldTransform newWorldTrans;
+			newWorldTrans.Initialize();
 
-			newWorldTrans->translation = objectData.translation;
-
+			newWorldTrans.translation = objectData.translation;
+			
 			// 配列に登録
 			pointLightsInfo_.push_back(newWorldTrans);
 
@@ -347,7 +358,7 @@ void GameScene::Initialize()
 		light->SetPointLightActive((int)i, true);
 
 		// ポジションの情報をセット
-		light->SetPointLightPos((int)i, pointLightsInfo_[i]->translation);
+		light->SetPointLightPos((int)i, pointLightsInfo_[i].translation);
 
 		// ポイントライトのライトの減衰具合
 		light->SetPointLightAtten((int)i, pointLightAtten);
@@ -592,9 +603,9 @@ void GameScene::Draw3D()
 
 		// オブジェクト関連の描画
 		// 敵の描画
-		//for (auto e : enemys_) {
-		//	e->Draw(&gameCamera->GetView());
-		//}
+		for (auto e : enemys_) {
+			e->Draw(&gameCamera->GetView());
+		}
 
 		// お墓のドアのオブジェクトの描画
 		for (auto l : latticeDoors_){
@@ -684,7 +695,7 @@ void GameScene::DrawBloomObject()
 	case GameScene::Scene::Title:
 		// ランタンのオブジェクトの描画
 		for (auto L : ranterns_) {
-			//L->worldTransform_.IsBloom_ = 0;
+			L->worldTransform_.IsBloom_ = 0;
 			L->worldTransform_.UpdateMatrix();
 			L->Draw(&gameCamera->GetView());
 		}
@@ -692,7 +703,7 @@ void GameScene::DrawBloomObject()
 	case GameScene::Scene::Game:
 		// ランタンのオブジェクトの描画
 		for (auto L : ranterns_) {
-			//L->worldTransform_.IsBloom_ = 0;
+			L->worldTransform_.IsBloom_ = 0;
 			L->worldTransform_.UpdateMatrix();
 			L->Draw(&gameCamera->GetView());
 		}
@@ -711,7 +722,7 @@ void GameScene::DrawHighLumiObj()
 	{
 	case GameScene::Scene::Title:
 		// ランタンのオブジェクトの描画
-		for (auto L : ranterns_) {
+		for (auto L : highLumiRanterns_) {
 			L->worldTransform_.IsBloom_ = 1;
 			L->worldTransform_.UpdateMatrix();
 			L->Draw(&gameCamera->GetView());
@@ -719,7 +730,7 @@ void GameScene::DrawHighLumiObj()
 		break;
 	case GameScene::Scene::Game:
 		// ランタンのオブジェクトの描画
-		for (auto L : ranterns_) {
+		for (auto L : highLumiRanterns_) {
 			L->worldTransform_.IsBloom_ = 1;
 			L->worldTransform_.UpdateMatrix();
 			L->Draw(&gameCamera->GetView());

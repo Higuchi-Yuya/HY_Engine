@@ -4,7 +4,9 @@
 #include "PostEffectComposition.h"
 #include "HiguLumiTarget.h"
 #include "PostTarget.h"
+#include "Vignette.h"
 #include "GameScene.h"
+
 
 class PostEffectManager
 {
@@ -25,6 +27,9 @@ private:// メンバー変数
 	// ターゲットシーン
 	std::unique_ptr<PostTarget>postTarget_;
 
+	// ビネット
+	std::unique_ptr<Vignette>vignette_;
+
 private:// 借りてくるもの
 
 	// ゲームシーン
@@ -37,6 +42,12 @@ public:// メンバー関数
 
 	// 初期化処理
 	void Initialize();
+
+	// 更新処理
+	void Update();
+
+	// IMGUI更新処理
+	void ImguiUpdate();
 
 	// ブルーム描画処理
 	void EffectBloomDraw();

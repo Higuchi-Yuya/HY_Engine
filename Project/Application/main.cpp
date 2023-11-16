@@ -186,7 +186,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		///////////////////////////////////////////////////
 
 		InputManager::GetInstance()->Update();
-		
+		postEffectManager->Update();
 
 
 		//////////////////////////////////////////////
@@ -197,7 +197,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		imguiManager->Begin();
 		gameScene->Update();
 		gameScene->ImguiUpdate();
-		
+		postEffectManager->ImguiUpdate();
+
 		imguiManager->End();
 #pragma endregion
 
@@ -242,6 +243,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 
 
 
+		
 		postEffectManager->EffectBloomDraw();
 #pragma endregion
 		
@@ -256,6 +258,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 		//-----ここまで 2D描画 -------//
 		// 描画後処理
 		spriteManager->PostDraw();
+
 #pragma endregion
 
 #pragma region IMGUIの描画

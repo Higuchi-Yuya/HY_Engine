@@ -45,17 +45,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)Lib\assimp\include</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(SolutionDir)External\assimp\include</IncludePath>
     <OutDir>$(SolutionDir)..\Generated\Outputs\HY_Engine\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Debug;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)External/assimp/lib;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Debug;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(ProjectDir)Lib\assimp\include</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\Imgui;$(SolutionDir)External\assimp\include</IncludePath>
     <OutDir>$(SolutionDir)..\Generated\Outputs\HY_Engine\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(ProjectDir)/Lib/assimp/lib;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Debug;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)External/assimp/lib;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Debug;$(ProjectDir)/External/DirectXTex/Bin/Desktop_2022_Win10/x64/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -79,9 +79,9 @@
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)lib\assimp\bin\Debug\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"
-copy "$(SolutionDir)lib\assimp\bin\Debug\zlibd1.dll" "$(TargetDir)zlibd1.dll"
-copy "$(SolutionDir)lib\assimp\bin\Debug\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
+      <Command>copy "$(SolutionDir)External\assimp\bin\Debug\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"
+copy "$(SolutionDir)External\assimp\bin\Debug\zlibd1.dll" "$(TargetDir)zlibd1.dll"
+copy "$(SolutionDir)External\assimp\bin\Debug\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -110,9 +110,9 @@ copy "$(SolutionDir)lib\assimp\bin\Debug\pugixml.dll" "$(TargetDir)pugixml.dll"<
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)lib\assimp\bin\Release\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"
-copy "$(SolutionDir)lib\assimp\bin\Release\zlibd1.dll" "$(TargetDir)zlibd1.dll"
-copy "$(SolutionDir)lib\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
+      <Command>copy "$(SolutionDir)External\assimp\bin\Release\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"
+copy "$(SolutionDir)External\assimp\bin\Release\zlibd1.dll" "$(TargetDir)zlibd1.dll"
+copy "$(SolutionDir)External\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

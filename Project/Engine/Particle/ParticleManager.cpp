@@ -195,7 +195,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	// 頂点レイアウトの設定
@@ -411,6 +411,10 @@ void ParticleManager::Draw(const ViewProjection& view)
 
 	// 定数バッファビューをセット
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
+	cmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// シェーダリソースビューをセット
 	cmdList_->SetGraphicsRootDescriptorTable(1, textureHandle_->GetGpuHandle());

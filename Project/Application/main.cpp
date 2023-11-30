@@ -240,11 +240,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma endregion
 
 #pragma region ３Ｄモデル描画
-
-
-
-		
 		postEffectManager->EffectBloomDraw();
+		gameScene->DrawParticle();
 #pragma endregion
 		
 #pragma region 前景スプライト描画
@@ -262,7 +259,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR,  _In_ int) {
 #pragma endregion
 
 #pragma region IMGUIの描画
-		imguiManager->Draw();
+		//imguiManager->Draw();
 #pragma endregion
 
 

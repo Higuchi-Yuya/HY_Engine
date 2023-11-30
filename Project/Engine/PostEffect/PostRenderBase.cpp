@@ -54,7 +54,7 @@ void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HAND
 	rtvIncrementIndex_++;
 }
 
-void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& dsvCpuHandle)
+void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& dsvCpuHandle, DXGI_FORMAT dsvFormat)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE DsvCpuHandle = descHeapDSV_->GetCPUDescriptorHandleForHeapStart();
 
@@ -67,7 +67,7 @@ void PostRenderBase::CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HAND
 
 	// デスクリプタヒープにDSV作成
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.Format = dsvFormat;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
 	// ハンドルの指す位置に深度ステンシルビュー作成

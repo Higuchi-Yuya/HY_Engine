@@ -72,7 +72,7 @@ void PostEffectManager::BloomDrawSetting()
 #pragma region 高輝度抽出の描画
 	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
 
-
+	higuLumiTarget_->Draw(dxCommon_->GetCommandList());
 	//Object3d::PreDraw(dxCommon_->GetCommandList());
 	//gameScene_->DrawBloomObject();
 

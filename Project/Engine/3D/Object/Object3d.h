@@ -47,6 +47,8 @@ public:
 		SUBTRACTION,    // 減算
 		SCREEN,         // スクリーン
 		SILHOUETTE,     // シルエット
+		TransParent,    // 窓透過用
+		Shield,			// 窓遮蔽物用
 		BLEND_NUMMAX,
 	};
 
@@ -127,6 +129,12 @@ public: // 静的メンバ関数
 	// シルエット
 	static void InitializeGraphicsPipelineSilhouette();
 
+	// 窓透過用(ステンシル読み込み側)
+	static void InitializeGraphicsPipelineTransParent();
+
+	// 窓遮蔽物用(ステンシル書き込み側)
+	static void InitializeGraphicsPipelineShield();
+
 	// シルエット用のシェーダーオブジェクト
 	static void InitializeShaderSilhouette();
 
@@ -165,6 +173,11 @@ private: // 静的メンバ変数
 
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> sPipelinestateSilhouette_;
+
+	// パイプラインステートオブジェクト 窓透過用
+	static ComPtr<ID3D12PipelineState> sPipelinestateTransParent_;
+	// パイプラインステートオブジェクト 窓遮蔽物用
+	static ComPtr<ID3D12PipelineState> sPipelinestateShield_;
 
 	// インプットレイアウト
 	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
@@ -228,6 +241,7 @@ public: // メンバ関数
 	/// 衝突時コールバック関数
 	/// </summary>
 
+	void SetIsStencil(bool IsStencil); 
 
 public:// パブリック変数
 
@@ -241,6 +255,8 @@ private: // メンバ変数
 	// モデル
 	Model* model_ = nullptr;
 
+	// ステンシルテストをするかどうか
+	bool IsStencilTest_ = false;
 	
 protected:// メンバ変数
 	// クラス名（デバッグ用）

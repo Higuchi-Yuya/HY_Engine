@@ -225,7 +225,7 @@ void PostEffectHighLumi::CreateDepthBuff()
 {
 	// 深度バッファリソース設定
 	CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		DXGI_FORMAT_D32_FLOAT,
+		DXGI_FORMAT_D24_UNORM_S8_UINT,
 		WinApp::window_width,
 		WinApp::window_height,
 		1, 0,
@@ -237,7 +237,7 @@ void PostEffectHighLumi::CreateDepthBuff()
 	CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
 	// テクスチャバリュー
-	CD3DX12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0);
+	CD3DX12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D24_UNORM_S8_UINT, 1.0f, 0);
 
 	// 深度バッファの生成
 	result = sDevice_->CreateCommittedResource(
@@ -267,7 +267,7 @@ void PostEffectHighLumi::CreateRTV()
 
 void PostEffectHighLumi::CreateDSV()
 {
-	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_[0].dsvCpuHandle_);
+	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_[0].dsvCpuHandle_, DXGI_FORMAT_D24_UNORM_S8_UINT);
 }
 
 void PostEffectHighLumi::CreateGraphicsPipelineState()
@@ -338,7 +338,7 @@ void PostEffectHighLumi::CreateGraphicsPipelineState()
 	pipelineDesc.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	pipelineDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// 頂点レイアウトの設定
 	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;

@@ -41,7 +41,7 @@ public:// メンバ関数
 	/// <summary>
 	/// 深度ステンシルビューの作成
 	/// </summary>
-	void CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& dsvCpuHandle);
+	void CreateDSV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& dsvCpuHandle, DXGI_FORMAT dsvFormat = DXGI_FORMAT_D32_FLOAT);
 
 	/// <summary>
 	/// デスクリプタヒープの作成

@@ -23,6 +23,8 @@ ComPtr<ID3D12PipelineState> Object3d::sPipelinestateADDITIONALPHA_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSUBTRACTION_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSCREEN_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSilhouette_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateTransParent_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateShield_ = nullptr;
 
 std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 
@@ -81,6 +83,12 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 
 	// シルエット
 	InitializeGraphicsPipelineSilhouette();
+
+	// 窓透過用(ステンシル読み込み側)
+	InitializeGraphicsPipelineTransParent();
+
+	// 窓遮蔽物用(ステンシル書き込み側)
+	InitializeGraphicsPipelineShield();
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -141,7 +149,7 @@ void Object3d::InitializeGraphicsPipelineNormal()
 	// デプスステンシルステート
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	//gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER;
-
+	
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -160,7 +168,7 @@ void Object3d::InitializeGraphicsPipelineNormal()
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
@@ -448,12 +456,11 @@ void Object3d::InitializeGraphicsPipelineSilhouette()
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
-
 	// ブレンドステートの設定
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
@@ -472,6 +479,142 @@ void Object3d::InitializeGraphicsPipelineSilhouette()
 
 	// グラフィックスパイプラインの生成
 	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateSilhouette_));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeGraphicsPipelineTransParent()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = *sVsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = *sPsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	gpipeline.DepthStencilState.DepthEnable = false;
+	gpipeline.DepthStencilState.StencilEnable = true;
+	gpipeline.DepthStencilState.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+	gpipeline.DepthStencilState.StencilWriteMask = 0x00;
+	gpipeline.DepthStencilState.FrontFace.StencilFailOp = D3D12_STENCIL_OP_ZERO;
+	gpipeline.DepthStencilState.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+	gpipeline.DepthStencilState.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+	gpipeline.DepthStencilState.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_EQUAL;
+	gpipeline.DepthStencilState.BackFace.StencilFailOp = gpipeline.DepthStencilState.FrontFace.StencilFailOp;
+	gpipeline.DepthStencilState.BackFace.StencilDepthFailOp = gpipeline.DepthStencilState.FrontFace.StencilDepthFailOp;
+	gpipeline.DepthStencilState.BackFace.StencilPassOp = gpipeline.DepthStencilState.FrontFace.StencilPassOp;
+	gpipeline.DepthStencilState.BackFace.StencilFunc = gpipeline.DepthStencilState.FrontFace.StencilFunc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	gpipeline.pRootSignature = sRootsignature_.Get();
+
+	// グラフィックスパイプラインの生成
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateTransParent_));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitializeGraphicsPipelineShield()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = *sVsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = *sPsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	gpipeline.DepthStencilState.DepthEnable = false;
+	gpipeline.DepthStencilState.StencilEnable = true;
+	gpipeline.DepthStencilState.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+	gpipeline.DepthStencilState.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+	gpipeline.DepthStencilState.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+	gpipeline.DepthStencilState.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+	gpipeline.DepthStencilState.FrontFace.StencilPassOp = D3D12_STENCIL_OP_REPLACE;
+	gpipeline.DepthStencilState.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	gpipeline.DepthStencilState.BackFace.StencilFailOp = gpipeline.DepthStencilState.FrontFace.StencilFailOp;
+	gpipeline.DepthStencilState.BackFace.StencilDepthFailOp = gpipeline.DepthStencilState.FrontFace.StencilDepthFailOp;
+	gpipeline.DepthStencilState.BackFace.StencilPassOp = gpipeline.DepthStencilState.FrontFace.StencilPassOp;
+	gpipeline.DepthStencilState.BackFace.StencilFunc = gpipeline.DepthStencilState.FrontFace.StencilFunc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	gpipeline.pRootSignature = sRootsignature_.Get();
+
+	// グラフィックスパイプラインの生成
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateShield_));
 	assert(SUCCEEDED(result));
 }
 
@@ -626,6 +769,7 @@ bool Object3d::Initialize()
 
 void Object3d::Update()
 {
+	
 	// ワールドトランスフォームの行列更新と転送
 	UpdateWorldMatrix();
 	sFog_->UpdateMatrix();
@@ -700,6 +844,15 @@ void Object3d::SetCollider(BaseCollider* collider)
 
 }
 
+void Object3d::SetIsStencil(bool IsStencil)
+{
+	IsStencilTest_ = IsStencil;
+	if (IsStencilTest_ == true) {
+		worldTransform_.color.w = 0;
+		Update();
+	}
+}
+
 void Object3d::SetBlendMode(BlendMode mode)
 {
 	switch (mode)
@@ -721,6 +874,13 @@ void Object3d::SetBlendMode(BlendMode mode)
 		break;
 	case Object3d::SILHOUETTE:// シルエット
 		sCmdList_->SetPipelineState(sPipelinestateSilhouette_.Get());
+		break;
+	case Object3d::TransParent:// 窓透過用
+		sCmdList_->SetPipelineState(sPipelinestateTransParent_.Get());
+		break;
+	case Object3d::Shield:// 窓透過用
+		sCmdList_->SetPipelineState(sPipelinestateShield_.Get());
+		break;
 	default:
 		break;
 	}
@@ -735,6 +895,8 @@ void Object3d::StaticFinalize()
 	sPipelinestateSUBTRACTION_ = nullptr;
 	sPipelinestateSCREEN_ = nullptr;
 	sPipelinestateSilhouette_ = nullptr;
+	sPipelinestateTransParent_ = nullptr;
+	sPipelinestateShield_ = nullptr;
 
 	sInputLayout_.clear();
 }

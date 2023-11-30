@@ -78,9 +78,10 @@ void GameScene::Initialize()
 
 #pragma region フォグ
 	fog.reset(Fog::Create());
-	fog->nearFog = 10;
-	fog->farFog = 100;
-	fog->isActiveFog = false;
+	fog->nearFog = 20;
+	fog->farFog = 150;
+	fog->isActiveFog = true;
+	fog->fogColor = Vector4(0.08f,0.08f,0.152f,1);
 	Object3d::SetFog(fog.get());
 #pragma endregion
 
@@ -405,6 +406,7 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	input_->Update();
 	// シーンチェンジ処理
 	SceneChageUpdate();
 
@@ -588,53 +590,61 @@ void GameScene::Draw3D()
 	{
 	case GameScene::Scene::Title: // タイトルシーン
 
+		
 		// お墓のドアのオブジェクトの描画
 		for (auto l: latticeDoors_){
+			
 			l->Draw(&gameCamera->GetView());
 		}
-
+		
 		// 普通のオブジェクトの描画
 		for (auto o : objects) {
+			
 			o->Draw(&gameCamera->GetView());
 		}
-
+		
 		break;
 	case GameScene::Scene::Game: // ゲームシーン
 
 		// オブジェクト関連の描画
+		//Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
+
+		commandList->OMSetStencilRef(2);
+		Object3d::SetBlendMode(Object3d::BlendMode::Shield);
+		// お墓のドアのオブジェクトの描画
+		for (auto d : latticeDoors_) {
+			d->SetIsStencil(true);
+			d->Draw(&gameCamera->GetView());
+		}
+		Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+
 		// 敵の描画
+		Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
 		for (auto e : enemys_) {
 			e->Draw(&gameCamera->GetView());
 		}
-
-		// お墓のドアのオブジェクトの描画
-		for (auto l : latticeDoors_){
-			l->Draw(&gameCamera->GetView());
-		}
-
+		Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+		//Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+		commandList->OMSetStencilRef(0);
+		
 		// 普通のオブジェクトの描画
 		for (auto o : objects) {
 			o->Draw(&gameCamera->GetView());
 		}
-		gameCollider->Draw3D(&gameCamera->GetView());
+		//gameCollider->Draw3D(&gameCamera->GetView());
 
 		// プレイヤーの描画
 		player_->Draw(&gameCamera->GetView());
 
-		// FBXモデルの描画
-		FbxModel::PreDraw(commandList);
 
 
-		FbxModel::PostDraw();
+		//// FBXモデルの描画
+		//FbxModel::PreDraw(commandList);
 
-		ParticleManager::PreDraw(commandList);
-		// パーティクルの描画
-		DrawParticle();
-		// 敵の描画
-		for (auto e : enemys_) {
-			e->DrawParticle(&gameCamera->GetView());
-		}
-		ParticleManager::PostDraw();
+
+		//FbxModel::PostDraw();
+
+
 
 
 		break;
@@ -649,7 +659,28 @@ void GameScene::Draw3D()
 void GameScene::DrawParticle()
 {
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
-	gameCollider->Draw(commandList, &gameCamera->GetView());
+
+	
+	switch (scene)
+	{
+	case GameScene::Scene::Title: // タイトルシーン
+		break;
+	case GameScene::Scene::Game: // ゲームシーン
+		ParticleManager::PreDraw(commandList);
+		//gameCollider->Draw(commandList, &gameCamera->GetView());
+		// 敵の描画
+		for (auto e : enemys_) {
+			e->DrawParticle(&gameCamera->GetView());
+		}
+		ParticleManager::PostDraw();
+		break;
+	case GameScene::Scene::Result: // リザルトシーン
+
+		break;
+	default:
+		break;
+	}
+	
 }
 
 void GameScene::Draw2DFront()

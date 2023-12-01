@@ -412,9 +412,9 @@ void ParticleManager::Draw(const ViewProjection& view)
 	// 定数バッファビューをセット
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
-	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
-	cmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//// デスクリプタヒープの配列
+	//ID3D12DescriptorHeap* ppHeaps[] = { TextureManager::sSrvHeap.Get() };
+	//cmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// シェーダリソースビューをセット
 	cmdList_->SetGraphicsRootDescriptorTable(1, textureHandle_->GetGpuHandle());

@@ -644,7 +644,7 @@ void GameScene::Draw3D()
 
 		//FbxModel::PostDraw();
 
-
+		DrawParticle();
 
 
 		break;
@@ -667,7 +667,7 @@ void GameScene::DrawParticle()
 		break;
 	case GameScene::Scene::Game: // ゲームシーン
 		ParticleManager::PreDraw(commandList);
-		//gameCollider->Draw(commandList, &gameCamera->GetView());
+		gameCollider->Draw(commandList, &gameCamera->GetView());
 		// 敵の描画
 		for (auto e : enemys_) {
 			e->DrawParticle(&gameCamera->GetView());

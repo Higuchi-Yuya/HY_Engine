@@ -79,9 +79,9 @@
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)External\assimp\bin\Debug\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"
-copy "$(SolutionDir)External\assimp\bin\Debug\zlibd1.dll" "$(TargetDir)zlibd1.dll"
-copy "$(SolutionDir)External\assimp\bin\Debug\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
+      <Command>copy "$(SolutionDir)External\assimp\dll\Debug\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"
+copy "$(SolutionDir)External\assimp\dll\Debug\zlibd1.dll" "$(TargetDir)zlibd1.dll"
+copy "$(SolutionDir)External\assimp\dll\Debug\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -110,9 +110,9 @@ copy "$(SolutionDir)External\assimp\bin\Debug\pugixml.dll" "$(TargetDir)pugixml.
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)External\assimp\bin\Release\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"
-copy "$(SolutionDir)External\assimp\bin\Release\zlibd1.dll" "$(TargetDir)zlibd1.dll"
-copy "$(SolutionDir)External\assimp\bin\Release\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
+      <Command>copy "$(SolutionDir)External\assimp\dll\Release\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"
+copy "$(SolutionDir)External\assimp\dll\Release\zlibd1.dll" "$(TargetDir)zlibd1.dll"
+copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixml.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

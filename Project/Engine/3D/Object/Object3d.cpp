@@ -500,7 +500,7 @@ void Object3d::InitializeGraphicsPipelineTransParent()
 	
 	// デプスステンシルステート
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	gpipeline.DepthStencilState.DepthEnable = false;
+	gpipeline.DepthStencilState.DepthEnable = true;
 	gpipeline.DepthStencilState.StencilEnable = true;
 	gpipeline.DepthStencilState.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
 	gpipeline.DepthStencilState.StencilWriteMask = 0x00;

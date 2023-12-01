@@ -168,7 +168,7 @@ void Object3d::InitializeGraphicsPipelineNormal()
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
@@ -460,7 +460,7 @@ void Object3d::InitializeGraphicsPipelineSilhouette()
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 	// 頂点レイアウトの設定
 	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
@@ -514,7 +514,7 @@ void Object3d::InitializeGraphicsPipelineTransParent()
 	gpipeline.DepthStencilState.BackFace.StencilFunc = gpipeline.DepthStencilState.FrontFace.StencilFunc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
@@ -582,7 +582,7 @@ void Object3d::InitializeGraphicsPipelineShield()
 	gpipeline.DepthStencilState.BackFace.StencilFunc = gpipeline.DepthStencilState.FrontFace.StencilFunc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};

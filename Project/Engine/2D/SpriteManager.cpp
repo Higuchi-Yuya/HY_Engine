@@ -48,7 +48,7 @@ void SpriteManager::Initialize(DirectXCommon* dxcommon)
 	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
 	pipelineDesc.RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
 
-	pipelineDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 	// ブレンドステート
 	//pipelineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask

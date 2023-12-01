@@ -195,7 +195,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 
 	// 深度バッファのフォーマット
-	gpipeline.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 	gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	// 頂点レイアウトの設定

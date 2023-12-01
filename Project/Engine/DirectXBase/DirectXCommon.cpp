@@ -365,7 +365,7 @@ void DirectXCommon::InitializeDepthBuffer()
 	depthResoureDesc.Width = WinApp::window_width;
 	depthResoureDesc.Height = WinApp::window_height;
 	depthResoureDesc.DepthOrArraySize = 1;
-	depthResoureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthResoureDesc.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 	depthResoureDesc.SampleDesc.Count = 1;
 	depthResoureDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
@@ -376,7 +376,7 @@ void DirectXCommon::InitializeDepthBuffer()
 	D3D12_CLEAR_VALUE depthClearValue{};
 	depthClearValue.DepthStencil.Depth = 1.0f;
 	depthClearValue.DepthStencil.Stencil = 0;
-	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 #pragma endregion
 
 #pragma region 深度バッファの生成
@@ -405,7 +405,7 @@ void DirectXCommon::InitializeDepthBuffer()
 #pragma region 深度バッファビュー（DSV）の生成
 	//深度ビュー作成
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	device_->CreateDepthStencilView(
 		depthBuff_.Get(),

@@ -438,6 +438,9 @@
     <ClCompile Include="Engine\PostEffect\Vignette\Vignette.cpp">
       <Filter>ソース ファイル\Engine\PostEffect\Vignette</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DirectXBase\MyGame.cpp">
+      <Filter>ソース ファイル\Engine\DirectXBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -655,6 +658,9 @@
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Vignette\Vignette.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect\Vignette</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DirectXBase\MyGame.h">
+      <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

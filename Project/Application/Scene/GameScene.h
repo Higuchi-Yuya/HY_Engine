@@ -66,6 +66,16 @@ public:// メンバ関数
 	/// </summary>
 	void DrawHighLumiObj();
 
+	/// <summary>
+	/// ステンシルの読み込みをするオブジェクトの描画
+	/// </summary>
+	void DrawTransParentObj();
+
+	/// <summary>
+	/// ステンシルの書き込みをするオブジェクトの描画
+	/// </summary>
+	void DrawShieldObj();
+
 	// リセット関数
 	void Reset();
 

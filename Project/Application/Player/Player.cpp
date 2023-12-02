@@ -38,15 +38,11 @@ bool Player::Initialize()
 	if (!Object3d::Initialize()) {
 		return false;
 	}
-	//input->Initialize();
-	// コライダーの追加
 
 
 	frontW_.Initialize();
 	frontW_.translation = { 0,0,1 };
 	frontW_.parent_ = &worldTransform_;
-
-	//worldTransform_.scale = { 2,2,2 };
 
 	bulletModel_.reset(Model::LoadFromOBJ("sphere",true));
 	cameraWorld_.Initialize();
@@ -70,14 +66,17 @@ bool Player::Initialize()
 	return true;
 }
 
-void Player::InitializeSilhouette()
+void Player::InitializeFlashLightRange()
 {
-	silhouetteModel_.reset(Model::LoadFromOBJ("chr_sword", true));
+	flashLightRangeModel_.reset(Model::LoadFromOBJ("flashlightRange", true));
 
-	silhouetteObj_.Initialize();
-	silhouetteObj_.SetModel(silhouetteModel_.get());
+	flashLightRangeObj_.Initialize();
+	flashLightRangeObj_.SetModel(flashLightRangeModel_.get());
 	
-	silhouetteObj_.worldTransform_.scale = { 0.89f,0.89f,0.899f };
+	flashLightRangeObj_.worldTransform_.scale = { 2.5f,1.5f,2.0f };
+
+	flashLightRangeObj_.worldTransform_.translation = { 0,0,2.2f };
+	flashLightRangeObj_.worldTransform_.parent_ = &worldTransform_;
 }
 
 void Player::Update()
@@ -97,45 +96,32 @@ void Player::Update()
 		}
 	}
 	
-
 	//弾更新
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Update();
 	}
 
-	
-
 	// 行列の更新など
 	Object3d::Update();
 
-	// プレイヤーと同じ情報を代入
-	silhouetteObj_.worldTransform_.translation = worldTransform_.translation;
-	silhouetteObj_.worldTransform_.rotation = worldTransform_.rotation;
-
-	silhouetteObj_.Update();
+	// 懐中電灯の範囲のオブジェの更新処理
+	flashLightRangeObj_.Update();
 }
 
 void Player::Draw(ViewProjection* view)
 {
-	// オブジェクト本体の描画
+	// シルエットの描画
 	Object3d::SetBlendMode(BlendMode::SILHOUETTE);
 	Object3d::Draw(view);
 
-
+	// オブジェクト本体の描画
 	Object3d::SetBlendMode(BlendMode::NORMAL);
 	Object3d::Draw(view);
-	// シルエット用の描画
-	//silhouetteObj_.SetBlendMode(BlendMode::SILHOUETTE);
-	//silhouetteObj_.Draw(view);
-
-	worldTransform_.scale = { 1,1,1 };
-	UpdateWorldMatrix();
 
 	//弾描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(view);
 	}
-	//atari->Draw(view);
 }
 
 void Player::OnCollision()
@@ -193,11 +179,6 @@ void Player::SetWorldTransInfo(WorldTransform worldTrans)
 void Player::SetGameCamera(GameCamera* gameCamera)
 {
 	bGameCamera = gameCamera;
-}
-
-void Player::SetSilhouetteModel(Model* model)
-{
-	silhouetteModel_.reset(model);
 }
 
 const std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
@@ -259,9 +240,27 @@ void Player::DrawImgui()
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 
 	ImGui::InputFloat("HitPoint", &playerHitPoint_, 0, playerHitPointMax_);
-
+	ImGui::InputFloat3("flashObjRange scale", &flashLightRangeObj_.worldTransform_.scale.x, 0, 5);
+	ImGui::InputFloat3("flashObjRange pos", &flashLightRangeObj_.worldTransform_.translation.x, 0, 5);
 
 	ImGui::End();
+
+	ImGui::Begin("playerSprite");
+
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat2("hpBarPos", &pHpBarPos_.x, "%.2f");
+	ImGui::InputFloat2("hpInsidePos", &pHpInsidePos_.x, "%.2f");
+	ImGui::InputFloat2("hpBarSize", &pHpBarSize_.x, "%.2f");
+	ImGui::InputFloat2("hpInsideSize", &pHpInsideSize_.x, "%.2f");
+
+	ImGui::End();
+}
+
+void Player::DrawFlashLightRange(ViewProjection* view)
+{
+	flashLightRangeObj_.Draw(view);
 }
 
 void Player::Reset()
@@ -304,10 +303,9 @@ void Player::MoveUpdate()
 	Vector2 joyStickInfoR = { 0,0 };
 
 	// 向いてる方向に移動
-
-
 	moveVel_ = { 0,0,0 };
 	frontVec_ = { 0,0,0 };
+
 	// カメラの前ベクトル
 	Vector3 cameForward = worldTransform_.translation - bGameCamera->GetView().eye;
 	cameForward.y = 0.0f;
@@ -364,18 +362,6 @@ void Player::MoveUpdate()
 	ImGui::InputFloat2("joySrickL", &joyStickInfoL.x, "%.2f");
 	ImGui::InputFloat2("joySrickR", &joyStickInfoR.x, "%.2f");
 	ImGui::InputFloat3("playerRot", &worldTransform_.rotation.x, "%.2f");
-
-	ImGui::End();
-	
-	ImGui::Begin("playerSprite");
-
-	//ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(500, 100));
-
-	ImGui::InputFloat2("hpBarPos", &pHpBarPos_.x, "%.2f");
-	ImGui::InputFloat2("hpInsidePos", &pHpInsidePos_.x, "%.2f");
-	ImGui::InputFloat2("hpBarSize", &pHpBarSize_.x, "%.2f");
-	ImGui::InputFloat2("hpInsideSize", &pHpInsideSize_.x, "%.2f");
 
 	ImGui::End();
 

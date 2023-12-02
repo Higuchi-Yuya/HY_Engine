@@ -21,7 +21,7 @@ public:
 	bool Initialize()override;
 
 	// シルエット初期化
-	void InitializeSilhouette();
+	void InitializeFlashLightRange();
 
 	// 毎フレーム処理
 	void Update()override;
@@ -34,6 +34,9 @@ public:
 
 	// Imguiの描画
 	void DrawImgui();
+
+	// 懐中電灯の範囲オブジェの描画
+	void DrawFlashLightRange(ViewProjection* view);
 
 	// リセット関数
 	void Reset();
@@ -62,9 +65,6 @@ public:// セッター
 
 	// ゲームカメラをセット
 	void SetGameCamera(GameCamera* gameCamera);
-
-	// モデルのセット
-	void SetSilhouetteModel(Model* model);
 
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
 
@@ -149,9 +149,9 @@ private:
 	// 生きているかフラグ
 	bool IsAlive_ = true;
 
-	// シルエット用のオブジェクト
-	Object3d silhouetteObj_;
-	std::unique_ptr<Model> silhouetteModel_;
+	// 懐中電灯の範囲のオブジェクト
+	Object3d flashLightRangeObj_;
+	std::unique_ptr<Model> flashLightRangeModel_;
 
 #pragma region プレイヤーのHP関連
 	// プレイヤーのHP関連

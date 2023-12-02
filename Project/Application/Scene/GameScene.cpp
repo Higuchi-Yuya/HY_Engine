@@ -182,7 +182,7 @@ void GameScene::Initialize()
 #pragma region プレイヤー関連の初期化
 	player_ = std::make_unique<Player>();
 	player_.reset(Player::Create(playerModel_.get()));
-	player_->InitializeSilhouette();
+	player_->InitializeFlashLightRange();
 #pragma endregion
 
 #pragma region コライダー本体の初期化
@@ -430,7 +430,6 @@ void GameScene::Update()
 
 void GameScene::ImguiUpdate()
 {
-
 	// 表示項目の追加--------//
 	ImGui::Begin("Sprite 1");
 
@@ -584,7 +583,7 @@ void GameScene::Draw2DBack()
 
 void GameScene::Draw3D()
 {
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	[[maybe_unused]] ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	switch (scene)
 	{
@@ -607,45 +606,25 @@ void GameScene::Draw3D()
 	case GameScene::Scene::Game: // ゲームシーン
 
 		// オブジェクト関連の描画
-		//Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
 
-		commandList->OMSetStencilRef(2);
-		Object3d::SetBlendMode(Object3d::BlendMode::Shield);
+		DrawShieldObj();
+
+		DrawTransParentObj();
+
 		// お墓のドアのオブジェクトの描画
 		for (auto d : latticeDoors_) {
-			d->SetIsStencil(true);
 			d->Draw(&gameCamera->GetView());
 		}
-		Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
-
-		// 敵の描画
-		Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
-		for (auto e : enemys_) {
-			e->Draw(&gameCamera->GetView());
-		}
-		Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
-		//Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
-		commandList->OMSetStencilRef(0);
 		
 		// 普通のオブジェクトの描画
 		for (auto o : objects) {
 			o->Draw(&gameCamera->GetView());
 		}
-		//gameCollider->Draw3D(&gameCamera->GetView());
 
 		// プレイヤーの描画
 		player_->Draw(&gameCamera->GetView());
 
-
-
-		//// FBXモデルの描画
-		//FbxModel::PreDraw(commandList);
-
-
-		//FbxModel::PostDraw();
-
 		DrawParticle();
-
 
 		break;
 	case GameScene::Scene::Result: // リザルトシーン
@@ -775,6 +754,40 @@ void GameScene::DrawHighLumiObj()
 	}
 }
 
+void GameScene::DrawTransParentObj()
+{
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+
+	// オブジェクトのパイプラインをステンシルの読み込み側に変更
+	Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
+	
+	// 敵の描画
+	for (auto e : enemys_) {
+		e->Draw(&gameCamera->GetView());
+	}
+
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+
+	// ステンシルの参照値を0に戻す
+	commandList->OMSetStencilRef(0);
+}
+
+void GameScene::DrawShieldObj()
+{
+	[[maybe_unused]] ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+
+	// ステンシルテストの参照値を設定する
+	commandList->OMSetStencilRef(2);
+
+	// オブジェクトのパイプラインをステンシルの書き込み側に変更
+	Object3d::SetBlendMode(Object3d::BlendMode::Shield);
+
+	// プレイヤーの懐中電灯の範囲オブジェクトの描画
+	player_->DrawFlashLightRange(&gameCamera->GetView());
+
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+}
+
 void GameScene::Reset()
 {
 	switch (scene)
@@ -830,7 +843,6 @@ void GameScene::Reset()
 
 void GameScene::LoadEnemy()
 {
-
 	switch (enemyWave_)
 	{
 	case GameScene::wave01:// ウェーブ０１の時の敵のスポーンパターン抽選

@@ -6,8 +6,13 @@ SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 texcolor0 = tex0.Sample(smp, input.uv);
-    float4 texcolor1 = tex1.Sample(smp, input.uv);
+    float2 tiling = float2(0.9f, 0.9f);
+    float2 offset = float2(
+    (1 - tiling.x)*10 * 0.05f,
+    (1 - tiling.y)*10 * 0.05f);
+    
+    float4 texcolor0 = tex0.Sample(smp, input.uv * tiling + offset);
+    float4 texcolor1 = tex1.Sample(smp, input.uv * tiling + offset);
     
     float4 result = float4(texcolor0.rgb + texcolor1.rgb, 1);
     

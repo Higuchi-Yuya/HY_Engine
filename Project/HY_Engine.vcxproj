@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -92,7 +92,7 @@ copy "$(SolutionDir)External\assimp\dll\Debug\pugixml.dll" "$(TargetDir)pugixml.
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -118,6 +118,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
   <ItemGroup>
     <ClCompile Include="Application\Player\Player.cpp" />
     <ClCompile Include="Application\Enemy\Enemy.cpp" />
+    <ClCompile Include="Application\Effect\BeatEffect.cpp" />
     <ClCompile Include="Engine\3D\Object\Dissolve.cpp" />
     <ClCompile Include="Engine\Collision\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
@@ -192,6 +193,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
     <ClInclude Include="Application\Enemy\Enemy.h" />
+    <ClInclude Include="Application\Effect\BeatEffect.h" />
     <ClInclude Include="Engine\3D\Object\Dissolve.h" />
     <ClInclude Include="Engine\Collision\CollisionAttribute.h" />
     <ClInclude Include="Engine\3D\Object\Mesh.h" />

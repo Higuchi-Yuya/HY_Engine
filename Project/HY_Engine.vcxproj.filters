@@ -223,6 +223,12 @@
     <Filter Include="シェーダーファイル\PostEffect\Vignette">
       <UniqueIdentifier>{fd1a5a61-8524-4480-b8ef-d8d564e07596}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Effect">
+      <UniqueIdentifier>{1e2f58d9-1090-413d-94c1-7806ba047810}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application\Effect">
+      <UniqueIdentifier>{845dd74e-0acd-4629-a569-c5bae55ce1a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -440,6 +446,9 @@
     </ClCompile>
     <ClCompile Include="Engine\DirectXBase\MyGame.cpp">
       <Filter>ソース ファイル\Engine\DirectXBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Effect\BeatEffect.cpp">
+      <Filter>ソース ファイル\Application\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -661,6 +670,9 @@
     </ClInclude>
     <ClInclude Include="Engine\DirectXBase\MyGame.h">
       <Filter>ヘッダー ファイル\Engine\DirectXBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Effect\BeatEffect.h">
+      <Filter>ヘッダー ファイル\Application\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

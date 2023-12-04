@@ -1,6 +1,7 @@
 #include "PostEffectComposition.h"
 
 #include "PostEffectHandleManager.h"
+#include "ImGuiManager.h"
 
 ID3D12Device* PostEffectComposition::sDevice_ = nullptr;
 
@@ -30,19 +31,29 @@ void PostEffectComposition::Initialize()
 	PostEffectHandleManager::SetPostEffectHandle("composition1", handles_[1]);
 }
 
+void PostEffectComposition::Update()
+{
+	// 定数バッファの値を更新
+	constMap_->compositionTailing = compoTiling_;
+	constMap_->compositionOffset = compoOffset_;
+}
+
+void PostEffectComposition::ImguiUpdate()
+{
+	// 表示項目の追加--------//
+	ImGui::Begin("compo");
+
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat2("compoTiling", &compoTiling_.x);
+
+	ImGui::InputFloat2("compoOffset", &compoOffset_.x);
+
+	ImGui::End();
+}
+
 void PostEffectComposition::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	// 定数バッファにデータ転送
-	SpriteManager::ConstBufferData* constMap = nullptr;
-	Matrix4 mathMat;
-
-	result = constBuff_->Map(0, nullptr, (void**)&constMap);
-	if (SUCCEEDED(result)) {
-		constMap->color = { 1,1,1,1 };
-		constMap->mat = mathMat.identity();
-		constBuff_->Unmap(0, nullptr);
-	}
-
 	// パイプラインステートの設定
 	// パイプラインステートとルートシグネチャの設定コマンド
 	cmdList->SetPipelineState(pipelineState_.Get());
@@ -168,7 +179,7 @@ void PostEffectComposition::CreateVertBuff()
 	CD3DX12_HEAP_PROPERTIES constHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
 	// リソースデスク
-	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(SpriteManager::ConstBufferData) + 0xff) & ~0xff);
+	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataComposition) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
 	result = sDevice_->CreateCommittedResource(
@@ -178,6 +189,10 @@ void PostEffectComposition::CreateVertBuff()
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuff_));
+	assert(SUCCEEDED(result));
+
+	//定数バッファのマッピング
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
 	assert(SUCCEEDED(result));
 }
 

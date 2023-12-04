@@ -24,11 +24,15 @@ void PostEffectManager::Initialize()
 void PostEffectManager::Update()
 {
 	vignette_->Update();
+
+	postComposition_->Update();
 }
 
 void PostEffectManager::ImguiUpdate()
 {
 	vignette_->ImguiUpdate();
+
+	postComposition_->ImguiUpdate();
 }
 
 void PostEffectManager::EffectBloomDraw()
@@ -73,10 +77,6 @@ void PostEffectManager::BloomDrawSetting()
 	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
 
 	higuLumiTarget_->Draw(dxCommon_->GetCommandList());
-	//Object3d::PreDraw(dxCommon_->GetCommandList());
-	//gameScene_->DrawBloomObject();
-
-	//Object3d::PostDraw();
 
 	postLumi_->PostDrawScene(dxCommon_->GetCommandList());
 #pragma endregion

@@ -3,12 +3,24 @@
 
 class PostEffectComposition
 {
+public:// サブクラス
+//定数バッファ用データ構造体
+    struct ConstBufferDataComposition {
+        Vector2 compositionTailing;
+        Vector2 compositionOffset;
+    };
 public:
     // コンストラクタ
     PostEffectComposition();
 
     // 初期化
     void Initialize();
+
+    // 更新処理
+    void Update();
+
+    // Imguiの更新処理
+    void ImguiUpdate();
 
     // 描画コマンドの発行
     void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -29,6 +41,18 @@ public:// セッター
 
     // デバイスのセッター
     static void SetDevice(ID3D12Device* device);
+
+    /// <summary>
+    /// レンダーテクスチャのタイリングを設定
+    /// </summary>
+    /// <param name="compoTiling">タイリング</param>
+    void SetCompoTiling(const Vector2& compoTiling) { compoTiling_ = compoTiling; }
+
+    /// <summary>
+    /// レンダーテクスチャのオフセットを設定
+    /// </summary>
+    /// <param name="compoOffset">オフセット</param>
+    void SetCompoOffset(const Vector2& compoOffset) { compoOffset_ = compoOffset; }
 
 private:
 
@@ -112,6 +136,15 @@ private:
 
     // 画面クリアカラー
     static const float clearColor_[4];
+
+    // テクスチャのタイリング
+    Vector2 compoTiling_ = { 0.5f,0.5f };
+
+    // テクスチャのオフセット
+    Vector2 compoOffset_ = { 0,0 };
+
+    // マッピング済みアドレス
+    ConstBufferDataComposition* constMap_ = nullptr;
 
     HRESULT result;
 };

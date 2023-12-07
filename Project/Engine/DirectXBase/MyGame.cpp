@@ -76,8 +76,8 @@ void MyGame::Update()
 	// ImGuiの更新処理
 	imguiManager->Begin();
 
-	gameScene->Update();
-	gameScene->ImguiUpdate();
+	sceneManager->Update();
+	sceneManager->ImguiUpdate();
 	postEffectManager->ImguiUpdate();
 
 	imguiManager->End();
@@ -193,11 +193,11 @@ void MyGame::SceneInitialize()
 {
 #pragma region シーンに使う変数の初期化
 
-	gameScene = std::make_unique<GameScene>();
-	gameScene->Initialize();
-	gameScene->SetDxComon(dxCommon.get());
+	sceneManager = std::make_unique<SceneManager>();
+	sceneManager->SetDxComon(dxCommon.get());
+	sceneManager->Initialize();
 
-	postEffectManager->SetGameScene(gameScene.get());
+	postEffectManager->SetSceneManager(sceneManager.get());
 
 #pragma endregion
 }
@@ -210,7 +210,7 @@ void MyGame::Draw2DBack()
 	spriteManager->PreDraw();
 	//-----ここから 背景スプライト描画 -----//
 
-	gameScene->Draw2DBack();
+	sceneManager->Draw2DBack();
 
 	//-----ここまで 背景スプライト描画 -----//
 	spriteManager->PostDraw();
@@ -233,7 +233,7 @@ void MyGame::Draw2DFront()
 
 	spriteManager->PreDraw();
 	//-----ここから 2D描画 -------//
-	gameScene->Draw2DFront();
+	sceneManager->Draw2DFront();
 
 	//-----ここまで 2D描画 -------//
 	// 描画後処理

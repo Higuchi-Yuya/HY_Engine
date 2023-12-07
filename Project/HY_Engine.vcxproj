@@ -189,6 +189,10 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Engine\PostEffect\Bloom\HiguLumiTarget.cpp" />
     <ClCompile Include="Engine\PostEffect\Vignette\Vignette.cpp" />
     <ClCompile Include="Engine\DirectXBase\MyGame.cpp" />
+    <ClCompile Include="Application\Scene\SceneManager.cpp" />
+    <ClCompile Include="Application\Scene\GameClearScene.cpp" />
+    <ClCompile Include="Application\Scene\GameOverScene.cpp" />
+    <ClCompile Include="Application\Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -265,6 +269,10 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Engine\PostEffect\Bloom\HiguLumiTarget.h" />
     <ClInclude Include="Engine\PostEffect\Vignette\Vignette.h" />
     <ClInclude Include="Engine\DirectXBase\MyGame.h" />
+    <ClInclude Include="Application\Scene\SceneManager.h" />
+    <ClInclude Include="Application\Scene\GameClearScene.h" />
+    <ClInclude Include="Application\Scene\GameOverScene.h" />
+    <ClInclude Include="Application\Scene\TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

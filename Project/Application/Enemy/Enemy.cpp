@@ -5,27 +5,34 @@
 
 
 std::unique_ptr<Texture> Enemy::sParticleTex_ = nullptr;
+Player* Enemy::player_ = nullptr;
+std::unique_ptr<Model> Enemy::modelDefu_ = nullptr;
 
 void Enemy::StaticInitialize()
 {
 	// パーティクルのテクスチャの初期化
 	sParticleTex_.reset(TextureManager::Load2DTextureP("effect.png"));
-
+	// 敵のモデル読み込み
+	modelDefu_.reset(Model::LoadFromOBJ("Medama", true));
 }
 
 void Enemy::StaticFinalize()
 {
 	sParticleTex_ = nullptr;
+	player_ = nullptr;
+	modelDefu_ = nullptr;
 }
 
-void Enemy::Initialize(Model* model, Player* player)
+void Enemy::Initialize(Model* model)
 {
-	player_ = player;
 
 	Object3d::Initialize();
 	// モデルのセット
 	if (model) {
 		SetModel(model);
+	}
+	else if (model == nullptr) {
+		SetModel(modelDefu_.get());
 	}
 
 	IsAlive_ = true;
@@ -50,17 +57,18 @@ void Enemy::Update()
 	case Enemy::State::Spawn:
 		// スポーンの最初のポジションがセットされたら
 		if (spawnFirstPos_ != 0) {
-			spawnTimer++;
-
-			spawnTimeLate = spawnTimer / spawnTimeMax;
-			float spawnPy = (float)Easing::In(spawnFirstPos_.y, spawnEndPos_.y, spawnTimer, spawnTimeMax);
+			ease_.SetEaseLimitTime(240);
+			
+			float spawnPy = (float)ease_.In(spawnFirstPos_.y, spawnEndPos_.y);
+			ease_.Update();
 			worldTransform_.translation.y = spawnPy;
 			//worldTransform_.translation = spawnEndPos_;
 			ParticleUpdate();
 
 			// スポーンが終わったら
-			if (spawnTimer > spawnTimeMax) {
+			if (ease_.GetIsEnd() == true) {
 				nowState_ = State::Alive;
+				ease_.Reset();
 			}
 		}
 		else {

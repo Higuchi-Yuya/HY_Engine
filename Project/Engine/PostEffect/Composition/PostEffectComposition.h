@@ -54,6 +54,20 @@ public:// セッター
     /// <param name="compoOffset">オフセット</param>
     void SetCompoOffset(const Vector2& compoOffset) { compoOffset_ = compoOffset; }
 
+public:// ゲッター
+
+    /// <summary>
+    /// タイリング情報を取得
+    /// </summary>
+    /// <returns></returns>
+    Vector2 GetTiling() { return compoTiling_; }
+
+    /// <summary>
+    /// オフセット情報を取得
+    /// </summary>
+    /// <returns></returns>
+    Vector2 GetOffset() { return compoOffset_; }
+
 private:
 
     /// <summary>
@@ -138,7 +152,7 @@ private:
     static const float clearColor_[4];
 
     // テクスチャのタイリング
-    Vector2 compoTiling_ = { 0.5f,0.5f };
+    Vector2 compoTiling_ = { 1.0f,1.0f };
 
     // テクスチャのオフセット
     Vector2 compoOffset_ = { 0,0 };

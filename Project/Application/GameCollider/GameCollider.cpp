@@ -271,13 +271,10 @@ void GameCollider::OnColParticle()
 	}
 }
 
-void GameCollider::Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection)
+void GameCollider::Draw(ViewProjection* viewProjection)
 {
 	// ----------------パーティクルの描画はここから--------------- //
-	commandList;
 	particleMan_->Draw(*viewProjection);
-
-
 
 	// ----------------パーティクルの描画ここまで----------------- //
 }

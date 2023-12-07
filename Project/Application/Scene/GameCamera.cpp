@@ -1,11 +1,9 @@
 #include "GameCamera.h"
 #include "JoyPadInput.h"
 #include "MathUtil.h"
-#include "Easing.h"
 
-void GameCamera::Initialize(const WorldTransform* worldTransform)
+void GameCamera::Initialize()
 {
-	worldTransform;
 	viewProjection_.Initialize();
 	worldTransform_.Initialize();
 	
@@ -15,7 +13,6 @@ void GameCamera::Initialize(const WorldTransform* worldTransform)
 	viewProjection_.eye = titleCameraFPos_;
 	viewProjection_.target = titleCameraFTargetPos_;
 
-	//worldTransform_.parent_ = worldTransform;
 	worldTransform_.translation = { -15,15,-15 };
 	worldTransform_.UpdateMatrix();
 
@@ -33,7 +30,8 @@ void GameCamera::TitleUpdate()
 		// カメラの座標を前に移動
 		case GameCamera::FirstMove:
 		{
-			easeTimer_++;
+			
+			ease_.SetEaseLimitTime(180);
 
 			// イージングの最初のポジション
 			Vector3 fEyePos = titleCameraFPos_;
@@ -44,15 +42,15 @@ void GameCamera::TitleUpdate()
 			Vector3 eTargetPos = { -0.8f,4,0 };
 
 			// カメラのポジションをイージングさせる
-			viewProjection_.eye = Easing::OutVec3(fEyePos, eEyePos, easeTimer_, easeTimeMax_);
-			viewProjection_.target = Easing::OutVec3(fTargetPos, eTargetPos, easeTimer_, easeTimeMax_);
+			viewProjection_.eye = ease_.OutVec3(fEyePos, eEyePos);
+			viewProjection_.target = ease_.OutVec3(fTargetPos, eTargetPos);
+			ease_.Update();
 
 			// イージングが終了したら
-			if (easeTimer_ >= easeTimeMax_) {
+			if (ease_.GetIsEnd()==true) {
 				easeTimer_ = 0;
-				// 次のイージングの処理に移動
 				titleCameraState_ = SecondMove;
-
+				ease_.Reset();
 				IsEaseEnd_ = true;
 			}
 			break;

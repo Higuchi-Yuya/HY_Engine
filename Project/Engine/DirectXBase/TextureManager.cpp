@@ -1,6 +1,6 @@
 #include"TextureManager.h"
 
-
+#include <filesystem>
 #include <DirectXTexD3D12.cpp>
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -29,18 +29,27 @@ Texture* TextureManager::LoadFreeTexture(const std::string& filePath)
 	// ディレクトリパスとファイル名を連結してフルパスを得る
 	std::string fullPath = filePath;
 
-	// ワイド文字列に変換した際の文字列バッファサイズを計算
-	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+	// ファイルパスを代入
+	std::filesystem::path fsPath = fullPath;
 
 	// ワイド文字列に変換
-	std::vector<wchar_t>wfilePath(filePathBufferSize);
-	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+	std::wstring wfilePath(filePath.begin(), filePath.end());
 
+	// DDSファイルだった場合
+	if (fsPath.extension() == ".dds") {
 
-	result = LoadFromWICFile(
-		wfilePath.data(),
-		WIC_FLAGS_NONE,
-		&metadata, scratchImg);
+		result = LoadFromDDSFile(
+			wfilePath.c_str(),
+			DDS_FLAGS_NONE,
+			&metadata, scratchImg);
+	}
+	// それ以外の場合(pngやjpgなど)
+	else {
+		result = LoadFromWICFile(
+			wfilePath.c_str(),
+			WIC_FLAGS_NONE,
+			&metadata, scratchImg);
+	}
 
 	ScratchImage mipChain{};
 	// ミップマップ生成
@@ -62,7 +71,7 @@ Texture* TextureManager::LoadFreeTexture(const std::string& filePath)
 	//ヒープ設定
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	textureHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-
+	
 
 	//リソース設定
 	sTextureResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -309,30 +318,39 @@ Texture* TextureManager::Load2DTextureP(const std::string fileName)
 	// ディレクトリパスとファイル名を連結してフルパスを得る
 	std::string fullPath = sDefault2DTextureDirectoryPath + fileName;
 
-	// ワイド文字列に変換した際の文字列バッファサイズを計算
-	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+	// ファイルパスを代入
+	std::filesystem::path fsPath = fullPath;
 
 	// ワイド文字列に変換
-	std::vector<wchar_t>wfilePath(filePathBufferSize);
-	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+	std::wstring wfilePath(fullPath.begin(), fullPath.end());
 
+	// DDSファイルだった場合
+	if (fsPath.extension() == ".dds") {
 
-	result = LoadFromWICFile(
-		wfilePath.data(),
-		WIC_FLAGS_NONE,
-		&metadata, scratchImg);
+		result = LoadFromDDSFile(
+			wfilePath.c_str(),
+			DDS_FLAGS_NONE,
+			&metadata, scratchImg);
+	}
+	// それ以外の場合(pngやjpgなど)
+	else {
+		result = LoadFromWICFile(
+			wfilePath.c_str(),
+			WIC_FLAGS_NONE,
+			&metadata, scratchImg);
+		ScratchImage mipChain{};
 
-	ScratchImage mipChain{};
-	// ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(),
-		scratchImg.GetImageCount(),
-		scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
+		// ミップマップ生成
+		result = GenerateMipMaps(
+			scratchImg.GetImages(),
+			scratchImg.GetImageCount(),
+			scratchImg.GetMetadata(),
+			TEX_FILTER_DEFAULT, 0, mipChain);
 
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
+		if (SUCCEEDED(result)) {
+			scratchImg = std::move(mipChain);
+			metadata = scratchImg.GetMetadata();
+		}
 	}
 
 	// 読み込んだディフューズテクスチャをSRGBとして扱う

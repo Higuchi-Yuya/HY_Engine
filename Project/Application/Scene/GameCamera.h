@@ -2,7 +2,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "ImGuiManager.h"
-
+#include "Easing.h"
 class GameCamera
 {
 private:
@@ -15,7 +15,7 @@ private:
 	};
 
 public:// メンバ関数
-	void Initialize(const WorldTransform* worldTransform);
+	void Initialize();
 
 	void TitleUpdate();
 
@@ -78,6 +78,8 @@ private:// メンバ変数
 
 	// 
 	TitleCameraState titleCameraState_;
+
+	Easing ease_;
 
 	// イージングのタイマー
 	float easeTimer_ = 0;

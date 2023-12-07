@@ -25,7 +25,7 @@ public:// メンバ関数
 	/// <summary>
 	/// 描画処理
 	/// </summary>
-	void Draw(ID3D12GraphicsCommandList* commandList, ViewProjection* viewProjection);
+	void Draw(ViewProjection* viewProjection);
 
 	/// <summary>
 	/// 描画処理

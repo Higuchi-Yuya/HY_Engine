@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Sprite.h"
 #include "Sound.h"
 #include "Object3d.h"
@@ -9,8 +8,6 @@
 #include "LightGroup.h"
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
-#include "FbxLoader.h"
-#include "FbxAnimetion.h"
 #include "LevelLoder.h"
 #include "TextureManager.h"
 #include "Player.h"
@@ -25,12 +22,16 @@
 
 #include <vector>
 
-class CollisionManager;
-class Player;
-class TouchableObject;
 
 class GameScene
 {
+public:
+	enum ObjsType {
+		Normal,
+		Doors,
+		Ranterns,
+		HiguLumiRanterns
+	};
 public:// メンバ関数
 	
 	// デストラクタ
@@ -44,8 +45,6 @@ public:// メンバ関数
 
 	// Imguiの更新処理
 	void ImguiUpdate();
-
-	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
 
 	// 描画処理
 	void Draw2DBack();
@@ -82,13 +81,67 @@ public:// メンバ関数
 	// 敵のレベルデータを読み込む
 	void LoadEnemy();
 
+public:// セッター
+	/// <summary>
+	/// コマンドリストの設定
+	/// </summary>
+	/// <param name="dxCommon"></param>
+	void SetCmdList(ID3D12GraphicsCommandList* cmdList) { commandList_ = cmdList; }
+
+	/// <summary>
+	/// ゲームカメラを設定
+	/// </summary>
+	/// <param name="gameCamera"></param>
+	void SetGameCamera(GameCamera* gameCamera) { gameCamera_ = gameCamera; }
+
+	/// <summary>
+	/// ゲームコライダーを設定
+	/// </summary>
+	/// <param name="gameCollider">コライダーのデータ</param>
+	void SetGameCollider(GameCollider* gameCollider) { gameCollider_ = gameCollider; }
+
+	/// <summary>
+	/// モデルデータ配列を設定
+	/// </summary>
+	/// <param name="models">モデルデータ</param>
+	void SetModels(std::map<std::string, Model*> models) { models_ = models; }
+
+	/// <summary>
+	/// オブジェクト配列を設定
+	/// </summary>
+	/// <param name="objs">オブジェクトの配列</param>
+	/// <param name="objType">配列のタイプ</param>
+	void SetObjs(std::vector<Object3d*> objs,ObjsType objType);
+
+	/// <summary>
+	/// ライトグループを設定
+	/// </summary>
+	/// <param name="lightGroup">ライトグループ</param>
+	void SetLightGroup(LightGroup* lightGroup) { lightGroup_ = lightGroup; }
+
+	/// <summary>
+	/// ポイントライトの情報を設定
+	/// </summary>
+	/// <param name="pointLightsInfo">ポイントライトの情報が格納されている配列</param>
+	void SetPointInfo(std::vector<WorldTransform*> pointLightsInfo) { pointLightsInfo_ = pointLightsInfo; }
+
+public:// ゲッター
+
+	Player* GetPlayer() { return player_.get(); }
+
+	/// <summary>
+	/// シーン終了しているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsSceneFinsh() { return IsSceneFinsh_; }
+
+	/// <summary>
+	/// ゲームをクリアしているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsGameClear() { return IsGameClear_; }
+
 private:// サブクラス
-	// シーンクラス（仮）
-	enum class Scene {
-		Title,
-		Game,
-		Result,
-	};
 
 	// 敵のウェーブ
 	enum EnemyWave {
@@ -98,10 +151,6 @@ private:// サブクラス
 	};
 
 private:// プライベート関数
-	/// <summary>
-	/// タイトルシーンの更新処理
-	/// </summary>
-	void TitleUpdate();
 
 	/// <summary>
 	/// ゲームシーンの更新処理
@@ -109,14 +158,9 @@ private:// プライベート関数
 	void GameSceneUpdate();
 
 	/// <summary>
-	/// リザルトシーンの更新処理
+	/// 光源の更新処理
 	/// </summary>
-	void ResultSceneUpdate();
-
-	/// <summary>
-	/// シーンチェンジの更新処理
-	/// </summary>
-	void SceneChageUpdate();
+	void LightUpdate();
 
 	/// <summary>
 	/// エネミーのゲームシーンの更新処理
@@ -128,145 +172,33 @@ private:// メンバ変数
 	// 入力
 	std::unique_ptr<Input> input_ = nullptr;
 
-#pragma region 光源関連
-	// オブジェクト共通のライトの初期化
-	std::unique_ptr<LightGroup> light = nullptr;
+	// 借りてくるコマンドリスト
+	ID3D12GraphicsCommandList* commandList_ = nullptr;
 
-	// 平行光源
-	bool isActiveDirectional = false;
+	//	借りてくるライトグループ
+	LightGroup* lightGroup_;
 
-	// 点光源のステータス
-	float pointLightPos[3] = { 0,5,0 };
-	Vector3 pointLightColor = { 0.92f,0.684f,0.56f };
-	Vector3 pointLightAtten = { 0.12f,0.1f,0.02f };
-	bool isActivePoint = false;
-	float pointLightIndensity = 1.2f;
-	float pointLightRadius = 70;
-	float pointLightDecay = 15.5f;
-	float pointLightDistance = 10;
+	// ポイントライト情報の配列
+	std::vector<WorldTransform*> pointLightsInfo_;
 
-	// スポットライトのステータス
-	Vector3 spotLightDir = { 0,0,0 };
-	Vector3 spotLightPos = { 0,50,0 };
-	Vector3 spotLightColor = { 1,1,1 };
-	Vector3 spotLightAtten = { 0.1f,0.1f,0.05f };
-	Vector2 spotLightFactorAngle = { 10.0f,30.0f };
+	// シーン終了フラグ
+	bool IsSceneFinsh_;
+
+	// ゲームクリアしてるかフラグ
+	bool IsGameClear_;
+
 	float spotDownPosY = 0.4f;
-
-	bool isActiveSpot = true;
-
-	// 丸影のステータス
 	Vector3 circleShadowCasterPos = { 0,0,0 };
-	Vector3 circleShadowDir = { 0,-1,0 };
-	Vector3 circleShadowAtten = { 6.5f,0.6f,0.0f };
-	Vector2 circleShadowFactorAngle = { 0.0f,0.5f };
-	bool isActiveCircleShadow = true;
-
-	Vector3 AmColor = { 1,0,0 };
-	Vector3 DiColor = { 0,1,0 };
-	Vector3 SpColor = { 0,0,1 };
-
-	// フォグ
-	std::unique_ptr<Fog> fog = nullptr;
-	bool isFogActive = true;
-#pragma endregion
-
-
-#pragma region テクスチャハンドル
-
-	std::unique_ptr<Texture> textureHandleDefu;
-	std::unique_ptr<Texture> titleFontTexHandle;
-	std::unique_ptr<Texture> titleBackTexHandle;
-	std::unique_ptr<Texture> titleButtonTexHandle;
-
-	// フェードインフェードアウト用の画像ハンドル
-	std::unique_ptr<Texture> blackOutTexHandle_;
-
-	// リザルト画面のスプライト
-	std::unique_ptr<Texture> resultGameOverFontHandle_ = nullptr;
-	std::unique_ptr<Texture> resultGameClearFontHandle_ = nullptr;
-#pragma endregion
-
-
-#pragma region スプライト
-
-	std::unique_ptr<Sprite> spriteProvisional = nullptr;
-	std::unique_ptr<Sprite> titleKariFont = nullptr;
-	std::unique_ptr<Sprite> titleKariBack = nullptr;
-	std::unique_ptr<Sprite> titleKariPressA = nullptr;
-
-	std::unique_ptr<Sprite> resultGameOverFont_ = nullptr;
-	std::unique_ptr<Sprite> resultGameClearFont_ = nullptr;
-
-	Vector2 spritePos;
-
-	// フェードインフェードアウト用の画像スプライト
-	std::unique_ptr<Sprite> blackOut = nullptr;
-#pragma endregion
-
-
-#pragma region モデル
-
-	std::unique_ptr<Model> playerModel_ = nullptr;
-	std::unique_ptr<Model> modelMedama_ = nullptr;
-
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
-	std::unique_ptr<Model> modelGround_ = nullptr;
-
-	// 木
-	std::unique_ptr<Model> modelTreeBald_ = nullptr;
-	std::unique_ptr<Model> modelTreeNormal_ = nullptr;
-
-	// フェンス
-	std::unique_ptr<Model> modelFence_ = nullptr;
-	std::unique_ptr<Model> modelFencePost_ = nullptr;
-	std::unique_ptr<Model> modelLatticeDoor_ = nullptr;
-
-	// お墓
-	std::unique_ptr<Model> modelGraveCross = nullptr;
-	std::unique_ptr<Model> modelGraveSquare = nullptr;
-
-	// ランタン
-	std::unique_ptr<Model> modelWallRantern_ = nullptr;
-
-#pragma endregion
-
-
 #pragma region オブジェクト関連
 	bool isDissolve = false;
+	std::unique_ptr<Model> playerModel_ = nullptr;
 #pragma endregion
-
-
-#pragma region カメラ関連
-	// ビュープロジェクション
-	std::unique_ptr<GameCamera>gameCamera;
-#pragma endregion
-
 
 #pragma region 音関連
 	Sound sound;
 	bool isActiveSound = false;
 	bool isStopSound = false;
 #pragma endregion
-
-
-#pragma region 当たり判定
-	std::unique_ptr < GameCollider> gameCollider;
-#pragma endregion
-
-
-#pragma region FBXモデルの確認
-	//std::unique_ptr<FbxModel> fbxmodel_;
-	WorldTransform fbxTrans_;
-	//std::unique_ptr<FbxAnimetion> modelAnim_;
-
-	// 借りてくるコモン
-	DirectXCommon* dxCommon_ = nullptr;
-
-	float frem = 0;
-	uint32_t BoneNum = 0;
-#pragma endregion
-
 
 #pragma region プレイヤー関連
 	std::unique_ptr<Player> player_;
@@ -279,51 +211,17 @@ private:// メンバ変数
 	float playerPointLightDecay_ = 1;
 #pragma endregion
 
+#pragma region 当たり判定関連
+	GameCollider* gameCollider_ = nullptr;
+#pragma endregion
+
+#pragma region カメラ関連
+	GameCamera* gameCamera_ = nullptr;
+#pragma endregion
 
 #pragma region エネミー関連
 	std::vector<Enemy*>enemys_;
 #pragma endregion
-
-
-#pragma region シーンチェンジ関連
-	// シーン管理
-	Scene scene = Scene::Title;
-
-	// ブラックアウトの変数
-	float blackAlpha = 0.0f;
-	bool sceneChangeFlag = false;
-	Scene oldScene = Scene::Title;
-	bool resultChange = false;
-
-	// ゲームクリアしているかどうか
-	bool IsGameClear_ = false;
-#pragma endregion
-
-
-#pragma region レベルデータ関連
-
-	// レベルデータ
-	std::unique_ptr<LevelData> levelData_;
-
-	// レベルデータに登録するモデルの配列
-	std::map<std::string, Model*> models;
-	// レベルデータに登録するオブジェクトの配列
-	std::vector<Object3d*> objects;
-
-	// お墓のドアの配列
-	std::vector<Object3d*> latticeDoors_;
-
-	// ランタンの配列
-	std::vector<Object3d*> ranterns_;
-
-	// ランタンの高輝度用配列
-	std::vector<Object3d*> highLumiRanterns_;
-
-	// ポイントライト情報の配列
-	std::vector<WorldTransform> pointLightsInfo_;
-
-#pragma endregion
-
 
 #pragma region 敵のウェーブ関連
 
@@ -353,19 +251,34 @@ private:// メンバ変数
 
 #pragma endregion
 
-
 #pragma region UI関連
 	std::unique_ptr<TimerUI>timerUi_;
 
 	std::unique_ptr<OperationUI> operationUi_;
 #pragma endregion
 
+#pragma region ローダー関連
+	// レベルデータ
+	std::unique_ptr<LevelData> levelData_;
 
-#pragma region タイトル関連
-	// スプライトを消すフラグ
-	bool IsTitleAlpha_ = false;
-	float titleAlpha_ = 1;
 #pragma endregion
 
+#pragma region 借りてくるオブジェの配列
+
+	// レベルデータに登録するモデルの配列
+	std::map<std::string, Model*> models_;
+
+	// オブジェクトの配列(借りてくる)
+	std::vector<Object3d*> objects_;
+
+	// お墓のドアの配列(借りてくる)
+	std::vector<Object3d*> latticeDoors_;
+
+	// ランタンの配列(借りてくる)
+	std::vector<Object3d*> ranterns_;
+
+	// ランタンの高輝度用配列
+	std::vector<Object3d*> highLumiRanterns_;
+#pragma endregion
 };
 

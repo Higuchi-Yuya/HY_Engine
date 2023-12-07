@@ -27,7 +27,7 @@ public:
 	static void StaticFinalize();
 
 	// 初期化
-	void Initialize(Model* model,Player* player);
+	void Initialize(Model* model = nullptr);
 
 	// 毎フレーム処理
 	void Update()override;
@@ -71,15 +71,27 @@ public:
 	/// <param name="isAlive">生きているかフラグ</param>
 	void SetAlive(bool isAlive) { IsAlive_ = isAlive; }
 
+	/// <summary>
+	/// プレイヤーを設定
+	/// </summary>
+	/// <param name="player">プレイヤーのポインタ</param>
+	static void SetPlayer(Player* player) { player_ = player; }
+
 public:
 	// 衝突点
 	Vector3 interPos;
 	// 排斥ベクトル
 	Vector3 rejectVec;
 
-private:
+private:// 静的メンバ変数
 	// 借りてくるプレイヤーの情報を一時的に保存
-	Player* player_ = nullptr;
+	static Player* player_;
+
+	// デフォルトのモデル
+	static std::unique_ptr<Model> modelDefu_;
+
+private:
+
 
 	// 当たったかどうか
 	bool IsCollision = false;
@@ -117,13 +129,15 @@ private:
 	// 移動する前の古いポジション
 	Vector3 oldPos_{};
 
+	
+
 #pragma region スポーン関連
 	float spawnTimer = 0;
 	float spawnTimeMax = 240;
 	float spawnTimeLate = 0;
 	Vector3 spawnFirstPos_ = { 0,0,0 };
 	Vector3 spawnEndPos_;
-
+	Easing ease_;
 
 #pragma endregion
 

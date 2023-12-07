@@ -5,8 +5,8 @@
 #include "HiguLumiTarget.h"
 #include "PostTarget.h"
 #include "Vignette.h"
-#include "GameScene.h"
-
+#include "SceneManager.h"
+#include "BeatEffect.h"
 
 class PostEffectManager
 {
@@ -21,19 +21,19 @@ private:// メンバー変数
 	// ガウシアンブラー
 	std::unique_ptr<GaussianBlur>gaussianBlur_;
 
-	// 合成用のポストエフェクト
-	std::unique_ptr<PostEffectComposition>postComposition_;
-
 	// ターゲットシーン
 	std::unique_ptr<PostTarget>postTarget_;
 
 	// ビネット
 	std::unique_ptr<Vignette>vignette_;
 
+	// 鼓動エフェクト
+	std::unique_ptr<BeatEffect>beatEffect_;
+
 private:// 借りてくるもの
 
 	// ゲームシーン
-	GameScene* gameScene_ = nullptr;
+	SceneManager* sceneManager_ = nullptr;
 
 	// コモン
 	DirectXCommon* dxCommon_ = nullptr;
@@ -58,7 +58,7 @@ public:// メンバー関数
 public:// セッター
 
 	// ゲームシーンのセッター
-	void SetGameScene(GameScene* gameScene);
+	void SetSceneManager(SceneManager* sceneManager);
 
 	// コモンのセッター
 	void SetDxCommon(DirectXCommon* dxCommon);

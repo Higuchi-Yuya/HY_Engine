@@ -11,28 +11,31 @@ void PostEffectManager::Initialize()
 	gaussianBlur_ = std::make_unique<GaussianBlur>();
 	gaussianBlur_->Initialize();
 
-	postComposition_ = std::make_unique<PostEffectComposition>();
-	postComposition_->Initialize();
+
 
 	postTarget_= std::make_unique<PostTarget>();
 	postTarget_->Initialize();
 
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
+
+	beatEffect_ = std::make_unique<BeatEffect>();
+	beatEffect_->Initialize();
+	BeatEffect::SetGaussianBlur(gaussianBlur_.get());
 }
 
 void PostEffectManager::Update()
 {
 	vignette_->Update();
 
-	postComposition_->Update();
+	beatEffect_->Update();
 }
 
 void PostEffectManager::ImguiUpdate()
 {
 	vignette_->ImguiUpdate();
 
-	postComposition_->ImguiUpdate();
+	beatEffect_->ImguiUpdate();
 }
 
 void PostEffectManager::EffectBloomDraw()
@@ -50,8 +53,8 @@ void PostEffectManager::BloomDrawSetting()
 	//-----ここから 3Dモデルの描画 -----//
 
 
-	gameScene_->DrawBloomObject();
-	gameScene_->Draw3D();
+	sceneManager_->DrawBloomObject();
+	sceneManager_->Draw3D();
 
 	//-----ここまで 3Dモデルの描画 -----//
 	Object3d::PostDraw();
@@ -65,8 +68,8 @@ void PostEffectManager::BloomDrawSetting()
 	//-----ここから 3Dモデルの描画 -----//
 
 
-	gameScene_->DrawHighLumiObj();
-	gameScene_->Draw3D();
+	sceneManager_->DrawHighLumiObj();
+	sceneManager_->Draw3D();
 
 	//-----ここまで 3Dモデルの描画 -----//
 	Object3d::PostDraw();
@@ -90,24 +93,19 @@ void PostEffectManager::BloomDrawSetting()
 #pragma endregion
 
 #pragma region ブルーム用に合成させる
-	postComposition_->PreDrawScene(dxCommon_->GetCommandList());
-
-	gaussianBlur_->Draw(dxCommon_->GetCommandList());
-
-	postComposition_->PostDrawScene(dxCommon_->GetCommandList());
+	beatEffect_->DrawPass();
 #pragma endregion
 	
 	vignette_->PreDrawScene(dxCommon_->GetCommandList());
-	postComposition_->Draw(dxCommon_->GetCommandList());
+	beatEffect_->Draw();
 	
-
 	vignette_->PostDrawScene(dxCommon_->GetCommandList());
 
 }
 
-void PostEffectManager::SetGameScene(GameScene* gameScene)
+void PostEffectManager::SetSceneManager(SceneManager* sceneManager)
 {
-	gameScene_ = gameScene;
+	sceneManager_ = sceneManager;
 }
 
 void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)

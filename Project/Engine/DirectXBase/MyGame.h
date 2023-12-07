@@ -4,7 +4,8 @@
 #include "DirectXCommon.h"
 #include "SpriteManager.h"
 #include "LightGroup.h"
-#include "GameScene.h"
+#include "SceneManager.h"
+#include "FbxModel.h"
 #include "PostEffect.h"
 #include "InputManager.h"
 #include "ParticleManager.h"
@@ -88,6 +89,6 @@ private:// メンバ変数
 	std::unique_ptr<PostEffectManager> postEffectManager;
 
 	// ゲームシーン
-	std::unique_ptr<GameScene> gameScene;
+	std::unique_ptr<SceneManager> sceneManager;
 };
 

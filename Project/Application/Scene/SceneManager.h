@@ -1,12 +1,9 @@
 #pragma once
 
-
 #include "TitleScene.h"
 #include "GameScene.h"
 #include "GameClearScene.h"
 #include "GameOverScene.h"
-
-
 
 class SceneManager
 {
@@ -152,7 +149,6 @@ private:// メンバ変数
 	Vector3 spotLightAtten = { 0.1f,0.1f,0.05f };
 	Vector2 spotLightFactorAngle = { 10.0f,30.0f };
 	
-
 	bool isActiveSpot = true;
 
 	// 丸影のステータス

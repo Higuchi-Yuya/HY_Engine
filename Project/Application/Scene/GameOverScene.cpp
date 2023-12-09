@@ -8,7 +8,7 @@ void GameOverScene::Initialize()
 	// タイトルのAボタン押すフォント（仮）
 	buttonTexHandle_.reset(TextureManager::Load2DTextureP("PressA.png"));
 	// リザルト画面のゲームクリアのフォント
-	resultGameOverFontHandle_.reset(TextureManager::Load2DTextureP("Result/GameClearFont.png"));
+	resultGameOverFontHandle_.reset(TextureManager::Load2DTextureP("Result/GameOverFont.png"));
 
 	// 背景のスプライト
 	backSprite_ = std::make_unique<Sprite>();

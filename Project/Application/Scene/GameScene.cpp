@@ -403,7 +403,6 @@ void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
 void GameScene::GameSceneUpdate()
 {
 	// 入力の更新
-	input_->Update();
 
 	if (isActiveSound == true) {
 		sound.SoundPlayWave(true, 0.01f);

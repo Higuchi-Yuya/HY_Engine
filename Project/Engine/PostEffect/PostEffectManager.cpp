@@ -118,4 +118,5 @@ void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)
 	PostEffectComposition::SetDevice(dxCommon_->GetDevice());
 	PostTarget::SetDevice(dxCommon_->GetDevice());
 	Vignette::SetDevice(dxCommon_->GetDevice());
+	PostEffectRipples::SetDevice(dxCommon_->GetDevice());
 }

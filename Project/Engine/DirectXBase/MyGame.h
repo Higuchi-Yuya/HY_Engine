@@ -6,7 +6,6 @@
 #include "LightGroup.h"
 #include "SceneManager.h"
 #include "FbxModel.h"
-#include "PostEffect.h"
 #include "InputManager.h"
 #include "ParticleManager.h"
 #include "PostRenderBase.h"

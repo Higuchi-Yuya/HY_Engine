@@ -31,8 +31,8 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	lightGroup_->SetSpotLightActive(0, true);
-	lightGroup_->SetCircleShadowActive(0, true);
+	lightGroup_->SetSpotLightActive(0, false);
+	lightGroup_->SetCircleShadowActive(0, false);
 	lightGroup_->SetPointLightActive((int)(pointLightsInfo_.size() + 1), false);
 
 	// パッドでAボタンを押すか、もしくはスペースキーを押した瞬間

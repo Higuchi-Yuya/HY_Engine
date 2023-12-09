@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Engine/PostEffect/Ripples;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -92,7 +92,7 @@ copy "$(SolutionDir)External\assimp\dll\Debug\pugixml.dll" "$(TargetDir)pugixml.
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Engine/PostEffect/Ripples;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -168,10 +168,8 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="Engine\3D\FBX\FbxModel.cpp" />
     <ClCompile Include="Engine\3D\FBX\FbxAnimetion.cpp" />
-    <ClCompile Include="Engine\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Engine\Input\JoyPadInput.cpp" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
-    <ClCompile Include="Engine\PostEffect\PostColorInversion.cpp" />
     <ClCompile Include="Application\Scene\GameCamera.cpp" />
     <ClCompile Include="Engine\RenderBase\ShaderObj.cpp" />
     <ClCompile Include="Engine\Particle\ParticleManager.cpp" />
@@ -193,6 +191,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Application\Scene\GameClearScene.cpp" />
     <ClCompile Include="Application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Application\Scene\TitleScene.cpp" />
+    <ClCompile Include="Engine\PostEffect\Ripples\PostEffectRipples.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
@@ -248,10 +247,8 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Engine\3D\FBX\FbxLoader.h" />
     <ClInclude Include="Engine\3D\FBX\FbxModel.h" />
     <ClInclude Include="Engine\3D\FBX\FbxAnimetion.h" />
-    <ClInclude Include="Engine\PostEffect\PostEffect.h" />
     <ClInclude Include="Engine\Input\JoyPadInput.h" />
     <ClInclude Include="Engine\Input\InputManager.h" />
-    <ClInclude Include="Engine\PostEffect\PostColorInversion.h" />
     <ClInclude Include="Application\Scene\GameCamera.h" />
     <ClInclude Include="Engine\RenderBase\ShaderObj.h" />
     <ClInclude Include="Engine\Particle\ParticleManager.h" />
@@ -273,6 +270,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Application\Scene\GameClearScene.h" />
     <ClInclude Include="Application\Scene\GameOverScene.h" />
     <ClInclude Include="Application\Scene\TitleScene.h" />
+    <ClInclude Include="Engine\PostEffect\Ripples\PostEffectRipples.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -294,6 +292,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <None Include="Resources\Shaders\PostEffect\Composition\CompositionHeader.hlsli" />
     <None Include="Resources\Shaders\PostEffect\PostEffectHeader (2).hlsli" />
     <None Include="Resources\Shaders\PostEffect\PostEffectHeader.hlsli" />
+    <None Include="Resources\Shaders\PostEffect\Ripples\RipplesHeader.hlsli" />
     <None Include="Resources\Shaders\PostEffect\Vignette\VignetteHeader.hlsli" />
     <None Include="Resources\Shaders\Sprite\SpriteShaderHeader.hlsli" />
   </ItemGroup>
@@ -429,6 +428,18 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesPS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffect\Vignette\VignettePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

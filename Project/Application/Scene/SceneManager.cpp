@@ -594,7 +594,7 @@ void SceneManager::LightUpdate()
 		light->SetDirLightActive(0, false);
 	}
 	if (isActiveSpot == true) {
-		light->SetSpotLightActive(0, true);
+		//light->SetSpotLightActive(0, true);
 	}
 	else if (isActiveSpot == false) {
 		light->SetSpotLightActive(0, false);
@@ -673,14 +673,15 @@ void SceneManager::SceneChageUpdate()
 			blackOut->SetColor({ 1,1,1,blackAlpha });
 			if (blackAlpha >= 1) {
 				blackAlpha = 1;
+				// ここにリセット関数を置く
+				Reset();
+
 				if (gameScene_->GetIsGameClear() == true) {
 					scene_ = Scene::GameClear;
 				}
 				else {
 					scene_ = Scene::GameOver;
 				}
-				// ここにリセット関数を置く
-				Reset();
 			}
 		}
 		break;

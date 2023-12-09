@@ -1,6 +1,7 @@
 #pragma once
 #include "GaussianBlur.h"
 #include "PostEffectComposition.h"
+#include "PostEffectRipples.h"
 #include "Easing.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -107,6 +108,8 @@ private:// メンバー変数
 
 	// 合成用のポストエフェクト
 	std::unique_ptr<PostEffectComposition>postComposition_;
+	// 波紋のポストエフェクト
+	std::unique_ptr<PostEffectRipples>postRipples_;
 
 	// イージング
 	Easing ease_;
@@ -114,7 +117,6 @@ private:// メンバー変数
 	// ビートするかフラグ
 	bool IsBeat_;
 	bool IsNotBeatDo_;
-
 
 	// ビートする距離
 	float beatDistance_;
@@ -135,5 +137,9 @@ private:// メンバー変数
 	// ビートしてる状態
 	beatState beatState_;
 	notBeatState notBeatState_;
+
+	// 波紋タイム
+	float timer_ = 0;
+	float timeLimit_ = 120;
 };
 

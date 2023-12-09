@@ -10,6 +10,9 @@ void BeatEffect::Initialize()
 	postComposition_ = std::make_unique<PostEffectComposition>();
 	postComposition_->Initialize();
 
+	postRipples_ = std::make_unique<PostEffectRipples>();
+	postRipples_->Initialize();
+
 	beatDistance_ = 5;
 	beatInterval_ = 60;
 
@@ -24,6 +27,9 @@ void BeatEffect::Initialize()
 
 	beatReductionStart_ = { 0.95f,0.95f };
 	beatReductionEnd_ = { 1.0f,1.0f };
+
+	timer_ = 0;
+	timeLimit_ = 60 * 2;
 }
 
 void BeatEffect::Update()
@@ -55,6 +61,19 @@ void BeatEffect::Update()
 
 	// 合成用ポストエフェクトの更新処理
 	postComposition_->Update();
+
+	timer_++;
+	if (timer_ >= timeLimit_) {
+		timer_ = 0;
+	}
+
+	float timeRate = timer_ / timeLimit_;
+
+	postRipples_->waveFrame_ = timeRate;
+
+
+	// 波紋の更新処理
+	postRipples_->Update();
 }
 
 void BeatEffect::BeatUpdate()
@@ -156,6 +175,7 @@ void BeatEffect::NotBeatUpdate()
 void BeatEffect::ImguiUpdate()
 {
 	postComposition_->ImguiUpdate();
+	postRipples_->ImguiUpdate();
 }
 
 void BeatEffect::DrawPass()
@@ -164,10 +184,14 @@ void BeatEffect::DrawPass()
 	postComposition_->PreDrawScene(cmdList_);
 	gaussianBlur_->Draw(cmdList_);
 	postComposition_->PostDrawScene(cmdList_);
+
+	postRipples_->PreDrawScene(cmdList_);
+	// 合成用ポストエフェクトの描画
+	postComposition_->Draw(cmdList_);
+	postRipples_->PostDrawScene(cmdList_);
 }
 
 void BeatEffect::Draw()
 {
-	// 合成用ポストエフェクトの描画
-	postComposition_->Draw(cmdList_);
+	postRipples_->Draw(cmdList_);
 }

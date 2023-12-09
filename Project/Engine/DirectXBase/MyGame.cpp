@@ -168,9 +168,6 @@ void MyGame::BaseInitialize()
 	FbxModel::SetDevice(dxCommon->GetDevice());
 	FbxModel::StaticInitialize();
 
-	// ポストエフェクトの初期化
-	PostEffect::SetDevice(dxCommon->GetDevice());
-
 	// パーティクルの初期化
 	ParticleManager::StaticInitialize(dxCommon->GetDevice());
 

@@ -62,16 +62,6 @@ void BeatEffect::Update()
 	// 合成用ポストエフェクトの更新処理
 	postComposition_->Update();
 
-	timer_++;
-	if (timer_ >= timeLimit_) {
-		timer_ = 0;
-	}
-
-	float timeRate = timer_ / timeLimit_;
-
-	postRipples_->waveFrame_ = timeRate;
-
-
 	// 波紋の更新処理
 	postRipples_->Update();
 }
@@ -122,6 +112,17 @@ void BeatEffect::BeatUpdate()
 	default:
 		break;
 	}
+
+	// 波紋の処理
+	timer_++;
+	if (timer_ >= timeLimit_) {
+		timer_ = 0;
+	}
+
+	float timeRate = timer_ / timeLimit_;
+
+	postRipples_->IsActive_ = true;
+	postRipples_->waveFrame_ = timeRate;
 }
 
 void BeatEffect::NotBeatUpdate()
@@ -170,6 +171,9 @@ void BeatEffect::NotBeatUpdate()
 			break;
 		}
 	}
+
+	// 波紋をオフ
+	postRipples_->IsActive_ = false;
 }
 
 void BeatEffect::ImguiUpdate()

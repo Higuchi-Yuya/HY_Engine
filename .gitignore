@@ -99,6 +99,7 @@ StyleCopReport.xml
 *.scc
 
 /Generated
+
 !/Project/External/assimp/dll/Debug
 !/Project/External/assimp/dll/Release
 

@@ -29,7 +29,11 @@ void BeatEffect::Initialize()
 	beatReductionEnd_ = { 1.0f,1.0f };
 
 	timer_ = 0;
-	timeLimit_ = 60 * 2;
+	timeLimit_ = 60 * 4;
+
+	postRipples_->centerPos_ = { 0.5f,0.7f };
+	postRipples_->waveSpan_ = 20;
+	postRipples_->waveScale_ = 0.01f;
 }
 
 void BeatEffect::Update()
@@ -178,6 +182,21 @@ void BeatEffect::NotBeatUpdate()
 
 void BeatEffect::ImguiUpdate()
 {
+	// 表示項目の追加--------//
+	ImGui::Begin("Ripples");
+
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputFloat2("centerPos", &postRipples_->centerPos_.x);
+
+	ImGui::InputFloat("alpha", &postRipples_->alpha_);
+	ImGui::InputFloat("waveSpan", &postRipples_->waveSpan_);
+	ImGui::InputFloat("waveFrame", &postRipples_->waveFrame_);
+	ImGui::InputFloat("waveScale", &postRipples_->waveScale_);
+	ImGui::InputFloat("timeLimit", &timeLimit_);
+
+	ImGui::End();
+
 	postComposition_->ImguiUpdate();
 	postRipples_->ImguiUpdate();
 }

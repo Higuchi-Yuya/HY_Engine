@@ -229,6 +229,15 @@
     <Filter Include="ソース ファイル\Application\Effect">
       <UniqueIdentifier>{845dd74e-0acd-4629-a569-c5bae55ce1a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\PostEffect\Ripples">
+      <UniqueIdentifier>{4de0b8e2-2a34-4544-b13e-92d2701f3e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\Ripples">
+      <UniqueIdentifier>{494c5508-de96-4e48-849d-e11289fe7930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\Ripples">
+      <UniqueIdentifier>{896bd5f7-6793-4742-a221-7283608bbe82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -457,7 +466,7 @@
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Ripples\PostEffectRipples.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\PostEffect\Ripples</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -690,7 +699,7 @@
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Ripples\PostEffectRipples.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\PostEffect\Ripples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,7 +740,9 @@
     <None Include="Resources\Shaders\PostEffect\Vignette\VignetteHeader.hlsli">
       <Filter>シェーダーファイル\PostEffect\Vignette</Filter>
     </None>
-    <None Include="Resources\Shaders\PostEffect\Ripples\RipplesHeader.hlsli" />
+    <None Include="Resources\Shaders\PostEffect\Ripples\RipplesHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect\Ripples</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -812,7 +823,11 @@
     <FxCompile Include="Resources\Shaders\PostEffect\Vignette\VignetteVS.hlsl">
       <Filter>シェーダーファイル\PostEffect\Vignette</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesPS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Ripples</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Ripples</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

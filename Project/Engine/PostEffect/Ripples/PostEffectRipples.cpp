@@ -41,19 +41,7 @@ void PostEffectRipples::Update()
 
 void PostEffectRipples::ImguiUpdate()
 {
-	// 表示項目の追加--------//
-	ImGui::Begin("Ripples");
 
-	ImGui::SetNextWindowSize(ImVec2(500, 100));
-
-	ImGui::InputFloat2("centerPos", &centerPos_.x);
-
-	ImGui::InputFloat("alpha", &alpha_);
-	ImGui::InputFloat("waveSpan", &waveSpan_);
-	ImGui::InputFloat("waveFrame", &waveFrame_);
-	ImGui::InputFloat("waveScale", &waveScale_);
-
-	ImGui::End();
 }
 
 void PostEffectRipples::Draw(ID3D12GraphicsCommandList* cmdList)

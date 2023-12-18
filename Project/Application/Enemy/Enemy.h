@@ -129,6 +129,8 @@ private:
 	// 移動する前の古いポジション
 	Vector3 oldPos_{};
 
+	// 追いかけて来るかどうか
+	bool IsChase = false;
 	
 
 #pragma region スポーン関連

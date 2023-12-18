@@ -49,6 +49,7 @@ public:
 		SILHOUETTE,     // シルエット
 		TransParent,    // 窓透過用
 		Shield,			// 窓遮蔽物用
+		LightAtten,		// 光の減衰が違う用
 		BLEND_NUMMAX,
 	};
 
@@ -138,6 +139,12 @@ public: // 静的メンバ関数
 	// シルエット用のシェーダーオブジェクト
 	static void InitializeShaderSilhouette();
 
+	// ライトの減衰用のパイプライン初期化
+	static void InitGraphicsPipelineLightAtten();
+
+	// ライトの減衰用のシェーダーオブジェクト
+	static void InitShaderLightAtten();
+
 	/// <summary>
 	/// ブレンドモード設定
 	/// </summary>
@@ -179,6 +186,9 @@ private: // 静的メンバ変数
 	// パイプラインステートオブジェクト 窓遮蔽物用
 	static ComPtr<ID3D12PipelineState> sPipelinestateShield_;
 
+	// パイプラインステートオブジェクト ライトの減衰用
+	static ComPtr<ID3D12PipelineState> sPipelinestateLightAtten_;
+
 	// インプットレイアウト
 	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
 	
@@ -188,6 +198,9 @@ private: // 静的メンバ変数
 
 	static ShaderObj *sVsShader_;// 頂点シェーダー
 	static ShaderObj *sPsShader_;// ピクセルシェーダー
+
+	static ShaderObj* sLightAttenVsShader_;// 頂点シェーダー
+	static ShaderObj* sLightAttenPsShader_;// ピクセルシェーダー
 
 	static ShaderObj* sSilhouetteVsShader_;// 頂点シェーダー
 	static ShaderObj* sSilhouettePsShader_;// ピクセルシェーダー

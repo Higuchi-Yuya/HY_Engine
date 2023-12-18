@@ -11,8 +11,6 @@ void PostEffectManager::Initialize()
 	gaussianBlur_ = std::make_unique<GaussianBlur>();
 	gaussianBlur_->Initialize();
 
-
-
 	postTarget_= std::make_unique<PostTarget>();
 	postTarget_->Initialize();
 
@@ -27,8 +25,6 @@ void PostEffectManager::Initialize()
 void PostEffectManager::Update()
 {
 	vignette_->Update();
-
-	beatEffect_->Update();
 }
 
 void PostEffectManager::ImguiUpdate()
@@ -119,4 +115,5 @@ void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)
 	PostTarget::SetDevice(dxCommon_->GetDevice());
 	Vignette::SetDevice(dxCommon_->GetDevice());
 	PostEffectRipples::SetDevice(dxCommon_->GetDevice());
+	PostEffectScaling::SetDevice(dxCommon_->GetDevice());
 }

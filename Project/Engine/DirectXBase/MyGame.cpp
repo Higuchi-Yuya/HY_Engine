@@ -193,6 +193,7 @@ void MyGame::SceneInitialize()
 	sceneManager = std::make_unique<SceneManager>();
 	sceneManager->SetDxComon(dxCommon.get());
 	sceneManager->Initialize();
+	sceneManager->SetBeatEffect(postEffectManager->GetBeatEffcet());
 
 	postEffectManager->SetSceneManager(sceneManager.get());
 

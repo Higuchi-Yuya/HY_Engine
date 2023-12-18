@@ -1,7 +1,9 @@
 cbuffer cbuff0 : register(b0)
 {
-	//float4 color; // 色(RGBA)
-	//matrix mat; // ３Ｄ変換行列
+    float2 scalingTiling; // タイリング
+    float2 scalingOffset; // オフセット
+	bool isActive;        // スケーリングをオンにするかどうか
+    float alpha;          // レンダーテクスチャのアルファ値：0～1
 };
 
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
@@ -14,5 +16,4 @@ struct VSOutput
 struct PSOutput
 {
     float4 target0 : SV_TARGET0;
-    float4 target1 : SV_TARGET1;
 };

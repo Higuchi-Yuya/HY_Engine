@@ -25,6 +25,7 @@ ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSCREEN_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSilhouette_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateTransParent_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateShield_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateLightAtten_ = nullptr;
 
 std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 
@@ -34,6 +35,9 @@ ComPtr<ID3DBlob> Object3d::sErrorBlob_;
 
 ShaderObj* Object3d::sVsShader_ = nullptr;
 ShaderObj* Object3d::sPsShader_ = nullptr;
+
+ShaderObj* Object3d::sLightAttenVsShader_ = nullptr;
+ShaderObj* Object3d::sLightAttenPsShader_ = nullptr;
 
 ShaderObj* Object3d::sSilhouetteVsShader_ = nullptr;
 ShaderObj* Object3d::sSilhouettePsShader_ = nullptr;
@@ -64,6 +68,9 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 	// シルエットのシェーダーオブジェクトの初期化
 	InitializeShaderSilhouette();
 
+	// ライトの減衰用のシェーダーオブジェクトの初期化
+	InitShaderLightAtten();
+
 	// パイプライン初期化
 
 	// ノーマル
@@ -89,6 +96,9 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 
 	// 窓遮蔽物用(ステンシル書き込み側)
 	InitializeGraphicsPipelineShield();
+
+	// ライト減衰用のパイプラインの初期化
+	InitGraphicsPipelineLightAtten();
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -629,6 +639,72 @@ void Object3d::InitializeShaderSilhouette()
 	sSilhouettePsShader_->Create("Object/SilhouettePS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 }
 
+void Object3d::InitGraphicsPipelineLightAtten()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = *sLightAttenVsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = *sLightAttenPsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	gpipeline.pRootSignature = sRootsignature_.Get();
+
+	// グラフィックスパイプラインの生成
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateLightAtten_));
+	assert(SUCCEEDED(result));
+}
+
+void Object3d::InitShaderLightAtten()
+{
+	// 頂点シェーダの読み込みとコンパイル
+	sLightAttenVsShader_ = new ShaderObj;
+	sLightAttenVsShader_->Create("Object/ObjLightAttenVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+
+	// ピクセルシェーダの読み込みとコンパイル
+	sLightAttenPsShader_ = new ShaderObj;
+	sLightAttenPsShader_->Create("Object/ObjLightAttenPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+}
+
 void Object3d::InitializeRootSignature()
 {
 	HRESULT result = S_FALSE;
@@ -881,6 +957,10 @@ void Object3d::SetBlendMode(BlendMode mode)
 	case Object3d::Shield:// 窓透過用
 		sCmdList_->SetPipelineState(sPipelinestateShield_.Get());
 		break;
+
+	case Object3d::LightAtten:// 光の減衰用
+		sCmdList_->SetPipelineState(sPipelinestateLightAtten_.Get());
+		break;
 	default:
 		break;
 	}
@@ -897,6 +977,7 @@ void Object3d::StaticFinalize()
 	sPipelinestateSilhouette_ = nullptr;
 	sPipelinestateTransParent_ = nullptr;
 	sPipelinestateShield_ = nullptr;
+	sPipelinestateLightAtten_ = nullptr;
 
 	sInputLayout_.clear();
 }

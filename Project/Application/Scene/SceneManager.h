@@ -4,6 +4,7 @@
 #include "GameScene.h"
 #include "GameClearScene.h"
 #include "GameOverScene.h"
+#include "BeatEffect.h"
 
 class SceneManager
 {
@@ -76,6 +77,8 @@ public:// 静的メンバ関数
 
 public:// セッター
 	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
+	void SetBeatEffect(BeatEffect* beatEffect) { beatEffect_ = beatEffect; }
+
 public:// ゲッター
 
 private:// プレイべーとメンバ関数
@@ -109,6 +112,9 @@ private:// メンバ変数
 
 	// 借りてくるコモン
 	DirectXCommon* dxCommon_ = nullptr;
+
+	// 鼓動エフェクト
+	BeatEffect* beatEffect_ = nullptr;
 
 	// シーンの状態
 	Scene scene_ = Title;

@@ -238,6 +238,15 @@
     <Filter Include="ヘッダー ファイル\Engine\PostEffect\Ripples">
       <UniqueIdentifier>{896bd5f7-6793-4742-a221-7283608bbe82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\PostEffect\Scaling">
+      <UniqueIdentifier>{6d47f11f-21b2-4625-830c-cf7caa1ee7eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\Scaling">
+      <UniqueIdentifier>{4ea603a6-dd7e-4584-ba5b-14e04d30e573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\Scaling">
+      <UniqueIdentifier>{c1b15082-979a-46a6-809d-cc072f57816d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -467,6 +476,9 @@
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Ripples\PostEffectRipples.cpp">
       <Filter>ソース ファイル\Engine\PostEffect\Ripples</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Scaling\PostEffectScaling.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect\Scaling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -701,6 +713,9 @@
     <ClInclude Include="Engine\PostEffect\Ripples\PostEffectRipples.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect\Ripples</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Scaling\PostEffectScaling.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect\Scaling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -711,12 +726,6 @@
     </None>
     <None Include="Resources\Shaders\Object\OBJShaderHeader.hlsli">
       <Filter>シェーダーファイル\Objct</Filter>
-    </None>
-    <None Include="Resources\Shaders\PostEffect\PostEffectHeader (2).hlsli">
-      <Filter>シェーダーファイル\PostEffect</Filter>
-    </None>
-    <None Include="Resources\Shaders\PostEffect\PostEffectHeader.hlsli">
-      <Filter>シェーダーファイル\PostEffect</Filter>
     </None>
     <None Include="Resources\Shaders\Sprite\SpriteShaderHeader.hlsli">
       <Filter>シェーダーファイル\Sprite</Filter>
@@ -743,6 +752,12 @@
     <None Include="Resources\Shaders\PostEffect\Ripples\RipplesHeader.hlsli">
       <Filter>シェーダーファイル\PostEffect\Ripples</Filter>
     </None>
+    <None Include="Resources\Shaders\Object\ObjLightAttenHeader.hlsli">
+      <Filter>シェーダーファイル\Objct</Filter>
+    </None>
+    <None Include="Resources\Shaders\PostEffect\Scaling\ScalingHeader.hlsli">
+      <Filter>シェーダーファイル\PostEffect\Scaling</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -765,18 +780,6 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Object\OBJVertexShader.hlsl">
       <Filter>シェーダーファイル\Objct</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\PostEffectPS (2).hlsl">
-      <Filter>シェーダーファイル\PostEffect</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\PostEffectPS.hlsl">
-      <Filter>シェーダーファイル\PostEffect</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\PostEffectVS (2).hlsl">
-      <Filter>シェーダーファイル\PostEffect</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\PostEffect\PostEffectVS.hlsl">
-      <Filter>シェーダーファイル\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Sprite\SpritePixelShader.hlsl">
       <Filter>シェーダーファイル\Sprite</Filter>
@@ -828,6 +831,18 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffect\Ripples\RipplesVS.hlsl">
       <Filter>シェーダーファイル\PostEffect\Ripples</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Object\ObjLightAttenPS.hlsl">
+      <Filter>シェーダーファイル\Objct</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Object\ObjLightAttenVS.hlsl">
+      <Filter>シェーダーファイル\Objct</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Scaling\ScalingPS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Scaling</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffect\Scaling\ScalingVS.hlsl">
+      <Filter>シェーダーファイル\PostEffect\Scaling</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

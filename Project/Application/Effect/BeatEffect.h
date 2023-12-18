@@ -2,6 +2,7 @@
 #include "GaussianBlur.h"
 #include "PostEffectComposition.h"
 #include "PostEffectRipples.h"
+#include "PostEffectScaling.h"
 #include "Easing.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -58,6 +59,11 @@ public:// メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// リセット関数
+	/// </summary>
+	void Reset();
+
 public:// セッター
 
 	/// <summary>
@@ -110,6 +116,8 @@ private:// メンバー変数
 	std::unique_ptr<PostEffectComposition>postComposition_;
 	// 波紋のポストエフェクト
 	std::unique_ptr<PostEffectRipples>postRipples_;
+	// 拡大縮小用のポストエフェクト
+	std::unique_ptr<PostEffectScaling>postScaling_;
 
 	// イージング
 	Easing ease_;

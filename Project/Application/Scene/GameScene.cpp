@@ -146,7 +146,6 @@ void GameScene::Draw3D()
 
 	DrawShieldObj();
 
-	DrawTransParentObj();
 
 	// お墓のドアのオブジェクトの描画
 	for (auto d : latticeDoors_) {
@@ -161,6 +160,7 @@ void GameScene::Draw3D()
 	// プレイヤーの描画
 	player_->Draw(&gameCamera_->GetView());
 
+	DrawTransParentObj();
 	DrawParticle();
 }
 

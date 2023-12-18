@@ -13,8 +13,11 @@ void BeatEffect::Initialize()
 	postRipples_ = std::make_unique<PostEffectRipples>();
 	postRipples_->Initialize();
 
+	postScaling_ = std::make_unique<PostEffectScaling>();
+	postScaling_->Initialize();
+
 	beatDistance_ = 5;
-	beatInterval_ = 60;
+	beatInterval_ = 30;
 
 	IsBeat_ = true;
 	IsNotBeatDo_ = false;
@@ -23,10 +26,10 @@ void BeatEffect::Initialize()
 	notBeatState_ = _SetValue;
 
 	beatExpansionStart_ = { 1.0f,1.0f };
-	beatExpansionEnd_ = { 0.95f,0.95f };
+	beatExpansionEnd_ = { 0.96f,0.96f };
 
-	beatReductionStart_ = { 0.95f,0.95f };
-	beatReductionEnd_ = { 1.0f,1.0f };
+	beatReductionStart_ = beatExpansionEnd_;
+	beatReductionEnd_ = beatExpansionStart_;
 
 	timer_ = 0;
 	timeLimit_ = 60 * 4;
@@ -66,6 +69,9 @@ void BeatEffect::Update()
 	// 合成用ポストエフェクトの更新処理
 	postComposition_->Update();
 
+	// 拡大縮小の更新処理
+	postScaling_->Update();
+
 	// 波紋の更新処理
 	postRipples_->Update();
 }
@@ -89,7 +95,7 @@ void BeatEffect::BeatUpdate()
 		Vector2 tiling = { ease_.In(beatExpansionStart_.x,beatExpansionEnd_.x),
 						   ease_.In(beatExpansionStart_.y,beatExpansionEnd_.y) };
 
-		postComposition_->SetCompoTiling(tiling);
+		postScaling_->tailing_ = tiling;
 
 		if (ease_.GetIsEnd() == true) {
 			ease_.Reset();
@@ -105,7 +111,7 @@ void BeatEffect::BeatUpdate()
 		Vector2 tiling = { ease_.In(beatReductionStart_.x,beatReductionEnd_.x),
 						   ease_.In(beatReductionStart_.y,beatReductionEnd_.y) };
 
-		postComposition_->SetCompoTiling(tiling);
+		postScaling_->tailing_ = tiling;
 
 		if (ease_.GetIsEnd() == true) {
 			ease_.Reset();
@@ -137,7 +143,7 @@ void BeatEffect::NotBeatUpdate()
 
 	// タイリングの情報が　1.0f　未満の場合
 	// イージングの残り時間を使い戻してあげる
-	if (postComposition_->GetTiling().x < 0.99f) {
+	if (postScaling_->tailing_.x < 1.0f) {
 		switch (notBeatState_)
 		{
 		case BeatEffect::_SetValue:
@@ -146,7 +152,7 @@ void BeatEffect::NotBeatUpdate()
 			int32_t LTime = ease_.GetLimitTime() - ease_.GetTimer();
 			ease_.SetEaseLimitTime(LTime);
 
-			notBeatStart_ = postComposition_->GetTiling();
+			notBeatStart_ = postScaling_->tailing_;
 			notBeatEnd_ = { 1.0f,1.0f };
 
 			notBeatState_ = _Undo;
@@ -159,7 +165,7 @@ void BeatEffect::NotBeatUpdate()
 			Vector2 tiling = { ease_.In(notBeatStart_.x,notBeatEnd_.x),
 							   ease_.In(notBeatStart_.y,notBeatEnd_.y) };
 
-			postComposition_->SetCompoTiling(tiling);
+			postScaling_->tailing_ = tiling;
 
 			if (ease_.GetIsEnd() == true) {
 				ease_.Reset();
@@ -195,6 +201,10 @@ void BeatEffect::ImguiUpdate()
 	ImGui::InputFloat("waveScale", &postRipples_->waveScale_);
 	ImGui::InputFloat("timeLimit", &timeLimit_);
 
+	ImGui::InputFloat2("scalingTailing", &postScaling_->tailing_.x);
+	ImGui::InputFloat2("scalingOffset", &postScaling_->offset_.x);
+	ImGui::InputFloat("beatInterval", &beatInterval_);
+
 	ImGui::End();
 
 	postComposition_->ImguiUpdate();
@@ -208,13 +218,36 @@ void BeatEffect::DrawPass()
 	gaussianBlur_->Draw(cmdList_);
 	postComposition_->PostDrawScene(cmdList_);
 
-	postRipples_->PreDrawScene(cmdList_);
-	// 合成用ポストエフェクトの描画
+	// 拡大縮小の描画
+	postScaling_->PreDrawScene(cmdList_);
 	postComposition_->Draw(cmdList_);
-	postRipples_->PostDrawScene(cmdList_);
+	postScaling_->PostDrawScene(cmdList_);
+
+
+	//postRipples_->PreDrawScene(cmdList_);
+	//// 合成用ポストエフェクトの描画
+	//postComposition_->Draw(cmdList_);
+	//postRipples_->PostDrawScene(cmdList_);
 }
 
 void BeatEffect::Draw()
 {
-	postRipples_->Draw(cmdList_);
+	postComposition_->Draw(cmdList_);
+	postScaling_->Draw(cmdList_);
+	//postRipples_->Draw(cmdList_);
+}
+
+void BeatEffect::Reset()
+{
+	IsBeat_ = false;
+	IsNotBeatDo_ = false;
+
+	beatState_ = _Expansion;
+	notBeatState_ = _SetValue;
+
+	postScaling_->tailing_ = { 1,1 };
+	// 拡大縮小の更新処理
+	postScaling_->Update();
+
+	timer_ = 0;
 }

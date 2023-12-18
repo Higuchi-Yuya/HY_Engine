@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "BeatEffect.h"
 
+
 class PostEffectManager
 {
 private:// メンバー変数
@@ -62,5 +63,13 @@ public:// セッター
 
 	// コモンのセッター
 	void SetDxCommon(DirectXCommon* dxCommon);
+
+public:// ゲッター
+
+	/// <summary>
+	/// 鼓動エフェクトを取得
+	/// </summary>
+	/// <returns>鼓動エフェクトのポインタ</returns>
+	BeatEffect* GetBeatEffcet() { return beatEffect_.get(); }
 };
 

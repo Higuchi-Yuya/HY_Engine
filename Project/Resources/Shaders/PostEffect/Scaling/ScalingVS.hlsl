@@ -1,4 +1,4 @@
-#include "PostEffectHeader.hlsli"
+#include "ScalingHeader.hlsli"
 
 VSOutput main(float4 pos : POSITION, float2 uv : TEXCOORD)
 {

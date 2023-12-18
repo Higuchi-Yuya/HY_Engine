@@ -167,6 +167,7 @@ void SceneManager::Update()
 		break;
 	case SceneManager::Game:
 		gameScene_->Update();
+		beatEffect_->Update();
 		break;
 	case SceneManager::GameClear:
 		gameClearScene_->Update();
@@ -756,6 +757,7 @@ void SceneManager::Reset()
 		break;
 	case SceneManager::Game:
 		gameScene_->Reset();
+		beatEffect_->Reset();
 		break;
 	case SceneManager::GameClear:
 		gameClearScene_->Reset();

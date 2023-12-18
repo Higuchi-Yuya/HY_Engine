@@ -16,7 +16,7 @@ void BeatEffect::Initialize()
 	postScaling_ = std::make_unique<PostEffectScaling>();
 	postScaling_->Initialize();
 
-	beatDistance_ = 5;
+	beatDistance_ = 10;
 	beatInterval_ = 30;
 
 	IsBeat_ = true;
@@ -41,24 +41,8 @@ void BeatEffect::Initialize()
 
 void BeatEffect::Update()
 {
-	// ビートフラグがオンの時
-	// 基本的にずっと処理を繰り返す
-	for (auto& e : enemysInfo_) {
-		
-		Vector3 vec= e->worldTransform_.translation - player_->worldTransform_.translation;
-		float dis = vec.length();
-
-		// 敵とプレイヤーのベクトルをとり、長さが一定以下の場合鼓動のフラグをオンして
-		// ループを抜ける
-		if (dis <= beatDistance_) {
-			IsBeat_ = true;
-			break;
-		}
-		// それ以外は鼓動のフラグをオフ
-		else {
-			IsBeat_ = false;
-		}
-	}
+	// 近くに敵がいるかどうかの処理
+	NearUpdate();
 
 	// 鼓動の更新処理
 	BeatUpdate();
@@ -184,6 +168,50 @@ void BeatEffect::NotBeatUpdate()
 
 	// 波紋をオフ
 	postRipples_->IsActive_ = false;
+}
+
+void BeatEffect::NearUpdate()
+{
+	// ビートフラグがオンの時
+	// 基本的にずっと処理を繰り返す
+
+	// 凄く近い時
+	for (auto& e : enemysInfo_) {
+
+		Vector3 vec = e->worldTransform_.translation - player_->worldTransform_.translation;
+		float dis = vec.length();
+
+		// 敵とプレイヤーのベクトルをとり、長さが一定以下の場合鼓動のフラグをオンして
+		// ループを抜ける
+		if (dis <= beatDistance_ * 0.5f) {
+			IsBeat_ = true;
+			IsNear_ = true;
+			beatInterval_ = 15;
+			break;
+		}
+		// それ以外は鼓動のフラグをオフ
+		else {
+			IsBeat_ = false;
+			IsNear_ = false;
+		}
+	}
+
+	// ある程度の近さの時
+	if (IsNear_ == false) {
+		for (auto& e : enemysInfo_) {
+
+			Vector3 vec = e->worldTransform_.translation - player_->worldTransform_.translation;
+			float dis = vec.length();
+			if (dis <= beatDistance_) {
+				IsBeat_ = true;
+				beatInterval_ = 30;
+				break;
+			}
+			else {
+				IsBeat_ = false;
+			}
+		}
+	}
 }
 
 void BeatEffect::ImguiUpdate()

@@ -34,15 +34,7 @@ public:// メンバ関数
 	/// </summary>
 	void Update();
 
-	/// <summary>
-	/// 鼓動するときの処理
-	/// </summary>
-	void BeatUpdate();
 
-	/// <summary>
-	/// 鼓動範囲ではない時の処理
-	/// </summary>
-	void NotBeatUpdate();
 
 	/// <summary>
 	/// Imguiの更新処理
@@ -96,6 +88,22 @@ public:// セッター
 	/// <param name="cmdList">コマンドリスト</param>
 	static void SetCmdList(ID3D12GraphicsCommandList* cmdList) { cmdList_ = cmdList; }
 
+private:// プライベートメンバ関数
+	/// <summary>
+	/// 鼓動するときの処理
+	/// </summary>
+	void BeatUpdate();
+
+	/// <summary>
+	/// 鼓動範囲ではない時の処理
+	/// </summary>
+	void NotBeatUpdate();
+
+	/// <summary>
+	/// 近くに敵がいるかどうかの処理
+	/// </summary>
+	void NearUpdate();
+
 private:// 借りてくるもの
 
 	// ガウシアンブラー(借りてくるもの)
@@ -125,6 +133,9 @@ private:// メンバー変数
 	// ビートするかフラグ
 	bool IsBeat_;
 	bool IsNotBeatDo_;
+
+	// 近いかどうか
+	bool IsNear_;
 
 	// ビートする距離
 	float beatDistance_;

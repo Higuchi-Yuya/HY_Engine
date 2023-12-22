@@ -63,8 +63,7 @@
                     1.0
                 ]
             },
-            "file_name": "ground",
-            "tag_name": "grave"
+            "file_name": "ground"
         },
         {
             "type": "MESH",

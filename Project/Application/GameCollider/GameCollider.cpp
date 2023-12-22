@@ -46,8 +46,10 @@ void GameCollider::Initialize()
 		box_[i]->worldTransform_.UpdateMatrix();
 	}
 
-
-
+	testBox_.reset(Object3d::Create());
+	testBox_->SetModel(boxModel_.get());
+	testBox_->worldTransform_.translation.x = 2;
+	testBox_->worldTransform_.translation.y = 1;
 }
 
 void GameCollider::Updata()
@@ -65,6 +67,16 @@ void GameCollider::Updata()
 	p.center.y += 1.0f;
 	p.radius = 1.0f;
 
+	Box testB;
+	testB.center = testBox_->worldTransform_.translation;
+	testB.radius = { 1.1f,1.1f,1.1f };
+	if (Collision::CheckSphereToAABB2D(p, testB, player_->worldTransform_)) {
+		testBox_->worldTransform_.color = { 1,0,0,1 };
+	}
+	else {
+		testBox_->worldTransform_.color = { 1,1,1,1 };
+	}
+	testBox_->worldTransform_.UpdateMatrix();
 	// 当たり判定（エネミー側の反応）
 	for (auto& e : enemysInfo_) {
 		// エネミーの情報をスフィアのものに登録
@@ -287,6 +299,8 @@ void GameCollider::Draw3D(ViewProjection* viewProjection)
 	{
 		//box_[i]->Draw(viewProjection);
 	}
+
+	testBox_->Draw(viewProjection);
 }
 
 void GameCollider::AddEnemy(Enemy* enemy)

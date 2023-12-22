@@ -39,5 +39,13 @@ public:
 
 	// OBB用の分離軸に投影された軸成分から投影線分長を算出
 	static float LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3 = 0);
+
+	// 球とAABB二軸だけの当たり判定
+	static bool CheckSphereToAABB2D(const Sphere& sphere, const WorldTransform& transA, Vector3* inter = nullptr, Vector3* reject = nullptr);
+	// 球とAABB二軸だけの当たり判定
+	static bool CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldTransform&trans);
+	// 球とAABBの当たり判定の距離の平方を計算
+	static float SquareDistance_PointRectangle(Vector3 p, Vector3 c, Vector3 r);
+
 };
 

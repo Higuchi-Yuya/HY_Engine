@@ -79,45 +79,12 @@ void Enemy::Update()
 		}
 		break;
 	case Enemy::State::Alive:
-		{
-			// 移動前ポジションを代入
-			oldPos_ = worldTransform_.translation;
-
-			timer++;
-			followTimer++;
-			if (timer > maxTime) {
-				timer = 0;
-			}
-			// 借りてきたプレイヤーのポジション
-			Vector3 playerPos = player_->worldTransform_.translation;
-			if (followTimer > followTimeMax) {
-				// 追従のベクトルの更新
-				Vector3 velo = playerPos - worldTransform_.translation;
-				followVec = velo.normalize() * followSpeed;
-				followTimer = 0;
-			}
-
-			worldTransform_.translation += followVec;
-			worldTransform_.translation.y = 1.0f;
-			worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
-
-			// 死んだら状態を変更
-			if (IsAlive_ == false) {
-				nowState_ = State::Dead;
-			}
-		}
+		MoveUpdate();
 		
 		break;
 	case Enemy::State::Dead:
-		disoTimer_++;
-		disoTimeLate_ = disoTimer_ / disoTimeMax_;
-		dissolve_.isActiveDissolve_ = true;
-		dissolve_.dissolveColor_ = Vector4(0.15f, 0.0f, 0.0f, 1);
-		dissolve_.dissolveTime_ = disoTimeLate_;
+		DeadUpdate();
 
-		if (dissolve_.dissolveTime_ >= 1.0f) {
-			IsDeadMotionEnd = true;
-		}
 		break;
 	default:
 		break;
@@ -245,4 +212,48 @@ void Enemy::SetWorldPos(Vector3 pos)
 	worldTransform_.translation = pos;
 	// 行列の更新
 	worldTransform_.UpdateMatrix();
+}
+
+void Enemy::MoveUpdate()
+{
+	// 移動前ポジションを代入
+	oldPos_ = worldTransform_.translation;
+
+	timer++;
+	followTimer++;
+	if (timer > maxTime) {
+		timer = 0;
+	}
+	// 借りてきたプレイヤーのポジション
+	Vector3 playerPos = player_->worldTransform_.translation;
+
+	if (followTimer > followTimeMax) {
+		// 追従のベクトルの更新
+		Vector3 velo = playerPos - worldTransform_.translation;
+		followVec = velo.normalize() * followSpeed;
+		followTimer = 0;
+	}
+
+	//worldTransform_.translation += followVec;
+	worldTransform_.translation.y = 1.0f;
+	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
+
+	// 死んだら状態を変更
+	if (IsAlive_ == false) {
+		nowState_ = State::Dead;
+	}
+}
+
+void Enemy::DeadUpdate()
+{
+	// ディゾルブの処理
+	disoTimer_++;
+	disoTimeLate_ = disoTimer_ / disoTimeMax_;
+	dissolve_.isActiveDissolve_ = true;
+	dissolve_.dissolveColor_ = Vector4(0.15f, 0.0f, 0.0f, 1);
+	dissolve_.dissolveTime_ = disoTimeLate_;
+
+	if (dissolve_.dissolveTime_ >= 1.0f) {
+		IsDeadMotionEnd = true;
+	}
 }

@@ -47,6 +47,7 @@ public:
 	// 押し戻し衝突判定コールバック関数
 	void pushBackOnCol();
 
+public:// ゲッター
 	// 生きているかを取得
 	const bool GetAlive() { return IsAlive_; }
 
@@ -59,6 +60,7 @@ public:
 	// 移動前のポジションの取得
 	const Vector3 GetOldPos() { return oldPos_; }
 
+public:// セッター
 	// ワールドトランスフォームの情報をセット
 	void SetWorldTransInfo(WorldTransform worldTrans);
 
@@ -76,6 +78,17 @@ public:
 	/// </summary>
 	/// <param name="player">プレイヤーのポインタ</param>
 	static void SetPlayer(Player* player) { player_ = player; }
+
+private:// プライベート関数
+	/// <summary>
+	/// 移動の更新処理
+	/// </summary>
+	void MoveUpdate();
+
+	/// <summary>
+	/// 死亡時の更新処理
+	/// </summary>
+	void DeadUpdate();
 
 public:
 	// 衝突点

@@ -589,3 +589,126 @@ float Collision::LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Ve
 
 	return r1 + r2 + r3;
 }
+
+bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const WorldTransform& transA, Vector3* inter, Vector3* reject)
+{
+	inter, reject;
+	Box box;
+	// ボックス構造体に情報を登録
+	box.center = transA.translation;
+	box.maxRadius = (transA.maxVertex_ * transA.scale);
+	box.maxRadius.x = abs(box.maxRadius.x);
+	box.maxRadius.y = abs(box.maxRadius.y);
+	box.maxRadius.z = abs(box.maxRadius.z);
+
+	// 円の中心と矩形のtransAの間の距離の平方を計算
+	float sqDist = SquareDistance_PointRectangle(sphere.center, box.center, box.maxRadius);
+
+	// 円と矩形 r が交差するのは、それらの間の平方した距離が
+	// 平方した円の半径よりも小さい場合
+	if (sqDist <= sphere.radius * sphere.radius) {
+		return true;
+	}
+	return false;
+}
+
+bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldTransform& trans)
+{
+	Vector3 leftTopPos;
+	Vector3 rightTopPos;
+	Vector3 leftDownPos;
+	Vector3 rightDownPos;
+
+	Vector3 sc = sphere.center;
+
+	leftTopPos.x = box.center.x - box.radius.x;
+	leftTopPos.z = box.center.z + box.radius.z;
+
+	rightTopPos.x = box.center.x + box.radius.x;
+	rightTopPos.z = box.center.z + box.radius.z;
+
+	leftDownPos.x= box.center.x - box.radius.x;
+	leftDownPos.z = box.center.z - box.radius.z;
+
+	rightDownPos.x = box.center.x + box.radius.x;
+	rightDownPos.z = box.center.z - box.radius.z;
+
+	bool A = false, B = false, C = false, D = false, E = false, F = false;
+
+	C, D, E, F;
+	// 上下の範囲判定
+	if (sc.x > leftTopPos.x &&
+		sc.x < rightDownPos.x &&
+		sc.z < leftTopPos.z + sphere.radius&&
+		sc.z > rightDownPos.z - sphere.radius ){
+		// 上へ押し出し
+		if (sc.z > box.center.z) {
+			trans.translation.z = trans.oldTranslation.z;
+		}
+		// 下への押し出し
+		if (sc.z < box.center.z) {
+			trans.translation.z = trans.oldTranslation.z;
+		}
+		A = true;
+	}
+	// 左右の範囲判定
+	if (sc.x > leftTopPos.x - sphere.radius &&
+		sc.x < rightDownPos.x + sphere.radius &&
+		sc.z < leftTopPos.z  &&
+		sc.z > rightDownPos.z ) {
+		// 右へ押し出し
+		if (sc.x > box.center.x) {
+			trans.translation.x = trans.oldTranslation.x;
+		}
+		// 左への押し出し
+		if (sc.x < box.center.x) {
+			trans.translation.x = trans.oldTranslation.x;
+		}
+		B = true;
+	}
+	// 左上の範囲判定
+	if (((leftTopPos.x - sc.x) * (leftTopPos.x - sc.x)) +
+		((leftTopPos.z - sc.z) * (leftTopPos.z - sc.z)) < sphere.radius * sphere.radius) {
+		C = true;
+	}
+	// 右上の範囲判定
+	if (((rightDownPos.x - sc.x) * (rightDownPos.x - sc.x)) +
+		((leftTopPos.z - sc.z) * (leftTopPos.z - sc.z)) < sphere.radius * sphere.radius) {
+		D = true;
+	}
+	// 左下の範囲判定
+	if (((rightDownPos.x - sc.x) * (rightDownPos.x - sc.x)) +
+		((rightDownPos.z - sc.z) * (rightDownPos.z - sc.z)) < sphere.radius * sphere.radius) {
+		E = true;
+	}
+	// 右下の範囲判定
+	if (((leftTopPos.x - sc.x) * (leftTopPos.x - sc.x)) +
+		((rightDownPos.z - sc.z) * (rightDownPos.z - sc.z)) < sphere.radius * sphere.radius) {
+		F = true;
+	}
+	if (A == true || B == true ||
+		C == true || D == true ||
+		E == true || F == true) {
+		return true;
+	}
+	return false;
+}
+
+float Collision::SquareDistance_PointRectangle(Vector3 p, Vector3 c, Vector3 r)
+{
+	float sqDist = 0.0f;
+	if (p.x < c.x) {
+		sqDist += (r.x - p.x)* (r.x - p.x);
+	}
+	if (p.x > c.x + r.x) {
+		sqDist += (p.x - c.x - r.x) * (p.x - c.x - r.x);
+	}
+	if (p.z < c.z) {
+		sqDist += (r.z - p.z) * (r.z - p.z);
+	}
+	if (p.z > c.z + r.z) {
+		sqDist += (p.z - c.z - r.z) * (p.z - c.z - r.z);
+	}
+
+	return sqDist;
+}

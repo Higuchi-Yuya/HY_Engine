@@ -156,7 +156,7 @@ void GameScene::Draw3D()
 	for (auto o : objects_) {
 		o->Draw(&gameCamera_->GetView());
 	}
-
+	gameCollider_->Draw3D(&gameCamera_->GetView());
 	// プレイヤーの描画
 	player_->Draw(&gameCamera_->GetView());
 

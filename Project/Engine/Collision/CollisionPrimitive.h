@@ -18,6 +18,8 @@ struct Box
 	// 中心座標
 	Vector3 center = { 0,0,0 };
 
+	Vector3 radius = { 1,1,1 };
+
 	// 半径
 	Vector3 minRadius = { 1,1,1 };
 	Vector3 maxRadius = { 1,1,1 };

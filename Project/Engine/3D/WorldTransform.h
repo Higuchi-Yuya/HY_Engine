@@ -52,6 +52,9 @@ public:// パブリック変数
 	// X,Y,Z軸回りのローカル回転角
 	Vector3 rotation = { 0, 0, 0 };
 
+	// 古い座標
+	Vector3 oldTranslation = { 0,0,0 };
+
 	// ローカル座標
 	Vector3 translation = { 0, 0, 0 };
 

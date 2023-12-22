@@ -77,6 +77,7 @@ private:// メンバ変数
 	std::unique_ptr<Model> boxModel_ = nullptr;
 	std::unique_ptr<Object3d> box_[4];
 
+	std::unique_ptr<Object3d> testBox_;
 #pragma region パーティクル
 	// パーティクルのテクスチャ
 	std::unique_ptr<Texture> particleTex_;

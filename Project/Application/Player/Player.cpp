@@ -83,6 +83,8 @@ void Player::Update()
 {
 	// 生きている間の更新処理
 	if (IsAlive_){
+		// 前フレームの座標を代入
+		worldTransform_.oldTranslation = worldTransform_.translation;
 
 		// 移動の更新処理
 		MoveUpdate();

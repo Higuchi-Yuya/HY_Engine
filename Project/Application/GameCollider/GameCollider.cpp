@@ -1,5 +1,5 @@
 #include "GameCollider.h"
-#include "Collision.h"
+
 
 
 void GameCollider::Initialize()
@@ -59,195 +59,30 @@ void GameCollider::Updata()
 		return x->GetAlive() == false;
 		}), enemysInfo_.end());
 
-	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
-
 	// プレイヤーの情報をスフィアのものに登録
-	Sphere p;
-	p.center = player_->worldTransform_.translation;
-	p.center.y += 1.0f;
-	p.radius = 1.0f;
+	pcol_.center = player_->worldTransform_.translation;
+	pcol_.center.y += 1.0f;
+	pcol_.radius = 1.0f;
 
 	Box testB;
 	testB.center = testBox_->worldTransform_.translation;
 	testB.radius = { 1.1f,1.1f,1.1f };
-	if (Collision::CheckSphereToAABB2D(p, testB, player_->worldTransform_)) {
+	if (Collision::CheckSphereToAABB2D(pcol_, testB, player_->worldTransform_)) {
 		testBox_->worldTransform_.color = { 1,0,0,1 };
 	}
 	else {
 		testBox_->worldTransform_.color = { 1,1,1,1 };
 	}
 	testBox_->worldTransform_.UpdateMatrix();
-	// 当たり判定（エネミー側の反応）
-	for (auto& e : enemysInfo_) {
-		// エネミーの情報をスフィアのものに登録
-		Sphere sphereE;
-		sphereE.center = e->worldTransform_.translation;
-		sphereE.radius = 1.0f;
 
-		if (e->GetState() == Enemy::State::Alive && Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
-			// エネミーがわを赤くする（仮）
-			e->worldTransform_.color = { 1,0,0,1 };
-			//e->SetAlive(false);
-			// プレイヤーのヒットフラグを立てる
-			isPlayerHit = true;
+	// 敵周りの当たり判定処理
+	EnemyCollisionUpdate();
 
-		}
-		else {
-			player_->OnColUpSpeed();
-			e->worldTransform_.color = { 1,1,1,1 };
-		}
+	// フィールドオブジェクトや壁の当たり判定処理
+	ObjAronudCollisionUpdate();
 
-		// -------------敵とプレイヤーの弾の当たり判定------------ //
-		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-
-			// プレイヤーの弾の情報をスフィアのものに登録
-			Sphere pB;
-			pB.center = playerbullet->worldTransform_.translation;
-			pB.radius = 1.0f;
-
-			// プレイヤーの弾とエネミーの当たり判定
-			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
-				// エネミーが死亡
-				e->OnCollision();
-				// 弾を消す
-				playerbullet->OnCollision();
-			}
-		}
-
-		// ----------敵と敵同士の当たり判定-------------- //
-		for (auto& e2 : enemysInfo_) {
-			if (e2 != e) {
-				Sphere sphereE2;
-				sphereE2.center = e2->worldTransform_.translation;
-				sphereE2.radius = 1.0f;
-
-				if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
-					e->pushBackOnCol();
-				}
-			}
-		}
-
-
-		// -----------プレイヤーと敵の当たり判定------------- //
-		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, p, &e->interPos, &e->rejectVec)) {
-			e->pushBackOnCol();
-
-			// プレイヤーの前方情報をスフィアのものに登録
-			Sphere frontP;
-			frontP.center = player_->GetFrontPos();
-			//frontP.center.y += 1.0f;
-			frontP.radius = 0.8f;
-			if (Collision::CheckSphere2Sphere(sphereE, frontP)) {
-				player_->OnColDownSpeed();
-			}
-			else {
-				player_->OnColUpSpeed();
-			}
-		}
-
-		// -----------敵とフィールドのオブジェクトの当たり判定------------- //
-		for (auto obj : objectsInfo_) {
-			Sphere sphereE2;
-			sphereE2.center = obj->worldTransform_.translation;
-			sphereE2.center.y += 1;
-			sphereE2.radius = 1.0f;
-
-			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
-				e->pushBackOnCol();
-			}
-		}
-	}
-
-	// フィールドのオブジェクトの当たり判定
-	for (auto obj : objectsInfo_) {
-		Sphere sphereObj;
-		sphereObj.center = obj->worldTransform_.translation;
-		sphereObj.center.y = 1.0f;
-		sphereObj.radius = 0.6f;
-
-		// -----------プレイヤーとフィールドのオブジェクトの当たり判定----------- //
-		if (Collision::CheckSphere2Sphere(p, sphereObj, &player_->interPos, &player_->rejectVec)) {
-			player_->pushBackOnCol();
-		}
-
-		// -------------プレイヤーの弾とフィールドのオブジェクトの当たり判定------------ //
-		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-
-			// プレイヤーの弾の情報をスフィアのものに登録
-			Sphere pB;
-			pB.center = playerbullet->worldTransform_.translation;
-			pB.radius = playerbullet->worldTransform_.scale.x;
-
-			// プレイヤーの弾とエネミーの当たり判定
-			if (Collision::CheckSphere2Sphere(sphereObj, pB)) {
-				// 弾を消す
-				playerbullet->OnCollision();
-			}
-		}
-	}
-
-	// 壁との当たり判定
-	for (size_t i = 0; i < 4; i++)
-	{
-		// ------------プレイヤーと壁の当たり判定---------- //
-		if (Collision::CheckSphere2AABB(p, box_[i]->worldTransform_, &player_->interPos, &player_->rejectVec)) {
-			player_->pushBackOnCol();
-		}
-
-		// ------------敵と壁の当たり判定----------- //
-		for (auto& e : enemysInfo_) {
-			// エネミーの情報をスフィアのものに登録
-			Sphere sphereE;
-			sphereE.center = e->worldTransform_.translation;
-			sphereE.radius = 1.0f;
-
-			if (Collision::CheckSphere2AABB(sphereE, box_[i]->worldTransform_, &e->interPos, &e->rejectVec)) {
-				box_[i]->worldTransform_.color = { 1,0,0,1 };
-				e->pushBackOnCol();
-			}
-		}
-
-		// --------プレイヤーの弾と壁の当たり判定---------- //
-		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-
-			// プレイヤーの弾の情報をスフィアのものに登録
-			Sphere pB;
-			pB.center = playerbullet->worldTransform_.translation;
-			pB.radius = 1.0f;
-
-			if (Collision::CheckSphere2AABB(pB, box_[i]->worldTransform_)) {
-				// 弾を消す
-				playerbullet->OnCollision();
-			}
-		}
-
-		box_[i]->Update();
-	}
-
-	if (isPlayerHit == true) {
-		// ヒット時に一度パーティクルを出す
-		if (isPartile == false) {
-			OnColParticle();
-			player_->OnColHitPoint();
-			isPartile = true;
-		}
-
-	}
-	// パーティクルが出たあとプレイヤーの無敵時間のタイマーを進める
-	if (isPartile == true) {
-		playerHitTimer++;
-
-		// 無敵時間を過ぎたらプレイヤーの当たり判定を再びとれるようにする
-		if (playerHitTimer > playerHitTimeMax) {
-			playerHitTimer = 0;
-			isPartile = false;
-			isPlayerHit = false;
-		}
-	}
-
-	// パーティクルの更新処理
-	particleMan_->Update();
-
+	// プレイヤー周りの当たり判定処理
+	PlayerCollisionUpdate();
 
 }
 
@@ -321,4 +156,198 @@ void GameCollider::SetPlayer(Player* player)
 void GameCollider::Reset()
 {
 	enemysInfo_.clear();
+}
+
+void GameCollider::EnemyCollisionUpdate()
+{
+	// プレイヤーのバレット情報を格納する配列
+	std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+
+	// 当たり判定（エネミー側の反応）
+	for (auto& e : enemysInfo_) {
+		// エネミーの情報をスフィアのものに登録
+		Sphere sphereE;
+		sphereE.center = e->worldTransform_.translation;
+		sphereE.radius = 1.0f;
+
+		Sphere sphereERange;
+		sphereERange.center = e->worldTransform_.translation;
+		sphereERange.radius = 8.0f;
+		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(pcol_, sphereERange)) {
+			e->SetAliveState(Enemy::AliveState::Tracking);
+
+			if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
+				// エネミーがわを赤くする（仮）
+				e->worldTransform_.color = { 1,0,0,1 };
+				//e->SetAlive(false);
+				// プレイヤーのヒットフラグを立てる
+				isPlayerHit = true;
+
+			}
+		}
+		else {
+			player_->OnColUpSpeed();
+			e->SetAliveState(Enemy::AliveState::Patrol);
+			e->worldTransform_.color = { 1,1,1,1 };
+		}
+
+		// -------------敵とプレイヤーの弾の当たり判定------------ //
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+
+			// プレイヤーの弾の情報をスフィアのものに登録
+			Sphere pB;
+			pB.center = playerbullet->worldTransform_.translation;
+			pB.radius = 1.0f;
+
+			// プレイヤーの弾とエネミーの当たり判定
+			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
+				// エネミーが死亡
+				e->OnCollision();
+				// 弾を消す
+				playerbullet->OnCollision();
+			}
+		}
+
+		// ----------敵と敵同士の当たり判定-------------- //
+		for (auto& e2 : enemysInfo_) {
+			if (e2 != e) {
+				Sphere sphereE2;
+				sphereE2.center = e2->worldTransform_.translation;
+				sphereE2.radius = 1.0f;
+
+				if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
+					e->pushBackOnCol();
+				}
+			}
+		}
+
+
+		// -----------プレイヤーと敵の当たり判定------------- //
+		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pcol_, &e->interPos, &e->rejectVec)) {
+			e->pushBackOnCol();
+
+			// プレイヤーの前方情報をスフィアのものに登録
+			Sphere frontP;
+			frontP.center = player_->GetFrontPos();
+			//frontP.center.y += 1.0f;
+			frontP.radius = 0.8f;
+			if (Collision::CheckSphere2Sphere(sphereE, frontP)) {
+				player_->OnColDownSpeed();
+			}
+			else {
+				player_->OnColUpSpeed();
+			}
+		}
+
+		// -----------敵とフィールドのオブジェクトの当たり判定------------- //
+		for (auto obj : objectsInfo_) {
+			Sphere sphereE2;
+			sphereE2.center = obj->worldTransform_.translation;
+			sphereE2.center.y += 1;
+			sphereE2.radius = 1.0f;
+
+			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
+				e->pushBackOnCol();
+			}
+		}
+	}
+}
+
+void GameCollider::PlayerCollisionUpdate()
+{
+	if (isPlayerHit == true) {
+		// ヒット時に一度パーティクルを出す
+		if (isPartile == false) {
+			OnColParticle();
+			player_->OnColHitPoint();
+			isPartile = true;
+		}
+
+	}
+	// パーティクルが出たあとプレイヤーの無敵時間のタイマーを進める
+	if (isPartile == true) {
+		playerHitTimer++;
+
+		// 無敵時間を過ぎたらプレイヤーの当たり判定を再びとれるようにする
+		if (playerHitTimer > playerHitTimeMax) {
+			playerHitTimer = 0;
+			isPartile = false;
+			isPlayerHit = false;
+		}
+	}
+
+	// パーティクルの更新処理
+	particleMan_->Update();
+}
+
+void GameCollider::ObjAronudCollisionUpdate()
+{
+	// プレイヤーのバレット情報を格納する配列
+	std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+
+	// フィールドのオブジェクトの当たり判定
+	for (auto obj : objectsInfo_) {
+		Sphere sphereObj;
+		sphereObj.center = obj->worldTransform_.translation;
+		sphereObj.center.y = 1.0f;
+		sphereObj.radius = 0.6f;
+
+		// -----------プレイヤーとフィールドのオブジェクトの当たり判定----------- //
+		if (Collision::CheckSphere2Sphere(pcol_, sphereObj, &player_->interPos, &player_->rejectVec)) {
+			player_->pushBackOnCol();
+		}
+
+		// -------------プレイヤーの弾とフィールドのオブジェクトの当たり判定------------ //
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+
+			// プレイヤーの弾の情報をスフィアのものに登録
+			Sphere pB;
+			pB.center = playerbullet->worldTransform_.translation;
+			pB.radius = playerbullet->worldTransform_.scale.x;
+
+			// プレイヤーの弾とエネミーの当たり判定
+			if (Collision::CheckSphere2Sphere(sphereObj, pB)) {
+				// 弾を消す
+				playerbullet->OnCollision();
+			}
+		}
+	}
+
+	// 壁との当たり判定
+	for (size_t i = 0; i < 4; i++)
+	{
+		// ------------プレイヤーと壁の当たり判定---------- //
+		if (Collision::CheckSphere2AABB(pcol_, box_[i]->worldTransform_, &player_->interPos, &player_->rejectVec)) {
+			player_->pushBackOnCol();
+		}
+
+		// ------------敵と壁の当たり判定----------- //
+		for (auto& e : enemysInfo_) {
+			// エネミーの情報をスフィアのものに登録
+			Sphere sphereE;
+			sphereE.center = e->worldTransform_.translation;
+			sphereE.radius = 1.0f;
+
+			if (Collision::CheckSphere2AABB(sphereE, box_[i]->worldTransform_, &e->interPos, &e->rejectVec)) {
+				box_[i]->worldTransform_.color = { 1,0,0,1 };
+				e->pushBackOnCol();
+			}
+		}
+
+		// --------プレイヤーの弾と壁の当たり判定---------- //
+		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
+
+			// プレイヤーの弾の情報をスフィアのものに登録
+			Sphere pB;
+			pB.center = playerbullet->worldTransform_.translation;
+			pB.radius = 1.0f;
+
+			if (Collision::CheckSphere2AABB(pB, box_[i]->worldTransform_)) {
+				// 弾を消す
+				playerbullet->OnCollision();
+			}
+		}
+
+		box_[i]->Update();
+	}
 }

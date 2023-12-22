@@ -51,7 +51,7 @@ void GameScene::Initialize()
 
 #pragma region ローダー読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("Scene"));
+	levelData_.reset(LevelLoader::LoadFile("field"));
 
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
@@ -146,6 +146,7 @@ void GameScene::Draw3D()
 
 	DrawShieldObj();
 
+	DrawTransParentObj();
 
 	// お墓のドアのオブジェクトの描画
 	for (auto d : latticeDoors_) {
@@ -160,7 +161,6 @@ void GameScene::Draw3D()
 	// プレイヤーの描画
 	player_->Draw(&gameCamera_->GetView());
 
-	DrawTransParentObj();
 	DrawParticle();
 }
 

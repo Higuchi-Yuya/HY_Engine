@@ -58,6 +58,8 @@ public:// ゲッター
 	// プレイヤーの生きているフラグの取得
 	const bool GetIsAlive()const;
 
+	std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
+
 public:// セッター
 
 	// ワールドトランスフォームの情報をセット
@@ -66,7 +68,7 @@ public:// セッター
 	// ゲームカメラをセット
 	void SetGameCamera(GameCamera* gameCamera);
 
-	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
+	
 
 public:// 当たり判定
 

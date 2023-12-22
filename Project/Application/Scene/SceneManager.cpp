@@ -392,7 +392,7 @@ void SceneManager::InitLoader()
 {
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("Scene"));
+	levelData_.reset(LevelLoader::LoadFile("field"));
 
 	// モデルデータをモデルのリストに登録
 	models.insert(std::make_pair("skydome", modelSkydome_.get()));

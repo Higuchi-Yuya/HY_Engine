@@ -79,7 +79,7 @@ void Enemy::Update()
 		}
 		break;
 	case Enemy::State::Alive:
-		MoveUpdate();
+		AliveUpdate();
 		
 		break;
 	case Enemy::State::Dead:
@@ -214,7 +214,24 @@ void Enemy::SetWorldPos(Vector3 pos)
 	worldTransform_.UpdateMatrix();
 }
 
-void Enemy::MoveUpdate()
+void Enemy::AliveUpdate()
+{
+	switch (aliveState_)
+	{
+	case Enemy::Patrol:
+
+
+		break;
+	case Enemy::Tracking:
+		TrackingUpdate();
+
+		break;
+	default:
+		break;
+	}
+}
+
+void Enemy::TrackingUpdate()
 {
 	// 移動前ポジションを代入
 	oldPos_ = worldTransform_.translation;
@@ -234,7 +251,7 @@ void Enemy::MoveUpdate()
 		followTimer = 0;
 	}
 
-	//worldTransform_.translation += followVec;
+	worldTransform_.translation += followVec;
 	worldTransform_.translation.y = 1.0f;
 	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 

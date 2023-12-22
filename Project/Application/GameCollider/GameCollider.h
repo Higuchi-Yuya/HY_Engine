@@ -2,7 +2,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "ParticleManager.h"
-
+#include "Collision.h"
 
 class GameCollider
 {
@@ -56,7 +56,14 @@ public:// メンバ関数
 	void Reset();
 
 private:// プライベート関数
+	// エネミー関連の当たり判定処理
+	void EnemyCollisionUpdate();
 
+	// プレイヤー周りの当たり判定処理
+	void PlayerCollisionUpdate();
+
+	// オブジェクト周りとの当たり判定処理
+	void ObjAronudCollisionUpdate();
 
 private:// メンバ変数
 
@@ -78,6 +85,11 @@ private:// メンバ変数
 	std::unique_ptr<Object3d> box_[4];
 
 	std::unique_ptr<Object3d> testBox_;
+
+	// プレイヤーの情報を格納するスフィア
+	Sphere pcol_;
+
+
 #pragma region パーティクル
 	// パーティクルのテクスチャ
 	std::unique_ptr<Texture> particleTex_;

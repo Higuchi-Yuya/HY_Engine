@@ -73,9 +73,9 @@ void Player::InitializeFlashLightRange()
 	flashLightRangeObj_.Initialize();
 	flashLightRangeObj_.SetModel(flashLightRangeModel_.get());
 	
-	flashLightRangeObj_.worldTransform_.scale = { 2.5f,1.5f,2.0f };
+	flashLightRangeObj_.worldTransform_.scale = { 2.5f,1.5f,3.0f };
 
-	flashLightRangeObj_.worldTransform_.translation = { 0,0,2.2f };
+	flashLightRangeObj_.worldTransform_.translation = { 0,0,3.3f };
 	flashLightRangeObj_.worldTransform_.parent_ = &worldTransform_;
 }
 
@@ -183,7 +183,7 @@ void Player::SetGameCamera(GameCamera* gameCamera)
 	bGameCamera = gameCamera;
 }
 
-const std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
+std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
 {
 	return bullets_;
 }

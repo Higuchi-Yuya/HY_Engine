@@ -104,8 +104,8 @@ void MyGame::Draw()
 	Draw2DFront();
 
 	#pragma region IMGUIの描画
-	//imguiManager->Draw();
-#pragma endregion
+	imguiManager->Draw();
+	#pragma endregion
 
 	// 描画コマンドの終了
 	dxCommon->PostDraw();

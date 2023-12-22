@@ -15,6 +15,12 @@ public:// サブクラス
 		Dead,// 死んでる時
 	};
 
+	enum AliveState
+	{
+		Patrol,//巡回
+		Tracking,//追尾
+	};
+
 public:
 	/// <summary>
 	/// 静的初期化
@@ -79,11 +85,23 @@ public:// セッター
 	/// <param name="player">プレイヤーのポインタ</param>
 	static void SetPlayer(Player* player) { player_ = player; }
 
+	/// <summary>
+	/// 敵の生きているときの行動状態を設定
+	/// </summary>
+	/// <param name="aState">状態</param>
+	void SetAliveState(AliveState aState) { aliveState_ = aState; }
+
 private:// プライベート関数
+
+	/// <summary>
+	/// 生きている時の更新処理
+	/// </summary>
+	void AliveUpdate();
+
 	/// <summary>
 	/// 移動の更新処理
 	/// </summary>
-	void MoveUpdate();
+	void TrackingUpdate();
 
 	/// <summary>
 	/// 死亡時の更新処理
@@ -145,6 +163,8 @@ private:
 	// 追いかけて来るかどうか
 	bool IsChase = false;
 	
+	// 生きてる時の状態推移
+	AliveState aliveState_ = AliveState::Patrol;
 
 #pragma region スポーン関連
 	float spawnTimer = 0;

@@ -172,10 +172,10 @@ void GameCollider::EnemyCollisionUpdate()
 
 		Sphere sphereERange;
 		sphereERange.center = e->worldTransform_.translation;
-		sphereERange.radius = 8.0f;
+		sphereERange.radius = 7.0f;
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(pcol_, sphereERange)) {
 			e->SetAliveState(Enemy::AliveState::Tracking);
-
+			e->ResetBack();
 			if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 				// エネミーがわを赤くする（仮）
 				e->worldTransform_.color = { 1,0,0,1 };
@@ -185,10 +185,11 @@ void GameCollider::EnemyCollisionUpdate()
 
 			}
 		}
-		else {
+		else if(e->GetAliveState()!=Enemy::AliveState::Patrol) {
 			player_->OnColUpSpeed();
-			e->SetAliveState(Enemy::AliveState::Patrol);
-			e->worldTransform_.color = { 1,1,1,1 };
+			e->SetAliveState(Enemy::AliveState::Back);
+			e->worldTransform_.color.y = 1;
+			e->worldTransform_.color.z = 1;
 		}
 
 		// -------------敵とプレイヤーの弾の当たり判定------------ //

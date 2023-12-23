@@ -68,6 +68,12 @@ bool Easing::GetIsEnd()
 	return IsEnd_;
 }
 
+float Easing::Lerp(const float startPos, const float endPos)
+{
+	float dis = endPos - startPos;
+	return dis * timeRate_ + startPos;
+}
+
 //追加
 float Easing::In(float start, float end)
 {

@@ -18,6 +18,7 @@ public:// サブクラス
 	enum AliveState
 	{
 		Patrol,//巡回
+		Back,// 戻る
 		Tracking,//追尾
 	};
 
@@ -53,6 +54,9 @@ public:
 	// 押し戻し衝突判定コールバック関数
 	void pushBackOnCol();
 
+	// 戻るフェーズ関連をリセット
+	void ResetBack();
+
 public:// ゲッター
 	// 生きているかを取得
 	const bool GetAlive() { return IsAlive_; }
@@ -62,6 +66,9 @@ public:// ゲッター
 
 	// 今の状態を取得
 	const State GetState() { return nowState_; }
+
+	// 生きているときの今の状態を取得
+	const AliveState GetAliveState() { return aliveState_; }
 
 	// 移動前のポジションの取得
 	const Vector3 GetOldPos() { return oldPos_; }
@@ -97,6 +104,11 @@ private:// プライベート関数
 	/// 生きている時の更新処理
 	/// </summary>
 	void AliveUpdate();
+
+	/// <summary>
+	/// 巡回の更新処理
+	/// </summary>
+	void PatrolUpdate();
 
 	/// <summary>
 	/// 移動の更新処理
@@ -165,6 +177,29 @@ private:
 	
 	// 生きてる時の状態推移
 	AliveState aliveState_ = AliveState::Patrol;
+
+#pragma region パトロール関連
+
+	// パトロールする経路のポイントの座標
+	std::vector<Vector3> patrolPos_;
+
+	// パトロール座標の何番目を参照しているか
+	int32_t patrolPosNum_ = 0;
+
+	Easing easePatrol_;
+	
+	WorldTransform testW_;
+
+	bool IsPatrolEnd_ = false;
+#pragma endregion
+
+#pragma region 戻るフェーズ関連
+	Easing easeAlpha_;
+	int32_t backWaitTimeLimit_ = 60;
+
+	bool IsAlphaZero_ = false;
+#pragma endregion
+
 
 #pragma region スポーン関連
 	float spawnTimer = 0;

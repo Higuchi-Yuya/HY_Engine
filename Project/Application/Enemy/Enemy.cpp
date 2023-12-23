@@ -4,6 +4,16 @@
 #include "Easing.h"
 
 
+bool is_float_equal(Vector3 l, Vector3 r)
+{
+	if (r.x == std::nextafter(l.x, r.x) &&
+		r.y == std::nextafter(l.y, r.y) &&
+		r.z == std::nextafter(l.z, r.z)) {
+		return true;
+	}
+	return false;
+}
+
 std::unique_ptr<Texture> Enemy::sParticleTex_ = nullptr;
 Player* Enemy::player_ = nullptr;
 std::unique_ptr<Model> Enemy::modelDefu_ = nullptr;
@@ -48,6 +58,12 @@ void Enemy::Initialize(Model* model)
 
 	// ライフの初期化
 	nowLife_ = maxLife_;
+
+	testW_ = worldTransform_;
+	testW_.translation.x += 5;
+
+	patrolPos_.push_back(worldTransform_.translation);
+	patrolPos_.push_back(testW_.translation);
 }
 
 void Enemy::Update()
@@ -58,7 +74,7 @@ void Enemy::Update()
 		// スポーンの最初のポジションがセットされたら
 		if (spawnFirstPos_ != 0) {
 			ease_.SetEaseLimitTime(240);
-			
+
 			float spawnPy = (float)ease_.In(spawnFirstPos_.y, spawnEndPos_.y);
 			ease_.Update();
 			worldTransform_.translation.y = spawnPy;
@@ -80,7 +96,7 @@ void Enemy::Update()
 		break;
 	case Enemy::State::Alive:
 		AliveUpdate();
-		
+
 		break;
 	case Enemy::State::Dead:
 		DeadUpdate();
@@ -134,7 +150,7 @@ void Enemy::ParticleUpdate()
 void Enemy::Draw(ViewProjection* view)
 {
 	Object3d::Draw(view);
-	
+
 }
 
 void Enemy::DrawParticle(ViewProjection* view)
@@ -199,6 +215,17 @@ void Enemy::pushBackOnCol()
 	worldTransform_.UpdateMatrix();
 }
 
+void Enemy::ResetBack()
+{
+	IsAlphaZero_ = false;
+	worldTransform_.color.w = 1;
+	easeAlpha_.Reset();
+
+	IsPatrolEnd_ = false;
+	patrolPosNum_ = 0;
+	easePatrol_.Reset();
+}
+
 void Enemy::SetWorldTransInfo(WorldTransform worldTrans)
 {
 	worldTransform_.translation = worldTrans.translation;
@@ -219,8 +246,34 @@ void Enemy::AliveUpdate()
 	switch (aliveState_)
 	{
 	case Enemy::Patrol:
+		PatrolUpdate();
 
+		break;
+	case Enemy::Back:
+		if (IsAlphaZero_ == false) {
+			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
 
+			easeAlpha_.Update();
+			worldTransform_.color.w = easeAlpha_.easeOutCubic(1, 0);
+
+			if (easeAlpha_.GetIsEnd() == true) {
+				easeAlpha_.Reset();
+				IsAlphaZero_ = true;
+				worldTransform_.translation.x = patrolPos_[0].x;
+				worldTransform_.translation.z = patrolPos_[0].z;
+			}
+		}
+		if (IsAlphaZero_ == true) {
+			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
+
+			easeAlpha_.Update();
+			worldTransform_.color.w = easeAlpha_.easeOutCubic(0, 1);
+
+			if (easeAlpha_.GetIsEnd() == true) {
+				easeAlpha_.Reset();
+				aliveState_ = Patrol;
+			}
+		}
 		break;
 	case Enemy::Tracking:
 		TrackingUpdate();
@@ -228,6 +281,61 @@ void Enemy::AliveUpdate()
 		break;
 	default:
 		break;
+	}
+
+	// 死んだら状態を変更
+	if (IsAlive_ == false) {
+		nowState_ = State::Dead;
+	}
+}
+
+void Enemy::PatrolUpdate()
+{
+	// 行きルート
+	if (IsPatrolEnd_ == false) {
+
+		if (patrolPosNum_ != patrolPos_.size() - 1) {
+			easePatrol_.SetEaseLimitTime(120);
+			easePatrol_.Update();
+
+			worldTransform_.translation.x = easePatrol_.Lerp(patrolPos_[patrolPosNum_].x, patrolPos_[patrolPosNum_ + 1].x);
+			worldTransform_.translation.z = easePatrol_.Lerp(patrolPos_[patrolPosNum_].z, patrolPos_[patrolPosNum_ + 1].z);
+
+			if (easePatrol_.GetIsEnd() == true) {
+
+				patrolPosNum_++;
+			}
+
+		}
+		if (patrolPosNum_ == patrolPos_.size() - 1 &&
+			easePatrol_.GetIsEnd() == true) {
+			easePatrol_.Reset();
+			IsPatrolEnd_ = true;
+		}
+
+
+	}
+	// 戻りルート
+	if (IsPatrolEnd_ == true) {
+
+		if (patrolPosNum_ != 0) {
+			easePatrol_.SetEaseLimitTime(120);
+			easePatrol_.Update();
+
+			worldTransform_.translation.x = easePatrol_.Lerp(patrolPos_[patrolPosNum_].x, patrolPos_[patrolPosNum_ - 1].x);
+			worldTransform_.translation.z = easePatrol_.Lerp(patrolPos_[patrolPosNum_].z, patrolPos_[patrolPosNum_ - 1].z);
+
+			if (easePatrol_.GetIsEnd() == true) {
+
+				patrolPosNum_--;
+			}
+
+		}
+		if (patrolPosNum_ == 0 &&
+			easePatrol_.GetIsEnd() == true) {
+			easePatrol_.Reset();
+			IsPatrolEnd_ = false;
+		}
 	}
 }
 
@@ -255,10 +363,7 @@ void Enemy::TrackingUpdate()
 	worldTransform_.translation.y = 1.0f;
 	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 
-	// 死んだら状態を変更
-	if (IsAlive_ == false) {
-		nowState_ = State::Dead;
-	}
+
 }
 
 void Enemy::DeadUpdate()

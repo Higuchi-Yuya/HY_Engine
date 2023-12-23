@@ -82,6 +82,7 @@ public:// ゲッター
 	/// <returns></returns>
 	bool GetIsEnd();
 public:
+	float Lerp(const float startPos, const float endPos);
 
 	float In(float start, float end);
 

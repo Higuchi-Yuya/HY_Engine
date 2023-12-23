@@ -146,7 +146,6 @@ void GameScene::Draw3D()
 
 	DrawShieldObj();
 
-	DrawTransParentObj();
 
 	// お墓のドアのオブジェクトの描画
 	for (auto d : latticeDoors_) {
@@ -161,6 +160,7 @@ void GameScene::Draw3D()
 	// プレイヤーの描画
 	player_->Draw(&gameCamera_->GetView());
 
+	DrawTransParentObj();
 	DrawParticle();
 }
 
@@ -205,7 +205,7 @@ void GameScene::DrawHighLumiObj()
 void GameScene::DrawTransParentObj()
 {
 	// オブジェクトのパイプラインをステンシルの読み込み側に変更
-	Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 
 	// 敵の描画
 	for (auto e : enemys_) {

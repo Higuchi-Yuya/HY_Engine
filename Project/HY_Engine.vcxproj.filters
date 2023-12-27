@@ -247,6 +247,9 @@
     <Filter Include="ヘッダー ファイル\Engine\PostEffect\Scaling">
       <UniqueIdentifier>{c1b15082-979a-46a6-809d-cc072f57816d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Billboard">
+      <UniqueIdentifier>{f67bb793-d1e1-4d24-8079-58642c1b4dbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -479,6 +482,9 @@
     </ClCompile>
     <ClCompile Include="Engine\PostEffect\Scaling\PostEffectScaling.cpp">
       <Filter>ソース ファイル\Engine\PostEffect\Scaling</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2D\BillboardTex.cpp">
+      <Filter>ソース ファイル\Engine\2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -716,6 +722,9 @@
     <ClInclude Include="Engine\PostEffect\Scaling\PostEffectScaling.h">
       <Filter>ヘッダー ファイル\Engine\PostEffect\Scaling</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\2D\BillboardTex.h">
+      <Filter>ヘッダー ファイル\Engine\2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -757,6 +766,9 @@
     </None>
     <None Include="Resources\Shaders\PostEffect\Scaling\ScalingHeader.hlsli">
       <Filter>シェーダーファイル\PostEffect\Scaling</Filter>
+    </None>
+    <None Include="Resources\Shaders\Billboard\BasicShaderHeader.hlsli">
+      <Filter>シェーダーファイル\Billboard</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -843,6 +855,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffect\Scaling\ScalingVS.hlsl">
       <Filter>シェーダーファイル\PostEffect\Scaling</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Billboard\BasicPixelShader.hlsl">
+      <Filter>シェーダーファイル\Billboard</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Billboard\BasicVertexShader.hlsl">
+      <Filter>シェーダーファイル\Billboard</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

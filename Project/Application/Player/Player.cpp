@@ -93,7 +93,7 @@ void Player::Update()
 		Attack();
 
 		// プレイヤーのHPが０以下ならプレイヤーが死ぬ
-		if (playerHitPoint_ <= ZERO) {
+		if (playerHitPoint_ <= (float)ZERO) {
 			IsAlive_ = false;
 		}
 	}

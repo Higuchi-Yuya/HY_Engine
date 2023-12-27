@@ -69,6 +69,11 @@ void WorldTransform::UpdateMatrix()
 	matWorld_.identity();
 	matWorld_ *= matScale;
 	matWorld_ *= matRot;
+	// ビルボード行列があれば計算
+	// 移動の計算の前にやる
+	if (matBillboard_ != nullptr) {
+		matWorld_ *= *matBillboard_;
+	}
 	matWorld_ *= matTrans;
 
 	if (parent_ != nullptr) {

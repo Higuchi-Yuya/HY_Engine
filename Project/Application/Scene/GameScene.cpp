@@ -103,6 +103,9 @@ void GameScene::Initialize()
 	BeatEffect::SetPlayer(player_.get());
 	BeatEffect::SetEnemys(enemys_);
 
+	testBillboard.reset(BillboardTex::Create());
+	testBillboard->LoadTexture("texture.png");
+	testBillboard->SetViewProjection(&gameCamera_->GetView());
 }
 
 void GameScene::Update()
@@ -110,6 +113,7 @@ void GameScene::Update()
 	input_->Update();
 
 	GameSceneUpdate();
+	testBillboard->Update();
 }
 
 void GameScene::ImguiUpdate()
@@ -162,6 +166,10 @@ void GameScene::Draw3D()
 
 	DrawTransParentObj();
 	DrawParticle();
+
+	BillboardTex::PreDraw(commandList_);
+	testBillboard->Draw();
+
 }
 
 void GameScene::DrawParticle()

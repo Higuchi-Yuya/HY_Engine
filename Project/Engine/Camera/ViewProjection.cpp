@@ -120,9 +120,11 @@ void ViewProjection::UpdateMatrix()
 	matBillboard_.m[0][0] = cameraAxisX.x;
 	matBillboard_.m[0][1] = cameraAxisX.y;
 	matBillboard_.m[0][2] = cameraAxisX.z;
+
 	matBillboard_.m[1][0] = cameraAxisY.x;
 	matBillboard_.m[1][1] = cameraAxisY.y;
 	matBillboard_.m[1][2] = cameraAxisY.z;
+
 	matBillboard_.m[2][0] = cameraAxisZ.x;
 	matBillboard_.m[2][1] = cameraAxisZ.y;
 	matBillboard_.m[2][2] = cameraAxisZ.z;

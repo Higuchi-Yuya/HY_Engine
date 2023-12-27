@@ -119,6 +119,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Application\Player\Player.cpp" />
     <ClCompile Include="Application\Enemy\Enemy.cpp" />
     <ClCompile Include="Application\Effect\BeatEffect.cpp" />
+    <ClCompile Include="Engine\2D\BillboardTex.cpp" />
     <ClCompile Include="Engine\3D\Object\Dissolve.cpp" />
     <ClCompile Include="Engine\Collision\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collision\CollisionManager.cpp" />
@@ -198,6 +199,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Application\Player\Player.h" />
     <ClInclude Include="Application\Enemy\Enemy.h" />
     <ClInclude Include="Application\Effect\BeatEffect.h" />
+    <ClInclude Include="Engine\2D\BillboardTex.h" />
     <ClInclude Include="Engine\3D\Object\Dissolve.h" />
     <ClInclude Include="Engine\Collision\CollisionAttribute.h" />
     <ClInclude Include="Engine\3D\Object\Mesh.h" />
@@ -285,6 +287,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Resources\shaders\Basic.hlsli" />
+    <None Include="Resources\Shaders\Billboard\BasicShaderHeader.hlsli" />
     <None Include="Resources\Shaders\FBX\FBX.hlsli" />
     <None Include="Resources\Shaders\Object\ObjLightAttenHeader.hlsli" />
     <None Include="Resources\Shaders\Object\OBJShaderHeader.hlsli" />
@@ -306,6 +309,18 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shaders\BasicVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Billboard\BasicPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Billboard\BasicVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>

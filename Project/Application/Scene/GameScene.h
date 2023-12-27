@@ -21,6 +21,7 @@
 #include "GameCollider.h"
 
 #include <vector>
+#include <BillboardTex.h>
 
 
 class GameScene
@@ -280,5 +281,8 @@ private:// メンバ変数
 	// ランタンの高輝度用配列
 	std::vector<Object3d*> highLumiRanterns_;
 #pragma endregion
+
+	// テストビルぼ
+	std::unique_ptr < BillboardTex> testBillboard;
 };
 

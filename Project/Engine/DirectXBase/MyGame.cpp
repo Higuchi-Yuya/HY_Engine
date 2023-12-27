@@ -51,7 +51,7 @@ void MyGame::Finalize()
 	Object3d::StaticFinalize();
 	FbxModel::StaticFainalize();
 	PostRenderBase::Destroy();
-
+	BillboardTex::StaticFinalize();
 	// WindouwsAPIの終了処理
 	winApp->Finalize();
 
@@ -179,6 +179,9 @@ void MyGame::BaseInitialize()
 	postEffectManager = std::make_unique<PostEffectManager>();
 	postEffectManager->SetDxCommon(dxCommon.get());
 	postEffectManager->Initialize();
+
+	// ビルボードの初期化
+	BillboardTex::StaticInitialize(dxCommon->GetDevice());
 
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//

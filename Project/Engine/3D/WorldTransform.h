@@ -34,6 +34,9 @@ public:// メンバ関数
 	// バッファのゲッター
 	ID3D12Resource *GetBuff() { return constBuff_.Get(); }
 
+	// ビルボード行列を設定
+	void SetBillboardMat(Matrix4* matBill) { matBillboard_ = matBill; }
+
 private:// プライベート関数
 	/// <summary>
 	/// 定数バッファ生成
@@ -83,5 +86,8 @@ private:// メンバ変数
 
 	// マッピング済みアドレス
 	ConstBufferDataWorldTransform* constMap_ = nullptr;
+
+	// ビルボード行列
+	Matrix4* matBillboard_ = nullptr;
 };
 

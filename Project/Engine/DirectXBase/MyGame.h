@@ -10,6 +10,7 @@
 #include "ParticleManager.h"
 #include "PostRenderBase.h"
 #include "PostEffectManager.h"
+#include "BillboardTex.h"
 
 class MyGame
 {

@@ -106,17 +106,6 @@ void BeatEffect::BeatUpdate()
 	default:
 		break;
 	}
-
-	// 波紋の処理
-	timer_++;
-	if (timer_ >= timeLimit_) {
-		timer_ = 0;
-	}
-
-	float timeRate = timer_ / timeLimit_;
-
-	postRipples_->IsActive_ = true;
-	postRipples_->waveFrame_ = timeRate;
 }
 
 void BeatEffect::NotBeatUpdate()
@@ -183,7 +172,8 @@ void BeatEffect::NearUpdate()
 
 		// 敵とプレイヤーのベクトルをとり、長さが一定以下の場合鼓動のフラグをオンして
 		// ループを抜ける
-		if (dis <= beatDistance_ * 0.5f) {
+		float nearDistance = beatDistance_ * 0.5f;
+		if (dis <= nearDistance) {
 			IsBeat_ = true;
 			IsNear_ = true;
 			beatInterval_ = 15;
@@ -250,32 +240,26 @@ void BeatEffect::DrawPass()
 	postScaling_->PreDrawScene(cmdList_);
 	postComposition_->Draw(cmdList_);
 	postScaling_->PostDrawScene(cmdList_);
-
-
-	//postRipples_->PreDrawScene(cmdList_);
-	//// 合成用ポストエフェクトの描画
-	//postComposition_->Draw(cmdList_);
-	//postRipples_->PostDrawScene(cmdList_);
 }
 
 void BeatEffect::Draw()
 {
 	postComposition_->Draw(cmdList_);
 	postScaling_->Draw(cmdList_);
-	//postRipples_->Draw(cmdList_);
 }
 
 void BeatEffect::Reset()
 {
+	// 状態を分別するのをリセット
 	IsBeat_ = false;
 	IsNotBeatDo_ = false;
 
+	// 状態をリセット
 	beatState_ = _Expansion;
 	notBeatState_ = _SetValue;
 
+	// 拡縮のタイリングをリセット
 	postScaling_->tailing_ = { 1,1 };
 	// 拡大縮小の更新処理
 	postScaling_->Update();
-
-	timer_ = 0;
 }

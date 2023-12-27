@@ -115,7 +115,7 @@ void TitleScene::DrawBloomObject()
 {
 	// ランタンのオブジェクトの描画
 	for (auto L : ranterns_) {
-		L->worldTransform_.IsBloom_ = 0;
+		L->worldTransform_.IsBloom_ = false;
 		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}
@@ -125,7 +125,7 @@ void TitleScene::DrawHighLumiObj()
 {
 	// ランタンのオブジェクトの描画
 	for (auto L : highLumiRanterns_) {
-		L->worldTransform_.IsBloom_ = 1;
+		L->worldTransform_.IsBloom_ = true;
 		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}

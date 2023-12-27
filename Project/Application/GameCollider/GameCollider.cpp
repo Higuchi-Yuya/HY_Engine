@@ -52,7 +52,7 @@ void GameCollider::Initialize()
 	testBox_->worldTransform_.translation.y = 1;
 }
 
-void GameCollider::Updata()
+void GameCollider::Update()
 {
 	//寿命が尽きた敵の情報を全削除
 	enemysInfo_.erase(std::remove_if(enemysInfo_.begin(), enemysInfo_.end(), [](Enemy* x) {

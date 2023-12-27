@@ -245,11 +245,12 @@ void Enemy::AliveUpdate()
 {
 	switch (aliveState_)
 	{
-	case Enemy::Patrol:
+	case Enemy::Patrol:// 巡回
 		PatrolUpdate();
 
 		break;
-	case Enemy::Back:
+	case Enemy::Back:// 戻るとき
+		// アルファ値がゼロではないとき
 		if (IsAlphaZero_ == false) {
 			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
 
@@ -263,6 +264,7 @@ void Enemy::AliveUpdate()
 				worldTransform_.translation.z = patrolPos_[0].z;
 			}
 		}
+		// アルファ値がぜろのとき
 		if (IsAlphaZero_ == true) {
 			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
 
@@ -275,7 +277,7 @@ void Enemy::AliveUpdate()
 			}
 		}
 		break;
-	case Enemy::Tracking:
+	case Enemy::Tracking:// 追跡
 		TrackingUpdate();
 
 		break;
@@ -291,10 +293,12 @@ void Enemy::AliveUpdate()
 
 void Enemy::PatrolUpdate()
 {
+	int32_t patrolMaxNum = (int32_t)patrolPos_.size() - 1;
+
 	// 行きルート
 	if (IsPatrolEnd_ == false) {
 
-		if (patrolPosNum_ != patrolPos_.size() - 1) {
+		if (patrolPosNum_ != patrolMaxNum) {
 			easePatrol_.SetEaseLimitTime(120);
 			easePatrol_.Update();
 
@@ -307,7 +311,7 @@ void Enemy::PatrolUpdate()
 			}
 
 		}
-		if (patrolPosNum_ == patrolPos_.size() - 1 &&
+		if (patrolPosNum_ == patrolMaxNum &&
 			easePatrol_.GetIsEnd() == true) {
 			easePatrol_.Reset();
 			IsPatrolEnd_ = true;

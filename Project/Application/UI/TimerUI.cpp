@@ -79,8 +79,8 @@ void TimerUI::Reset()
 void TimerUI::TextureSetting()
 {
 	gameTimer_++;
-
-	if (gameTimer_ >= 60)
+	int32_t gameTimeLimit = 60;
+	if (gameTimer_ >= gameTimeLimit)
 	{
 		gameTimer_ = 0;
 		remainTime_--;

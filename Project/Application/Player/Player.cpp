@@ -93,7 +93,7 @@ void Player::Update()
 		Attack();
 
 		// プレイヤーのHPが０以下ならプレイヤーが死ぬ
-		if (playerHitPoint_ <= 0) {
+		if (playerHitPoint_ <= ZERO) {
 			IsAlive_ = false;
 		}
 	}
@@ -211,16 +211,17 @@ void Player::pushBackOnCol()
 
 void Player::OnColDownSpeed()
 {
-	moveSpeed_ /= 2;
+	float downS = 2;
+	moveSpeed_ /= downS;
 	if (moveSpeed_ <= moveSpeedMin_) {
 		moveSpeed_ = moveSpeedMin_;
 	}
-
 }
 
 void Player::OnColUpSpeed()
 {
-	moveSpeed_ += 0.005f;
+	float upS = 0.005f;
+	moveSpeed_ += upS;
 	if (moveSpeed_ >= moveSpeedMax_) {
 		moveSpeed_ = moveSpeedMax_;
 	}
@@ -268,8 +269,8 @@ void Player::DrawFlashLightRange(ViewProjection* view)
 void Player::Reset()
 {
 	// ワールド変換データのリセット
-	worldTransform_.translation = { 0,0,0 };
-	worldTransform_.rotation = { 0,0,0 };
+	worldTransform_.translation = { ZERO,ZERO,ZERO };
+	worldTransform_.rotation = { ZERO,ZERO,ZERO };
 
 	// プレイヤーのHPのリセット
 	playerHitPoint_ = playerHitPointMax_;
@@ -288,43 +289,45 @@ void Player::MoveUpdate()
 
 	// 移動ベクトルをY軸周りの角度で回転
 
-	Vector3 vectorX = { 0.01f,0,0 };
+	Vector3 vectorX = { 0.01f,ZERO,ZERO };
 	vectorX = MathUtil::MatVector(worldTransform_.matWorld_,vectorX);
 	vectorX.normalize();
-	Vector3 vectorZ = { 0,0,-0.01f };
+	Vector3 vectorZ = { ZERO,ZERO,-0.01f };
 	vectorZ = MathUtil::MatVector(worldTransform_.matWorld_, vectorZ);
 	vectorZ.normalize();
 
 	vectorX *= moveValue;
 	vectorZ *= moveValue;
 
-	Vector3 move = { 0,0,0 };
-	Vector3 rot = { 0,0,0 };
+	Vector3 move = { ZERO,ZERO,ZERO };
+	Vector3 rot = { ZERO,ZERO,ZERO };
 
-	Vector2 joyStickInfoL = { 0,0 };
-	Vector2 joyStickInfoR = { 0,0 };
+	Vector2 joyStickInfoL = { ZERO,ZERO };
+	Vector2 joyStickInfoR = { ZERO,ZERO };
 
 	// 向いてる方向に移動
-	moveVel_ = { 0,0,0 };
-	frontVec_ = { 0,0,0 };
+	moveVel_ = { ZERO,ZERO,ZERO };
+	frontVec_ = { ZERO,ZERO,ZERO };
 
 	// カメラの前ベクトル
 	Vector3 cameForward = worldTransform_.translation - bGameCamera->GetView().eye;
-	cameForward.y = 0.0f;
+	cameForward.y = ZERO;
 
 	// カメラの右ベクトル
-	Vector3 up = { 0, 1, 0 };
+	Vector3 up = { ZERO, 1,ZERO };
 	Vector3 cameRight = Vector3::Cross(cameForward, up);
 
 	Vector3 stick =
 	{
 		Pad::GetStick(PadCode::LeftStick, 300).x,
-		0,
+		ZERO,
 		Pad::GetStick(PadCode::LeftStick, 300).y,
 	};
-	if (stick != 0.0f)
+
+	// スティック入力がゼロでは無いなら
+	if (stick != ZERO)
 	{
-		Vector3 stickMoveVec = {0,0,0};
+		Vector3 stickMoveVec = { ZERO,ZERO,ZERO };
 
 		stickMoveVec.x = stick.normalize().x;
 		stickMoveVec.z = stick.normalize().z;
@@ -332,9 +335,9 @@ void Player::MoveUpdate()
 		frontVec_ = cameForward * -stickMoveVec.z + cameRight * -stickMoveVec.x;
 	}
 
-	if (frontVec_ != 0.0f)
+	// 前ベクトルがゼロではないなら
+	if (frontVec_ != ZERO)
 	{
-
 		if (IsAttack_ == true) {
 			moveSpeed_ = 0.08f;
 			moveVel_ = frontVec_.normalize() * moveSpeed_;

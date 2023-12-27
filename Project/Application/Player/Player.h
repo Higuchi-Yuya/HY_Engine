@@ -8,6 +8,13 @@
 
 class Player:public Object3d
 {
+private:
+	enum 
+	{
+		ZERO,
+		ONE,
+	};
+	
 public:
 	// 3Dオブジェクト生成
 	static Player* Create(Model* model = nullptr);

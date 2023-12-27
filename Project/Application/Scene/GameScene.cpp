@@ -186,7 +186,7 @@ void GameScene::DrawBloomObject()
 {
 	// ランタンのオブジェクトの描画
 	for (auto L : ranterns_) {
-		L->worldTransform_.IsBloom_ = 0;
+		L->worldTransform_.IsBloom_ = false;
 		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}
@@ -196,7 +196,7 @@ void GameScene::DrawHighLumiObj()
 {
 	// ランタンのオブジェクトの描画
 	for (auto L : highLumiRanterns_) {
-		L->worldTransform_.IsBloom_ = 1;
+		L->worldTransform_.IsBloom_ = true;
 		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}
@@ -404,15 +404,6 @@ void GameScene::GameSceneUpdate()
 {
 	// 入力の更新
 
-	if (isActiveSound == true) {
-		sound.SoundPlayWave(true, 0.01f);
-		isActiveSound = false;
-	}
-	if (isStopSound == true) {
-		sound.StopWave();
-		isStopSound = false;
-	}
-
 	// プレイヤーの更新処理
 	player_->Update();
 
@@ -440,7 +431,7 @@ void GameScene::GameSceneUpdate()
 	}
 
 	// 当たり判定関連の更新処理
-	gameCollider_->Updata();
+	gameCollider_->Update();
 
 	// タイマーの更新処理
 	timerUi_->Update();

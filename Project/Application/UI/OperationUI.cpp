@@ -54,6 +54,7 @@ void OperationUI::Init()
 
 void OperationUI::Update()
 {
+	// 左スティックの処理
 	Vector2 leftStick = Pad::GetStick(PadCode::LeftStick, 300);
 	if (leftStick != 0)
 	{

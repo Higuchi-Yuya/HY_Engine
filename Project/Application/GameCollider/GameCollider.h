@@ -15,7 +15,7 @@ public:// メンバ関数
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Updata();
+	void Update();
 
 	/// <summary>
 	/// エネミーと当たったらプレイヤーの中心にパーティクルを出す処理

@@ -127,48 +127,14 @@ void GameCamera::SetIsCanEase(bool IsCanEase)
 
 void GameCamera::RotUpdate()
 {
-	// Rスティックでカメラ回転
-	if (JoypadInput::GetStick(PadCode::RightStick).x > 450) {
-		if (aInfo >= 360) {
-			aInfo = 0;
-			angle_ = { 0,0,0 };
-		}
-		aInfo += 2;
-		angle_.x = MathUtil::DegreeToRadian(aInfo);
-		angle_.z = MathUtil::DegreeToRadian(aInfo);
-		rotPos.x = viewProjection_.target.x + cosf(angle_.x) * velLength;
-		rotPos.y = 15;
-		rotPos.z = viewProjection_.target.z + sinf(angle_.z) * velLength;
-		rotNorm = rotPos.normalize();
-		vel = rotPos.normalize();
-		vel.y = 15;
-	}
-
 	const float cameraEaseSpeed = 0.1f;//1e-100f;
 
-	
-	//vel.y = 15;
 	viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
 	viewProjection_.eye = ((viewProjection_.target + cameraFPos));// - viewProjection_.eye)* cameraEaseSpeed;
-	//viewProjection_.eye = rotPos;
-	// プレイヤーの座標を注視点にセット
-	//viewProjection_.target = playerPos_;
-	// 方向ベクトルを求める
-
-
-
-	if (JoypadInput::GetStick(PadCode::RightStick).x < -450) {
-
-	}
-
-
-	////cameraVecRot_.y = atan2f(dirVec.x, dirVec.z);
-	//worldTransform_.translation += dir_;
 
 	// 行列を初期化
 	worldTransform_.matWorld_.identity();
 
 	// 行列を計算
 	worldTransform_.UpdateMatrix();
-
 }

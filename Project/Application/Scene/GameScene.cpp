@@ -105,7 +105,10 @@ void GameScene::Initialize()
 
 	testBillboard.reset(BillboardTex::Create());
 	testBillboard->LoadTexture("texture.png");
-	testBillboard->SetViewProjection(&gameCamera_->GetView());
+	BillboardTex::SetViewProjection(&gameCamera_->GetView());
+
+	testItem_.Initialize(" ");
+	
 }
 
 void GameScene::Update()
@@ -114,6 +117,7 @@ void GameScene::Update()
 
 	GameSceneUpdate();
 	testBillboard->Update();
+	testItem_.Update();
 }
 
 void GameScene::ImguiUpdate()
@@ -167,9 +171,10 @@ void GameScene::Draw3D()
 	DrawTransParentObj();
 	DrawParticle();
 
-	BillboardTex::PreDraw(commandList_);
-	testBillboard->Draw();
-
+	//BillboardTex::PreDraw(commandList_);
+	//testBillboard->Draw();
+	//testItem_.Draw();
+	DrawBillboardTex();
 }
 
 void GameScene::DrawParticle()
@@ -192,12 +197,14 @@ void GameScene::Draw2DFront()
 
 void GameScene::DrawBloomObject()
 {
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 	// ランタンのオブジェクトの描画
 	for (auto L : ranterns_) {
 		L->worldTransform_.IsBloom_ = false;
 		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}
+	
 }
 
 void GameScene::DrawHighLumiObj()
@@ -238,6 +245,12 @@ void GameScene::DrawShieldObj()
 	player_->DrawFlashLightRange(&gameCamera_->GetView());
 
 	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+}
+
+void GameScene::DrawBillboardTex()
+{
+	BillboardTex::PreDraw(commandList_);
+	testItem_.Draw();
 }
 
 void GameScene::Reset()

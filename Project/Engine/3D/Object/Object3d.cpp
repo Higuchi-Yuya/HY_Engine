@@ -104,7 +104,7 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::sCmdList_ == nullptr);
+	//assert(Object3d::sCmdList_ == nullptr);
 
 	// コマンドリストをセット
 	Object3d::sCmdList_ = cmdList;

@@ -250,6 +250,12 @@
     <Filter Include="シェーダーファイル\Billboard">
       <UniqueIdentifier>{f67bb793-d1e1-4d24-8079-58642c1b4dbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Item">
+      <UniqueIdentifier>{c07b1d51-7bff-4359-b06b-86e7fe7e50a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Item">
+      <UniqueIdentifier>{92fe7e1a-df24-48fd-b6b8-da3c98e3117a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -485,6 +491,12 @@
     </ClCompile>
     <ClCompile Include="Engine\2D\BillboardTex.cpp">
       <Filter>ソース ファイル\Engine\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Item\ItemKey.cpp">
+      <Filter>ソース ファイル\Application\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Item\ItemPaper.cpp">
+      <Filter>ソース ファイル\Application\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -724,6 +736,12 @@
     </ClInclude>
     <ClInclude Include="Engine\2D\BillboardTex.h">
       <Filter>ヘッダー ファイル\Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Item\ItemKey.h">
+      <Filter>ヘッダー ファイル\Application\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Item\ItemPaper.h">
+      <Filter>ヘッダー ファイル\Application\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

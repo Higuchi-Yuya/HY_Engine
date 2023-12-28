@@ -22,7 +22,7 @@
 
 #include <vector>
 #include <BillboardTex.h>
-
+#include "ItemPaper.h"
 
 class GameScene
 {
@@ -75,6 +75,11 @@ public:// メンバ関数
 	/// ステンシルの書き込みをするオブジェクトの描画
 	/// </summary>
 	void DrawShieldObj();
+
+	/// <summary>
+	/// ビルボードのオブジェの描画
+	/// </summary>
+	void DrawBillboardTex();
 
 	// リセット関数
 	void Reset();
@@ -284,5 +289,7 @@ private:// メンバ変数
 
 	// テストビルぼ
 	std::unique_ptr < BillboardTex> testBillboard;
+
+	ItemPaper testItem_;
 };
 

@@ -107,6 +107,7 @@ void GameScene::Initialize()
 	testBillboard->LoadTexture("texture.png");
 	BillboardTex::SetViewProjection(&gameCamera_->GetView());
 
+	ItemPaper::SetPlayer(player_.get());
 	testItem_.Initialize(" ");
 	
 }
@@ -171,9 +172,6 @@ void GameScene::Draw3D()
 	DrawTransParentObj();
 	DrawParticle();
 
-	//BillboardTex::PreDraw(commandList_);
-	//testBillboard->Draw();
-	//testItem_.Draw();
 	DrawBillboardTex();
 }
 
@@ -193,6 +191,7 @@ void GameScene::Draw2DFront()
 	player_->Draw2DFront();
 	timerUi_->DrawFrontSprite();
 	operationUi_->DrawFrontSprite();
+	testItem_.Draw2D();
 }
 
 void GameScene::DrawBloomObject()
@@ -250,7 +249,7 @@ void GameScene::DrawShieldObj()
 void GameScene::DrawBillboardTex()
 {
 	BillboardTex::PreDraw(commandList_);
-	testItem_.Draw();
+	testItem_.Draw3D();
 }
 
 void GameScene::Reset()
@@ -425,17 +424,22 @@ void GameScene::GameSceneUpdate()
 {
 	// 入力の更新
 
-	// プレイヤーの更新処理
-	player_->Update();
+	// アイテムが表示されていいなかったら
+	// プレイヤーと敵の更新処理を行う
+	if (testItem_.GetIsGetItem() == false) {
 
-	// プレイヤーが死んだらとりあえずリザルト画面に移行
-	if (player_->GetIsAlive() == false) {
-		IsSceneFinsh_ = true;
-		IsGameClear_ = false;
+		// プレイヤーの更新処理
+		player_->Update();
+
+		// プレイヤーが死んだらとりあえずリザルト画面に移行
+		if (player_->GetIsAlive() == false) {
+			IsSceneFinsh_ = true;
+			IsGameClear_ = false;
+		}
+
+		// 敵の更新処理関連
+		EnemyGameUpdate();
 	}
-
-	// 敵の更新処理関連
-	EnemyGameUpdate();
 
 	// カメラの更新処理
 	gameCamera_->SetCameraPos(player_->worldTransform_.translation);

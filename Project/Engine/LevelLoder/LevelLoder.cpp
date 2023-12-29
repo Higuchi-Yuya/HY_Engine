@@ -61,10 +61,13 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName) {
 				objectData.fileName = object["file_name"];
 			}
 			if (object.contains("tag_name")) {
-				// ファイル名
+				// タグ名
 				objectData.tagName = object["tag_name"];
 			}
-
+			if (object.contains("itemTex_name")) {
+				// アイテムテクスチャ名
+				objectData.itemTexName = object["itemTex_name"];
+			}
 			// トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
 			// 平行移動

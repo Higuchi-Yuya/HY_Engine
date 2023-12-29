@@ -13,6 +13,8 @@ struct LevelData {
 		std::string fileName;
 		// タグ名
 		std::string tagName;
+		// アイテムのテクスチャ名
+		std::string itemTexName;
 		// 平行移動
 		Vector3 translation;
 		// 回転角

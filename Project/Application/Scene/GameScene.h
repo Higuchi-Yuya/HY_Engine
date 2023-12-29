@@ -287,8 +287,9 @@ private:// メンバ変数
 	std::vector<Object3d*> highLumiRanterns_;
 #pragma endregion
 
-	// テストビルぼ
-	std::unique_ptr < BillboardTex> testBillboard;
+#pragma region アイテム関連
+	std::vector<ItemPaper*>itemPapers_;
+#pragma endregion
 
 	ItemPaper testItem_;
 };

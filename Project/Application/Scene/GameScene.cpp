@@ -17,6 +17,12 @@ GameScene::~GameScene()
 		delete e;
 	}
 	enemys_.clear();
+
+	for (auto i:itemPapers_)
+	{
+		delete i;
+	}
+	itemPapers_.clear();
 }
 
 void GameScene::Initialize()
@@ -51,7 +57,7 @@ void GameScene::Initialize()
 
 #pragma region ローダー読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("field"));
+	levelData_.reset(LevelLoader::LoadFile("testItem"));
 
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
@@ -83,6 +89,25 @@ void GameScene::Initialize()
 			gameCollider_->AddEnemy(newEnemy);
 		}
 #pragma endregion
+
+		// タグ名がItemPaperなら
+		if (objectData.tagName == "ItemPaper")
+		{
+			WorldTransform w;
+			w.Initialize();
+			w.translation = objectData.translation;
+			w.scale = objectData.scaling;
+			w.rotation = objectData.rotation;
+
+			// 新しい敵の生成
+			ItemPaper* newItemPaper = new ItemPaper;
+			newItemPaper->Initialize(objectData.itemTexName);
+			newItemPaper->SetWorldTransformPos(w.translation);
+			newItemPaper->UpdateWorldMatrix();
+
+			// 今作成した敵を配列に格納
+			itemPapers_.push_back(newItemPaper);
+		}
 	}
 #pragma endregion
 
@@ -103,12 +128,10 @@ void GameScene::Initialize()
 	BeatEffect::SetPlayer(player_.get());
 	BeatEffect::SetEnemys(enemys_);
 
-	testBillboard.reset(BillboardTex::Create());
-	testBillboard->LoadTexture("texture.png");
 	BillboardTex::SetViewProjection(&gameCamera_->GetView());
-
 	ItemPaper::SetPlayer(player_.get());
-	testItem_.Initialize(" ");
+
+	testItem_.Initialize("texture.png");
 	
 }
 
@@ -117,7 +140,11 @@ void GameScene::Update()
 	input_->Update();
 
 	GameSceneUpdate();
-	testBillboard->Update();
+
+	for (auto i : itemPapers_) {
+		i->Update();
+	}
+
 	testItem_.Update();
 }
 
@@ -170,8 +197,11 @@ void GameScene::Draw3D()
 	player_->Draw(&gameCamera_->GetView());
 
 	DrawTransParentObj();
+
+	// パーティクルの描画
 	DrawParticle();
 
+	// ビルボードオブジェの描画
 	DrawBillboardTex();
 }
 
@@ -192,6 +222,9 @@ void GameScene::Draw2DFront()
 	timerUi_->DrawFrontSprite();
 	operationUi_->DrawFrontSprite();
 	testItem_.Draw2D();
+	for (auto i : itemPapers_) {
+		i->Draw2D();
+	}
 }
 
 void GameScene::DrawBloomObject()
@@ -250,6 +283,10 @@ void GameScene::DrawBillboardTex()
 {
 	BillboardTex::PreDraw(commandList_);
 	testItem_.Draw3D();
+
+	for (auto i : itemPapers_) {
+		i->Draw3D();
+	}
 }
 
 void GameScene::Reset()

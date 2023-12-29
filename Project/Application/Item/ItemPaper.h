@@ -32,6 +32,11 @@ public:// メンバ関数
 	void Update();
 
 	/// <summary>
+	/// 行列の更新など
+	/// </summary>
+	void UpdateWorldMatrix();
+
+	/// <summary>
 	/// 3D描画処理
 	/// </summary>
 	void Draw3D();
@@ -43,6 +48,8 @@ public:// メンバ関数
 
 public:// セッター
 	static void SetPlayer(Player* player) { sPlayer_ = player; }
+
+	void SetWorldTransformPos(Vector3 wTranslation);
 
 public:// ゲッター
 	const bool GetIsGetItem() { return IsGetItem_; }

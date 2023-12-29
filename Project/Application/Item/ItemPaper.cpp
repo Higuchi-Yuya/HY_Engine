@@ -6,18 +6,16 @@ Player* ItemPaper::sPlayer_ = nullptr;
 
 void ItemPaper::Initialize(std::string fileName)
 {
-	spriteTex_.reset(TextureManager::Load2DTextureP("texture.png"));
+	spriteTex_.reset(TextureManager::Load2DTextureP(fileName));
 
 	scaleBig_ = { 0.2f,0.2f,0.2f };
 	scaleSmall_ = { 0.1f,0.1f,0.1f };
 
 	billTex_.Initialize();
 	billTex_.LoadTexture("itemEffect.png");
-	billTex_.worldTransform_.translation.y = 1.5f;
 	billTex_.worldTransform_.scale = scaleSmall_;
 
 	itemSprite_.Initialize(spriteTex_.get());
-	//itemSprite_.SetAnchorPoint({ 0.5f,0.5f });
 	itemSprite_.SetPosition({ WinApp::window_width / 2,WinApp::window_height / 2 });
 
 	// 状態の初期化
@@ -27,6 +25,8 @@ void ItemPaper::Initialize(std::string fileName)
 	alphaChangeValue_ = 0.02f;
 
 	IsBig_ = false;
+	IsCheckSprite_ = false;
+	IsGetItem_ = false;
 }
 
 void ItemPaper::Update()
@@ -39,6 +39,11 @@ void ItemPaper::Update()
 
 	// ビルボードの情報を更新など
 	billTex_.Update();
+}
+
+void ItemPaper::UpdateWorldMatrix()
+{
+	billTex_.worldTransform_.UpdateMatrix();
 }
 
 void ItemPaper::Draw3D()
@@ -59,6 +64,12 @@ void ItemPaper::Draw2D()
 			itemSprite_.Draw();
 		}
 	}
+}
+
+void ItemPaper::SetWorldTransformPos(Vector3 wTranslation)
+{
+	billTex_.worldTransform_.translation = wTranslation;
+
 }
 
 void ItemPaper::OncolToPlayerUpdate()

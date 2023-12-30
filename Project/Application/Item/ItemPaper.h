@@ -46,13 +46,50 @@ public:// メンバ関数
 	/// </summary>
 	void Draw2D();
 
+	/// <summary>
+	/// アイテムのリセット
+	/// </summary>
+	void Reset();
+
 public:// セッター
+
+	/// <summary>
+	/// 共通のプレイヤー情報を設定
+	/// </summary>
+	/// <param name="player">プレイヤーのポインタ</param>
 	static void SetPlayer(Player* player) { sPlayer_ = player; }
 
+	/// <summary>
+	/// ポジションの設定
+	/// </summary>
+	/// <param name="wTranslation">ポジション</param>
 	void SetWorldTransformPos(Vector3 wTranslation);
 
+	/// <summary>
+	/// キーアイテムなのかを設定
+	/// </summary>
+	/// <param name="isKeyItem">キーアイテムフラグ</param>
+	void SetIsKeyItem(bool isKeyItem);
+
 public:// ゲッター
+
+	/// <summary>
+	/// アイテムを獲得しているかを取得
+	/// </summary>
+	/// <returns></returns>
 	const bool GetIsGetItem() { return IsGetItem_; }
+
+	/// <summary>
+	/// キーアイテムなのかを取得
+	/// </summary>
+	/// <returns></returns>
+	const bool GetIsKeyItem() { return IsKeyItem_; }
+
+	/// <summary>
+	/// アイテムの表示を確認終えているかを取得
+	/// </summary>
+	/// <returns></returns>
+	const bool GetIsCheckItem() { return IsCheckSprite_; }
 
 private:// プライベート関数
 
@@ -101,5 +138,7 @@ public:// メンバ変数
 	// 拾った後アイテムが表示している間に更新処理を止めるフラグ
 	bool IsGetItem_;
 
+	// キーアイテムなのかどうか
+	bool IsKeyItem_;
 };
 

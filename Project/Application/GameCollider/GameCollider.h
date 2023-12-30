@@ -55,6 +55,11 @@ public:// メンバ関数
 	/// </summary>
 	void Reset();
 
+	/// <summary>
+	/// クリア範囲フラグを取得
+	/// </summary>
+	const bool GetIsClear() { return IsClear_; };
+
 private:// プライベート関数
 	// エネミー関連の当たり判定処理
 	void EnemyCollisionUpdate();
@@ -84,7 +89,10 @@ private:// メンバ変数
 	std::unique_ptr<Model> boxModel_ = nullptr;
 	std::unique_ptr<Object3d> box_[4];
 
+	// ドアが開いた時のクリア判定
 	std::unique_ptr<Object3d> testBox_;
+	// ドアが開いた時のクリア判定フラグ
+	bool IsClear_ = false;
 
 	// プレイヤーの情報を格納するスフィア
 	Sphere pcol_;

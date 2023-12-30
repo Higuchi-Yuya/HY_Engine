@@ -3383,8 +3383,8 @@
                     1.0
                 ]
             },
-            "tag_name": "ItemPaper",
-            "itemTex_name": "reimu.png"
+            "tag_name": "ItemKey",
+            "itemTex_name": "itemKey.png"
         },
         {
             "type": "MESH",
@@ -3406,8 +3406,31 @@
                     1.0
                 ]
             },
-            "tag_name": "ItemPaper",
-            "itemTex_name": "reimu.png"
+            "tag_name": "ItemKey",
+            "itemTex_name": "itemKey.png"
+        },
+        {
+            "type": "MESH",
+            "name": "ICO球.002",
+            "transform": {
+                "translation": [
+                    10.688347816467285,
+                    -7.512444496154785,
+                    0.6000000238418579
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "tag_name": "ItemKey",
+            "itemTex_name": "itemKey.png"
         }
     ]
 }

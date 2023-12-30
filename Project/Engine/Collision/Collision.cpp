@@ -612,7 +612,7 @@ bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const WorldTransform& 
 	return false;
 }
 
-bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldTransform& trans)
+bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldTransform* trans)
 {
 	Vector3 leftTopPos;
 	Vector3 rightTopPos;
@@ -641,14 +641,17 @@ bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldT
 		sc.x < rightDownPos.x &&
 		sc.z < leftTopPos.z + sphere.radius&&
 		sc.z > rightDownPos.z - sphere.radius ){
-		// 上へ押し出し
-		if (sc.z > box.center.z) {
-			trans.translation.z = trans.oldTranslation.z;
+		if (trans != nullptr) {
+			// 上へ押し出し
+			if (sc.z > box.center.z) {
+				trans->translation.z = trans->oldTranslation.z;
+			}
+			// 下への押し出し
+			if (sc.z < box.center.z) {
+				trans->translation.z = trans->oldTranslation.z;
+			}
 		}
-		// 下への押し出し
-		if (sc.z < box.center.z) {
-			trans.translation.z = trans.oldTranslation.z;
-		}
+
 		A = true;
 	}
 	// 左右の範囲判定
@@ -656,13 +659,15 @@ bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldT
 		sc.x < rightDownPos.x + sphere.radius &&
 		sc.z < leftTopPos.z  &&
 		sc.z > rightDownPos.z ) {
-		// 右へ押し出し
-		if (sc.x > box.center.x) {
-			trans.translation.x = trans.oldTranslation.x;
-		}
-		// 左への押し出し
-		if (sc.x < box.center.x) {
-			trans.translation.x = trans.oldTranslation.x;
+		if (trans != nullptr) {
+			// 右へ押し出し
+			if (sc.x > box.center.x) {
+				trans->translation.x = trans->oldTranslation.x;
+			}
+			// 左への押し出し
+			if (sc.x < box.center.x) {
+				trans->translation.x = trans->oldTranslation.x;
+			}
 		}
 		B = true;
 	}

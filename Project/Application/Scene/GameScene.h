@@ -289,6 +289,15 @@ private:// メンバ変数
 
 #pragma region アイテム関連
 	std::vector<ItemPaper*>itemPapers_;
+
+	bool IsItemDisplay_ = false;
+
+	float doorRotYValue = 0.5f;
+	float door1Roty = -160;
+	float door2Roty = 160;
+
+	// 三つのアイテムが全て集まったら
+	
 #pragma endregion
 
 	ItemPaper testItem_;

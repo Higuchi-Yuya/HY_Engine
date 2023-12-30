@@ -675,12 +675,13 @@ void SceneManager::SceneChageUpdate()
 			if (blackAlpha >= 1) {
 				blackAlpha = 1;
 				// ここにリセット関数を置く
-				Reset();
-
+				
 				if (gameScene_->GetIsGameClear() == true) {
+					Reset();
 					scene_ = Scene::GameClear;
 				}
 				else {
+					Reset();
 					scene_ = Scene::GameOver;
 				}
 			}

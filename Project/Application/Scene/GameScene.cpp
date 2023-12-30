@@ -108,6 +108,26 @@ void GameScene::Initialize()
 			// 今作成した敵を配列に格納
 			itemPapers_.push_back(newItemPaper);
 		}
+
+		// タグ名がItemKeyなら
+		if (objectData.tagName == "ItemKey")
+		{
+			WorldTransform w;
+			w.Initialize();
+			w.translation = objectData.translation;
+			w.scale = objectData.scaling;
+			w.rotation = objectData.rotation;
+
+			// 新しい敵の生成
+			ItemPaper* newItemPaper = new ItemPaper;
+			newItemPaper->Initialize(objectData.itemTexName);
+			newItemPaper->SetWorldTransformPos(w.translation);
+			newItemPaper->UpdateWorldMatrix();
+			newItemPaper->SetIsKeyItem(true);
+
+			// 今作成した敵を配列に格納
+			itemPapers_.push_back(newItemPaper);
+		}
 	}
 #pragma endregion
 
@@ -141,10 +161,6 @@ void GameScene::Update()
 
 	GameSceneUpdate();
 
-	for (auto i : itemPapers_) {
-		i->Update();
-	}
-
 	testItem_.Update();
 }
 
@@ -162,6 +178,9 @@ void GameScene::ImguiUpdate()
 	ImGui::InputFloat("playerPointIndensity", &playerPointLightIndensity);
 	ImGui::InputFloat("playerPointRadius", &playerPointLightRadius_);
 	ImGui::InputFloat("playerPointDecay", &playerPointLightDecay_);
+
+	ImGui::InputFloat("door1Roty", &door1Roty);
+	ImGui::InputFloat("door2Roty", &door2Roty);
 
 	ImGui::End();
 
@@ -252,7 +271,7 @@ void GameScene::DrawHighLumiObj()
 void GameScene::DrawTransParentObj()
 {
 	// オブジェクトのパイプラインをステンシルの読み込み側に変更
-	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+	Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
 
 	// 敵の描画
 	for (auto e : enemys_) {
@@ -324,6 +343,14 @@ void GameScene::Reset()
 	// カメラのリセット
 	gameCamera_->Reset();
 
+	// アイテムたちをリセット
+	for (auto i : itemPapers_){
+		i->Reset();
+	}
+
+	// ドアの角度をリセット
+	latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(-90);
+	latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(90);
 }
 
 void GameScene::LoadEnemy()
@@ -459,11 +486,58 @@ void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
 
 void GameScene::GameSceneUpdate()
 {
-	// 入力の更新
+	// アイテムの更新処理
+	uint32_t keyItemCount = 0;
+	for (auto i : itemPapers_) {
+		i->Update();
+
+		// キーアイテムが獲得されているなら
+		if (i->GetIsCheckItem() == true &&
+			i->GetIsKeyItem() == true) {
+			keyItemCount += 1;
+		}
+	}
+
+	// もしいずれかのアイテムが表示状態であれば
+	// 表示フラグをオンにするそれ以外はオフ
+	for (auto i : itemPapers_) {
+
+		if (i->GetIsGetItem() == true) {
+			IsItemDisplay_ = true;
+			break;
+		}
+		else {
+			IsItemDisplay_ = false;
+		}
+	}
+
+	// もしキーアイテムが三つ集まったら
+	// ゲームクリア
+	if (keyItemCount >= 3) {
+		gameCamera_->SetIsDoorOpen(true);
+		IsGameClear_ = true;
+	}
+
+	if (gameCamera_->GetIsDoorOpen() == true) {
+		// 右のドアの回転処理
+		if (latticeDoors_[0]->worldTransform_.rotation.y >= MathUtil::DegreeToRadian(door1Roty)) {
+			latticeDoors_[0]->worldTransform_.rotation.y -= MathUtil::DegreeToRadian(doorRotYValue);
+		}
+		// 左のドアの回転処理
+		if (latticeDoors_[1]->worldTransform_.rotation.y <= MathUtil::DegreeToRadian(door2Roty)) {
+			latticeDoors_[1]->worldTransform_.rotation.y += MathUtil::DegreeToRadian(doorRotYValue);
+		}
+	}
+
+	// ゲームクリアのドア範囲内ならクリアシーンに移行
+	if (gameCollider_->GetIsClear() == true &&
+		IsGameClear_ == true) {
+		IsSceneFinsh_ = true;
+	}
 
 	// アイテムが表示されていいなかったら
 	// プレイヤーと敵の更新処理を行う
-	if (testItem_.GetIsGetItem() == false) {
+	if (IsItemDisplay_ == false) {
 
 		// プレイヤーの更新処理
 		player_->Update();
@@ -570,29 +644,29 @@ void GameScene::EnemyGameUpdate()
 	}
 
 	// エネミーの時間ごとにわく処理 (無限沸き)
-	switch (enemyWave_)
-	{
-	case GameScene::wave01:
-		if (enemySpawnTimer_ >= enemySpawnTimeMax1_ && enemys_.size() <= 3 * 1) {
-			LoadEnemy();
-			enemySpawnTimer_ = 0;
-		}
-		break;
-	case GameScene::wave02:
-		if (enemySpawnTimer_ >= enemySpawnTimeMax2_ && enemys_.size() <= 4 * 2) {
-			LoadEnemy();
-			enemySpawnTimer_ = 0;
-		}
-		break;
-	case GameScene::wave03:
-		if (enemySpawnTimer_ >= enemySpawnTimeMax3_ && enemys_.size() <= 5 * 3) {
-			LoadEnemy();
-			enemySpawnTimer_ = 0;
-		}
-		break;
-	default:
-		break;
-	}
+	//switch (enemyWave_)
+	//{
+	//case GameScene::wave01:
+	//	if (enemySpawnTimer_ >= enemySpawnTimeMax1_ && enemys_.size() <= 3 * 1) {
+	//		LoadEnemy();
+	//		enemySpawnTimer_ = 0;
+	//	}
+	//	break;
+	//case GameScene::wave02:
+	//	if (enemySpawnTimer_ >= enemySpawnTimeMax2_ && enemys_.size() <= 4 * 2) {
+	//		LoadEnemy();
+	//		enemySpawnTimer_ = 0;
+	//	}
+	//	break;
+	//case GameScene::wave03:
+	//	if (enemySpawnTimer_ >= enemySpawnTimeMax3_ && enemys_.size() <= 5 * 3) {
+	//		LoadEnemy();
+	//		enemySpawnTimer_ = 0;
+	//	}
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	//寿命が尽きた敵を全削除
 	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a)

@@ -34,6 +34,12 @@ public:// ゲッター
 	// タイトルのカメラ処理が終わっているかを取得
 	bool& GetIsEaseEnd() { return IsEaseEnd_; }
 
+	// ドアの開くときのカメラ処理なのかを取得
+	bool& GetIsDoorOpen() { return IsDoorOpen_; }
+
+	// ドアの開く間のカメラ処理が終わっているのかを取得
+	const bool GetIsFinishDoorOpen_() { return IsFinshDoor_; }
+
 public:// セッター
 	// 最初にセットするカメラ情報
 	void SetCameraFPos(Vector3 pos);
@@ -43,6 +49,9 @@ public:// セッター
 
 	// タイトルのカメラの更新処理を行うかをセット
 	void SetIsCanEase(bool IsCanEase);
+
+	// ドアが開くときのカメラをセット
+	void SetIsDoorOpen(bool isDoorOpen);
 
 private:// プライベートメンバ関数
 	void RotUpdate();
@@ -87,5 +96,19 @@ private:// メンバ変数
 
 	bool IsCanEase_ = false;
 	bool IsEaseEnd_ = false;
+
+	// ドアが開く時のカメラ関連
+
+	// ドアの時のカメラ座標とターゲット座標
+	Vector3 doorOpenEye_ = { -0.8f,1.5f,-8.0f };
+	Vector3 doorOpenTarget_ = { -0.8f,2.0f,-20.0f };
+
+	// ドアが開くかどうか
+	bool IsDoorOpen_ = false;
+	bool IsFinshDoor_ = false;
+
+	// ドア開くときのカメラの滞在時間
+	float doorOpenTimer_ = 0;
+	float doorOpenTimeLimit_ = 60 * 10;
 };
 

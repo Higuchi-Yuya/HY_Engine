@@ -43,7 +43,7 @@ public:
 	// 球とAABB二軸だけの当たり判定
 	static bool CheckSphereToAABB2D(const Sphere& sphere, const WorldTransform& transA, Vector3* inter = nullptr, Vector3* reject = nullptr);
 	// 球とAABB二軸だけの当たり判定
-	static bool CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldTransform&trans);
+	static bool CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldTransform* trans = nullptr);
 	// 球とAABBの当たり判定の距離の平方を計算
 	static float SquareDistance_PointRectangle(Vector3 p, Vector3 c, Vector3 r);
 

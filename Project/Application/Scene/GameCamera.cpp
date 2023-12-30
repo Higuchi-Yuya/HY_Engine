@@ -19,6 +19,8 @@ void GameCamera::Initialize()
 	offSet = { 0,5,0 };
 	
 	titleCameraState_ = titleCameraState_;
+
+	doorOpenTimeLimit_ = 60 * 3.5f;
 }
 
 void GameCamera::TitleUpdate()
@@ -65,7 +67,24 @@ void GameCamera::TitleUpdate()
 	}
 	
 	
+	ImGui::Begin("gameCamera");
 
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	//ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
+	ImGui::InputFloat("ainfo", &aInfo);
+	ImGui::InputFloat3("angle", &angle_.x);
+	ImGui::InputFloat3("rotPos", &rotPos.x);
+	ImGui::InputFloat3("rotnorm", &rotNorm.x);
+	ImGui::InputFloat3("rotnorm", &vel.x);
+	ImGui::InputFloat("chagePos Y", &offSet.y);
+	ImGui::InputFloat3("worldRot", &worldTransform_.rotation.x, "%.2f");
+	ImGui::InputFloat3("worldPos", &worldTransform_.translation.x, "%.2f");
+	ImGui::InputFloat3("cameraEye", &viewProjection_.eye.x, "%.2f");
+	ImGui::InputFloat3("cameraTraget", &viewProjection_.target.x, "%.2f");
+
+	ImGui::End();
 	// ビューの更新処理
 	viewProjection_.UpdateMatrix();
 }
@@ -104,6 +123,10 @@ void GameCamera::Reset()
 	IsCanEase_ = false;
 	IsEaseEnd_ = false;
 
+	doorOpenTimer_ = 0;
+	IsDoorOpen_ = false;
+	IsFinshDoor_ = false;
+
 	viewProjection_.eye = titleCameraFPos_;
 	viewProjection_.target = titleCameraFTargetPos_;
 }
@@ -125,12 +148,32 @@ void GameCamera::SetIsCanEase(bool IsCanEase)
 	IsCanEase_ = IsCanEase;
 }
 
+void GameCamera::SetIsDoorOpen(bool isDoorOpen)
+{
+	IsDoorOpen_ = isDoorOpen;
+}
+
 void GameCamera::RotUpdate()
 {
 	const float cameraEaseSpeed = 0.1f;//1e-100f;
 
-	viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
-	viewProjection_.eye = ((viewProjection_.target + cameraFPos));// - viewProjection_.eye)* cameraEaseSpeed;
+	// ドアが開いてる間のカメラ処理
+	if (IsDoorOpen_ == true &&
+		IsFinshDoor_ == false) {
+		if (doorOpenTimer_ <= doorOpenTimeLimit_) {
+			doorOpenTimer_++;
+		}
+		else {
+			IsFinshDoor_ = true;
+		}
+		viewProjection_.eye = doorOpenEye_;
+		viewProjection_.target = doorOpenTarget_;
+	}
+	// それ以外の時のカメラ処理
+	else {
+		viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
+		viewProjection_.eye = ((viewProjection_.target + cameraFPos));// - viewProjection_.eye)* cameraEaseSpeed;
+	}
 
 	// 行列を初期化
 	worldTransform_.matWorld_.identity();

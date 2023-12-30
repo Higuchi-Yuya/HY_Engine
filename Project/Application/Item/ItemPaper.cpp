@@ -27,6 +27,7 @@ void ItemPaper::Initialize(std::string fileName)
 	IsBig_ = false;
 	IsCheckSprite_ = false;
 	IsGetItem_ = false;
+	IsKeyItem_ = false;
 }
 
 void ItemPaper::Update()
@@ -66,10 +67,27 @@ void ItemPaper::Draw2D()
 	}
 }
 
+void ItemPaper::Reset()
+{
+	colState_ = withInRange;
+	itemState_ = sparkling;
+
+	easeTrans_.Reset();
+
+	IsBig_ = false;
+	IsCheckSprite_ = false;
+	IsGetItem_ = false;
+}
+
 void ItemPaper::SetWorldTransformPos(Vector3 wTranslation)
 {
 	billTex_.worldTransform_.translation = wTranslation;
 
+}
+
+void ItemPaper::SetIsKeyItem(bool isKeyItem)
+{
+	IsKeyItem_ = isKeyItem;
 }
 
 void ItemPaper::OncolToPlayerUpdate()

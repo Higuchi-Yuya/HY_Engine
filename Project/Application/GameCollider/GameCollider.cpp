@@ -127,7 +127,7 @@ void GameCollider::Draw(ViewProjection* viewProjection)
 	// ----------------パーティクルの描画はここから--------------- //
 	particleMan_->Draw(*viewProjection);
 
-	// ----------------パーティクルの描画ここまで----------------- //
+	// ----------------パーティクルの描画ここまで----------------- //3つのかけらを集め、脱出せよ
 }
 
 void GameCollider::Draw3D(ViewProjection* viewProjection)

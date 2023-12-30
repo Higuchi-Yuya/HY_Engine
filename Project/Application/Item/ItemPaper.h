@@ -112,6 +112,7 @@ public:// メンバ変数
 
 	// アイテムを拾った後に画面上に表示されるスプライト
 	Sprite itemSprite_;
+private:
 	std::unique_ptr<Texture> spriteTex_;
 
 	// イージング

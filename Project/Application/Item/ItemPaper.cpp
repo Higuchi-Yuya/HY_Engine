@@ -13,6 +13,7 @@ void ItemPaper::Initialize(std::string fileName)
 
 	billTex_.Initialize();
 	billTex_.LoadTexture("itemEffect.png");
+	billTex_.worldTransform_.translation.y = 0.6f;
 	billTex_.worldTransform_.scale = scaleSmall_;
 
 	itemSprite_.Initialize(spriteTex_.get());

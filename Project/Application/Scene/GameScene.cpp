@@ -151,8 +151,9 @@ void GameScene::Initialize()
 	BillboardTex::SetViewProjection(&gameCamera_->GetView());
 	ItemPaper::SetPlayer(player_.get());
 
-	testItem_.Initialize("texture.png");
-	
+	testItem_.Initialize("tips1.png");
+	testItem_.itemSprite_.SetSize({ 500,300 });
+	testItem_.itemSprite_.SetScale({0.8f,0.8f,0});
 }
 
 void GameScene::Update()
@@ -502,7 +503,8 @@ void GameScene::GameSceneUpdate()
 	// 表示フラグをオンにするそれ以外はオフ
 	for (auto i : itemPapers_) {
 
-		if (i->GetIsGetItem() == true) {
+		if (i->GetIsGetItem() == true ||
+			testItem_.GetIsGetItem() == true) {
 			IsItemDisplay_ = true;
 			break;
 		}

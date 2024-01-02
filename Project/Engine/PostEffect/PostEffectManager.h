@@ -4,7 +4,6 @@
 #include "PostEffectComposition.h"
 #include "HiguLumiTarget.h"
 #include "PostTarget.h"
-#include "Vignette.h"
 #include "SceneManager.h"
 #include "BeatEffect.h"
 
@@ -24,9 +23,6 @@ private:// メンバー変数
 
 	// ターゲットシーン
 	std::unique_ptr<PostTarget>postTarget_;
-
-	// ビネット
-	std::unique_ptr<Vignette>vignette_;
 
 	// 鼓動エフェクト
 	std::unique_ptr<BeatEffect>beatEffect_;

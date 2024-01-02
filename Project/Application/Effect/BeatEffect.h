@@ -3,6 +3,7 @@
 #include "PostEffectComposition.h"
 #include "PostEffectRipples.h"
 #include "PostEffectScaling.h"
+#include "Vignette.h"
 #include "Easing.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -124,6 +125,9 @@ private:// メンバー変数
 	std::unique_ptr<PostEffectComposition>postComposition_;
 	// 波紋のポストエフェクト
 	std::unique_ptr<PostEffectRipples>postRipples_;
+	// ビネット
+	std::unique_ptr<Vignette>vignette_;
+
 	// 拡大縮小用のポストエフェクト
 	std::unique_ptr<PostEffectScaling>postScaling_;
 
@@ -160,5 +164,9 @@ private:// メンバー変数
 	// 波紋タイム
 	float timer_ = 0;
 	float timeLimit_ = 120;
+
+	// ビネットの色
+	Vector4 bloodRedColor = { 0.1f,0.01f,0.01f,1 };
+	Vector4 blackColor = { 0,0,0,1 };
 };
 

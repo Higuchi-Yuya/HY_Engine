@@ -14,9 +14,6 @@ void PostEffectManager::Initialize()
 	postTarget_= std::make_unique<PostTarget>();
 	postTarget_->Initialize();
 
-	vignette_ = std::make_unique<Vignette>();
-	vignette_->Initialize();
-
 	beatEffect_ = std::make_unique<BeatEffect>();
 	beatEffect_->Initialize();
 	BeatEffect::SetGaussianBlur(gaussianBlur_.get());
@@ -24,20 +21,20 @@ void PostEffectManager::Initialize()
 
 void PostEffectManager::Update()
 {
-	vignette_->Update();
+	beatEffect_->Update();
 }
 
 void PostEffectManager::ImguiUpdate()
 {
-	vignette_->ImguiUpdate();
+	
 
 	beatEffect_->ImguiUpdate();
 }
 
 void PostEffectManager::EffectBloomDraw()
 {
+	beatEffect_->Draw();
 	
-	vignette_->Draw(dxCommon_->GetCommandList());
 }
 
 void PostEffectManager::BloomDrawSetting()
@@ -91,11 +88,7 @@ void PostEffectManager::BloomDrawSetting()
 #pragma region ブルーム用に合成させる
 	beatEffect_->DrawPass();
 #pragma endregion
-	
-	vignette_->PreDrawScene(dxCommon_->GetCommandList());
-	beatEffect_->Draw();
-	
-	vignette_->PostDrawScene(dxCommon_->GetCommandList());
+
 
 }
 

@@ -16,6 +16,9 @@ void BeatEffect::Initialize()
 	postScaling_ = std::make_unique<PostEffectScaling>();
 	postScaling_->Initialize();
 
+	vignette_ = std::make_unique<Vignette>();
+	vignette_->Initialize();
+
 	beatDistance_ = 10;
 	beatInterval_ = 30;
 
@@ -58,6 +61,9 @@ void BeatEffect::Update()
 
 	// 波紋の更新処理
 	postRipples_->Update();
+
+	// ビネットの更新処理
+	vignette_->Update();
 }
 
 void BeatEffect::BeatUpdate()
@@ -78,7 +84,10 @@ void BeatEffect::BeatUpdate()
 
 		Vector2 tiling = { ease_.In(beatExpansionStart_.x,beatExpansionEnd_.x),
 						   ease_.In(beatExpansionStart_.y,beatExpansionEnd_.y) };
+		Vector4 color = { ease_.In(blackColor.x,bloodRedColor.x),
+						  0,0,1 };
 
+		vignette_->SetVignetteColor(color);
 		postScaling_->tailing_ = tiling;
 
 		if (ease_.GetIsEnd() == true) {
@@ -95,6 +104,10 @@ void BeatEffect::BeatUpdate()
 		Vector2 tiling = { ease_.In(beatReductionStart_.x,beatReductionEnd_.x),
 						   ease_.In(beatReductionStart_.y,beatReductionEnd_.y) };
 
+		Vector4 color = { ease_.In(bloodRedColor.x,blackColor.x),
+						  0,0,1 };
+
+		vignette_->SetVignetteColor(color);
 		postScaling_->tailing_ = tiling;
 
 		if (ease_.GetIsEnd() == true) {
@@ -227,6 +240,7 @@ void BeatEffect::ImguiUpdate()
 
 	postComposition_->ImguiUpdate();
 	postRipples_->ImguiUpdate();
+	vignette_->ImguiUpdate();
 }
 
 void BeatEffect::DrawPass()
@@ -240,12 +254,17 @@ void BeatEffect::DrawPass()
 	postScaling_->PreDrawScene(cmdList_);
 	postComposition_->Draw(cmdList_);
 	postScaling_->PostDrawScene(cmdList_);
+
+	// ビネットの描画
+	vignette_->PreDrawScene(cmdList_);
+	postComposition_->Draw(cmdList_);
+	postScaling_->Draw(cmdList_);
+	vignette_->PostDrawScene(cmdList_);
 }
 
 void BeatEffect::Draw()
 {
-	postComposition_->Draw(cmdList_);
-	postScaling_->Draw(cmdList_);
+	vignette_->Draw(cmdList_);
 }
 
 void BeatEffect::Reset()

@@ -62,7 +62,10 @@ void ItemPaper::Draw2D()
 	// もしアイテムの状態が拾った後の時
 	// アイテムの確認がとれていないなら描画をする
 	if (itemState_ == afterPickItUp) {
-		if (IsCheckSprite_ == false) {
+		if (IsKeyItem_ == true) {
+			itemSprite_.Draw();
+		}
+		else if (IsCheckSprite_ == false) {
 			itemSprite_.Draw();
 		}
 	}
@@ -89,6 +92,16 @@ void ItemPaper::SetWorldTransformPos(Vector3 wTranslation)
 void ItemPaper::SetIsKeyItem(bool isKeyItem)
 {
 	IsKeyItem_ = isKeyItem;
+}
+
+void ItemPaper::SetIsEaseKey(bool isEaseKey)
+{
+	IsEaseKeyItem_ = isEaseKey;
+}
+
+void ItemPaper::SetEaseKeyPos(Vector2 easeKeyPos)
+{
+	easeKeyPos_ = easeKeyPos;
 }
 
 void ItemPaper::OncolToPlayerUpdate()
@@ -203,4 +216,14 @@ void ItemPaper::ItemStateUpdate()
 		break;
 	}
 
+}
+
+void ItemPaper::KeyItemEaseUpdate()
+{
+	easeKeyItem_.SetEaseLimitTime(60);
+	easeKeyItem_.Update();
+
+	Vector2 windowHalfSize = { WinApp::window_width / 2,WinApp::window_height / 2 };
+
+	itemSprite_.SetPosition(easeKeyItem_.easeInCircVec2(windowHalfSize, easeKeyPos_));
 }

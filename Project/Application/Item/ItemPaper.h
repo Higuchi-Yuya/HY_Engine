@@ -51,6 +51,9 @@ public:// メンバ関数
 	/// </summary>
 	void Reset();
 
+	// キーアイテムの取得後のイージング処理
+	void KeyItemEaseUpdate();
+
 public:// セッター
 
 	/// <summary>
@@ -71,6 +74,18 @@ public:// セッター
 	/// <param name="isKeyItem">キーアイテムフラグ</param>
 	void SetIsKeyItem(bool isKeyItem);
 
+	/// <summary>
+	/// キーアイテムのイージング処理が終わっているか
+	/// </summary>
+	/// <param name="isEaseKey"></param>
+	void SetIsEaseKey(bool isEaseKey);
+
+	/// <summary>
+	/// キーアイテムのイージング座標を設定
+	/// </summary>
+	/// <param name="easeKeyPos"></param>
+	void SetEaseKeyPos(Vector2 easeKeyPos);
+
 public:// ゲッター
 
 	/// <summary>
@@ -90,6 +105,12 @@ public:// ゲッター
 	/// </summary>
 	/// <returns></returns>
 	const bool GetIsCheckItem() { return IsCheckSprite_; }
+
+	/// <summary>
+	/// キーアイテムのイージング処理が終わっているかを取得
+	/// </summary>
+	/// <returns></returns>
+	const bool GetIsEaseKeyItem() { return IsEaseKeyItem_; }
 
 private:// プライベート関数
 
@@ -116,7 +137,7 @@ private:
 	std::unique_ptr<Texture> spriteTex_;
 
 	// イージング
-	Easing easeAlpha_;
+	Easing easeKeyItem_;
 	Easing easeTrans_;
 
 	// 状態
@@ -133,6 +154,8 @@ private:
 	Vector3 scaleBig_;
 	Vector3 scaleSmall_;
 
+	Vector2 easeKeyPos_;
+
 	// 拾った後アイテムを閉じるフラグ
 	bool IsCheckSprite_;
 
@@ -141,5 +164,8 @@ private:
 
 	// キーアイテムなのかどうか
 	bool IsKeyItem_;
+
+	// キーアイテムのイージング処理が終わっているか
+	bool IsEaseKeyItem_;
 };
 

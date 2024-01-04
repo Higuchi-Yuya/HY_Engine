@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include <Vector2.h>
 
 //追加
 class Easing
@@ -108,6 +109,7 @@ public:
 	Vector3 easeOutCircVec3(Vector3 start, Vector3 end);
 
 	float easeInCirc(float start, float end);
+	Vector2 easeInCircVec2(Vector2 start, Vector2 end);
 	Vector3 easeInCircVec3(Vector3 start, Vector3 end);
 
 private:// メンバ

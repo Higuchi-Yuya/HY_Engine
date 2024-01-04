@@ -488,37 +488,7 @@ void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
 void GameScene::GameSceneUpdate()
 {
 	// アイテムの更新処理
-	uint32_t keyItemCount = 0;
-	for (auto i : itemPapers_) {
-		i->Update();
-
-		// キーアイテムが獲得されているなら
-		if (i->GetIsCheckItem() == true &&
-			i->GetIsKeyItem() == true) {
-			keyItemCount += 1;
-		}
-	}
-
-	// もしいずれかのアイテムが表示状態であれば
-	// 表示フラグをオンにするそれ以外はオフ
-	for (auto i : itemPapers_) {
-
-		if (i->GetIsGetItem() == true ||
-			testItem_.GetIsGetItem() == true) {
-			IsItemDisplay_ = true;
-			break;
-		}
-		else {
-			IsItemDisplay_ = false;
-		}
-	}
-
-	// もしキーアイテムが三つ集まったら
-	// ゲームクリア
-	if (keyItemCount >= 3) {
-		gameCamera_->SetIsDoorOpen(true);
-		IsGameClear_ = true;
-	}
+	ItemUpdate();
 
 	if (gameCamera_->GetIsDoorOpen() == true) {
 		// 右のドアの回転処理
@@ -682,4 +652,69 @@ void GameScene::EnemyGameUpdate()
 	}
 
 	BeatEffect::SetEnemys(enemys_);
+}
+
+void GameScene::ItemUpdate()
+{
+	// アイテムの更新処理
+	uint32_t keyItemCount = 0;
+	for (auto i : itemPapers_) {
+		i->Update();
+
+		// キーアイテムが獲得されているなら
+		if (i->GetIsCheckItem() == true &&
+			i->GetIsKeyItem() == true) {
+			keyItemCount += 1;
+		}
+	}
+
+	for (auto i : itemPapers_) {
+		// キーアイテムが獲得されているなら
+		if (i->GetIsCheckItem() == true &&
+			i->GetIsKeyItem() == true) {
+			if (i->GetIsEaseKeyItem() == false) {
+
+				if (keyItemCount == 1) {
+					i->SetEaseKeyPos(easeItemPos1);
+				}
+				if (keyItemCount == 2) {
+					i->SetEaseKeyPos(easeItemPos2);
+				}
+				if (keyItemCount == 3) {
+					i->SetEaseKeyPos(easeItemPos3);
+				}
+				i->SetIsEaseKey(true);
+			}
+		}
+	}
+
+	// キーアイテムのイージング処理
+	for (auto i : itemPapers_) {
+		if (i->GetIsEaseKeyItem() == true) {
+			i->KeyItemEaseUpdate();
+		}
+	}
+
+	// もしいずれかのアイテムが表示状態であれば
+	// 表示フラグをオンにするそれ以外はオフ
+	for (auto i : itemPapers_) {
+
+		if (i->GetIsGetItem() == true ||
+			testItem_.GetIsGetItem() == true) {
+			IsItemDisplay_ = true;
+			break;
+		}
+		else {
+			IsItemDisplay_ = false;
+		}
+	}
+
+
+
+	// もしキーアイテムが三つ集まったら
+	// ゲームクリア
+	if (keyItemCount >= 3) {
+		gameCamera_->SetIsDoorOpen(true);
+		IsGameClear_ = true;
+	}
 }

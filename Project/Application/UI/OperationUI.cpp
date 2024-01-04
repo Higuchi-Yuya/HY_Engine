@@ -19,6 +19,7 @@ void OperationUI::Init()
 	LstickTex_.reset(TextureManager::Load2DTextureP("UI/Lstic.png"));
 	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/AttackText.png"));
 	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/MoveText.png"));
+	itemFlameTex_.reset(TextureManager::Load2DTextureP("itemKeyFlame.png"));
 
 	Vector3 AbuttonScale(1.0f, 1.0f, 0);
 	Vector3 LstickScale(1.5f, 1.5f, 0);
@@ -50,6 +51,17 @@ void OperationUI::Init()
 	// 移動テキストの初期化
 	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(100, 0), Vector2(272, 120));
 	sprites_[MoveText]->SetScale(Vector3(0.3f, 0.3f, 0));
+
+	// アイテムフレームの初期化
+	itemFlameDefaPos_ = { 120,80 };
+	itemFlameDefaSize_ = { 158,152 };
+	float abjustmentPos = 40;
+
+	sprites_[itemFlame1]->Initialize(itemFlameTex_.get(), { itemFlameDefaPos_ });
+	sprites_[itemFlame2]->Initialize(itemFlameTex_.get(), { (itemFlameDefaPos_.x + itemFlameDefaSize_.x * 1)- abjustmentPos,
+															itemFlameDefaPos_.y });
+	sprites_[itemFlame3]->Initialize(itemFlameTex_.get(), { (itemFlameDefaPos_.x + itemFlameDefaSize_.x * 2) - abjustmentPos * 2,
+															itemFlameDefaPos_.y });
 }
 
 void OperationUI::Update()

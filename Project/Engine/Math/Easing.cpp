@@ -240,6 +240,17 @@ float Easing::easeInCirc(float start, float end){
 	return start + (end - start) * x;
 }
 
+Vector2 Easing::easeInCircVec2(Vector2 start, Vector2 end)
+{
+	Vector2 Vec;
+	float x = easeInCirc(start.x, end.x);
+	float y = easeInCirc(start.y, end.y);
+
+	Vec = { static_cast <float>(x),static_cast <float>(y)};
+
+	return Vec;
+}
+
 Vector3 Easing::easeInCircVec3(Vector3 start, Vector3 end)
 {
 	Vector3 Vec;

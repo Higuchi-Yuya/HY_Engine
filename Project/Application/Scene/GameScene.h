@@ -173,6 +173,11 @@ private:// プライベート関数
 	/// </summary>
 	void EnemyGameUpdate();
 
+	/// <summary>
+	/// アイテムの更新処理
+	/// </summary>
+	void ItemUpdate();
+
 private:// メンバ変数
 
 	// 入力
@@ -295,6 +300,14 @@ private:// メンバ変数
 	float doorRotYValue = 0.5f;
 	float door1Roty = -160;
 	float door2Roty = 160;
+
+	Easing easeItem1;
+	Easing easeItem2;
+	Easing easeItem3;
+
+	Vector2 easeItemPos1 = { 120,80 };
+	Vector2 easeItemPos2 = { 238,80 };
+	Vector2 easeItemPos3 = { 356,80 };
 
 	// 三つのアイテムが全て集まったら
 	

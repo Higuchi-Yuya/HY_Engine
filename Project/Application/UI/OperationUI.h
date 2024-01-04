@@ -18,6 +18,10 @@ private:
 		AttackText,
 		MoveText,
 
+		itemFlame1,
+		itemFlame2,
+		itemFlame3,
+
 		Size,
 	};
 private:
@@ -36,8 +40,17 @@ private:
 	// 攻撃のテキストテクスチャ
 	std::unique_ptr<Texture> attackTextTex_;
 
+	// アイテムのフレームのテキストテクスチャ
+	std::unique_ptr<Texture> itemFlameTex_;
+
 	// Lスティックのデフォルトポジション
 	Vector2 LstickDefuPos_;
+
+	// アイテムフレームの座標
+	Vector2 itemFlameDefaPos_;
+
+	// アイテムフレームのデフォルトサイズ
+	Vector2 itemFlameDefaSize_;
 
 public:
 	OperationUI();

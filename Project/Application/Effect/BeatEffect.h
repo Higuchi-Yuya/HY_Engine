@@ -166,7 +166,8 @@ private:// メンバー変数
 	float timeLimit_ = 120;
 
 	// ビネットの色
-	Vector4 bloodRedColor = { 0.1f,0.01f,0.01f,1 };
+	Vector4 nowVColor;
+	Vector4 bloodRedColor = { 0.05f,0.01f,0.01f,1 };
 	Vector4 blackColor = { 0,0,0,1 };
 };
 

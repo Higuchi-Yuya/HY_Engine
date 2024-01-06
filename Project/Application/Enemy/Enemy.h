@@ -57,6 +57,11 @@ public:
 	// 戻るフェーズ関連をリセット
 	void ResetBack();
 
+	/// <summary>
+	/// プレイヤーが近い時にでるパーティクルの更新処理
+	/// </summary>
+	void NearPlayerParticleUpdate();
+
 public:// ゲッター
 	// 生きているかを取得
 	const bool GetAlive() { return IsAlive_; }
@@ -119,6 +124,8 @@ private:// プライベート関数
 	/// 死亡時の更新処理
 	/// </summary>
 	void DeadUpdate();
+
+
 
 public:
 	// 衝突点
@@ -208,6 +215,20 @@ private:
 	Vector3 spawnFirstPos_ = { 0,0,0 };
 	Vector3 spawnEndPos_;
 	Easing ease_;
+
+#pragma endregion
+
+#pragma region プレイヤーに近いときの処理関連
+	// プレイヤーに近いときに一度に出すパーティクルの数
+	int nearPlayerParticleNum = 20;
+	// パーティクルのタイマー
+	int nearPlayerTimer = 0;
+	int nearPlayerTimeLimit = 10;
+	// 色の初期値
+	Vector4 nearStartColor_ = { 0.35f,0.05f,0.05f,1 };
+	// 色の最終値
+	Vector4 nearEndColor_ = { 0.02f,0.01f,0.01f,0 };
+	
 
 #pragma endregion
 

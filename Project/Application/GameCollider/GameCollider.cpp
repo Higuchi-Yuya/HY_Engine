@@ -180,6 +180,7 @@ void GameCollider::EnemyCollisionUpdate()
 		sphereERange.radius = 7.0f;
 		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(pcol_, sphereERange)) {
 			e->SetAliveState(Enemy::AliveState::Tracking);
+			e->NearPlayerParticleUpdate();
 			e->ResetBack();
 			if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
 				// エネミーがわを赤くする（仮）

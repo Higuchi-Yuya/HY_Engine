@@ -140,7 +140,7 @@ void BeatEffect::NotBeatUpdate()
 
 			notBeatStart_ = postScaling_->tailing_;
 			notBeatEnd_ = { 1.0f,1.0f };
-
+			nowVColor = vignette_->GetVignetteColor();
 			notBeatState_ = _Undo;
 			break;
 		}
@@ -151,7 +151,11 @@ void BeatEffect::NotBeatUpdate()
 			Vector2 tiling = { ease_.In(notBeatStart_.x,notBeatEnd_.x),
 							   ease_.In(notBeatStart_.y,notBeatEnd_.y) };
 
+			Vector4 color = { ease_.In(nowVColor.x,blackColor.x),
+						  0,0,1 };
+
 			postScaling_->tailing_ = tiling;
+			vignette_->SetVignetteColor(color);
 
 			if (ease_.GetIsEnd() == true) {
 				ease_.Reset();

@@ -2,7 +2,7 @@
 #include "Collision.h"
 #include "MathUtil.h"
 #include "Easing.h"
-
+#include "Random.h"
 
 bool is_float_equal(Vector3 l, Vector3 r)
 {
@@ -105,10 +105,10 @@ void Enemy::Update()
 	default:
 		break;
 	}
-
 	particleMan_->Update();
 	// 行列の更新など
 	Object3d::Update();
+
 }
 
 void Enemy::ParticleUpdate()
@@ -381,5 +381,49 @@ void Enemy::DeadUpdate()
 
 	if (dissolve_.dissolveTime_ >= 1.0f) {
 		IsDeadMotionEnd = true;
+	}
+}
+
+void Enemy::NearPlayerParticleUpdate()
+{
+	nearPlayerTimer++;
+	if (nearPlayerTimer > nearPlayerTimeLimit) {
+		nearPlayerTimer = 0;
+		// スポーンするときのパーティクル
+		for (int i = 0; i < nearPlayerParticleNum; i++) {
+
+			Vector3 pos{};
+			// ポジションをエネミーの中心座標にセット
+			//pos.y += 1.5f;
+
+			// X,Y,Z全てでランダムに分布
+			Vector3 vel{};
+
+			const float md_angle = 360.0f;
+			Vector3 angle{};
+			float randAngle = (float)rand() / RAND_MAX * md_angle - md_angle;
+			angle.x = randAngle;
+			angle.z = randAngle;
+			angle.x += MathUtil::DegreeToRadian(angle.x);
+			angle.z += MathUtil::DegreeToRadian(angle.z);
+			float range = Random::RangeF(0.1f, 1.0f);
+
+			pos.y = worldTransform_.translation.y + Random::RangeF(-0.6f, 0.6f);
+			//range = abs(pos.y);
+			// 角度の方向にポジションをセット
+			pos.x = worldTransform_.translation.x + cos(angle.x) * range;
+			pos.z = worldTransform_.translation.z + sin(angle.z) * range;
+
+			// 重力に見立ててYのみでランダムに分布
+			Vector3 acc{};
+			const float md_acc = 0.0015f;
+			
+			acc.x = Random::RangeF(-md_acc, md_acc);
+			acc.y = Random::RangeF(-md_acc, md_acc);
+			acc.z = Random::RangeF(-md_acc, md_acc);
+
+			// 追加
+			particleMan_->Add(ParticleManager::Type::EnemyNear, 150, pos, vel, acc, angle, 0.1f, 0.0f, nearStartColor_, nearEndColor_);
+		}
 	}
 }

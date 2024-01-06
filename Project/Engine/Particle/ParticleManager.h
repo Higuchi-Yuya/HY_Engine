@@ -40,6 +40,7 @@ public: // サブクラス
 	{
 		Normal,
 		EnemySpawn,
+		EnemyNear,
 	};
 
 	//パーティクル一粒

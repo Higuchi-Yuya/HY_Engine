@@ -281,6 +281,9 @@ void BeatEffect::Reset()
 	beatState_ = _Expansion;
 	notBeatState_ = _SetValue;
 
+	vignette_->SetVignetteColor(blackColor);
+	vignette_->Update();
+
 	// 拡縮のタイリングをリセット
 	postScaling_->tailing_ = { 1,1 };
 	// 拡大縮小の更新処理

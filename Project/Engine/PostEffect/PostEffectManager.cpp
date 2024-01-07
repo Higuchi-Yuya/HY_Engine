@@ -21,7 +21,7 @@ void PostEffectManager::Initialize()
 
 void PostEffectManager::Update()
 {
-	beatEffect_->Update();
+	//beatEffect_->Update();
 }
 
 void PostEffectManager::ImguiUpdate()

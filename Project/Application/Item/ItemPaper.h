@@ -155,6 +155,11 @@ private:
 	Vector3 scaleSmall_;
 
 	Vector2 easeKeyPos_;
+	Vector3 easeScale_;
+
+	// 拾ったあとの少し表示するためのタイマー
+	int displayTimer_;
+	int displayTimeLimit_;
 
 	// 拾った後アイテムを閉じるフラグ
 	bool IsCheckSprite_;

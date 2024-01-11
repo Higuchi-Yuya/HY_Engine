@@ -29,6 +29,12 @@ void ItemPaper::Initialize(std::string fileName)
 	IsCheckSprite_ = false;
 	IsGetItem_ = false;
 	IsKeyItem_ = false;
+
+	// 表示するためのタイマー
+	displayTimer_ = 0;
+	displayTimeLimit_ = 5;
+
+	easeScale_ = { 0.7f,0.7f,0.7f };
 }
 
 void ItemPaper::Update()
@@ -77,10 +83,17 @@ void ItemPaper::Reset()
 	itemState_ = sparkling;
 
 	easeTrans_.Reset();
+	easeKeyItem_.Reset();
 
 	IsBig_ = false;
 	IsCheckSprite_ = false;
 	IsGetItem_ = false;
+	IsEaseKeyItem_ = false;
+
+	displayTimer_ = 0;
+
+	itemSprite_.SetPosition({ WinApp::window_width / 2,WinApp::window_height / 2 });
+	itemSprite_.SetScale({ 1,1,1 });
 }
 
 void ItemPaper::SetWorldTransformPos(Vector3 wTranslation)
@@ -129,8 +142,8 @@ void ItemPaper::OncolToPlayerUpdate()
 		// アイテムが取得できる範囲だったら
 		if (Collision::CheckSphere2Sphere(pcol, sItemInRange)) {
 
-			// Yボタンを押したらアイテムを表示し、アイテム取得フラグをオン
-			if (JoypadInput::GetButton(PadCode::ButtonY)) {
+			// Aボタンを押したらアイテムを表示し、アイテム取得フラグをオン
+			if (JoypadInput::GetButtonDown(PadCode::ButtonA)) {
 				itemState_ = afterPickItUp;
 				IsGetItem_ = true;
 			}
@@ -206,8 +219,14 @@ void ItemPaper::ItemStateUpdate()
 		break;
 	case ItemPaper::afterPickItUp:// 拾った後の状態
 
+		// もしタイマーがリミット以下なら
+		// タイマーをプラスして、スイッチ文を抜ける
+		if (displayTimer_ < displayTimeLimit_) {
+			displayTimer_++;
+			break;
+		}
 		// Aボタンを押したらアイテムの確認がとれたことになる
-		if (JoypadInput::GetButton(PadCode::ButtonA)) {
+		if (JoypadInput::GetButtonDown(PadCode::ButtonA)) {
 			IsCheckSprite_ = true;
 			IsGetItem_ = false;
 		}
@@ -224,6 +243,8 @@ void ItemPaper::KeyItemEaseUpdate()
 	easeKeyItem_.Update();
 
 	Vector2 windowHalfSize = { WinApp::window_width / 2,WinApp::window_height / 2 };
+	Vector3 defuScale = { 1,1,1 };
 
 	itemSprite_.SetPosition(easeKeyItem_.easeInCircVec2(windowHalfSize, easeKeyPos_));
+	itemSprite_.SetScale(easeKeyItem_.easeInCircVec3(defuScale, easeScale_));
 }

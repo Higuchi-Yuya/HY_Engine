@@ -341,6 +341,9 @@ void Enemy::PatrolUpdate()
 			IsPatrolEnd_ = false;
 		}
 	}
+
+	// 回転処理
+	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
 }
 
 void Enemy::TrackingUpdate()

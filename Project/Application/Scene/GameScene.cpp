@@ -9,7 +9,6 @@
 #include "InputManager.h"
 #include "FbxLoader.h"
 #include "Random.h"
-#include "BeatEffect.h"
 
 GameScene::~GameScene()
 {
@@ -213,9 +212,12 @@ void GameScene::Draw3D()
 		o->Draw(&gameCamera_->GetView());
 	}
 	gameCollider_->Draw3D(&gameCamera_->GetView());
-	// プレイヤーの描画
-	player_->Draw(&gameCamera_->GetView());
 
+	// プレイヤーの描画(カメラがクリア演出以外の時に描画)
+	if (gameCamera_->GetIsDoorOpen() == false || gameCamera_->GetIsFinishDoorOpen_() == true) {
+		player_->Draw(&gameCamera_->GetView());
+	}
+	
 	DrawTransParentObj();
 
 	// パーティクルの描画
@@ -271,6 +273,8 @@ void GameScene::DrawHighLumiObj()
 
 void GameScene::DrawTransParentObj()
 {
+	// ステンシルの参照値を0に戻す
+	commandList_->OMSetStencilRef(2);
 	// オブジェクトのパイプラインをステンシルの読み込み側に変更
 	Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
 
@@ -297,6 +301,8 @@ void GameScene::DrawShieldObj()
 	player_->DrawFlashLightRange(&gameCamera_->GetView());
 
 	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+	// ステンシルテストの参照値を設定する
+	commandList_->OMSetStencilRef(0);
 }
 
 void GameScene::DrawBillboardTex()
@@ -348,87 +354,97 @@ void GameScene::Reset()
 	for (auto i : itemPapers_){
 		i->Reset();
 	}
+	testItem_.Reset();
 
 	// ドアの角度をリセット
 	latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(-90);
 	latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(90);
+
+	// 鼓動エフェクトのリセット
+	beatEffect_->Reset();
+
+	// アイテムの表示フラグをリセット
+	IsItemDisplay_ = false;
 }
 
 void GameScene::LoadEnemy()
 {
-	switch (enemyWave_)
-	{
-	case GameScene::wave01:// ウェーブ０１の時の敵のスポーンパターン抽選
+	//switch (enemyWave_)
+	//{
+	//case GameScene::wave01:// ウェーブ０１の時の敵のスポーンパターン抽選
 
-		randomWave01_ = Random::Range(1, 3);
+	//	randomWave01_ = Random::Range(1, 3);
 
-		switch (randomWave01_)
-		{
-		case 1:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p1"));
-			break;
-		case 2:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p2"));
-			break;
-		case 3:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p3"));
-			break;
-		default:
-			break;
-		}
+	//	switch (randomWave01_)
+	//	{
+	//	case 1:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p1"));
+	//		break;
+	//	case 2:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p2"));
+	//		break;
+	//	case 3:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave01_p3"));
+	//		break;
+	//	default:
+	//		break;
+	//	}
 
-		break;
-	case GameScene::wave02:// ウェーブ０２の時の敵のスポーンパターン抽選
-		randomWave01_ = Random::Range(1, 3);
+	//	break;
+	//case GameScene::wave02:// ウェーブ０２の時の敵のスポーンパターン抽選
+	//	randomWave01_ = Random::Range(1, 3);
 
-		switch (randomWave01_)
-		{
-		case 1:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p1"));
-			break;
-		case 2:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p2"));
-			break;
-		case 3:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p3"));
-			break;
-		default:
-			break;
-		}
+	//	switch (randomWave01_)
+	//	{
+	//	case 1:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p1"));
+	//		break;
+	//	case 2:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p2"));
+	//		break;
+	//	case 3:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave02_p3"));
+	//		break;
+	//	default:
+	//		break;
+	//	}
 
-		break;
-	case GameScene::wave03:// ウェーブ０３の時の敵のスポーンパターン抽選
+	//	break;
+	//case GameScene::wave03:// ウェーブ０３の時の敵のスポーンパターン抽選
 
-		randomWave01_ = Random::Range(1, 3);
+	//	randomWave01_ = Random::Range(1, 3);
 
-		switch (randomWave01_)
-		{
-		case 1:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p1"));
-			break;
-		case 2:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p2"));
-			break;
-		case 3:
-			// レベルデータの読み込み
-			levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p3"));
-			break;
-		default:
-			break;
-		}
+	//	switch (randomWave01_)
+	//	{
+	//	case 1:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p1"));
+	//		break;
+	//	case 2:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p2"));
+	//		break;
+	//	case 3:
+	//		// レベルデータの読み込み
+	//		levelData_.reset(LevelLoader::LoadFile("Enemy/enemyDataWave03_p3"));
+	//		break;
+	//	default:
+	//		break;
+	//	}
 
-		break;
-	default:
-		break;
-	}
+	//	break;
+	//default:
+	//	break;
+	//}
+	
+	// レベルデータの読み込み
+	levelData_.reset(LevelLoader::LoadFile("testItem"));
 
 
 	for (auto& objectData : levelData_->objects) {
@@ -509,7 +525,9 @@ void GameScene::GameSceneUpdate()
 
 	// アイテムが表示されていいなかったら
 	// プレイヤーと敵の更新処理を行う
-	if (IsItemDisplay_ == false) {
+	if (IsItemDisplay_ == false &&
+		(gameCamera_->GetIsDoorOpen() == false ||
+		 gameCamera_->GetIsFinishDoorOpen_() == true)) {
 
 		// プレイヤーの更新処理
 		player_->Update();
@@ -522,6 +540,11 @@ void GameScene::GameSceneUpdate()
 
 		// 敵の更新処理関連
 		EnemyGameUpdate();
+		beatEffect_->Update();
+	}
+	// それ以外の時は鼓動のリセット
+	else {
+		beatEffect_->Reset();
 	}
 
 	// カメラの更新処理
@@ -553,7 +576,7 @@ void GameScene::GameSceneUpdate()
 	// 制限時間が過ぎたらクリア
 	if (timerUi_->GetIsTimeEnd() == true) {
 		IsSceneFinsh_ = true;
-		IsGameClear_ = true;
+		IsGameClear_ = false;
 	}
 }
 

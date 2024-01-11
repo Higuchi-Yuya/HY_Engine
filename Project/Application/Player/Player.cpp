@@ -229,9 +229,8 @@ void Player::OnColUpSpeed()
 
 void Player::Draw2DFront()
 {
-	//playerHpInside_->Draw();
-	//playerHpBar_->Draw();
-	
+	playerHpInside_->Draw();
+	playerHpBar_->Draw();
 }
 
 void Player::DrawImgui()

@@ -53,15 +53,15 @@ void OperationUI::Init()
 	sprites_[MoveText]->SetScale(Vector3(0.3f, 0.3f, 0));
 
 	// アイテムフレームの初期化
-	itemFlameDefaPos_ = { 120,80 };
-	itemFlameDefaSize_ = { 158,152 };
-	float abjustmentPos = 40;
+	itemFlameDefaPos_ = { 100,150 };
+	itemFlameDefaSize_ = { 70,70 };
+	float abjustmentPos = 10;
 
-	sprites_[itemFlame1]->Initialize(itemFlameTex_.get(), { itemFlameDefaPos_ });
-	sprites_[itemFlame2]->Initialize(itemFlameTex_.get(), { (itemFlameDefaPos_.x + itemFlameDefaSize_.x * 1)- abjustmentPos,
-															itemFlameDefaPos_.y });
-	sprites_[itemFlame3]->Initialize(itemFlameTex_.get(), { (itemFlameDefaPos_.x + itemFlameDefaSize_.x * 2) - abjustmentPos * 2,
-															itemFlameDefaPos_.y });
+	sprites_[itemFlame1]->Initialize(itemFlameTex_.get(), { itemFlameDefaPos_ },itemFlameDefaSize_);
+	sprites_[itemFlame2]->Initialize(itemFlameTex_.get(), { (itemFlameDefaPos_.x + itemFlameDefaSize_.x * 1)+ abjustmentPos,
+															itemFlameDefaPos_.y }, itemFlameDefaSize_);
+	sprites_[itemFlame3]->Initialize(itemFlameTex_.get(), { (itemFlameDefaPos_.x + itemFlameDefaSize_.x * 2) + abjustmentPos * 2,
+															itemFlameDefaPos_.y }, itemFlameDefaSize_);
 }
 
 void OperationUI::Update()

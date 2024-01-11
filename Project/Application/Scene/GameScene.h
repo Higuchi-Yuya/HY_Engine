@@ -23,6 +23,7 @@
 #include <vector>
 #include <BillboardTex.h>
 #include "ItemPaper.h"
+#include "BeatEffect.h"
 
 class GameScene
 {
@@ -130,6 +131,12 @@ public:// セッター
 	/// </summary>
 	/// <param name="pointLightsInfo">ポイントライトの情報が格納されている配列</param>
 	void SetPointInfo(std::vector<WorldTransform*> pointLightsInfo) { pointLightsInfo_ = pointLightsInfo; }
+
+	/// <summary>
+	/// 鼓動エフェクトを設定
+	/// </summary>
+	/// <param name="beatEffect"></param>
+	void SetBeatEffect(BeatEffect* beatEffect) { beatEffect_ = beatEffect; }
 
 public:// ゲッター
 
@@ -295,6 +302,7 @@ private:// メンバ変数
 #pragma region アイテム関連
 	std::vector<ItemPaper*>itemPapers_;
 
+	// 表示されているかどうか
 	bool IsItemDisplay_ = false;
 
 	float doorRotYValue = 0.5f;
@@ -305,14 +313,17 @@ private:// メンバ変数
 	Easing easeItem2;
 	Easing easeItem3;
 
-	Vector2 easeItemPos1 = { 120,80 };
-	Vector2 easeItemPos2 = { 238,80 };
-	Vector2 easeItemPos3 = { 356,80 };
+	Vector2 easeItemPos1 = { 100,150 };
+	Vector2 easeItemPos2 = { 180,150 };
+	Vector2 easeItemPos3 = { 260,150 };
 
 	// 三つのアイテムが全て集まったら
 	
 #pragma endregion
 
 	ItemPaper testItem_;
+
+	// 鼓動エフェクト
+	BeatEffect* beatEffect_ = nullptr;
 };
 

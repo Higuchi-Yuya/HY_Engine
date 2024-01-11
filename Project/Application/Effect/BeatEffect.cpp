@@ -181,6 +181,12 @@ void BeatEffect::NearUpdate()
 	// ビートフラグがオンの時
 	// 基本的にずっと処理を繰り返す
 
+	// もし敵がいないとき鼓動フラグをオフ
+	if (enemysInfo_.size() == 0) {
+		IsBeat_ = false;
+		IsNear_ = false;
+	}
+
 	// 凄く近い時
 	for (auto& e : enemysInfo_) {
 

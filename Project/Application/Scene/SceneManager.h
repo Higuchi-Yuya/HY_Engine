@@ -77,7 +77,7 @@ public:// 静的メンバ関数
 
 public:// セッター
 	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
-	void SetBeatEffect(BeatEffect* beatEffect) { beatEffect_ = beatEffect; }
+	void SetBeatEffect(BeatEffect* beatEffect);
 
 public:// ゲッター
 

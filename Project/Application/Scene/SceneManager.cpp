@@ -86,6 +86,18 @@ void SceneManager::Initialize()
 
 	// ランタン
 	modelWallRantern_.reset(Model::LoadFromOBJ("WallRantern"));
+	modelPostRantern_.reset(Model::LoadFromOBJ("postRantern"));
+
+	// 壁
+	modelWall02_.reset(Model::LoadFromOBJ("wall02"));
+	modelWall03_.reset(Model::LoadFromOBJ("wall03"));
+
+	// 椅子
+	modelChair_.reset(Model::LoadFromOBJ("chair"));
+
+	// 十字架
+	modelCross_.reset(Model::LoadFromOBJ("cross"));
+	modelStoneCross_.reset(Model::LoadFromOBJ("stoneCross"));
 
 #pragma endregion
 
@@ -396,7 +408,7 @@ void SceneManager::InitLoader()
 {
 #pragma region ローダー用の読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("field"));
+	levelData_.reset(LevelLoader::LoadFile("testS"));
 
 	// モデルデータをモデルのリストに登録
 	models.insert(std::make_pair("skydome", modelSkydome_.get()));
@@ -412,6 +424,13 @@ void SceneManager::InitLoader()
 	models.insert(std::make_pair("grave_square", modelGraveSquare.get()));
 	models.insert(std::make_pair("WallRantern", modelWallRantern_.get()));
 
+	models.insert(std::make_pair("postRantern", modelPostRantern_.get()));
+	models.insert(std::make_pair("wall02", modelWall02_.get()));
+	models.insert(std::make_pair("wall03", modelWall03_.get()));
+	models.insert(std::make_pair("cross", modelCross_.get()));
+	models.insert(std::make_pair("stoneCross", modelStoneCross_.get()));
+	models.insert(std::make_pair("chair", modelChair_.get()));
+
 	// レベルデータからオブジェクトを生成、配置
 	//	また、プレイヤーの初期位置やエネミーの初期
 	for (auto& objectData : levelData_->objects) {
@@ -423,6 +442,9 @@ void SceneManager::InitLoader()
 		}
 
 		if (objectData.tagName == "enemy") {
+
+		}
+		else if (objectData.tagName == "ItemKey") {
 
 		}
 		// タグ名がドアなら

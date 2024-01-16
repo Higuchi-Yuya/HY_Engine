@@ -196,6 +196,20 @@ private:// メンバ変数
 	// ランタン
 	std::unique_ptr<Model> modelWallRantern_ = nullptr;
 
+	// 街灯
+	std::unique_ptr<Model> modelPostRantern_ = nullptr;
+
+	// 壁
+	std::unique_ptr<Model> modelWall02_ = nullptr;
+	std::unique_ptr<Model> modelWall03_ = nullptr;
+
+	// 椅子
+	std::unique_ptr<Model> modelChair_ = nullptr;
+
+	// 十字架
+	std::unique_ptr<Model> modelCross_ = nullptr;
+	std::unique_ptr<Model> modelStoneCross_ = nullptr;
+
 	#pragma endregion
 
 	#pragma region カメラ関連

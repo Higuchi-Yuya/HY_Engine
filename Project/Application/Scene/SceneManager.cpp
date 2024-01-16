@@ -137,7 +137,7 @@ void SceneManager::Initialize()
 	}
 
 	// プレイヤーのポイントライトをオン
-	light->SetPointLightActive((int)(pointLightsInfo_.size() + 1), true);
+	//light->SetPointLightActive((int)(pointLightsInfo_.size() + 1), true);
 #pragma endregion
 
 #pragma region ビュープロジェクション関連の初期化

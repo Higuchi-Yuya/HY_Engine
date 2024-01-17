@@ -447,6 +447,22 @@ void SceneManager::InitLoader()
 		else if (objectData.tagName == "ItemKey") {
 
 		}
+		else if (objectData.tagName == "colBox") {
+
+			Box box;
+			box.center = objectData.translation;
+			box.radius = objectData.scaling;
+
+			gameCollider->AddObjBox(box);
+		}
+		else if (objectData.tagName == "colSphere") {
+
+			Sphere sphere;
+			sphere.center = objectData.translation;
+			sphere.radius = objectData.scaling.x;
+
+			gameCollider->AddObjSphere(sphere);
+		}
 		// タグ名がドアなら
 #pragma region お墓のドア
 		else if (objectData.tagName == "Door")

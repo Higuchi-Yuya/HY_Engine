@@ -644,14 +644,13 @@ bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldT
 		if (trans != nullptr) {
 			// 上へ押し出し
 			if (sc.z > box.center.z) {
-				trans->translation.z = trans->oldTranslation.z;
+				trans->translation.z = box.center.z + (box.radius.z + sphere.radius) + 0.1f;
 			}
 			// 下への押し出し
 			if (sc.z < box.center.z) {
-				trans->translation.z = trans->oldTranslation.z;
+				trans->translation.z = box.center.z - (box.radius.z + sphere.radius) - 0.1f;
 			}
 		}
-
 		A = true;
 	}
 	// 左右の範囲判定
@@ -662,11 +661,11 @@ bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldT
 		if (trans != nullptr) {
 			// 右へ押し出し
 			if (sc.x > box.center.x) {
-				trans->translation.x = trans->oldTranslation.x;
+				trans->translation.x = box.center.x + (box.radius.x + sphere.radius) + 0.1f;
 			}
 			// 左への押し出し
 			if (sc.x < box.center.x) {
-				trans->translation.x = trans->oldTranslation.x;
+				trans->translation.x = box.center.x - (box.radius.x + sphere.radius) - 0.1f;
 			}
 		}
 		B = true;
@@ -691,9 +690,12 @@ bool Collision::CheckSphereToAABB2D(const Sphere& sphere, const Box& box, WorldT
 		((rightDownPos.z - sc.z) * (rightDownPos.z - sc.z)) < sphere.radius * sphere.radius) {
 		F = true;
 	}
+
+	// どれかの条件が通ったら当たった判定をとる
 	if (A == true || B == true ||
 		C == true || D == true ||
 		E == true || F == true) {
+
 		return true;
 	}
 	return false;

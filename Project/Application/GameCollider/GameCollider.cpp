@@ -21,24 +21,24 @@ void GameCollider::Initialize()
 		switch (i)
 		{
 		case 0:
-			box_[i]->worldTransform_.translation.z = 30 + 50.22f;
-			box_[i]->worldTransform_.scale.x = 50;
-			box_[i]->worldTransform_.scale.z = 50;
+			box_[i]->worldTransform_.translation.z = 30 + 30.0f;
+			box_[i]->worldTransform_.scale.x = 75;
+			box_[i]->worldTransform_.scale.z = 1;
 			break;
 		case 1:
-			box_[i]->worldTransform_.translation.z = -30 - 50.22f;
-			box_[i]->worldTransform_.scale.x = 50;
-			box_[i]->worldTransform_.scale.z = 50;
+			box_[i]->worldTransform_.translation.z = -30 - 14.22f;
+			box_[i]->worldTransform_.scale.x = 75;
+			box_[i]->worldTransform_.scale.z = 1;
 			break;
 		case 2:
-			box_[i]->worldTransform_.translation.x = 30 + 45.8f;
-			box_[i]->worldTransform_.scale.x = 30;
-			box_[i]->worldTransform_.scale.z = 30;
+			box_[i]->worldTransform_.translation.x = 30 + 37.6f;
+			box_[i]->worldTransform_.scale.x = 1;
+			box_[i]->worldTransform_.scale.z = 65;
 			break;
 		case 3:
-			box_[i]->worldTransform_.translation.x = -30 - 47.3f;
-			box_[i]->worldTransform_.scale.x = 30;
-			box_[i]->worldTransform_.scale.z = 30;
+			box_[i]->worldTransform_.translation.x = -30 - 39.0f;
+			box_[i]->worldTransform_.scale.x = 1;
+			box_[i]->worldTransform_.scale.z = 65;
 			break;
 		default:
 			break;
@@ -136,7 +136,7 @@ void GameCollider::Draw3D(ViewProjection* viewProjection)
 	
 	for (size_t i = 0; i < 4; i++)
 	{
-		//box_[i]->Draw(viewProjection);
+		box_[i]->Draw(viewProjection);
 	}
 
 	//testBox_->Draw(viewProjection);
@@ -150,6 +150,16 @@ void GameCollider::AddEnemy(Enemy* enemy)
 void GameCollider::AddObj(Object3d* obj)
 {
 	objectsInfo_.push_back(obj);
+}
+
+void GameCollider::AddObjSphere(Sphere sphere)
+{
+	objSpheres_.push_back(sphere);
+}
+
+void GameCollider::AddObjBox(Box box)
+{
+	objBox_.push_back(box);
 }
 
 void GameCollider::SetPlayer(Player* player)
@@ -323,9 +333,12 @@ void GameCollider::ObjAronudCollisionUpdate()
 	// 壁との当たり判定
 	for (size_t i = 0; i < 4; i++)
 	{
+		Box wallbox;
+		wallbox.center = box_[i]->worldTransform_.translation;
+		wallbox.radius = box_[i]->worldTransform_.scale;
 		// ------------プレイヤーと壁の当たり判定---------- //
-		if (Collision::CheckSphere2AABB(pcol_, box_[i]->worldTransform_, &player_->interPos, &player_->rejectVec)) {
-			player_->pushBackOnCol();
+		if (Collision::CheckSphereToAABB2D(pcol_, wallbox, &player_->worldTransform_)) {
+			//player_->pushBackOnCol();
 		}
 
 		// ------------敵と壁の当たり判定----------- //
@@ -356,5 +369,21 @@ void GameCollider::ObjAronudCollisionUpdate()
 		}
 
 		box_[i]->Update();
+	}
+
+	for (auto objSphere : objSpheres_)
+	{
+		// ------------プレイヤーと追加オブジェクトの当たり判定---------- //
+		if (Collision::CheckSphere2Sphere(pcol_, objSphere, &player_->interPos,&player_->rejectVec)) {
+			player_->pushBackOnCol();
+		}
+	}
+
+	for (auto objBox : objBox_)
+	{
+		// ------------プレイヤーと追加オブジェクトの当たり判定---------- //
+		if (Collision::CheckSphereToAABB2D(pcol_, objBox, &player_->worldTransform_)) {
+			//player_->pushBackOnCol();
+		}
 	}
 }

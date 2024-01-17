@@ -45,6 +45,18 @@ public:// メンバ関数
 	void AddObj(Object3d* obj);
 
 	/// <summary>
+	/// 球の情報をベクター型に格納
+	/// </summary>
+	/// <param name="sphere">球の情報</param>
+	void AddObjSphere(Sphere sphere);
+
+	/// <summary>
+	/// ボックスの情報をベクター型に格納
+	/// </summary>
+	/// <param name="box">ボックスの情報</param>
+	void AddObjBox(Box box);
+
+	/// <summary>
 	/// プレイヤーを取得する
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
@@ -83,6 +95,11 @@ private:// メンバ変数
 	std::list<std::unique_ptr<PlayerBullet>> bulletsInfo_;
 	// オブジェクト当たり判定用の配列
 	std::vector<Object3d*> objectsInfo_;
+
+	// 球の当たり判定用の配列
+	std::vector<Sphere> objSpheres_;
+	// ボックスの当たり判定用の配列
+	std::vector<Box>objBox_;
 
 	Player* player_ = nullptr;
 

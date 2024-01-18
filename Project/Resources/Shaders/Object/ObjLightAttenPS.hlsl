@@ -44,20 +44,20 @@ float DegreeToRadian(float degree)
 float calculateAttenuation(float distance, float2 lightDirection, float2 spotDirection)
 {
 	
-    float constant = 1.0f;
+    const float constant = 1.0f;
     float liner = 0.1f;
-    float quadratic = 0.01f;
-    float cutoffAngle = 45.0f * (3.141592f / 180.0f); // 45度をラジアンに変換
-    float outerCutoffAngle = 30.0f * (3.141592f / 180.0f); // 30度をラジアンに変換
+    float quadratic = 0.05f;
+    float cutoffAngle = 30.0f * (3.141592f / 180.0f); // 45度をラジアンに変換
+    float outerCutoffAngle = 45.0f * (3.141592f / 180.0f); // 30度をラジアンに変換
     // 光源からの距離
     float distanceSquared = distance * distance;
 
-        // 光の減衰係数
+    // 光の減衰係数
     float attenuation = 1.0f / (constant + 
     liner * distance
     +quadratic * distanceSquared);
 
-        // スポットライトの角度による減衰
+    // スポットライトの角度による減衰
     float spotCosine = cos(cutoffAngle);
     float outerSpotCosine = cos(outerCutoffAngle);
     float lightDotSpot = dot(lightDirection, spotDirection);
@@ -209,15 +209,15 @@ float4 main(VSOutput input) : SV_TARGET
             float cos_ = dot(lightv, spotLights[i].lightv);
 			// 減衰開始角度から、減衰終了角度にかけて減衰
 			// 減衰開始角度の内側は1倍 減衰終了角度の外側は0倍の輝度
-			float angleatten = smoothstep(spotLights[i].lightfactoranglecos.y, spotLights[i].lightfactoranglecos.x, cos_);
-            float angleXZAtten = smoothstep(cos(DegreeToRadian(100)), cos(DegreeToRadian(10)), cos_);
+			//float angleatten = smoothstep(spotLights[i].lightfactoranglecos.y, spotLights[i].lightfactoranglecos.x, cos_);
+            //float angleXZAtten = smoothstep(cos(DegreeToRadian(100)), cos(DegreeToRadian(10)), cos_);
 			
 			
 			// 角度減衰を乗算
-            float attenAlpha = atten;
-			atten *= angleatten;
-            attenAlpha *= angleXZAtten;
-            //atten = calculateAttenuation(distance, lightVV, spotV);
+            //float attenAlpha = atten;
+			//atten *= angleatten;
+            //attenAlpha *= angleXZAtten;
+            atten = calculateAttenuation(distance, lightVV, spotV);
 
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(lightv, input.normal);
@@ -232,7 +232,7 @@ float4 main(VSOutput input) : SV_TARGET
 
 			// 全て加算する
             shadecolor.rgb += atten * (ambient+diffuse + specular) * spotLights[i].lightcolor;
-            shadecolor.a += angleXZAtten * angleXZAtten;
+            shadecolor.a += atten * atten;
 
         }
 	}

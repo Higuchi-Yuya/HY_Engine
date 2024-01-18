@@ -41,6 +41,45 @@ float DegreeToRadian(float degree)
     return result;
 }
 
+float calculateAttenuation(float distance, float2 lightDirection, float2 spotDirection)
+{
+	
+    float constant = 1.0f;
+    float liner = 0.1f;
+    float quadratic = 0.01f;
+    float cutoffAngle = 45.0f * (3.141592f / 180.0f); // 45度をラジアンに変換
+    float outerCutoffAngle = 30.0f * (3.141592f / 180.0f); // 30度をラジアンに変換
+    // 光源からの距離
+    float distanceSquared = distance * distance;
+
+        // 光の減衰係数
+    float attenuation = 1.0f / (constant + 
+    liner * distance
+    +quadratic * distanceSquared);
+
+        // スポットライトの角度による減衰
+    float spotCosine = cos(cutoffAngle);
+    float outerSpotCosine = cos(outerCutoffAngle);
+    float lightDotSpot = dot(lightDirection, spotDirection);
+
+    if (lightDotSpot < spotCosine)
+    {
+        // 光がカットオフ角度より外側ならば、外側カットオフ角度による減衰を適用
+        if (lightDotSpot > outerSpotCosine)
+        {
+            float blend = (lightDotSpot - spotCosine) / (outerSpotCosine - spotCosine);
+            attenuation *= (1.0f - blend);
+        }
+        else
+        {
+            // カットオフ角度より外側でない場合は完全に減衰
+            attenuation = 0.0f;
+        }
+    }
+
+    return attenuation;
+}
+
 float4 main(VSOutput input) : SV_TARGET
 {	
 	// テクスチャマッピング
@@ -60,7 +99,7 @@ float4 main(VSOutput input) : SV_TARGET
     float3 ambient = ambientIndensity * ambientColor;
 
 	// シェーディングによる色
-    float4 shadecolor = { 0, 0, 0, 0.01f };
+    float4 shadecolor = { 0, 0, 0, 0.0f };
 
     if (bloomActive)
     {
@@ -146,7 +185,7 @@ float4 main(VSOutput input) : SV_TARGET
             float3 lightColor = pointLights[i].lightcolor * pointLights[i].lightIndensity;
 			
 			// 全て加算する
-            shadecolor.rgb += sColor * lightColor * atten;
+            //shadecolor.rgb += sColor * lightColor * atten;
         }
 	}
 
@@ -172,9 +211,13 @@ float4 main(VSOutput input) : SV_TARGET
 			// 減衰開始角度の内側は1倍 減衰終了角度の外側は0倍の輝度
 			float angleatten = smoothstep(spotLights[i].lightfactoranglecos.y, spotLights[i].lightfactoranglecos.x, cos_);
             float angleXZAtten = smoothstep(cos(DegreeToRadian(100)), cos(DegreeToRadian(10)), cos_);
+			
+			
 			// 角度減衰を乗算
+            float attenAlpha = atten;
 			atten *= angleatten;
-            //atten = max(atten, 0.2f);
+            attenAlpha *= angleXZAtten;
+            //atten = calculateAttenuation(distance, lightVV, spotV);
 
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(lightv, input.normal);
@@ -183,13 +226,13 @@ float4 main(VSOutput input) : SV_TARGET
 			// 環境反射光
             float3 ambient = m_ambient;
 			// 拡散反射光
-			float3 diffuse = dotlightnormal * m_diffuse;
+            float3 diffuse = saturate(dotlightnormal) * m_diffuse;
 			// 鏡面反射光
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 
 			// 全て加算する
-            shadecolor.rgb += atten * (ambient + diffuse + specular) * spotLights[i].lightcolor;
-            shadecolor.a += angleXZAtten * 0.8f;
+            shadecolor.rgb += atten * (ambient+diffuse + specular) * spotLights[i].lightcolor;
+            shadecolor.a += angleXZAtten * angleXZAtten;
 
         }
 	}
@@ -263,6 +306,6 @@ float4 main(VSOutput input) : SV_TARGET
     }
 
 	// テクスチャの色は使わず色を数値指定
-	return color * shadecolor * texcolor;
+    return color * shadecolor * texcolor;
 
 }

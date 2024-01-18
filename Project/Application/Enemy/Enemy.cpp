@@ -217,7 +217,7 @@ void Enemy::pushBackOnCol()
 
 void Enemy::ResetBack()
 {
-	IsAlphaZero_ = false;
+	IsAlphaZero_ = true;
 	worldTransform_.color.w = 1;
 	easeAlpha_.Reset();
 
@@ -255,7 +255,7 @@ void Enemy::AliveUpdate()
 			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
 
 			easeAlpha_.Update();
-			worldTransform_.color.w = easeAlpha_.easeOutCubic(1, 0);
+			worldTransform_.color.w = easeAlpha_.easeOutCubic(0, 1);
 
 			if (easeAlpha_.GetIsEnd() == true) {
 				easeAlpha_.Reset();
@@ -269,7 +269,7 @@ void Enemy::AliveUpdate()
 			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
 
 			easeAlpha_.Update();
-			worldTransform_.color.w = easeAlpha_.easeOutCubic(0, 1);
+			worldTransform_.color.w = easeAlpha_.easeOutCubic(1, 0);
 
 			if (easeAlpha_.GetIsEnd() == true) {
 				easeAlpha_.Reset();

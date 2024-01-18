@@ -171,12 +171,12 @@ float4 main(VSOutput input) : SV_TARGET
 			// ŠÂ‹«”½ŽËŒõ
             float3 ambient = m_ambient;
 			// ŠgŽU”½ŽËŒõ
-			float3 diffuse = dotlightnormal * m_diffuse;
+            float3 diffuse = saturate(dotlightnormal) * m_diffuse;
 			// ‹¾–Ê”½ŽËŒõ
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 
 			// ‘S‚Ä‰ÁŽZ‚·‚é
-            shadecolor.rgb += atten * (ambient + diffuse + specular) * spotLights[i].lightcolor;
+            shadecolor.rgb += atten * (diffuse + specular) * spotLights[i].lightcolor;
         }
 	}
 

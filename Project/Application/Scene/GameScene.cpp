@@ -32,7 +32,7 @@ void GameScene::Initialize()
 #pragma endregion
 
 #pragma region サウンド読み込み
-	sound.SoundLoadWave("GameClear.wav");
+	//sound.SoundLoadWave("GameClear.wav");
 #pragma endregion
 
 #pragma region プレイヤー関連の初期化
@@ -276,7 +276,7 @@ void GameScene::DrawTransParentObj()
 	// ステンシルの参照値を0に戻す
 	commandList_->OMSetStencilRef(2);
 	// オブジェクトのパイプラインをステンシルの読み込み側に変更
-	Object3d::SetBlendMode(Object3d::BlendMode::TransParent);
+	Object3d::SetBlendMode(Object3d::BlendMode::LightAtten);
 
 	// 敵の描画
 	for (auto e : enemys_) {
@@ -295,10 +295,10 @@ void GameScene::DrawShieldObj()
 	commandList_->OMSetStencilRef(2);
 
 	// オブジェクトのパイプラインをステンシルの書き込み側に変更
-	Object3d::SetBlendMode(Object3d::BlendMode::Shield);
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 
 	// プレイヤーの懐中電灯の範囲オブジェクトの描画
-	player_->DrawFlashLightRange(&gameCamera_->GetView());
+	//player_->DrawFlashLightRange(&gameCamera_->GetView());
 
 	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 	// ステンシルテストの参照値を設定する

@@ -51,8 +51,8 @@ public:// サブクラス
 		Vector3 normal; // 法線ベクトル
 		Vector2 uv;  // uv座標
 
-		uint32_t boneIndex[sMAX_BONE_INDICES];
-		float boneWeight[sMAX_BONE_INDICES];
+		//uint32_t boneIndex[sMAX_BONE_INDICES];
+		//float boneWeight[sMAX_BONE_INDICES];
 	};
 
 

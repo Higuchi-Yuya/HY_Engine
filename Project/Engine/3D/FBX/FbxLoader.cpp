@@ -150,9 +150,10 @@ void FbxLoader::ParseSkin(FbxModel* model, aiMesh* fbxMesh)
 
 		for (auto& weightSet : weightList)
 		{
+			weightSet;
 			//頂点データに書き込み
-			vertices[j].boneIndex[weightArrayIndex] = weightSet.index;
-			vertices[j].boneWeight[weightArrayIndex] = weightSet.weight;
+			//vertices[j].boneIndex[weightArrayIndex] = weightSet.index;
+			//vertices[j].boneWeight[weightArrayIndex] = weightSet.weight;
 
 			//4つに達したら修了
 			if (++weightArrayIndex >= Mesh::sMAX_BONE_INDICES)

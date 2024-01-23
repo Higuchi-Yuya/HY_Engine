@@ -91,8 +91,22 @@ void GameCamera::TitleUpdate()
 
 void GameCamera::GameUpdate()
 {
-	// カメラ回転
-	RotUpdate();
+	switch (gameCameraState_)
+	{
+	case GameCamera::FirstEvent:
+		GameFirstEventUpdate();
+		break;
+	case GameCamera::Normal:
+		// カメラ回転
+		RotUpdate();
+		break;
+	case GameCamera::DoorOpen:
+		break;
+	default:
+		break;
+	}
+
+	
 
 	//ビュープロジェクションを更新
 	viewProjection_.UpdateMatrix();
@@ -117,6 +131,18 @@ void GameCamera::GameUpdate()
 	ImGui::End();
 }
 
+void GameCamera::GameFirstEventUpdate()
+{
+	firstEventTimer++;
+	if (firstEventTimer >= firstEventTimeLimit) {
+		firstEventTimer = 0;
+		gameCameraState_ = Normal;
+	}
+
+	viewProjection_.eye = firstEventEye_;
+	viewProjection_.target = firstEventTarget_;
+}
+
 void GameCamera::Reset()
 {
 	titleCameraState_ = FirstMove;
@@ -129,6 +155,8 @@ void GameCamera::Reset()
 
 	viewProjection_.eye = titleCameraFPos_;
 	viewProjection_.target = titleCameraFTargetPos_;
+
+	gameCameraState_ = FirstEvent;
 }
 
 void GameCamera::SetCameraFPos(Vector3 pos)
@@ -151,6 +179,11 @@ void GameCamera::SetIsCanEase(bool IsCanEase)
 void GameCamera::SetIsDoorOpen(bool isDoorOpen)
 {
 	IsDoorOpen_ = isDoorOpen;
+}
+
+void GameCamera::SetGameState(GameCameraState state)
+{
+	gameCameraState_ = state;
 }
 
 void GameCamera::RotUpdate()

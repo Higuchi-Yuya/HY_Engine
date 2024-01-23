@@ -240,9 +240,12 @@ void GameScene::DrawParticle()
 
 void GameScene::Draw2DFront()
 {
-	player_->Draw2DFront();
-	timerUi_->DrawFrontSprite();
-	operationUi_->DrawFrontSprite();
+	if (player_->GetIsEndTurnAround() == true) {
+		player_->Draw2DFront();
+		timerUi_->DrawFrontSprite();
+		operationUi_->DrawFrontSprite();
+	}
+
 	testItem_.Draw2D();
 	for (auto i : itemPapers_) {
 		i->Draw2D();
@@ -309,6 +312,7 @@ void GameScene::DrawBillboardTex()
 {
 	BillboardTex::PreDraw(commandList_);
 	testItem_.Draw3D();
+	player_->DrawBillTex();
 
 	for (auto i : itemPapers_) {
 		i->Draw3D();
@@ -503,6 +507,8 @@ void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
 
 void GameScene::GameSceneUpdate()
 {
+	FirstEventUpdate();
+
 	// アイテムの更新処理
 	ItemUpdate();
 
@@ -740,4 +746,20 @@ void GameScene::ItemUpdate()
 		gameCamera_->SetIsDoorOpen(true);
 		IsGameClear_ = true;
 	}
+}
+
+void GameScene::FirstEventUpdate()
+{
+	if (player_->GetIsEndTurnAround() == true) {
+		easeDoorRota_.SetEaseLimitTime(30);
+		easeDoorRota_.Update();
+		latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeDoorRota_.easeInCirc(doorLDefuRota - doorRotaValue, doorLDefuRota));
+		latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeDoorRota_.easeInCirc(doorRDefuRota + doorRotaValue, doorRDefuRota));
+
+		if (easeDoorRota_.GetIsEnd() == true) {
+			// プレイヤーがびっくりするモーションに入るようにする
+
+		}
+	}
+	
 }

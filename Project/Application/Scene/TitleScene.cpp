@@ -69,8 +69,8 @@ void TitleScene::Update()
 
 	if (gameCamera_->GetIsEaseEnd() == true) {
 		IsSceneFinsh_ = true;
-		latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(0 - 90);
-		latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(180 - 90);
+		latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(-90 - 75);
+		latticeDoors_[1]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(90 + 75);
 	}
 
 	for (auto l : latticeDoors_)

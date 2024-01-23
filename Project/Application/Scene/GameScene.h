@@ -185,6 +185,11 @@ private:// プライベート関数
 	/// </summary>
 	void ItemUpdate();
 
+	/// <summary>
+	/// 最初のイベントの更新処理
+	/// </summary>
+	void FirstEventUpdate();
+
 private:// メンバ変数
 
 	// 入力
@@ -320,6 +325,16 @@ private:// メンバ変数
 	// 三つのアイテムが全て集まったら
 	
 #pragma endregion
+
+#pragma region 最初のイベントシーン関連
+	float doorLDefuRota = -90;
+	float doorRDefuRota = 90;
+
+	float doorRotaValue = 75;
+	Easing easeDoorRota_;
+
+#pragma endregion
+
 
 	ItemPaper testItem_;
 

@@ -14,6 +14,13 @@ private:
 
 	};
 
+	enum GameCameraState
+	{
+		FirstEvent,
+		Normal,
+		DoorOpen,
+	};
+
 public:// メンバ関数
 	void Initialize();
 
@@ -22,6 +29,10 @@ public:// メンバ関数
 	void GameUpdate();
 
 	void Reset();
+
+private:
+
+	void GameFirstEventUpdate();
 
 public:// ゲッター
 
@@ -52,6 +63,9 @@ public:// セッター
 
 	// ドアが開くときのカメラをセット
 	void SetIsDoorOpen(bool isDoorOpen);
+
+	// ゲームカメラの状態のセット
+	void SetGameState(GameCameraState state);
 
 private:// プライベートメンバ関数
 	void RotUpdate();
@@ -110,5 +124,18 @@ private:// メンバ変数
 	// ドア開くときのカメラの滞在時間
 	float doorOpenTimer_ = 0;
 	float doorOpenTimeLimit_ = 60 * 10;
+
+#pragma region ゲームシーンの最初のイベント関連のカメラ変数
+	uint32_t firstEventTimer = 0;
+	uint32_t firstEventTimeLimit = 600;
+
+	// 最初のイベントの時のカメラ座標とターゲット座標
+	Vector3 firstEventEye_ = { -0.8f,1.5f,-8.0f };
+	Vector3 firstEventTarget_ = { -0.8f,2.0f,-20.0f };
+
+
+	GameCameraState gameCameraState_ = FirstEvent;
+#pragma endregion
+
 };
 

@@ -4,8 +4,8 @@
 #include "CollisionManager.h"
 #include "CollisionAttribute.h"
 #include "JoyPadInput.h"
-
-
+#include "MathUtil.h"
+#include "Random.h"
 Player* Player::Create(Model* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
@@ -38,13 +38,14 @@ bool Player::Initialize()
 	if (!Object3d::Initialize()) {
 		return false;
 	}
-
+	worldTransform_.translation.x -= 1;
+	worldTransform_.translation.z -= 32;
 
 	frontW_.Initialize();
 	frontW_.translation = { 0,0,1 };
 	frontW_.parent_ = &worldTransform_;
 
-	bulletModel_.reset(Model::LoadFromOBJ("sphere",true));
+	bulletModel_.reset(Model::LoadFromOBJ("sphere", true));
 	cameraWorld_.Initialize();
 
 	// プレイヤーのHPの初期化
@@ -63,6 +64,12 @@ bool Player::Initialize()
 	playerHpInside_->Initialize(textureHandleHpInside_.get());
 	playerHpInside_->SetAnchorPoint({ 0,0 });
 
+	questionBillTex_.Initialize();
+	questionBillTex_.LoadTexture("question.png");
+	questionBillTex_.worldTransform_.translation = worldTransform_.translation;
+	questionBillTex_.worldTransform_.translation.y += 2;
+	questionBillTex_.worldTransform_.scale = { 0.1f,0.1f,0.1f };
+
 	return true;
 }
 
@@ -72,32 +79,132 @@ void Player::InitializeFlashLightRange()
 
 	flashLightRangeObj_.Initialize();
 	flashLightRangeObj_.SetModel(flashLightRangeModel_.get());
-	
+
 	flashLightRangeObj_.worldTransform_.scale = { 2.5f,1.5f,3.0f };
 
 	flashLightRangeObj_.worldTransform_.translation = { 0,0,3.3f };
 	flashLightRangeObj_.worldTransform_.parent_ = &worldTransform_;
 }
 
+void Player::gameSceneFirstUpdate()
+{
+	if (IsEndTurnAround_ == false) {
+		switch (firstEventState_)
+		{
+		case FirstMove:// 最初の移動
+			easeQuestion_.SetEaseLimitTime(80);
+			easeQuestion_.Update();
+			worldTransform_.translation.z = easeQuestion_.Lerp(firstEventMoveZS, firstEventMoveZE);
+
+			if (easeQuestion_.GetIsEnd() == true) {
+				easeQuestion_.Reset();
+				firstEventState_ = InterTurn;
+			}
+
+			break;
+
+		case InterTurn:
+			// イージングの処理
+			easeQuestion_.SetEaseLimitTime(20);
+			easeQuestion_.Update();
+			worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeQuestion_.Lerp(0, easeQ_Rota2));
+			questionBillTex_.worldTransform_.rotation.z = MathUtil::DegreeToRadian(easeQuestion_.Lerp(0, easeQ_Rota2));
+			if (easeQuestion_.GetIsEnd() == true) {
+				easeQuestion_.Reset();
+				firstEventState_ = FirstTurn;
+			}
+
+			break;
+		case FirstTurn:// 一回目の回転
+
+			// イージングの処理
+			easeQuestion_.SetEaseLimitTime(40);
+			easeQuestion_.Update();
+			worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeQuestion_.Lerp(easeQ_Rota2, easeQ_Rota1));
+			questionBillTex_.worldTransform_.rotation.z = MathUtil::DegreeToRadian(easeQuestion_.Lerp(easeQ_Rota2, easeQ_Rota1));
+
+			if (easeQuestion_.GetIsEnd() == true) {
+				aroundStopTimer++;
+			}
+			if (aroundStopTimer >= aroundStopTimeLimit) {
+				aroundStopTimer = 0;
+				aroundStopTimeLimit = Random::Range(20, 40);
+				easeQuestion_.Reset();
+				firstEventState_ = SecondTurn;
+			}
+			break;
+		case SecondTurn:// 二回目の回転
+
+			// イージングの処理
+			easeQuestion_.SetEaseLimitTime(30);
+			easeQuestion_.Update();
+			worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeQuestion_.Lerp(easeQ_Rota1, easeQ_Rota2));
+			questionBillTex_.worldTransform_.rotation.z = MathUtil::DegreeToRadian(easeQuestion_.Lerp(easeQ_Rota1, easeQ_Rota2));
+
+			if (easeQuestion_.GetIsEnd() == true) {
+				aroundStopTimer++;
+			}
+			if (aroundStopTimer >= aroundStopTimeLimit) {
+				aroundStopTimer = 0;
+				aroundStopTimeLimit = Random::Range(20, 40);
+				easeQuestion_.Reset();
+				firstEventState_ = FirstTurn;
+				turnAroundCount_++;
+			}
+			break;
+
+		case Surprised:// びっくりのフェーズ
+			// イージングの処理
+			easeQuestion_.SetEaseLimitTime(30);
+			easeQuestion_.Update();
+			worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeQuestion_.Lerp(easeQ_Rota2, easeSRota));
+
+			if (easeQuestion_.GetIsEnd() == true) {
+				easeQuestion_.Reset();
+				IsEndTurnAround_ = true;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	// 回転が２カウント以上になったら
+	if (turnAroundCount_ >= 2) {
+		firstEventState_ = Surprised;
+	}
+
+	questionBillTex_.worldTransform_.translation = worldTransform_.translation;
+	questionBillTex_.worldTransform_.translation.y += 2;
+	questionBillTex_.Update();
+
+	frontW_.UpdateMatrix();
+}
+
 void Player::Update()
 {
 	// 生きている間の更新処理
-	if (IsAlive_){
+	if (IsAlive_) {
 		// 前フレームの座標を代入
 		worldTransform_.oldTranslation = worldTransform_.translation;
 
-		// 移動の更新処理
-		MoveUpdate();
+		// ゲームシーンの最初のきょろきょろ更新処理
+		gameSceneFirstUpdate();
 
-		// 攻撃関数
-		Attack();
+		if (IsEndTurnAround_ == true) {
+			// 移動の更新処理
+			MoveUpdate();
 
-		// プレイヤーのHPが０以下ならプレイヤーが死ぬ
-		if (playerHitPoint_ <= (float)ZERO) {
-			IsAlive_ = false;
+			// 攻撃関数
+			Attack();
+
+			// プレイヤーのHPが０以下ならプレイヤーが死ぬ
+			if (playerHitPoint_ <= (float)ZERO) {
+				IsAlive_ = false;
+			}
 		}
 	}
-	
+
 	//弾更新
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Update();
@@ -123,6 +230,18 @@ void Player::Draw(ViewProjection* view)
 	//弾描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(view);
+	}
+
+
+}
+
+void Player::DrawBillTex()
+{
+	// ビルボード描画
+	if (firstEventState_ == InterTurn ||
+		firstEventState_ == FirstTurn ||
+		firstEventState_ == SecondTurn) {
+		questionBillTex_.Draw();
 	}
 }
 
@@ -188,6 +307,11 @@ std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
 	return bullets_;
 }
 
+const bool Player::GetIsEndTurnAround() const
+{
+	return IsEndTurnAround_;
+}
+
 void Player::pushBackOnCol()
 {
 	const Vector3 up = { 0,1,0 };
@@ -202,7 +326,7 @@ void Player::pushBackOnCol()
 
 	if (-threshold < cos && cos < threshold) {
 		//sphere->center += info.reject;
-		
+
 	}
 	move += rejectVec;
 	worldTransform_.translation += move;
@@ -229,6 +353,7 @@ void Player::OnColUpSpeed()
 
 void Player::Draw2DFront()
 {
+
 	playerHpInside_->Draw();
 	playerHpBar_->Draw();
 }
@@ -280,6 +405,10 @@ void Player::Reset()
 	// プレイヤーのHPスプライトの情報をリセット
 	pHpInsidePos_ = { 20,50 };
 	pHpInsideSize_ = { 500,70 };
+
+	// 最初の処理のリセット
+	IsEndTurnAround_ = false;
+	firstEventState_ = FirstMove;
 }
 
 void Player::MoveUpdate()
@@ -289,7 +418,7 @@ void Player::MoveUpdate()
 	// 移動ベクトルをY軸周りの角度で回転
 
 	Vector3 vectorX = { 0.01f,ZERO,ZERO };
-	vectorX = MathUtil::MatVector(worldTransform_.matWorld_,vectorX);
+	vectorX = MathUtil::MatVector(worldTransform_.matWorld_, vectorX);
 	vectorX.normalize();
 	Vector3 vectorZ = { ZERO,ZERO,-0.01f };
 	vectorZ = MathUtil::MatVector(worldTransform_.matWorld_, vectorZ);
@@ -340,7 +469,7 @@ void Player::MoveUpdate()
 		if (IsAttack_ == true) {
 			moveSpeed_ = 0.08f;
 			moveVel_ = frontVec_.normalize() * moveSpeed_;
-			
+
 		}
 		else if (IsAttack_ == false) {
 			OnColUpSpeed();
@@ -356,7 +485,7 @@ void Player::MoveUpdate()
 	cameraWorld_.translation = worldTransform_.translation;
 	cameraWorld_.rotation.y += MathUtil::DegreeToRadian(rot.y);
 	cameraWorld_.UpdateMatrix();
-	
+
 
 	ImGui::Begin("joyPadInfo");
 

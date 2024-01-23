@@ -4,7 +4,7 @@
 #include "GameCamera.h"
 #include "PlayerBullet.h"
 #include "Sprite.h"
-
+#include "BillboardTex.h"
 
 class Player:public Object3d
 {
@@ -15,6 +15,15 @@ private:
 		ONE,
 	};
 	
+	enum firstEventState
+	{
+		FirstMove,	// 最初の移動
+		InterTurn,	// 補間の回転
+		FirstTurn,	// 一回目の回転
+		SecondTurn,	// 二回目の回転
+		Surprised,	// びっくりのフェーズ
+	};
+
 public:
 	// 3Dオブジェクト生成
 	static Player* Create(Model* model = nullptr);
@@ -30,11 +39,18 @@ public:
 	// シルエット初期化
 	void InitializeFlashLightRange();
 
+	// ゲームシーンの最初のイベントの更新処理
+	void gameSceneFirstUpdate();
+
 	// 毎フレーム処理
 	void Update()override;
 
 	// 描画
 	void Draw(ViewProjection* view)override;
+
+	// 描画ビルボード
+	void DrawBillTex();
+
 
 	// プレイヤーの2D描画前面
 	void Draw2DFront();
@@ -66,6 +82,9 @@ public:// ゲッター
 	const bool GetIsAlive()const;
 
 	std::list<std::unique_ptr<PlayerBullet>>& GetBullets();
+
+	// プレイヤーのきょろきょろが終了しているかどうか
+	const bool GetIsEndTurnAround()const;
 
 public:// セッター
 
@@ -180,6 +199,36 @@ private:
 
 	Vector2 pHpBarSize_ = { 500,70 };
 	Vector2 pHpInsideSize_ = { 500,70 };
+#pragma endregion
+
+#pragma region ゲームシーン最初の処理関連
+	// きょろきょろの回数
+	uint32_t turnAroundCount_ = 0;
+
+	// ビルボードのテクスチャ
+	BillboardTex questionBillTex_;
+
+	// はてなのイージング
+	Easing easeQuestion_;
+
+	// うごく角度
+	const float easeQ_Rota1 = 25.0f;
+	const float easeQ_Rota2 = -25.0f;
+
+	const float easeSRota = 180.0f;
+
+	// 回転のフラグ
+	bool IsEndTurnAround_ = false;
+
+	firstEventState firstEventState_ = FirstMove;
+
+	uint32_t aroundStopTimer = 0;
+	uint32_t aroundStopTimeLimit = 20;
+
+	float firstEventMoveZS = -42;
+	float firstEventMoveZE = -32;
+
+
 #pragma endregion
 
 };

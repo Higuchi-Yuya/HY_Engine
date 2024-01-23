@@ -136,7 +136,7 @@ void GameCollider::Draw3D(ViewProjection* viewProjection)
 	
 	for (size_t i = 0; i < 4; i++)
 	{
-		box_[i]->Draw(viewProjection);
+		//box_[i]->Draw(viewProjection);
 	}
 
 	//testBox_->Draw(viewProjection);

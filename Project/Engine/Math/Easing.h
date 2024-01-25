@@ -91,7 +91,7 @@ public:
 	Vector3 OutVec3(Vector3 start, Vector3 end);
 
 	float InOut(float start, float end);
-	
+	Vector3 InOut(Vector3 start, Vector3 end);
 
 	float In_Back(float start, float end);
 

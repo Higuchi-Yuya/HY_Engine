@@ -56,7 +56,7 @@ void GameScene::Initialize()
 
 #pragma region ローダー読み込み
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("testItem"));
+	levelData_.reset(LevelLoader::LoadFile("testS"));
 
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
@@ -98,11 +98,13 @@ void GameScene::Initialize()
 			w.scale = objectData.scaling;
 			w.rotation = objectData.rotation;
 
-			// 新しい敵の生成
+			// 新しいアイテムの生成
 			ItemPaper* newItemPaper = new ItemPaper;
 			newItemPaper->Initialize(objectData.itemTexName);
 			newItemPaper->SetWorldTransformPos(w.translation);
 			newItemPaper->UpdateWorldMatrix();
+			newItemPaper->itemSprite_.SetSize({ 500,300 });
+			newItemPaper->itemSprite_.SetScale({ 0.8f,0.8f,0 });
 
 			// 今作成した敵を配列に格納
 			itemPapers_.push_back(newItemPaper);
@@ -117,7 +119,7 @@ void GameScene::Initialize()
 			w.scale = objectData.scaling;
 			w.rotation = objectData.rotation;
 
-			// 新しい敵の生成
+			// 新しいアイテムの生成
 			ItemPaper* newItemPaper = new ItemPaper;
 			newItemPaper->Initialize(objectData.itemTexName);
 			newItemPaper->SetWorldTransformPos(w.translation);
@@ -150,7 +152,7 @@ void GameScene::Initialize()
 	BillboardTex::SetViewProjection(&gameCamera_->GetView());
 	ItemPaper::SetPlayer(player_.get());
 
-	testItem_.Initialize("tips1.png");
+	testItem_.Initialize("tips2.png");
 	testItem_.itemSprite_.SetSize({ 500,300 });
 	testItem_.itemSprite_.SetScale({0.8f,0.8f,0});
 }
@@ -369,6 +371,10 @@ void GameScene::Reset()
 
 	// アイテムの表示フラグをリセット
 	IsItemDisplay_ = false;
+
+	// ドアのイージングのリセット
+	easeDoorRota_.Reset();
+	IsDoorFirstTurn = false;
 }
 
 void GameScene::LoadEnemy()
@@ -507,6 +513,7 @@ void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
 
 void GameScene::GameSceneUpdate()
 {
+	// 最初のイベントの更新処理
 	FirstEventUpdate();
 
 	// アイテムの更新処理
@@ -750,7 +757,8 @@ void GameScene::ItemUpdate()
 
 void GameScene::FirstEventUpdate()
 {
-	if (player_->GetIsEndTurnAround() == true) {
+	if (player_->GetIsEndTurnAround() == true &&
+		IsDoorFirstTurn == false) {
 		easeDoorRota_.SetEaseLimitTime(30);
 		easeDoorRota_.Update();
 		latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(easeDoorRota_.easeInCirc(doorLDefuRota - doorRotaValue, doorLDefuRota));
@@ -758,7 +766,7 @@ void GameScene::FirstEventUpdate()
 
 		if (easeDoorRota_.GetIsEnd() == true) {
 			// プレイヤーがびっくりするモーションに入るようにする
-
+			IsDoorFirstTurn = true;
 		}
 	}
 	

@@ -57,10 +57,10 @@ void ItemPaper::UpdateWorldMatrix()
 void ItemPaper::Draw3D()
 {
 	// もしアイテムの状態がキラキラの時
-	if(itemState_==sparkling){
+	if (itemState_ == sparkling) {
 		billTex_.Draw();
 	}
-	
+
 }
 
 void ItemPaper::Draw2D()
@@ -138,9 +138,11 @@ void ItemPaper::OncolToPlayerUpdate()
 	if (Collision::CheckSphere2Sphere(pcol, sItemRange)) {
 
 		colState_ = withInRange;
+		sPlayer_->SetIsItemRange(true);
 
 		// アイテムが取得できる範囲だったら
 		if (Collision::CheckSphere2Sphere(pcol, sItemInRange)) {
+			sPlayer_->SetIsItemInRange(true);
 
 			// Aボタンを押したらアイテムを表示し、アイテム取得フラグをオン
 			if (JoypadInput::GetButtonDown(PadCode::ButtonA)) {
@@ -151,6 +153,8 @@ void ItemPaper::OncolToPlayerUpdate()
 	}
 	else {
 		colState_ = outOfRange;
+		sPlayer_->SetIsItemRange(false);
+		sPlayer_->SetIsItemInRange(false);
 	}
 }
 

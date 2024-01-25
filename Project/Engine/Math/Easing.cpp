@@ -113,6 +113,18 @@ float Easing::InOut(float start, float end)
 	}
 }
 
+Vector3 Easing::InOut(Vector3 start, Vector3 end)
+{
+	Vector3 Vec;
+	float x = InOut(static_cast <float>(start.x), static_cast <float>(end.x));
+	float y = InOut(static_cast <float>(start.y), static_cast <float>(end.y));
+	float z = InOut(static_cast <float>(start.z), static_cast <float>(end.z));
+
+	Vec = { (float)x,(float)y,(float)z };
+
+	return Vec;
+}
+
 float Easing::In_Back(float start, float end)
 {
 	

@@ -17,7 +17,7 @@ void OperationUI::Init()
 	// スプライトのハンドルの初期化
 	AbuttonTex_.reset(TextureManager::Load2DTextureP("UI/Abutton.png"));
 	LstickTex_.reset(TextureManager::Load2DTextureP("UI/Lstic.png"));
-	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/AttackText.png"));
+	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/findText.png"));
 	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/MoveText.png"));
 	itemFlameTex_.reset(TextureManager::Load2DTextureP("itemKeyFlame.png"));
 

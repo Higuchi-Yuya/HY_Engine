@@ -94,7 +94,17 @@ public:// セッター
 	// ゲームカメラをセット
 	void SetGameCamera(GameCamera* gameCamera);
 
-	
+	/// <summary>
+	/// アイテムの範囲なのかを設定
+	/// </summary>
+	/// <param name="isItemRange"></param>
+	void SetIsItemRange(bool isItemRange);
+
+	/// <summary>
+	/// アイテムのとれる範囲なのかを設定
+	/// </summary>
+	/// <param name="isItemInRange"></param>
+	void SetIsItemInRange(bool isItemInRange);
 
 public:// 当たり判定
 
@@ -207,6 +217,13 @@ private:
 
 	// ビルボードのテクスチャ
 	BillboardTex questionBillTex_;
+
+	std::unique_ptr<Texture> questionTex_ = nullptr;
+	std::unique_ptr<Texture> surprisedTex_ = nullptr;
+
+	// アイテムの範囲なのか
+	bool IsItemRange_ = false;
+	bool IsItemInRange_ = false;
 
 	// はてなのイージング
 	Easing easeQuestion_;

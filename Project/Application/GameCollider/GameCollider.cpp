@@ -50,7 +50,7 @@ void GameCollider::Initialize()
 	testBox_->SetModel(boxModel_.get());
 	testBox_->worldTransform_.translation.x = -0.8f;
 	testBox_->worldTransform_.translation.y = 1;
-	testBox_->worldTransform_.translation.z = -30;
+	testBox_->worldTransform_.translation.z = -42.5f;
 }
 
 void GameCollider::Update()
@@ -67,7 +67,7 @@ void GameCollider::Update()
 
 	Box testB;
 	testB.center = testBox_->worldTransform_.translation;
-	testB.radius = { 3.1f,1.1f,1.1f };
+	testB.radius = { 3.6f,1.1f,1.1f };
 	testBox_->worldTransform_.scale = testB.radius;
 	if (Collision::CheckSphereToAABB2D(pcol_, testB)) {
 		testBox_->worldTransform_.color = { 1,0,0,1 };
@@ -139,7 +139,7 @@ void GameCollider::Draw3D(ViewProjection* viewProjection)
 		//box_[i]->Draw(viewProjection);
 	}
 
-	//testBox_->Draw(viewProjection);
+	testBox_->Draw(viewProjection);
 }
 
 void GameCollider::AddEnemy(Enemy* enemy)

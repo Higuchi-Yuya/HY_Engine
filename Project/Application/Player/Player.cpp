@@ -64,8 +64,11 @@ bool Player::Initialize()
 	playerHpInside_->Initialize(textureHandleHpInside_.get());
 	playerHpInside_->SetAnchorPoint({ 0,0 });
 
+	questionTex_.reset(TextureManager::Load2DTextureP("question.png"));
+	surprisedTex_.reset(TextureManager::Load2DTextureP("surprised.png"));
+
 	questionBillTex_.Initialize();
-	questionBillTex_.LoadTexture("question.png");
+	questionBillTex_.SetTexture(questionTex_.get());
 	questionBillTex_.worldTransform_.translation = worldTransform_.translation;
 	questionBillTex_.worldTransform_.translation.y += 2;
 	questionBillTex_.worldTransform_.scale = { 0.1f,0.1f,0.1f };
@@ -174,10 +177,6 @@ void Player::gameSceneFirstUpdate()
 		firstEventState_ = Surprised;
 	}
 
-	questionBillTex_.worldTransform_.translation = worldTransform_.translation;
-	questionBillTex_.worldTransform_.translation.y += 2;
-	questionBillTex_.Update();
-
 	frontW_.UpdateMatrix();
 }
 
@@ -190,6 +189,11 @@ void Player::Update()
 
 		// ゲームシーンの最初のきょろきょろ更新処理
 		gameSceneFirstUpdate();
+
+		// ビルボードの更新処理
+		questionBillTex_.worldTransform_.translation = worldTransform_.translation;
+		questionBillTex_.worldTransform_.translation.y += 2;
+		questionBillTex_.Update();
 
 		if (IsEndTurnAround_ == true) {
 			// 移動の更新処理
@@ -238,9 +242,19 @@ void Player::Draw(ViewProjection* view)
 void Player::DrawBillTex()
 {
 	// ビルボード描画
-	if (firstEventState_ == InterTurn ||
-		firstEventState_ == FirstTurn ||
-		firstEventState_ == SecondTurn) {
+	if (IsItemInRange_ == true) {
+		questionBillTex_.SetTexture(surprisedTex_.get());
+		questionBillTex_.Draw();
+	}
+	else if (firstEventState_ == InterTurn ||
+			 firstEventState_ == FirstTurn ||
+			 firstEventState_ == SecondTurn) 
+	{
+		questionBillTex_.Draw();
+	}
+	else if (IsItemRange_ == true) {
+		questionBillTex_.SetTexture(questionTex_.get());
+		
 		questionBillTex_.Draw();
 	}
 }
@@ -300,6 +314,16 @@ void Player::SetWorldTransInfo(WorldTransform worldTrans)
 void Player::SetGameCamera(GameCamera* gameCamera)
 {
 	bGameCamera = gameCamera;
+}
+
+void Player::SetIsItemRange(bool isItemRange)
+{
+	IsItemRange_ = isItemRange;
+}
+
+void Player::SetIsItemInRange(bool isItemInRange)
+{
+	IsItemInRange_ = isItemInRange;
 }
 
 std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
@@ -393,7 +417,7 @@ void Player::DrawFlashLightRange(ViewProjection* view)
 void Player::Reset()
 {
 	// ワールド変換データのリセット
-	worldTransform_.translation = { ZERO,ZERO,ZERO };
+	worldTransform_.translation = { -1,ZERO,firstEventMoveZS };
 	worldTransform_.rotation = { ZERO,ZERO,ZERO };
 
 	// プレイヤーのHPのリセット
@@ -409,6 +433,9 @@ void Player::Reset()
 	// 最初の処理のリセット
 	IsEndTurnAround_ = false;
 	firstEventState_ = FirstMove;
+	easeQuestion_.Reset();
+	turnAroundCount_ = 0;
+	aroundStopTimer = 0;
 }
 
 void Player::MoveUpdate()

@@ -463,3 +463,8 @@ void BillboardTex::Draw()
 	// 描画コマンド
 	sCmdList_->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
 }
+
+void BillboardTex::SetTexture(Texture* tex)
+{
+	textureHandle_.reset(tex);
+}

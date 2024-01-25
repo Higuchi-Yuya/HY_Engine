@@ -21,6 +21,14 @@ private:
 		DoorOpen,
 	};
 
+	enum GameFirstEventState
+	{
+		EventCamera,// 最初のイベントシーンのカメラ
+		SetValue,	// 値の設定
+		TipsCameraStart,	// ヒントを与えるカメラ(向かうとき)
+		TipsCameraEnd,	// ヒントを与えるカメラ(戻るとき)
+	};
+
 public:// メンバ関数
 	void Initialize();
 
@@ -133,7 +141,17 @@ private:// メンバ変数
 	Vector3 firstEventEye_ = { -0.8f,1.5f,-8.0f };
 	Vector3 firstEventTarget_ = { -0.8f,2.0f,-20.0f };
 
+	// 最初のイベントのカメライージング
+	Easing easeFirstCamera;
 
+	// 最初のイベントのカメラ座標とターゲット座標
+	Vector3 firstEyeS;
+	Vector3 firstEyeE;
+	Vector3 firstTargetS;
+	Vector3 firstTargetE;
+
+
+	GameFirstEventState firstEventState_ = EventCamera;
 	GameCameraState gameCameraState_ = FirstEvent;
 #pragma endregion
 

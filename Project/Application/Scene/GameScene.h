@@ -332,7 +332,7 @@ private:// メンバ変数
 
 	float doorRotaValue = 75;
 	Easing easeDoorRota_;
-
+	bool IsDoorFirstTurn = false;
 #pragma endregion
 
 

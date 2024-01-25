@@ -106,8 +106,6 @@ void GameCamera::GameUpdate()
 		break;
 	}
 
-	
-
 	//ビュープロジェクションを更新
 	viewProjection_.UpdateMatrix();
 
@@ -133,14 +131,62 @@ void GameCamera::GameUpdate()
 
 void GameCamera::GameFirstEventUpdate()
 {
-	firstEventTimer++;
-	if (firstEventTimer >= firstEventTimeLimit) {
-		firstEventTimer = 0;
-		gameCameraState_ = Normal;
-	}
+	switch (firstEventState_)
+	{
+	case GameCamera::EventCamera:// イベントカメラの時の処理
+		firstEventTimer++;
+		if (firstEventTimer >= firstEventTimeLimit) {
+			firstEventTimer = 0;
+			firstEventState_ = SetValue;
+		}
 
-	viewProjection_.eye = firstEventEye_;
-	viewProjection_.target = firstEventTarget_;
+		viewProjection_.eye = firstEventEye_;
+		viewProjection_.target = firstEventTarget_;
+
+		break;
+	case GameCamera::SetValue:// カメラがイージングする値を設定
+
+		firstTargetS = (Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z));
+		firstTargetE = { 0,0.5f,1.5f };
+		firstEventTimeLimit = 60;
+		firstEyeS = firstTargetS + cameraFPos;
+		firstEyeE = { firstEyeS.x,firstEyeS.y + 5,-10 };
+		firstEventState_ = TipsCameraStart;
+		easeFirstCamera.SetEaseLimitTime(120);
+
+		break;
+	case GameCamera::TipsCameraStart:// ヒントカメラの行き
+
+		easeFirstCamera.Update();
+
+		viewProjection_.eye = easeFirstCamera.InOut(firstEyeS, firstEyeE);
+		viewProjection_.target = easeFirstCamera.InOut(firstTargetS, firstTargetE);
+
+		if (easeFirstCamera.GetIsEnd() == true) {
+			firstEventTimer++;
+		}
+		if (firstEventTimer >= firstEventTimeLimit) {
+			firstEventTimer = 0;
+			firstEventState_ = TipsCameraEnd;
+			easeFirstCamera.Reset();
+		}
+		break;
+	case GameCamera::TipsCameraEnd:// ヒントカメラの戻り
+
+		easeFirstCamera.Update();
+
+		viewProjection_.eye = easeFirstCamera.InOut(firstEyeE, firstEyeS);
+		viewProjection_.target = easeFirstCamera.InOut(firstTargetE, firstTargetS);
+
+		// イベントカメラが終了したらゲームカメラの状態を普通の
+		// プレイヤーを追従するカメラに変更する
+		if (easeFirstCamera.GetIsEnd() == true) {
+			gameCameraState_ = Normal;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void GameCamera::Reset()
@@ -157,6 +203,10 @@ void GameCamera::Reset()
 	viewProjection_.target = titleCameraFTargetPos_;
 
 	gameCameraState_ = FirstEvent;
+	firstEventState_ = EventCamera;
+	firstEventTimer = 0;
+	firstEventTimeLimit = 600;
+	easeFirstCamera.Reset();
 }
 
 void GameCamera::SetCameraFPos(Vector3 pos)

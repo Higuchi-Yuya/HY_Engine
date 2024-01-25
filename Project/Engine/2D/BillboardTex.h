@@ -140,6 +140,12 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// テクスチャの設定
+	/// </summary>
+	/// <param name="tex"></param>
+	void SetTexture(Texture* tex);
+
 public:
 	// ワールドデータ
 	WorldTransform worldTransform_;

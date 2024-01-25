@@ -441,10 +441,9 @@ void SceneManager::InitLoader()
 			model = it->second;
 		}
 
-		if (objectData.tagName == "enemy") {
-
-		}
-		else if (objectData.tagName == "ItemKey") {
+		if (objectData.tagName == "enemy"||
+			objectData.tagName == "ItemKey"||
+			objectData.tagName == "ItemPaper") {
 
 		}
 		else if (objectData.tagName == "colBox") {

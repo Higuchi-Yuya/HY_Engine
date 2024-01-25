@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "ParticleManager.h"
 #include "Collision.h"
+#include <ItemPaper.h>
 
 class GameCollider
 {
@@ -57,6 +58,12 @@ public:// メンバ関数
 	void AddObjBox(Box box);
 
 	/// <summary>
+	/// アイテムの情報をベクター型に格納
+	/// </summary>
+	/// <param name="item"></param>
+	void AddItem(ItemPaper* item);
+
+	/// <summary>
 	/// プレイヤーを取得する
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
@@ -82,6 +89,9 @@ private:// プライベート関数
 	// オブジェクト周りとの当たり判定処理
 	void ObjAronudCollisionUpdate();
 
+	// アイテム周りとの当たり判定処理
+	void ItemCollisionUpdate();
+
 private:// メンバ変数
 
 	int playerHitTimer = 0;
@@ -100,6 +110,9 @@ private:// メンバ変数
 	std::vector<Sphere> objSpheres_;
 	// ボックスの当たり判定用の配列
 	std::vector<Box>objBox_;
+
+	// アイテムの当たり判定用の配列
+	std::vector<ItemPaper*> ItemPapersInfo_;
 
 	Player* player_ = nullptr;
 

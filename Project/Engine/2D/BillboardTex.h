@@ -76,10 +76,6 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static BillboardTex* Create();
 
-	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	void LoadTexture(std::string fileName);
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* sDevice_;
@@ -156,7 +152,7 @@ private: // メンバ変数
 	static ViewProjection* sViewProjection_;
 
 	// ビルボードオブジェのテクスチャ
-	std::unique_ptr<Texture> textureHandle_ = nullptr;
+	Texture* textureHandle_ = nullptr;
 
 	// ビルボード行列
 	std::unique_ptr<Matrix4> matBillboard_ = nullptr;

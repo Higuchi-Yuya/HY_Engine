@@ -88,6 +88,8 @@ void GameCollider::Update()
 	// プレイヤー周りの当たり判定処理
 	PlayerCollisionUpdate();
 
+	// アイテム周りの当たり判定
+	ItemCollisionUpdate();
 }
 
 void GameCollider::OnColParticle()
@@ -160,6 +162,11 @@ void GameCollider::AddObjSphere(Sphere sphere)
 void GameCollider::AddObjBox(Box box)
 {
 	objBox_.push_back(box);
+}
+
+void GameCollider::AddItem(ItemPaper* item)
+{
+	ItemPapersInfo_.push_back(item);
 }
 
 void GameCollider::SetPlayer(Player* player)
@@ -384,6 +391,39 @@ void GameCollider::ObjAronudCollisionUpdate()
 		// ------------プレイヤーと追加オブジェクトの当たり判定---------- //
 		if (Collision::CheckSphereToAABB2D(pcol_, objBox, &player_->worldTransform_)) {
 			//player_->pushBackOnCol();
+		}
+	}
+}
+
+void GameCollider::ItemCollisionUpdate()
+{
+	for (auto item : ItemPapersInfo_)
+	{
+		// アイテムビルボードオブジェの情報をスフィアに設定
+		Sphere sItemRange;
+		sItemRange.center = item->billTex_.worldTransform_.translation;
+		sItemRange.radius = 8.0f;
+
+		Sphere sItemInRange;
+		sItemInRange.center = item->billTex_.worldTransform_.translation;
+		sItemInRange.radius = 1.5f;
+
+		// アイテムのキラキラが表示される範囲だったら
+		if (Collision::CheckSphere2Sphere(pcol_, sItemRange) && item->GetIsCheckItem() == false) {
+
+			player_->SetIsItemRange(true);
+
+			// アイテムが取得できる範囲だったら
+			if (Collision::CheckSphere2Sphere(pcol_, sItemInRange)) {
+				player_->SetIsItemInRange(true);
+				break;
+			}
+
+			break;
+		}
+		else {
+			player_->SetIsItemRange(false);
+			player_->SetIsItemInRange(false);
 		}
 	}
 }

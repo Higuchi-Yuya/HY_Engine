@@ -106,8 +106,9 @@ void GameScene::Initialize()
 			newItemPaper->itemSprite_.SetSize({ 500,300 });
 			newItemPaper->itemSprite_.SetScale({ 0.8f,0.8f,0 });
 
-			// 今作成した敵を配列に格納
+			// 今作成したアイテムを配列に格納
 			itemPapers_.push_back(newItemPaper);
+			gameCollider_->AddItem(newItemPaper);
 		}
 
 		// タグ名がItemKeyなら
@@ -126,8 +127,9 @@ void GameScene::Initialize()
 			newItemPaper->UpdateWorldMatrix();
 			newItemPaper->SetIsKeyItem(true);
 
-			// 今作成した敵を配列に格納
+			// 今作成したアイテムを配列に格納
 			itemPapers_.push_back(newItemPaper);
+			gameCollider_->AddItem(newItemPaper);
 		}
 	}
 #pragma endregion
@@ -151,10 +153,6 @@ void GameScene::Initialize()
 
 	BillboardTex::SetViewProjection(&gameCamera_->GetView());
 	ItemPaper::SetPlayer(player_.get());
-
-	testItem_.Initialize("tips2.png");
-	testItem_.itemSprite_.SetSize({ 500,300 });
-	testItem_.itemSprite_.SetScale({0.8f,0.8f,0});
 }
 
 void GameScene::Update()
@@ -162,8 +160,6 @@ void GameScene::Update()
 	input_->Update();
 
 	GameSceneUpdate();
-
-	testItem_.Update();
 }
 
 void GameScene::ImguiUpdate()
@@ -248,7 +244,6 @@ void GameScene::Draw2DFront()
 		operationUi_->DrawFrontSprite();
 	}
 
-	testItem_.Draw2D();
 	for (auto i : itemPapers_) {
 		i->Draw2D();
 	}
@@ -313,7 +308,7 @@ void GameScene::DrawShieldObj()
 void GameScene::DrawBillboardTex()
 {
 	BillboardTex::PreDraw(commandList_);
-	testItem_.Draw3D();
+	
 	player_->DrawBillTex();
 
 	for (auto i : itemPapers_) {
@@ -360,7 +355,6 @@ void GameScene::Reset()
 	for (auto i : itemPapers_){
 		i->Reset();
 	}
-	testItem_.Reset();
 
 	// ドアの角度をリセット
 	latticeDoors_[0]->worldTransform_.rotation.y = MathUtil::DegreeToRadian(-90);
@@ -509,6 +503,11 @@ void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
 	default:
 		break;
 	}
+}
+
+void GameScene::SetBeatEffect(BeatEffect* beatEffect)
+{
+	beatEffect_ = beatEffect;
 }
 
 void GameScene::GameSceneUpdate()
@@ -735,8 +734,7 @@ void GameScene::ItemUpdate()
 	// 表示フラグをオンにするそれ以外はオフ
 	for (auto i : itemPapers_) {
 
-		if (i->GetIsGetItem() == true ||
-			testItem_.GetIsGetItem() == true) {
+		if (i->GetIsGetItem() == true) {
 			IsItemDisplay_ = true;
 			break;
 		}

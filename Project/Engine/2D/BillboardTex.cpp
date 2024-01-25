@@ -250,11 +250,6 @@ void BillboardTex::InitializeGraphicsPipeline()
 
 }
 
-void BillboardTex::LoadTexture(std::string fileName)
-{
-	textureHandle_.reset(TextureManager::Load2DTextureP(fileName));
-}
-
 void BillboardTex::CreateModel()
 {
 	HRESULT result = S_FALSE;
@@ -466,5 +461,5 @@ void BillboardTex::Draw()
 
 void BillboardTex::SetTexture(Texture* tex)
 {
-	textureHandle_.reset(tex);
+	textureHandle_ = tex;
 }

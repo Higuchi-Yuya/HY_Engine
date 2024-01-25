@@ -11,8 +11,10 @@ void ItemPaper::Initialize(std::string fileName)
 	scaleBig_ = { 0.2f,0.2f,0.2f };
 	scaleSmall_ = { 0.1f,0.1f,0.1f };
 
+	effectTex_.reset(TextureManager::Load2DTextureP("itemEffect.png"));
+
 	billTex_.Initialize();
-	billTex_.LoadTexture("itemEffect.png");
+	billTex_.SetTexture(effectTex_.get());
 	billTex_.worldTransform_.translation.y = 0.6f;
 	billTex_.worldTransform_.scale = scaleSmall_;
 
@@ -128,14 +130,14 @@ void ItemPaper::OncolToPlayerUpdate()
 	// アイテムビルボードオブジェの情報をスフィアに設定
 	Sphere sItemRange;
 	sItemRange.center = billTex_.worldTransform_.translation;
-	sItemRange.radius = 6.0f;
+	sItemRange.radius = 8.0f;
 
 	Sphere sItemInRange;
 	sItemInRange.center = billTex_.worldTransform_.translation;
 	sItemInRange.radius = 1.5f;
 
 	// アイテムのキラキラが表示される範囲だったら
-	if (Collision::CheckSphere2Sphere(pcol, sItemRange)) {
+	if (Collision::CheckSphere2Sphere(pcol, sItemRange) == true) {
 
 		colState_ = withInRange;
 		sPlayer_->SetIsItemRange(true);

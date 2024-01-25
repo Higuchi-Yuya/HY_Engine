@@ -136,7 +136,7 @@ public:// セッター
 	/// 鼓動エフェクトを設定
 	/// </summary>
 	/// <param name="beatEffect"></param>
-	void SetBeatEffect(BeatEffect* beatEffect) { beatEffect_ = beatEffect; }
+	void SetBeatEffect(BeatEffect* beatEffect);
 
 public:// ゲッター
 
@@ -334,9 +334,6 @@ private:// メンバ変数
 	Easing easeDoorRota_;
 	bool IsDoorFirstTurn = false;
 #pragma endregion
-
-
-	ItemPaper testItem_;
 
 	// 鼓動エフェクト
 	BeatEffect* beatEffect_ = nullptr;

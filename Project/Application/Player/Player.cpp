@@ -243,6 +243,7 @@ void Player::DrawBillTex()
 {
 	// ビルボード描画
 	if (IsItemInRange_ == true) {
+		questionBillTex_.worldTransform_.rotation.z = 0;
 		questionBillTex_.SetTexture(surprisedTex_.get());
 		questionBillTex_.Draw();
 	}
@@ -253,8 +254,8 @@ void Player::DrawBillTex()
 		questionBillTex_.Draw();
 	}
 	else if (IsItemRange_ == true) {
+		questionBillTex_.worldTransform_.rotation.z = 0;
 		questionBillTex_.SetTexture(questionTex_.get());
-		
 		questionBillTex_.Draw();
 	}
 }

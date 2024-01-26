@@ -182,6 +182,7 @@ void GameCamera::GameFirstEventUpdate()
 		// プレイヤーを追従するカメラに変更する
 		if (easeFirstCamera.GetIsEnd() == true) {
 			gameCameraState_ = Normal;
+			IsFirstCameraEnd = true;
 		}
 		break;
 	default:
@@ -207,6 +208,7 @@ void GameCamera::Reset()
 	firstEventTimer = 0;
 	firstEventTimeLimit = 600;
 	easeFirstCamera.Reset();
+	IsFirstCameraEnd = false;
 }
 
 void GameCamera::SetCameraFPos(Vector3 pos)

@@ -59,6 +59,9 @@ public:// ゲッター
 	// ドアの開く間のカメラ処理が終わっているのかを取得
 	const bool GetIsFinishDoorOpen_() { return IsFinshDoor_; }
 
+	// 最初のカメラのイベントシーンが終了しているかどうかを取得
+	const bool GetIsFirstCameraEnd() { return IsFirstCameraEnd; }
+
 public:// セッター
 	// 最初にセットするカメラ情報
 	void SetCameraFPos(Vector3 pos);
@@ -150,7 +153,7 @@ private:// メンバ変数
 	Vector3 firstTargetS;
 	Vector3 firstTargetE;
 
-
+	bool IsFirstCameraEnd = false;
 	GameFirstEventState firstEventState_ = EventCamera;
 	GameCameraState gameCameraState_ = FirstEvent;
 #pragma endregion

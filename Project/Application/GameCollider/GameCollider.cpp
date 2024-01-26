@@ -141,7 +141,7 @@ void GameCollider::Draw3D(ViewProjection* viewProjection)
 		//box_[i]->Draw(viewProjection);
 	}
 
-	testBox_->Draw(viewProjection);
+	//testBox_->Draw(viewProjection);
 }
 
 void GameCollider::AddEnemy(Enemy* enemy)
@@ -406,7 +406,7 @@ void GameCollider::ItemCollisionUpdate()
 
 		Sphere sItemInRange;
 		sItemInRange.center = item->billTex_.worldTransform_.translation;
-		sItemInRange.radius = 1.5f;
+		sItemInRange.radius = 1.0f;
 
 		// アイテムのキラキラが表示される範囲だったら
 		if (Collision::CheckSphere2Sphere(pcol_, sItemRange) && item->GetIsCheckItem() == false) {

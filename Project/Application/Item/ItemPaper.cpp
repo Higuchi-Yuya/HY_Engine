@@ -134,7 +134,7 @@ void ItemPaper::OncolToPlayerUpdate()
 
 	Sphere sItemInRange;
 	sItemInRange.center = billTex_.worldTransform_.translation;
-	sItemInRange.radius = 1.5f;
+	sItemInRange.radius = 1.0f;
 
 	// アイテムのキラキラが表示される範囲だったら
 	if (Collision::CheckSphere2Sphere(pcol, sItemRange) == true) {

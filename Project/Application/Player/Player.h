@@ -106,6 +106,12 @@ public:// セッター
 	/// <param name="isItemInRange"></param>
 	void SetIsItemInRange(bool isItemInRange);
 
+	/// <summary>
+	/// 移動がかのうかどうかを設定
+	/// </summary>
+	/// <param name="isCamMove"></param>
+	void SetIsCanMove(bool isCamMove);
+
 public:// 当たり判定
 
 	// 衝突時コールバック関数
@@ -237,6 +243,9 @@ private:
 	// 回転のフラグ
 	bool IsEndTurnAround_ = false;
 
+	// 移動がかのうかどうかのフラグ
+	bool IsCanMove_ = false;
+	
 	firstEventState firstEventState_ = FirstMove;
 
 	uint32_t aroundStopTimer = 0;

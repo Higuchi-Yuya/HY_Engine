@@ -559,6 +559,13 @@ void GameScene::GameSceneUpdate()
 		beatEffect_->Reset();
 	}
 
+	if (gameCamera_->GetIsFirstCameraEnd() == true) {
+		player_->SetIsCanMove(true);
+	}
+	else {
+		player_->SetIsCanMove(false);
+	}
+
 	// カメラの更新処理
 	gameCamera_->SetCameraPos(player_->worldTransform_.translation);
 	gameCamera_->GameUpdate();

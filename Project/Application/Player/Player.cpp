@@ -196,11 +196,20 @@ void Player::Update()
 		questionBillTex_.Update();
 
 		if (IsEndTurnAround_ == true) {
-			// 移動の更新処理
-			MoveUpdate();
+
+			if (IsCanMove_ == true) {
+				// 移動の更新処理
+				MoveUpdate();
+			}
+
+			// スプライトのポジションやサイズの変更
+			playerHpBar_->SetPosition(pHpBarPos_);
+			playerHpInside_->SetPosition(pHpInsidePos_);
+			playerHpBar_->SetSize(pHpBarSize_);
+			playerHpInside_->SetSize(pHpInsideSize_);
 
 			// 攻撃関数
-			Attack();
+			//Attack();
 
 			// プレイヤーのHPが０以下ならプレイヤーが死ぬ
 			if (playerHitPoint_ <= (float)ZERO) {
@@ -251,6 +260,7 @@ void Player::DrawBillTex()
 			 firstEventState_ == FirstTurn ||
 			 firstEventState_ == SecondTurn) 
 	{
+		questionBillTex_.SetTexture(questionTex_.get());
 		questionBillTex_.Draw();
 	}
 	else if (IsItemRange_ == true) {
@@ -258,6 +268,11 @@ void Player::DrawBillTex()
 		questionBillTex_.SetTexture(questionTex_.get());
 		questionBillTex_.Draw();
 	}
+}
+
+void Player::SetIsCanMove(bool isCamMove)
+{
+	IsCanMove_ = isCamMove;
 }
 
 void Player::OnCollision()
@@ -437,6 +452,7 @@ void Player::Reset()
 	easeQuestion_.Reset();
 	turnAroundCount_ = 0;
 	aroundStopTimer = 0;
+	IsCanMove_ = false;
 }
 
 void Player::MoveUpdate()
@@ -525,12 +541,6 @@ void Player::MoveUpdate()
 	ImGui::InputFloat3("playerRot", &worldTransform_.rotation.x, "%.2f");
 
 	ImGui::End();
-
-	// スプライトのポジションやサイズの変更
-	playerHpBar_->SetPosition(pHpBarPos_);
-	playerHpInside_->SetPosition(pHpInsidePos_);
-	playerHpBar_->SetSize(pHpBarSize_);
-	playerHpInside_->SetSize(pHpInsideSize_);
 
 
 	frontW_.UpdateMatrix();

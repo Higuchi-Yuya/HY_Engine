@@ -173,49 +173,15 @@ private:// メンバ変数
 	bool isFogActive = true;
 	#pragma endregion
 
-	#pragma region モデル
 
-	std::unique_ptr<Model> modelMedama_ = nullptr;
-
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
-	std::unique_ptr<Model> modelGround_ = nullptr;
-
-	// 木
-	std::unique_ptr<Model> modelTreeBald_ = nullptr;
-	std::unique_ptr<Model> modelTreeNormal_ = nullptr;
-
-	// フェンス
-	std::unique_ptr<Model> modelFence_ = nullptr;
-	std::unique_ptr<Model> modelFencePost_ = nullptr;
-	std::unique_ptr<Model> modelLatticeDoor_ = nullptr;
-
-	// お墓
-	std::unique_ptr<Model> modelGraveCross = nullptr;
-	std::unique_ptr<Model> modelGraveSquare = nullptr;
-
-	// ランタン
-	std::unique_ptr<Model> modelWallRantern_ = nullptr;
-
-	// 街灯
-	std::unique_ptr<Model> modelPostRantern_ = nullptr;
-
-	// 壁
-	std::unique_ptr<Model> modelWall02_ = nullptr;
-	std::unique_ptr<Model> modelWall03_ = nullptr;
-
-	// 椅子
-	std::unique_ptr<Model> modelChair_ = nullptr;
-
-	// 十字架
-	std::unique_ptr<Model> modelCross_ = nullptr;
-	std::unique_ptr<Model> modelStoneCross_ = nullptr;
-
-	#pragma endregion
 
 	#pragma region カメラ関連
 	// ビュープロジェクション
 	std::unique_ptr<GameCamera>gameCamera;
 #pragma endregion
+
+	// ポイントライト情報の配列
+	std::vector<WorldTransform*> pointLightsInfo_;
 
 	#pragma region シーンチェンジ関連
 
@@ -229,31 +195,6 @@ private:// メンバ変数
 	float blackAlpha = 0.0f;
 	bool sceneChangeFlag = false;
 	Scene oldScene = Scene::Title;
-
-	#pragma endregion
-
-	#pragma region レベルデータ関連
-
-	// レベルデータ
-	std::unique_ptr<LevelData> levelData_;
-
-	// レベルデータに登録するモデルの配列
-	std::map<std::string, Model*> models;
-
-	// レベルデータに登録するオブジェクトの配列
-	std::vector<Object3d*> objects;
-
-	// お墓のドアの配列
-	std::vector<Object3d*> latticeDoors_;
-
-	// ランタンの配列
-	std::vector<Object3d*> ranterns_;
-
-	// ランタンの高輝度用配列
-	std::vector<Object3d*> highLumiRanterns_;
-
-	// ポイントライト情報の配列
-	std::vector<WorldTransform*> pointLightsInfo_;
 
 	#pragma endregion
 

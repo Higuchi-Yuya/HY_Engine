@@ -4,8 +4,9 @@
 #include "ParticleManager.h"
 #include "Collision.h"
 #include <ItemPaper.h>
+#include "Singleton.h"
 
-class GameCollider
+class GameCollider:Singleton<GameCollider>
 {
 public:// メンバ関数
 	/// <summary>
@@ -143,6 +144,8 @@ private:// メンバ変数
 	int particleNum = 50;
 
 #pragma endregion
+
+
 
 };
 

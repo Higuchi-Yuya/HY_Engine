@@ -246,34 +246,6 @@ private:// メンバ変数
 	std::vector<Enemy*>enemys_;
 #pragma endregion
 
-#pragma region 敵のウェーブ関連
-
-	// エネミーのウエーブを管理するもの
-	EnemyWave enemyWave_ = EnemyWave::wave01;
-
-	// ゲームのウェーブごとの時間
-	float waveTimer_ = 0;
-	const float waveTimeMax_ = 60 * 30;
-
-	// 今のウェーブ
-	uint32_t waveTimeNum_ = 0;
-
-	// エネミーのスポーン時間
-	float enemySpawnTimer_ = 0;
-
-	// エネミーのウェーブごとのスポーン間隔
-	const float enemySpawnTimeMax1_ = 60 * 5;
-	const float enemySpawnTimeMax2_ = 60 * 4;
-	const float enemySpawnTimeMax3_ = 60 * 3;
-
-	// 抽選するエネミーのスポーンパターン
-	int randomWave01_ = 0;
-
-	// ウェーブが終わった時の判別フラグ
-	bool IsEndWave = false;
-
-#pragma endregion
-
 #pragma region UI関連
 	std::unique_ptr<TimerUI>timerUi_;
 

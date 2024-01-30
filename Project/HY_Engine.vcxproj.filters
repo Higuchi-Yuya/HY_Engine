@@ -498,6 +498,9 @@
     <ClCompile Include="Application\Item\ItemPaper.cpp">
       <Filter>ソース ファイル\Application\Item</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Load\LoadManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -742,6 +745,9 @@
     </ClInclude>
     <ClInclude Include="Application\Item\ItemPaper.h">
       <Filter>ヘッダー ファイル\Application\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Load\LoadManager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

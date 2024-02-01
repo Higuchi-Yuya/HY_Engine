@@ -5,6 +5,7 @@
 #include "GameClearScene.h"
 #include "GameOverScene.h"
 #include "BeatEffect.h"
+#include "LoadManager.h"
 
 class SceneManager
 {
@@ -178,7 +179,7 @@ private:// メンバ変数
 	#pragma region カメラ関連
 	// ビュープロジェクション
 	std::unique_ptr<GameCamera>gameCamera;
-#pragma endregion
+	#pragma endregion
 
 	// ポイントライト情報の配列
 	std::vector<WorldTransform*> pointLightsInfo_;
@@ -201,6 +202,5 @@ private:// メンバ変数
 	#pragma region 当たり判定
 	std::unique_ptr<GameCollider> gameCollider;
 	#pragma endregion
-
 };
 

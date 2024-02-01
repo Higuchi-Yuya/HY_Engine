@@ -2,8 +2,9 @@
 #include "Object3d.h"
 #include "LevelLoder.h"
 #include "Singleton.h"
+#include <GameCollider.h>
 
-class LoadManager:Singleton<LoadManager>
+class LoadManager:public Singleton<LoadManager>
 {
 public:
 	/// <summary>
@@ -22,6 +23,55 @@ private:
 	/// レベルデータ
 	/// </summary>
 	void LoadLevelDate();
+
+public:// セッター
+	// ゲームコライダーのセット
+	void SetCollider(GameCollider* collider);
+
+public://ゲッター
+	// ゲッター
+
+	/// <summary>
+	/// モデルのゲッター
+	/// </summary>
+	/// <param name="modelName">モデルの名前</param>
+	/// <returns></returns>
+	Model* GetModel(std::string modelName);
+
+	/// <summary>
+	/// モデルデータ全てを取得
+	/// </summary>
+	/// <returns></returns>
+	std::map<std::string, Model*>GetModels();
+
+	/// <summary>
+	/// 配置オブジェクトの取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Object3d*>GetObjects();
+
+	/// <summary>
+	/// 門のオブジェクトの取得
+	/// </summary>
+	std::vector<Object3d*>GetLatticeDoors();
+
+	/// <summary>
+	/// ランタンのオブジェクトの取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Object3d*>GetRanterns();
+
+	/// <summary>
+	/// 高輝度ランタンのオブジェクトの取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Object3d*>GetHighRanterns();
+
+	/// <summary>
+	/// ポイントライトの情報
+	/// </summary>
+	/// <returns></returns>
+	std::vector<WorldTransform*>GetPointLightInfo();
 
 private:
 
@@ -85,11 +135,14 @@ private:
 	// ポイントライト情報の配列
 	std::vector<WorldTransform*> pointLightsInfo_;
 
+	// ゲームコライダー
+	GameCollider* gameCollider_;
 
 private:
 	friend Singleton<LoadManager>;
 
 	LoadManager();
-	~LoadManager();
+public:
+	void Finalize();
 
 };

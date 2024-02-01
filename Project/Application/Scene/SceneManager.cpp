@@ -1,9 +1,9 @@
 #include "SceneManager.h"
 #include "BeatEffect.h"
-
+#include"LoadManager.h"
 SceneManager::~SceneManager()
 {
-
+	LoadManager::GetInstance()->Finalize();
 
 	Enemy::StaticFinalize();
 }
@@ -59,17 +59,18 @@ void SceneManager::Initialize()
 	gameCollider = std::make_unique<GameCollider>();
 	gameCollider->Initialize();
 #pragma endregion
-
+	LoadManager::GetInstance()->SetCollider(gameCollider.get());
+	LoadManager::GetInstance()->LoadAll();
 	InitLoader();
 
 #pragma region ポイントライトのセット
-	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	for (size_t i = 0; i < LoadManager::GetInstance()->GetPointLightInfo().size(); i++)
 	{
 		// ポイントライトのフラグをアクティブに
 		light->SetPointLightActive((int)i, true);
 
 		// ポジションの情報をセット
-		light->SetPointLightPos((int)i, pointLightsInfo_[i]->translation);
+		light->SetPointLightPos((int)i, LoadManager::GetInstance()->GetPointLightInfo()[i]->translation);
 
 		// ポイントライトのライトの減衰具合
 		light->SetPointLightAtten((int)i, pointLightAtten);
@@ -354,23 +355,23 @@ void SceneManager::InitLoader()
 void SceneManager::InitScenesSets()
 {
 	titleScene_->SetGameCamera(gameCamera.get());
-	titleScene_->SetObjs(objects, TitleScene::Normal);
-	titleScene_->SetObjs(latticeDoors_, TitleScene::Doors);
-	titleScene_->SetObjs(ranterns_, TitleScene::Ranterns);
-	titleScene_->SetObjs(highLumiRanterns_, TitleScene::HiguLumiRanterns);
+	titleScene_->SetObjs(LoadManager::GetInstance()->GetObjects(), TitleScene::Normal);
+	titleScene_->SetObjs(LoadManager::GetInstance()->GetLatticeDoors(), TitleScene::Doors);
+	titleScene_->SetObjs(LoadManager::GetInstance()->GetRanterns(), TitleScene::Ranterns);
+	titleScene_->SetObjs(LoadManager::GetInstance()->GetHighRanterns(), TitleScene::HiguLumiRanterns);
 	titleScene_->SetLightGroup(light.get());
-	titleScene_->SetPointInfo(pointLightsInfo_);
+	titleScene_->SetPointInfo(LoadManager::GetInstance()->GetPointLightInfo());
 
 	gameScene_->SetCmdList(dxCommon_->GetCommandList());
 	gameScene_->SetGameCamera(gameCamera.get());
 	gameScene_->SetGameCollider(gameCollider.get());
-	gameScene_->SetModels(models);
-	gameScene_->SetObjs(objects, GameScene::Normal);
-	gameScene_->SetObjs(latticeDoors_, GameScene::Doors);
-	gameScene_->SetObjs(ranterns_, GameScene::Ranterns);
-	gameScene_->SetObjs(highLumiRanterns_, GameScene::HiguLumiRanterns);
+	gameScene_->SetModels(LoadManager::GetInstance()->GetModels());
+	gameScene_->SetObjs(LoadManager::GetInstance()->GetObjects(), GameScene::Normal);
+	gameScene_->SetObjs(LoadManager::GetInstance()->GetLatticeDoors(), GameScene::Doors);
+	gameScene_->SetObjs(LoadManager::GetInstance()->GetRanterns(), GameScene::Ranterns);
+	gameScene_->SetObjs(LoadManager::GetInstance()->GetHighRanterns(), GameScene::HiguLumiRanterns);
 	gameScene_->SetLightGroup(light.get());
-	gameScene_->SetPointInfo(pointLightsInfo_);
+	gameScene_->SetPointInfo(LoadManager::GetInstance()->GetPointLightInfo());
 
 }
 

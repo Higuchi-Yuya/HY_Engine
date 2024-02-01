@@ -1,5 +1,14 @@
 #include "LoadManager.h"
 
+void LoadManager::LoadAll()
+{
+	// モデルの読み込み
+	LoadModel();
+
+	// レベルデータの読み込み
+	LoadLevelDate();
+}
+
 void LoadManager::LoadModel()
 {
 #pragma region モデルの読み込み
@@ -90,7 +99,7 @@ void LoadManager::LoadLevelDate()
 			box.center = objectData.translation;
 			box.radius = objectData.scaling;
 
-			gameCollider->AddObjBox(box);
+			gameCollider_->AddObjBox(box);
 		}
 		else if (objectData.tagName == "colSphere") {
 
@@ -98,7 +107,7 @@ void LoadManager::LoadLevelDate()
 			sphere.center = objectData.translation;
 			sphere.radius = objectData.scaling.x;
 
-			gameCollider->AddObjSphere(sphere);
+			gameCollider_->AddObjSphere(sphere);
 		}
 		// タグ名がドアなら
 #pragma region お墓のドア
@@ -205,7 +214,7 @@ void LoadManager::LoadLevelDate()
 			// タグ名が墓もしくは木だったら、当たり判定をつける
 			if (objectData.tagName == "tree" ||
 				objectData.tagName == "grave") {
-				gameCollider->AddObj(newObject);
+				gameCollider_->AddObj(newObject);
 			}
 		}
 
@@ -213,7 +222,57 @@ void LoadManager::LoadLevelDate()
 #pragma endregion
 }
 
-LoadManager::~LoadManager()
+void LoadManager::SetCollider(GameCollider* collider)
+{
+	gameCollider_ = collider;
+}
+
+Model* LoadManager::GetModel(std::string modelName)
+{
+	auto it = models.find(modelName);
+
+	if (it != models.end()) {
+		return nullptr;
+	}
+
+	return models[modelName];
+}
+
+std::map<std::string, Model*> LoadManager::GetModels()
+{
+	return models;
+}
+
+std::vector<Object3d*> LoadManager::GetObjects()
+{
+	return objects;
+}
+
+std::vector<Object3d*> LoadManager::GetLatticeDoors()
+{
+	return latticeDoors_;
+}
+
+std::vector<Object3d*> LoadManager::GetRanterns()
+{
+	return ranterns_;
+}
+
+std::vector<Object3d*> LoadManager::GetHighRanterns()
+{
+	return highLumiRanterns_;
+}
+
+std::vector<WorldTransform*> LoadManager::GetPointLightInfo()
+{
+	return pointLightsInfo_;
+}
+
+LoadManager::LoadManager() {
+
+}
+
+void LoadManager::Finalize()
 {
 	models.clear();
 

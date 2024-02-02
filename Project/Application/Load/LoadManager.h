@@ -4,7 +4,7 @@
 #include "Singleton.h"
 #include <GameCollider.h>
 
-class LoadManager:public Singleton<LoadManager>
+class LoadManager
 {
 public:
 	/// <summary>
@@ -138,11 +138,10 @@ private:
 	// ゲームコライダー
 	GameCollider* gameCollider_;
 
-private:
-	friend Singleton<LoadManager>;
 
-	LoadManager();
+	
 public:
+	LoadManager();
 	void Finalize();
 
 };

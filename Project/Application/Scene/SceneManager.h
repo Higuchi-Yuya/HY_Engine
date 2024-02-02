@@ -132,6 +132,9 @@ private:// メンバ変数
 	// ゲームオーバーシーン
 	std::unique_ptr<GameOverScene> gameOverScene_;
 
+	// ロードマネージャー
+	std::unique_ptr<LoadManager> loadManager_;
+
 	#pragma region 光源関連
 	// オブジェクト共通のライトの初期化
 	std::unique_ptr<LightGroup> light = nullptr;
@@ -144,8 +147,8 @@ private:// メンバ変数
 	Vector3 pointLightColor = { 0.92f,0.684f,0.56f };
 	Vector3 pointLightAtten = { 0.12f,0.1f,0.02f };
 	bool isActivePoint = false;
-	float pointLightIndensity = 1.2f;
-	float pointLightRadius = 70;
+	float pointLightIndensity = 1.5f;
+	float pointLightRadius = 35;
 	float pointLightDecay = 15.5f;
 	float pointLightDistance = 10;
 

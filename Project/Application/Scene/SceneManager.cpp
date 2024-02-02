@@ -3,8 +3,8 @@
 #include"LoadManager.h"
 SceneManager::~SceneManager()
 {
-	LoadManager::GetInstance()->Finalize();
-
+	loadManager_->Finalize();
+	loadManager_ = nullptr;
 	Enemy::StaticFinalize();
 }
 
@@ -59,18 +59,23 @@ void SceneManager::Initialize()
 	gameCollider = std::make_unique<GameCollider>();
 	gameCollider->Initialize();
 #pragma endregion
-	LoadManager::GetInstance()->SetCollider(gameCollider.get());
-	LoadManager::GetInstance()->LoadAll();
+
+#pragma region ロードマネージャー
+	loadManager_ = std::make_unique<LoadManager>();
+	loadManager_->SetCollider(gameCollider.get());
+	loadManager_->LoadAll();
+#pragma endregion
+
 	InitLoader();
 
 #pragma region ポイントライトのセット
-	for (size_t i = 0; i < LoadManager::GetInstance()->GetPointLightInfo().size(); i++)
+	for (size_t i = 0; i < loadManager_->GetPointLightInfo().size(); i++)
 	{
 		// ポイントライトのフラグをアクティブに
 		light->SetPointLightActive((int)i, true);
 
 		// ポジションの情報をセット
-		light->SetPointLightPos((int)i, LoadManager::GetInstance()->GetPointLightInfo()[i]->translation);
+		light->SetPointLightPos((int)i, loadManager_->GetPointLightInfo()[i]->translation);
 
 		// ポイントライトのライトの減衰具合
 		light->SetPointLightAtten((int)i, pointLightAtten);
@@ -355,29 +360,29 @@ void SceneManager::InitLoader()
 void SceneManager::InitScenesSets()
 {
 	titleScene_->SetGameCamera(gameCamera.get());
-	titleScene_->SetObjs(LoadManager::GetInstance()->GetObjects(), TitleScene::Normal);
-	titleScene_->SetObjs(LoadManager::GetInstance()->GetLatticeDoors(), TitleScene::Doors);
-	titleScene_->SetObjs(LoadManager::GetInstance()->GetRanterns(), TitleScene::Ranterns);
-	titleScene_->SetObjs(LoadManager::GetInstance()->GetHighRanterns(), TitleScene::HiguLumiRanterns);
+	titleScene_->SetObjs(loadManager_->GetObjects(), TitleScene::Normal);
+	titleScene_->SetObjs(loadManager_->GetLatticeDoors(), TitleScene::Doors);
+	titleScene_->SetObjs(loadManager_->GetRanterns(), TitleScene::Ranterns);
+	titleScene_->SetObjs(loadManager_->GetHighRanterns(), TitleScene::HiguLumiRanterns);
 	titleScene_->SetLightGroup(light.get());
-	titleScene_->SetPointInfo(LoadManager::GetInstance()->GetPointLightInfo());
+	titleScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
 	gameScene_->SetCmdList(dxCommon_->GetCommandList());
 	gameScene_->SetGameCamera(gameCamera.get());
 	gameScene_->SetGameCollider(gameCollider.get());
-	gameScene_->SetModels(LoadManager::GetInstance()->GetModels());
-	gameScene_->SetObjs(LoadManager::GetInstance()->GetObjects(), GameScene::Normal);
-	gameScene_->SetObjs(LoadManager::GetInstance()->GetLatticeDoors(), GameScene::Doors);
-	gameScene_->SetObjs(LoadManager::GetInstance()->GetRanterns(), GameScene::Ranterns);
-	gameScene_->SetObjs(LoadManager::GetInstance()->GetHighRanterns(), GameScene::HiguLumiRanterns);
+	gameScene_->SetModels(loadManager_->GetModels());
+	gameScene_->SetObjs(loadManager_->GetObjects(), GameScene::Normal);
+	gameScene_->SetObjs(loadManager_->GetLatticeDoors(), GameScene::Doors);
+	gameScene_->SetObjs(loadManager_->GetRanterns(), GameScene::Ranterns);
+	gameScene_->SetObjs(loadManager_->GetHighRanterns(), GameScene::HiguLumiRanterns);
 	gameScene_->SetLightGroup(light.get());
-	gameScene_->SetPointInfo(LoadManager::GetInstance()->GetPointLightInfo());
+	gameScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
 }
 
 void SceneManager::LightUpdate()
 {
-	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	for (size_t i = 0; i < loadManager_->GetPointLightInfo().size(); i++)
 	{
 		// ポイントライトのフラグをアクティブに
 		light->SetPointLightActive((int)i, true);

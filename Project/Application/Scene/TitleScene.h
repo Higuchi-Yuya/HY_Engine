@@ -5,8 +5,9 @@
 #include "TextureManager.h"
 #include "GameCamera.h"
 #include "GameCollider.h"
+#include "IScene.h"
 
-class TitleScene
+class TitleScene:public IScene
 {
 public:
 	enum ObjsType {
@@ -22,22 +23,22 @@ public:// メンバ関数
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	void Initialize();
+	void Initialize()override;
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update();
+	void Update()override;
 
 	/// <summary>
 	/// 背面スプライトの描画処理
 	/// </summary>
-	void Draw2DBack();
+	void Draw2DBack()override;
 
 	/// <summary>
 	/// 3Dオブジェクトの描画処理
 	/// </summary>
-	void Draw3D();
+	void Draw3D()override;
 
 	/// <summary>
 	/// パーティクルの描画処理
@@ -47,22 +48,22 @@ public:// メンバ関数
 	/// <summary>
 	/// 前面スプライトの描画処理
 	/// </summary>
-	void Draw2DFront();
+	void Draw2DFront()override;
 
 	/// <summary>
 	/// ブルームを掛けるオブジェクトの描画
 	/// </summary>
-	void DrawBloomObject();
+	void DrawBloomObject()override;
 
 	/// <summary>
 	/// 高輝度抽出するオブジェクトの描画
 	/// </summary>
-	void DrawHighLumiObj();
+	void DrawHighLumiObj()override;
 
 	/// <summary>
 	/// リセット関数
 	/// </summary>
-	void Reset();
+	void Reset()override;
 
 public:// 静的メンバ関数
 

@@ -504,6 +504,9 @@
     <ClCompile Include="Application\Load\LoadManager.cpp">
       <Filter>ソース ファイル\Application\Load</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Scene\IScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -748,6 +751,9 @@
     </ClInclude>
     <ClInclude Include="Application\Load\LoadManager.h">
       <Filter>ヘッダー ファイル\Application\Load</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Scene\IScene.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

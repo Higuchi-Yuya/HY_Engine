@@ -177,15 +177,10 @@ private:// メンバ変数
 	bool isFogActive = true;
 	#pragma endregion
 
-
-
 	#pragma region カメラ関連
 	// ビュープロジェクション
 	std::unique_ptr<GameCamera>gameCamera;
 	#pragma endregion
-
-	// ポイントライト情報の配列
-	std::vector<WorldTransform*> pointLightsInfo_;
 
 	#pragma region シーンチェンジ関連
 

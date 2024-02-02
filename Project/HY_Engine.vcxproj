@@ -195,7 +195,6 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Engine\PostEffect\Ripples\PostEffectRipples.cpp" />
     <ClCompile Include="Engine\PostEffect\Scaling\PostEffectScaling.cpp" />
     <ClCompile Include="Application\Item\ItemPaper.cpp" />
-    <ClCompile Include="Application\Item\ItemKey.cpp" />
     <ClCompile Include="Application\Load\LoadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -279,7 +278,6 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Engine\PostEffect\Ripples\PostEffectRipples.h" />
     <ClInclude Include="Engine\PostEffect\Scaling\PostEffectScaling.h" />
     <ClInclude Include="Application\Item\ItemPaper.h" />
-    <ClInclude Include="Application\Item\ItemKey.h" />
     <ClInclude Include="Application\Load\LoadManager.h" />
   </ItemGroup>
   <ItemGroup>

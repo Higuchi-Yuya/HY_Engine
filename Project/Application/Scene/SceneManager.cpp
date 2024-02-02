@@ -438,19 +438,19 @@ void SceneManager::SceneChageUpdate()
 {
 
 	if (titleScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::Title;
+		oldScene = SceneType::Title;
 		sceneChangeFlag = true;
 	}
 	else if(gameScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::Game;
+		oldScene = SceneType::Game;
 		sceneChangeFlag = true;
 	}
 	else if (gameClearScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::GameClear;
+		oldScene = SceneType::GameClear;
 		sceneChangeFlag = true;
 	}
 	else if (gameOverScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::GameOver;
+		oldScene = SceneType::GameOver;
 		sceneChangeFlag = true;
 	}
 
@@ -460,7 +460,7 @@ void SceneManager::SceneChageUpdate()
 
 	switch (scene_)
 	{
-	case Scene::Title:
+	case SceneType::Title:
 		if (titleScene_->GetIsSceneFinsh()==true) {
 			blackAlpha += 0.025f;
 			blackOut->SetColor({ 1,1,1,blackAlpha });
@@ -468,12 +468,12 @@ void SceneManager::SceneChageUpdate()
 				// ここにリセット関数を置く
 				Reset();
 				blackAlpha = 1;
-				scene_ = Scene::Game;
+				scene_ = SceneType::Game;
 
 			}
 		}
-		else if (oldScene == Scene::GameClear ||
-			oldScene == Scene::GameOver) {
+		else if (oldScene == SceneType::GameClear ||
+			oldScene == SceneType::GameOver) {
 			blackAlpha -= 0.025f;
 			blackOut->SetColor({ 1,1,1,blackAlpha });
 			if (blackAlpha <= 0) {
@@ -482,8 +482,8 @@ void SceneManager::SceneChageUpdate()
 			}
 		}
 		break;
-	case Scene::Game:
-		if (oldScene != Scene::Game) {
+	case SceneType::Game:
+		if (oldScene != SceneType::Game) {
 			blackAlpha -= 0.025f;
 			blackOut->SetColor({ 1,1,1,blackAlpha });
 			if (blackAlpha <= 0) {
@@ -501,17 +501,17 @@ void SceneManager::SceneChageUpdate()
 				
 				if (gameScene_->GetIsGameClear() == true) {
 					Reset();
-					scene_ = Scene::GameClear;
+					scene_ = SceneType::GameClear;
 				}
 				else {
 					Reset();
-					scene_ = Scene::GameOver;
+					scene_ = SceneType::GameOver;
 				}
 			}
 		}
 		break;
-	case Scene::GameClear:
-		if (oldScene == Scene::Game) {
+	case SceneType::GameClear:
+		if (oldScene == SceneType::Game) {
 			blackAlpha -= 0.025f;
 			blackOut->SetColor({ 1,1,1,blackAlpha });
 			if (blackAlpha <= 0) {
@@ -526,20 +526,20 @@ void SceneManager::SceneChageUpdate()
 				blackAlpha = 1;
 
 				if (gameClearScene_->GetIsTitleOrGame() == false) {
-					scene_ = Scene::Game;
+					scene_ = SceneType::Game;
 					// ここにリセット関数を置く
 				}
 				else if (gameClearScene_->GetIsTitleOrGame() == true) {
 					// ここにリセット関数を置く
 					Reset();
 
-					scene_ = Scene::Title;
+					scene_ = SceneType::Title;
 				}
 			}
 		}
 		break;
-	case Scene::GameOver:
-		if (oldScene == Scene::Game) {
+	case SceneType::GameOver:
+		if (oldScene == SceneType::Game) {
 			blackAlpha -= 0.025f;
 			blackOut->SetColor({ 1,1,1,blackAlpha });
 			if (blackAlpha <= 0) {
@@ -554,14 +554,14 @@ void SceneManager::SceneChageUpdate()
 				blackAlpha = 1;
 
 				if (gameOverScene_->GetIsTitleOrGame() == false) {
-					scene_ = Scene::Game;
+					scene_ = SceneType::Game;
 					// ここにリセット関数を置く
 				}
 				else if (gameOverScene_->GetIsTitleOrGame() == true) {
 					// ここにリセット関数を置く
 					Reset();
 
-					scene_ = Scene::Title;
+					scene_ = SceneType::Title;
 				}
 			}
 		}

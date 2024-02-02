@@ -11,7 +11,7 @@ class SceneManager
 {
 public:
 	// シーンクラス
-	enum Scene {
+	enum SceneType {
 		Title,
 		Game,
 		GameClear,
@@ -118,7 +118,7 @@ private:// メンバ変数
 	BeatEffect* beatEffect_ = nullptr;
 
 	// シーンの状態
-	Scene scene_ = Title;
+	SceneType scene_ = Title;
 
 	// タイトルシーン
 	std::unique_ptr<TitleScene> titleScene_;
@@ -198,7 +198,7 @@ private:// メンバ変数
 	// ブラックアウトの変数
 	float blackAlpha = 0.0f;
 	bool sceneChangeFlag = false;
-	Scene oldScene = Scene::Title;
+	SceneType oldScene = SceneType::Title;
 
 	#pragma endregion
 

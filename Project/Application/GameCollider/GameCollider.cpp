@@ -1,7 +1,5 @@
 #include "GameCollider.h"
 
-
-
 void GameCollider::Initialize()
 {
 	// パーティクルのテクスチャの初期化

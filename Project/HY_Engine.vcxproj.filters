@@ -256,6 +256,18 @@
     <Filter Include="ヘッダー ファイル\Application\Item">
       <UniqueIdentifier>{92fe7e1a-df24-48fd-b6b8-da3c98e3117a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Load">
+      <UniqueIdentifier>{62332e2e-de29-47a6-9460-d49cb8031246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Load">
+      <UniqueIdentifier>{bf2f174c-7e7e-4b13-94bd-f2a1b836987e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application\Camera">
+      <UniqueIdentifier>{abb10a8a-2842-4980-93c4-e6b35216a715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Camera">
+      <UniqueIdentifier>{e3985756-75e3-4a95-be61-193f9a15c753}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -417,9 +429,6 @@
     <ClCompile Include="Engine\Particle\ParticleManager.cpp">
       <Filter>ソース ファイル\Engine\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\GameCamera.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Application\GameCollider\GameCollider.cpp">
       <Filter>ソース ファイル\Application\GameCollider</Filter>
     </ClCompile>
@@ -492,11 +501,17 @@
     <ClCompile Include="Engine\2D\BillboardTex.cpp">
       <Filter>ソース ファイル\Engine\2D</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Item\ItemKey.cpp">
-      <Filter>ソース ファイル\Application\Item</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Item\ItemPaper.cpp">
       <Filter>ソース ファイル\Application\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Load\LoadManager.cpp">
+      <Filter>ソース ファイル\Application\Load</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Scene\IScene.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Scene\GameCamera.cpp">
+      <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -659,9 +674,6 @@
     <ClInclude Include="Engine\Particle\ParticleManager.h">
       <Filter>ヘッダー ファイル\Engine\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\GameCamera.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Application\GameCollider\GameCollider.h">
       <Filter>ヘッダー ファイル\Application\GameCollider</Filter>
     </ClInclude>
@@ -737,11 +749,17 @@
     <ClInclude Include="Engine\2D\BillboardTex.h">
       <Filter>ヘッダー ファイル\Engine\2D</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Item\ItemKey.h">
-      <Filter>ヘッダー ファイル\Application\Item</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Item\ItemPaper.h">
       <Filter>ヘッダー ファイル\Application\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Load\LoadManager.h">
+      <Filter>ヘッダー ファイル\Application\Load</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Scene\IScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Scene\GameCamera.h">
+      <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,8 +24,9 @@
 #include <BillboardTex.h>
 #include "ItemPaper.h"
 #include "BeatEffect.h"
+#include "IScene.h"
 
-class GameScene
+class GameScene:public IScene
 {
 public:
 	enum ObjsType {
@@ -40,32 +41,32 @@ public:// メンバ関数
 	~GameScene();
 
 	// 初期化処理
-	void Initialize();
+	void Initialize()override;
 
 	// 更新処理
-	void Update();
+	void Update()override;
 
 	// Imguiの更新処理
-	void ImguiUpdate();
+	void ImguiUpdate()override;
 
 	// 描画処理
 	void Draw2DBack();
 
-	void Draw3D();
+	void Draw3D()override;
 
 	void DrawParticle();
 
-	void Draw2DFront();
+	void Draw2DFront()override;
 
 	/// <summary>
 	/// ブルームを掛けるオブジェクトの描画
 	/// </summary>
-	void DrawBloomObject();
+	void DrawBloomObject()override;
 
 	/// <summary>
 	/// 高輝度抽出するオブジェクトの描画
 	/// </summary>
-	void DrawHighLumiObj();
+	void DrawHighLumiObj()override;
 
 	/// <summary>
 	/// ステンシルの読み込みをするオブジェクトの描画
@@ -83,7 +84,7 @@ public:// メンバ関数
 	void DrawBillboardTex();
 
 	// リセット関数
-	void Reset();
+	void Reset()override;
 
 	// 敵のレベルデータを読み込む
 	void LoadEnemy();
@@ -146,13 +147,13 @@ public:// ゲッター
 	/// シーン終了しているかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsSceneFinsh() { return IsSceneFinsh_; }
+	bool GetIsSceneFinsh()override { return IsSceneFinsh_; }
 
 	/// <summary>
 	/// ゲームをクリアしているかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsGameClear() { return IsGameClear_; }
+	bool GetIsGameClear()override { return IsGameClear_; }
 
 private:// サブクラス
 
@@ -244,34 +245,6 @@ private:// メンバ変数
 
 #pragma region エネミー関連
 	std::vector<Enemy*>enemys_;
-#pragma endregion
-
-#pragma region 敵のウェーブ関連
-
-	// エネミーのウエーブを管理するもの
-	EnemyWave enemyWave_ = EnemyWave::wave01;
-
-	// ゲームのウェーブごとの時間
-	float waveTimer_ = 0;
-	const float waveTimeMax_ = 60 * 30;
-
-	// 今のウェーブ
-	uint32_t waveTimeNum_ = 0;
-
-	// エネミーのスポーン時間
-	float enemySpawnTimer_ = 0;
-
-	// エネミーのウェーブごとのスポーン間隔
-	const float enemySpawnTimeMax1_ = 60 * 5;
-	const float enemySpawnTimeMax2_ = 60 * 4;
-	const float enemySpawnTimeMax3_ = 60 * 3;
-
-	// 抽選するエネミーのスポーンパターン
-	int randomWave01_ = 0;
-
-	// ウェーブが終わった時の判別フラグ
-	bool IsEndWave = false;
-
 #pragma endregion
 
 #pragma region UI関連

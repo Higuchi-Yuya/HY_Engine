@@ -82,6 +82,15 @@ void TitleScene::Update()
 	gameCamera_->TitleUpdate();
 }
 
+void TitleScene::ImguiUpdate()
+{
+}
+
+bool TitleScene::GetIsGameClear()
+{
+	return false;
+}
+
 void TitleScene::Draw2DBack()
 {
 }

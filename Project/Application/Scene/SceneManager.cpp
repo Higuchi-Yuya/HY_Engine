@@ -1,35 +1,10 @@
 #include "SceneManager.h"
 #include "BeatEffect.h"
-
+#include"LoadManager.h"
 SceneManager::~SceneManager()
 {
-	models.clear();
-
-	for (auto o : objects) {
-		delete o;
-	}
-	objects.clear();
-
-	for (auto o : latticeDoors_) {
-		delete o;
-	}
-	latticeDoors_.clear();
-
-	for (auto o : ranterns_) {
-		delete o;
-	}
-	ranterns_.clear();
-
-	for (auto o : highLumiRanterns_) {
-		delete o;
-	}
-	highLumiRanterns_.clear();
-
-	for (auto o : pointLightsInfo_) {
-		delete o;
-	}
-	pointLightsInfo_.clear();
-
+	loadManager_->Finalize();
+	loadManager_ = nullptr;
 	Enemy::StaticFinalize();
 }
 
@@ -62,45 +37,6 @@ void SceneManager::Initialize()
 	Object3d::SetFog(fog.get());
 #pragma endregion
 
-#pragma region モデルの読み込み
-
-	// 敵のモデル読み込み
-	modelMedama_.reset(Model::LoadFromOBJ("Medama", true));
-
-	// 背景モデル関連
-	modelSkydome_.reset(Model::LoadFromOBJ("skydome"));
-	modelGround_.reset(Model::LoadFromOBJ("ground"));
-
-	// 木
-	modelTreeBald_.reset(Model::LoadFromOBJ("tree_bald"));
-	modelTreeNormal_.reset(Model::LoadFromOBJ("tree_Normal"));
-
-	// フェンス
-	modelFence_.reset(Model::LoadFromOBJ("fence"));
-	modelFencePost_.reset(Model::LoadFromOBJ("fencePost"));
-	modelLatticeDoor_.reset(Model::LoadFromOBJ("latticeDoor"));
-
-	// お墓
-	modelGraveCross.reset(Model::LoadFromOBJ("grave_cross"));
-	modelGraveSquare.reset(Model::LoadFromOBJ("grave_square"));
-
-	// ランタン
-	modelWallRantern_.reset(Model::LoadFromOBJ("WallRantern"));
-	modelPostRantern_.reset(Model::LoadFromOBJ("postRantern"));
-
-	// 壁
-	modelWall02_.reset(Model::LoadFromOBJ("wall02"));
-	modelWall03_.reset(Model::LoadFromOBJ("wall03"));
-
-	// 椅子
-	modelChair_.reset(Model::LoadFromOBJ("chair"));
-
-	// 十字架
-	modelCross_.reset(Model::LoadFromOBJ("cross"));
-	modelStoneCross_.reset(Model::LoadFromOBJ("stoneCross"));
-
-#pragma endregion
-
 #pragma region テクスチャの読み込み
 	// シーンチェンジで使うハンドル
 	blackOutTexHandle_.reset(TextureManager::Load2DTextureP("SceneChageTex.png"));
@@ -118,16 +54,20 @@ void SceneManager::Initialize()
 	gameCollider->Initialize();
 #pragma endregion
 
-	InitLoader();
+#pragma region ロードマネージャー
+	loadManager_ = std::make_unique<LoadManager>();
+	loadManager_->SetCollider(gameCollider.get());
+	loadManager_->LoadAll();
+#pragma endregion
 
 #pragma region ポイントライトのセット
-	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	for (size_t i = 0; i < loadManager_->GetPointLightInfo().size(); i++)
 	{
 		// ポイントライトのフラグをアクティブに
 		light->SetPointLightActive((int)i, true);
 
 		// ポジションの情報をセット
-		light->SetPointLightPos((int)i, pointLightsInfo_[i]->translation);
+		light->SetPointLightPos((int)i, loadManager_->GetPointLightInfo()[i]->translation);
 
 		// ポイントライトのライトの減衰具合
 		light->SetPointLightAtten((int)i, pointLightAtten);
@@ -135,9 +75,6 @@ void SceneManager::Initialize()
 		// ポイントライトのライトの色
 		light->SetPointLightColor((int)i, pointLightColor);
 	}
-
-	// プレイヤーのポイントライトをオン
-	//light->SetPointLightActive((int)(pointLightsInfo_.size() + 1), true);
 #pragma endregion
 
 #pragma region ビュープロジェクション関連の初期化
@@ -163,6 +100,8 @@ void SceneManager::Initialize()
 	gameScene_->Initialize();
 	gameClearScene_->Initialize();
 	gameOverScene_->Initialize();
+
+	currentScene_ = titleScene_.get();
 #pragma endregion
 
 }
@@ -172,23 +111,8 @@ void SceneManager::Update()
 	// シーンチェンジ処理
 	SceneChageUpdate();
 
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->Update();
-		break;
-	case SceneManager::Game:
-		gameScene_->Update();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Update();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Update();
-		break;
-	default:
-		break;
-	}
+	// 現在のシーンの更新処理
+	currentScene_->Update();
 
 	LightUpdate();
 	fog->UpdateMatrix();
@@ -267,22 +191,7 @@ void SceneManager::ImguiUpdate()
 
 	ImGui::End();
 
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		break;
-	case SceneManager::Game:
-		gameScene_->ImguiUpdate();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
+	currentScene_->ImguiUpdate();
 }
 
 void SceneManager::Draw2DBack()
@@ -291,67 +200,16 @@ void SceneManager::Draw2DBack()
 
 void SceneManager::Draw3D()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->Draw3D();
-		break;
-	case SceneManager::Game:
-		gameScene_->Draw3D();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Draw3D();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Draw3D();
-		break;
-	default:
-		break;
-	}
-
-	DrawParticle();
+	currentScene_->Draw3D();
 }
 
 void SceneManager::DrawParticle()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-
-		break;
-	case SceneManager::Game:
-		gameScene_->DrawParticle();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
 }
 
 void SceneManager::Draw2DFront()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->Draw2DFront();
-		break;
-	case SceneManager::Game:
-		gameScene_->Draw2DFront();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Draw2DFront();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Draw2DFront();
-		break;
-	default:
-		break;
-	}
+	currentScene_->Draw2DFront();
 
 	// シーンチェンジ用ののスプライトの描画
 	blackOut->Draw();
@@ -359,44 +217,12 @@ void SceneManager::Draw2DFront()
 
 void SceneManager::DrawBloomObject()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->DrawBloomObject();
-		break;
-	case SceneManager::Game:
-		gameScene_->DrawBloomObject();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
+	currentScene_->DrawBloomObject();
 }
 
 void SceneManager::DrawHighLumiObj()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->DrawHighLumiObj();
-		break;
-	case SceneManager::Game:
-		gameScene_->DrawHighLumiObj();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
+	currentScene_->DrawHighLumiObj();
 }
 
 void SceneManager::SetBeatEffect(BeatEffect* beatEffect)
@@ -404,203 +230,66 @@ void SceneManager::SetBeatEffect(BeatEffect* beatEffect)
 	gameScene_->SetBeatEffect(beatEffect);
 }
 
+void SceneManager::SetNextScene(SceneType sceneType)
+{
+	// 最初に今のシーンをリセット
+	currentScene_->Reset();
+
+	// シーンのタイプごとにシーンを変える
+	switch (sceneType)
+	{
+	case Title:
+		currentScene_ = titleScene_.get();
+		sceneType_ = Title;
+		break;
+	case Game:
+		currentScene_ = gameScene_.get();
+		sceneType_ = Game;
+		break;
+	case GameClear:
+		currentScene_ = gameClearScene_.get();
+		sceneType_ = GameClear;
+		break;
+	case GameOver:
+		currentScene_ = gameOverScene_.get();
+		sceneType_ = GameOver;
+		break;
+	default:
+		break;
+	}
+}
+
 void SceneManager::InitLoader()
 {
-#pragma region ローダー用の読み込み
-	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("testS"));
 
-	// モデルデータをモデルのリストに登録
-	models.insert(std::make_pair("skydome", modelSkydome_.get()));
-	models.insert(std::make_pair("ground", modelGround_.get()));
-	models.insert(std::make_pair("Medama", modelMedama_.get()));
-
-	models.insert(std::make_pair("tree_bald", modelTreeBald_.get()));
-	models.insert(std::make_pair("tree_Normal", modelTreeNormal_.get()));
-	models.insert(std::make_pair("fence", modelFence_.get()));
-	models.insert(std::make_pair("fencePost", modelFencePost_.get()));
-	models.insert(std::make_pair("latticeDoor", modelLatticeDoor_.get()));
-	models.insert(std::make_pair("grave_cross", modelGraveCross.get()));
-	models.insert(std::make_pair("grave_square", modelGraveSquare.get()));
-	models.insert(std::make_pair("WallRantern", modelWallRantern_.get()));
-
-	models.insert(std::make_pair("postRantern", modelPostRantern_.get()));
-	models.insert(std::make_pair("wall02", modelWall02_.get()));
-	models.insert(std::make_pair("wall03", modelWall03_.get()));
-	models.insert(std::make_pair("cross", modelCross_.get()));
-	models.insert(std::make_pair("stoneCross", modelStoneCross_.get()));
-	models.insert(std::make_pair("chair", modelChair_.get()));
-
-	// レベルデータからオブジェクトを生成、配置
-	//	また、プレイヤーの初期位置やエネミーの初期
-	for (auto& objectData : levelData_->objects) {
-		// ファイル名から登録済みモデルを検索
-		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.fileName);
-		if (it != models.end()) {
-			model = it->second;
-		}
-
-		if (objectData.tagName == "enemy"||
-			objectData.tagName == "ItemKey"||
-			objectData.tagName == "ItemPaper") {
-
-		}
-		else if (objectData.tagName == "colBox") {
-
-			Box box;
-			box.center = objectData.translation;
-			box.radius = objectData.scaling;
-
-			gameCollider->AddObjBox(box);
-		}
-		else if (objectData.tagName == "colSphere") {
-
-			Sphere sphere;
-			sphere.center = objectData.translation;
-			sphere.radius = objectData.scaling.x;
-
-			gameCollider->AddObjSphere(sphere);
-		}
-		// タグ名がドアなら
-#pragma region お墓のドア
-		else if (objectData.tagName == "Door")
-		{
-			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
-			newObject->SetModel(model);
-
-			// 座標
-			Vector3 pos;
-			pos = objectData.translation;
-			newObject->worldTransform_.translation = pos;
-
-			// 回転角
-			Vector3 rot;
-			rot = objectData.rotation;
-			newObject->worldTransform_.rotation = rot;
-			newObject->worldTransform_.rotation.y += MathUtil::DegreeToRadian(180);
-
-			// スケール
-			Vector3 scale;
-			scale = objectData.scaling;
-			newObject->worldTransform_.scale = scale;
-
-			// 配列に登録
-			latticeDoors_.push_back(newObject);
-		}
-#pragma endregion
-
-		// タグ名がランタンなら
-		else if (objectData.tagName == "Rantern")
-		{
-			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
-			Object3d* newObj2 = Object3d::Create();
-			newObject->SetModel(model);
-			newObj2->SetModel(model);
-
-			// 座標
-			Vector3 pos;
-			pos = objectData.translation;
-			newObject->worldTransform_.translation = pos;
-			newObj2->worldTransform_.translation = pos;
-
-			// 回転角
-			Vector3 rot;
-			rot = objectData.rotation;
-			newObject->worldTransform_.rotation = rot;
-			newObj2->worldTransform_.rotation = rot;
-			//newObject->worldTransform_.rotation.y += MathUtil::DegreeToRadian(180);
-
-			// スケール
-			Vector3 scale;
-			scale = objectData.scaling;
-			newObject->worldTransform_.scale = scale;
-			newObj2->worldTransform_.scale = scale;
-
-			// 配列に登録
-			ranterns_.push_back(newObject);
-			highLumiRanterns_.push_back(newObj2);
-		}
-
-		// タグ名がポイントライトなら
-		else if (objectData.tagName == "PointLight")
-		{
-			// ポイントライトの登録
-			WorldTransform* newWorldTrans = new WorldTransform();
-			newWorldTrans->Initialize();
-
-			newWorldTrans->translation = objectData.translation;
-
-			// 配列に登録
-			pointLightsInfo_.push_back(newWorldTrans);
-
-		}
-
-		// それ以外のタグ名またはなしの場合
-		// 普通のオブジェクトと判断し生成
-		else
-		{
-			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
-			newObject->SetModel(model);
-
-			// 座標
-			Vector3 pos;
-			pos = objectData.translation;
-			newObject->worldTransform_.translation = pos;
-
-			// 回転角
-			Vector3 rot;
-			rot = objectData.rotation;
-			newObject->worldTransform_.rotation = rot;
-
-			// スケール
-			Vector3 scale;
-			scale = objectData.scaling;
-			newObject->worldTransform_.scale = scale;
-
-			// 配列に登録
-			objects.push_back(newObject);
-
-			// タグ名が墓もしくは木だったら、当たり判定をつける
-			if (objectData.tagName == "tree" ||
-				objectData.tagName == "grave") {
-				gameCollider->AddObj(newObject);
-			}
-		}
-
-	}
-#pragma endregion
 }
 
 void SceneManager::InitScenesSets()
 {
 	titleScene_->SetGameCamera(gameCamera.get());
-	titleScene_->SetObjs(objects, TitleScene::Normal);
-	titleScene_->SetObjs(latticeDoors_, TitleScene::Doors);
-	titleScene_->SetObjs(ranterns_, TitleScene::Ranterns);
-	titleScene_->SetObjs(highLumiRanterns_, TitleScene::HiguLumiRanterns);
+	titleScene_->SetObjs(loadManager_->GetObjects(), TitleScene::Normal);
+	titleScene_->SetObjs(loadManager_->GetLatticeDoors(), TitleScene::Doors);
+	titleScene_->SetObjs(loadManager_->GetRanterns(), TitleScene::Ranterns);
+	titleScene_->SetObjs(loadManager_->GetHighRanterns(), TitleScene::HiguLumiRanterns);
 	titleScene_->SetLightGroup(light.get());
-	titleScene_->SetPointInfo(pointLightsInfo_);
+	titleScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
 	gameScene_->SetCmdList(dxCommon_->GetCommandList());
 	gameScene_->SetGameCamera(gameCamera.get());
 	gameScene_->SetGameCollider(gameCollider.get());
-	gameScene_->SetModels(models);
-	gameScene_->SetObjs(objects, GameScene::Normal);
-	gameScene_->SetObjs(latticeDoors_, GameScene::Doors);
-	gameScene_->SetObjs(ranterns_, GameScene::Ranterns);
-	gameScene_->SetObjs(highLumiRanterns_, GameScene::HiguLumiRanterns);
+	gameScene_->SetModels(loadManager_->GetModels());
+	gameScene_->SetObjs(loadManager_->GetObjects(), GameScene::Normal);
+	gameScene_->SetObjs(loadManager_->GetLatticeDoors(), GameScene::Doors);
+	gameScene_->SetObjs(loadManager_->GetRanterns(), GameScene::Ranterns);
+	gameScene_->SetObjs(loadManager_->GetHighRanterns(), GameScene::HiguLumiRanterns);
 	gameScene_->SetLightGroup(light.get());
-	gameScene_->SetPointInfo(pointLightsInfo_);
+	gameScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
 }
 
 void SceneManager::LightUpdate()
 {
-	for (size_t i = 0; i < pointLightsInfo_.size(); i++)
+	for (size_t i = 0; i < loadManager_->GetPointLightInfo().size(); i++)
 	{
 		// ポイントライトのフラグをアクティブに
 		light->SetPointLightActive((int)i, true);
@@ -655,20 +344,8 @@ void SceneManager::LightUpdate()
 void SceneManager::SceneChageUpdate()
 {
 
-	if (titleScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::Title;
-		sceneChangeFlag = true;
-	}
-	else if(gameScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::Game;
-		sceneChangeFlag = true;
-	}
-	else if (gameClearScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::GameClear;
-		sceneChangeFlag = true;
-	}
-	else if (gameOverScene_->GetIsSceneFinsh() == true) {
-		oldScene = Scene::GameOver;
+	if (currentScene_->GetIsSceneFinsh() == true) {
+		oldSceneType_ = sceneType_;
 		sceneChangeFlag = true;
 	}
 
@@ -676,123 +353,53 @@ void SceneManager::SceneChageUpdate()
 		return;
 	}
 
-	switch (scene_)
-	{
-	case Scene::Title:
-		if (titleScene_->GetIsSceneFinsh()==true) {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				// ここにリセット関数を置く
-				Reset();
-				blackAlpha = 1;
-				scene_ = Scene::Game;
-
-			}
+	// シーンが変わっていたら
+	if (oldSceneType_ != sceneType_) {
+		blackAlpha -= 0.025f;
+		blackOut->SetColor({ 1,1,1,blackAlpha });
+		if (blackAlpha <= 0) {
+			blackAlpha = 0;
+			sceneChangeFlag = false;
 		}
-		else if (oldScene == Scene::GameClear ||
-			oldScene == Scene::GameOver) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		break;
-	case Scene::Game:
-		if (oldScene != Scene::Game) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		// ゲームシーンからリザルトシーン
-		else {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				blackAlpha = 1;
-				// ここにリセット関数を置く
-				
-				if (gameScene_->GetIsGameClear() == true) {
-					Reset();
-					scene_ = Scene::GameClear;
+	}
+	// シーンが変わっていなかったら
+	else {
+		blackAlpha += 0.025f;
+		blackOut->SetColor({ 1,1,1,blackAlpha });
+		if (blackAlpha >= 1) {
+			blackAlpha = 1;
+			
+			// 現在のシーンタイプごとに次のシーンをセット
+			switch (sceneType_)
+			{
+			case SceneManager::Title:
+				SetNextScene(Game);
+				break;
+			case SceneManager::Game:
+				if (currentScene_->GetIsGameClear() == true) {
+					SetNextScene(GameClear);
 				}
 				else {
-					Reset();
-					scene_ = Scene::GameOver;
+					SetNextScene(GameOver);
 				}
+				break;
+			case SceneManager::GameClear:
+				SetNextScene(Title);
+				break;
+			case SceneManager::GameOver:
+				SetNextScene(Title);
+				break;
+			default:
+				break;
 			}
-		}
-		break;
-	case Scene::GameClear:
-		if (oldScene == Scene::Game) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		else {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				blackAlpha = 1;
 
-				if (gameClearScene_->GetIsTitleOrGame() == false) {
-					scene_ = Scene::Game;
-					// ここにリセット関数を置く
-				}
-				else if (gameClearScene_->GetIsTitleOrGame() == true) {
-					// ここにリセット関数を置く
-					Reset();
-
-					scene_ = Scene::Title;
-				}
-			}
 		}
-		break;
-	case Scene::GameOver:
-		if (oldScene == Scene::Game) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		else {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				blackAlpha = 1;
-
-				if (gameOverScene_->GetIsTitleOrGame() == false) {
-					scene_ = Scene::Game;
-					// ここにリセット関数を置く
-				}
-				else if (gameOverScene_->GetIsTitleOrGame() == true) {
-					// ここにリセット関数を置く
-					Reset();
-
-					scene_ = Scene::Title;
-				}
-			}
-		}
-		break;
-	default:
-		break;
 	}
-
 }
 
 void SceneManager::Reset()
 {
-	switch (scene_)
+	switch (sceneType_)
 	{
 	case SceneManager::Title:
 		titleScene_->Reset();

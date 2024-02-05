@@ -5,12 +5,14 @@
 #include "GameClearScene.h"
 #include "GameOverScene.h"
 #include "BeatEffect.h"
+#include "LoadManager.h"
+#include "IScene.h"
 
 class SceneManager
 {
 public:
 	// シーンクラス
-	enum Scene {
+	enum SceneType {
 		Title,
 		Game,
 		GameClear,
@@ -79,6 +81,12 @@ public:// セッター
 	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
 	void SetBeatEffect(BeatEffect* beatEffect);
 
+	/// <summary>
+	/// 次のシーンを予約
+	/// </summary>
+	/// <param name="nextScene">次のシーン</param>
+	void SetNextScene(SceneType sceneType);
+
 public:// ゲッター
 
 private:// プレイべーとメンバ関数
@@ -117,7 +125,7 @@ private:// メンバ変数
 	BeatEffect* beatEffect_ = nullptr;
 
 	// シーンの状態
-	Scene scene_ = Title;
+	SceneType sceneType_ = Title;
 
 	// タイトルシーン
 	std::unique_ptr<TitleScene> titleScene_;
@@ -131,6 +139,12 @@ private:// メンバ変数
 	// ゲームオーバーシーン
 	std::unique_ptr<GameOverScene> gameOverScene_;
 
+	// ロードマネージャー
+	std::unique_ptr<LoadManager> loadManager_;
+
+	// 現在のシーン
+	IScene* currentScene_ = nullptr;
+
 	#pragma region 光源関連
 	// オブジェクト共通のライトの初期化
 	std::unique_ptr<LightGroup> light = nullptr;
@@ -143,8 +157,8 @@ private:// メンバ変数
 	Vector3 pointLightColor = { 0.92f,0.684f,0.56f };
 	Vector3 pointLightAtten = { 0.12f,0.1f,0.02f };
 	bool isActivePoint = false;
-	float pointLightIndensity = 1.2f;
-	float pointLightRadius = 70;
+	float pointLightIndensity = 1.5f;
+	float pointLightRadius = 35;
 	float pointLightDecay = 15.5f;
 	float pointLightDistance = 10;
 
@@ -173,49 +187,10 @@ private:// メンバ変数
 	bool isFogActive = true;
 	#pragma endregion
 
-	#pragma region モデル
-
-	std::unique_ptr<Model> modelMedama_ = nullptr;
-
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
-	std::unique_ptr<Model> modelGround_ = nullptr;
-
-	// 木
-	std::unique_ptr<Model> modelTreeBald_ = nullptr;
-	std::unique_ptr<Model> modelTreeNormal_ = nullptr;
-
-	// フェンス
-	std::unique_ptr<Model> modelFence_ = nullptr;
-	std::unique_ptr<Model> modelFencePost_ = nullptr;
-	std::unique_ptr<Model> modelLatticeDoor_ = nullptr;
-
-	// お墓
-	std::unique_ptr<Model> modelGraveCross = nullptr;
-	std::unique_ptr<Model> modelGraveSquare = nullptr;
-
-	// ランタン
-	std::unique_ptr<Model> modelWallRantern_ = nullptr;
-
-	// 街灯
-	std::unique_ptr<Model> modelPostRantern_ = nullptr;
-
-	// 壁
-	std::unique_ptr<Model> modelWall02_ = nullptr;
-	std::unique_ptr<Model> modelWall03_ = nullptr;
-
-	// 椅子
-	std::unique_ptr<Model> modelChair_ = nullptr;
-
-	// 十字架
-	std::unique_ptr<Model> modelCross_ = nullptr;
-	std::unique_ptr<Model> modelStoneCross_ = nullptr;
-
-	#pragma endregion
-
 	#pragma region カメラ関連
 	// ビュープロジェクション
 	std::unique_ptr<GameCamera>gameCamera;
-#pragma endregion
+	#pragma endregion
 
 	#pragma region シーンチェンジ関連
 
@@ -228,38 +203,12 @@ private:// メンバ変数
 	// ブラックアウトの変数
 	float blackAlpha = 0.0f;
 	bool sceneChangeFlag = false;
-	Scene oldScene = Scene::Title;
-
-	#pragma endregion
-
-	#pragma region レベルデータ関連
-
-	// レベルデータ
-	std::unique_ptr<LevelData> levelData_;
-
-	// レベルデータに登録するモデルの配列
-	std::map<std::string, Model*> models;
-
-	// レベルデータに登録するオブジェクトの配列
-	std::vector<Object3d*> objects;
-
-	// お墓のドアの配列
-	std::vector<Object3d*> latticeDoors_;
-
-	// ランタンの配列
-	std::vector<Object3d*> ranterns_;
-
-	// ランタンの高輝度用配列
-	std::vector<Object3d*> highLumiRanterns_;
-
-	// ポイントライト情報の配列
-	std::vector<WorldTransform*> pointLightsInfo_;
+	SceneType oldSceneType_ = SceneType::Title;
 
 	#pragma endregion
 
 	#pragma region 当たり判定
 	std::unique_ptr<GameCollider> gameCollider;
 	#pragma endregion
-
 };
 

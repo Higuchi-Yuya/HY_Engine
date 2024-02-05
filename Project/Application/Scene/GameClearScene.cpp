@@ -26,7 +26,6 @@ void GameClearScene::Update()
 	// パッドでAボタンを押した瞬間
 	if (JoypadInput::GetButtonDown(PadCode::ButtonA)) {
 		IsSceneFinsh_ = true;
-		IsTitleOrGame_ = true;
 	}
 }
 
@@ -39,6 +38,23 @@ void GameClearScene::Draw2DFront()
 	backSprite_->Draw();
 	pressASprite->Draw();
 	resultGameClearFont_->Draw();
+}
+
+void GameClearScene::ImguiUpdate()
+{
+}
+
+void GameClearScene::DrawBloomObject()
+{
+}
+
+void GameClearScene::DrawHighLumiObj()
+{
+}
+
+bool GameClearScene::GetIsGameClear()
+{
+	return false;
 }
 
 void GameClearScene::Reset()

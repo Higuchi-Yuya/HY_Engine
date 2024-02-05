@@ -92,11 +92,6 @@ public:// ゲッター
 private:// プレイべーとメンバ関数
 
 	/// <summary>
-	/// ローダーの初期化処理
-	/// </summary>
-	void InitLoader();
-
-	/// <summary>
 	/// 各シーンに必要な初期設定の処理
 	/// </summary>
 	void InitScenesSets();
@@ -110,11 +105,6 @@ private:// プレイべーとメンバ関数
 	/// シーンチェンジの更新処理
 	/// </summary>
 	void SceneChageUpdate();
-
-	/// <summary>
-	/// リセット関数
-	/// </summary>
-	void Reset();
 
 private:// メンバ変数
 

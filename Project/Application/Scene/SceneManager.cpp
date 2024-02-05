@@ -259,11 +259,6 @@ void SceneManager::SetNextScene(SceneType sceneType)
 	}
 }
 
-void SceneManager::InitLoader()
-{
-
-}
-
 void SceneManager::InitScenesSets()
 {
 	titleScene_->SetGameCamera(gameCamera.get());
@@ -394,26 +389,5 @@ void SceneManager::SceneChageUpdate()
 			}
 
 		}
-	}
-}
-
-void SceneManager::Reset()
-{
-	switch (sceneType_)
-	{
-	case SceneManager::Title:
-		titleScene_->Reset();
-		break;
-	case SceneManager::Game:
-		gameScene_->Reset();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Reset();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Reset();
-		break;
-	default:
-		break;
 	}
 }

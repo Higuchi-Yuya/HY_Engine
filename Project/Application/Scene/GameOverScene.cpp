@@ -26,7 +26,6 @@ void GameOverScene::Update()
 	// パッドでAボタンを押した瞬間
 	if (JoypadInput::GetButtonDown(PadCode::ButtonA)) {
 		IsSceneFinsh_ = true;
-		IsTitleOrGame_ = true;
 	}
 }
 
@@ -45,4 +44,21 @@ void GameOverScene::Reset()
 {
 	IsSceneFinsh_ = false;
 	IsTitleOrGame_ = true;
+}
+
+void GameOverScene::ImguiUpdate()
+{
+}
+
+void GameOverScene::DrawBloomObject()
+{
+}
+
+void GameOverScene::DrawHighLumiObj()
+{
+}
+
+bool GameOverScene::GetIsGameClear()
+{
+	return false;
 }

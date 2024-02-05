@@ -37,12 +37,6 @@ void SceneManager::Initialize()
 	Object3d::SetFog(fog.get());
 #pragma endregion
 
-#pragma region モデルの読み込み
-
-
-
-#pragma endregion
-
 #pragma region テクスチャの読み込み
 	// シーンチェンジで使うハンドル
 	blackOutTexHandle_.reset(TextureManager::Load2DTextureP("SceneChageTex.png"));
@@ -66,8 +60,6 @@ void SceneManager::Initialize()
 	loadManager_->LoadAll();
 #pragma endregion
 
-	InitLoader();
-
 #pragma region ポイントライトのセット
 	for (size_t i = 0; i < loadManager_->GetPointLightInfo().size(); i++)
 	{
@@ -83,9 +75,6 @@ void SceneManager::Initialize()
 		// ポイントライトのライトの色
 		light->SetPointLightColor((int)i, pointLightColor);
 	}
-
-	// プレイヤーのポイントライトをオン
-	//light->SetPointLightActive((int)(pointLightsInfo_.size() + 1), true);
 #pragma endregion
 
 #pragma region ビュープロジェクション関連の初期化
@@ -111,6 +100,8 @@ void SceneManager::Initialize()
 	gameScene_->Initialize();
 	gameClearScene_->Initialize();
 	gameOverScene_->Initialize();
+
+	currentScene_ = titleScene_.get();
 #pragma endregion
 
 }
@@ -120,23 +111,8 @@ void SceneManager::Update()
 	// シーンチェンジ処理
 	SceneChageUpdate();
 
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->Update();
-		break;
-	case SceneManager::Game:
-		gameScene_->Update();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Update();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Update();
-		break;
-	default:
-		break;
-	}
+	// 現在のシーンの更新処理
+	currentScene_->Update();
 
 	LightUpdate();
 	fog->UpdateMatrix();
@@ -215,22 +191,7 @@ void SceneManager::ImguiUpdate()
 
 	ImGui::End();
 
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		break;
-	case SceneManager::Game:
-		gameScene_->ImguiUpdate();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
+	currentScene_->ImguiUpdate();
 }
 
 void SceneManager::Draw2DBack()
@@ -239,67 +200,16 @@ void SceneManager::Draw2DBack()
 
 void SceneManager::Draw3D()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->Draw3D();
-		break;
-	case SceneManager::Game:
-		gameScene_->Draw3D();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Draw3D();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Draw3D();
-		break;
-	default:
-		break;
-	}
-
-	DrawParticle();
+	currentScene_->Draw3D();
 }
 
 void SceneManager::DrawParticle()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-
-		break;
-	case SceneManager::Game:
-		gameScene_->DrawParticle();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
 }
 
 void SceneManager::Draw2DFront()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->Draw2DFront();
-		break;
-	case SceneManager::Game:
-		gameScene_->Draw2DFront();
-		break;
-	case SceneManager::GameClear:
-		gameClearScene_->Draw2DFront();
-		break;
-	case SceneManager::GameOver:
-		gameOverScene_->Draw2DFront();
-		break;
-	default:
-		break;
-	}
+	currentScene_->Draw2DFront();
 
 	// シーンチェンジ用ののスプライトの描画
 	blackOut->Draw();
@@ -307,49 +217,46 @@ void SceneManager::Draw2DFront()
 
 void SceneManager::DrawBloomObject()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->DrawBloomObject();
-		break;
-	case SceneManager::Game:
-		gameScene_->DrawBloomObject();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
+	currentScene_->DrawBloomObject();
 }
 
 void SceneManager::DrawHighLumiObj()
 {
-	switch (scene_)
-	{
-	case SceneManager::Title:
-		titleScene_->DrawHighLumiObj();
-		break;
-	case SceneManager::Game:
-		gameScene_->DrawHighLumiObj();
-		break;
-	case SceneManager::GameClear:
-
-		break;
-	case SceneManager::GameOver:
-
-		break;
-	default:
-		break;
-	}
+	currentScene_->DrawHighLumiObj();
 }
 
 void SceneManager::SetBeatEffect(BeatEffect* beatEffect)
 {
 	gameScene_->SetBeatEffect(beatEffect);
+}
+
+void SceneManager::SetNextScene(SceneType sceneType)
+{
+	// 最初に今のシーンをリセット
+	currentScene_->Reset();
+
+	// シーンのタイプごとにシーンを変える
+	switch (sceneType)
+	{
+	case Title:
+		currentScene_ = titleScene_.get();
+		sceneType_ = Title;
+		break;
+	case Game:
+		currentScene_ = gameScene_.get();
+		sceneType_ = Game;
+		break;
+	case GameClear:
+		currentScene_ = gameClearScene_.get();
+		sceneType_ = GameClear;
+		break;
+	case GameOver:
+		currentScene_ = gameOverScene_.get();
+		sceneType_ = GameOver;
+		break;
+	default:
+		break;
+	}
 }
 
 void SceneManager::InitLoader()
@@ -437,20 +344,8 @@ void SceneManager::LightUpdate()
 void SceneManager::SceneChageUpdate()
 {
 
-	if (titleScene_->GetIsSceneFinsh() == true) {
-		oldScene = SceneType::Title;
-		sceneChangeFlag = true;
-	}
-	else if(gameScene_->GetIsSceneFinsh() == true) {
-		oldScene = SceneType::Game;
-		sceneChangeFlag = true;
-	}
-	else if (gameClearScene_->GetIsSceneFinsh() == true) {
-		oldScene = SceneType::GameClear;
-		sceneChangeFlag = true;
-	}
-	else if (gameOverScene_->GetIsSceneFinsh() == true) {
-		oldScene = SceneType::GameOver;
+	if (currentScene_->GetIsSceneFinsh() == true) {
+		oldSceneType_ = sceneType_;
 		sceneChangeFlag = true;
 	}
 
@@ -458,123 +353,53 @@ void SceneManager::SceneChageUpdate()
 		return;
 	}
 
-	switch (scene_)
-	{
-	case SceneType::Title:
-		if (titleScene_->GetIsSceneFinsh()==true) {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				// ここにリセット関数を置く
-				Reset();
-				blackAlpha = 1;
-				scene_ = SceneType::Game;
-
-			}
+	// シーンが変わっていたら
+	if (oldSceneType_ != sceneType_) {
+		blackAlpha -= 0.025f;
+		blackOut->SetColor({ 1,1,1,blackAlpha });
+		if (blackAlpha <= 0) {
+			blackAlpha = 0;
+			sceneChangeFlag = false;
 		}
-		else if (oldScene == SceneType::GameClear ||
-			oldScene == SceneType::GameOver) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		break;
-	case SceneType::Game:
-		if (oldScene != SceneType::Game) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		// ゲームシーンからリザルトシーン
-		else {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				blackAlpha = 1;
-				// ここにリセット関数を置く
-				
-				if (gameScene_->GetIsGameClear() == true) {
-					Reset();
-					scene_ = SceneType::GameClear;
+	}
+	// シーンが変わっていなかったら
+	else {
+		blackAlpha += 0.025f;
+		blackOut->SetColor({ 1,1,1,blackAlpha });
+		if (blackAlpha >= 1) {
+			blackAlpha = 1;
+			
+			// 現在のシーンタイプごとに次のシーンをセット
+			switch (sceneType_)
+			{
+			case SceneManager::Title:
+				SetNextScene(Game);
+				break;
+			case SceneManager::Game:
+				if (currentScene_->GetIsGameClear() == true) {
+					SetNextScene(GameClear);
 				}
 				else {
-					Reset();
-					scene_ = SceneType::GameOver;
+					SetNextScene(GameOver);
 				}
+				break;
+			case SceneManager::GameClear:
+				SetNextScene(Title);
+				break;
+			case SceneManager::GameOver:
+				SetNextScene(Title);
+				break;
+			default:
+				break;
 			}
-		}
-		break;
-	case SceneType::GameClear:
-		if (oldScene == SceneType::Game) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		else {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				blackAlpha = 1;
 
-				if (gameClearScene_->GetIsTitleOrGame() == false) {
-					scene_ = SceneType::Game;
-					// ここにリセット関数を置く
-				}
-				else if (gameClearScene_->GetIsTitleOrGame() == true) {
-					// ここにリセット関数を置く
-					Reset();
-
-					scene_ = SceneType::Title;
-				}
-			}
 		}
-		break;
-	case SceneType::GameOver:
-		if (oldScene == SceneType::Game) {
-			blackAlpha -= 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha <= 0) {
-				blackAlpha = 0;
-				sceneChangeFlag = false;
-			}
-		}
-		else {
-			blackAlpha += 0.025f;
-			blackOut->SetColor({ 1,1,1,blackAlpha });
-			if (blackAlpha >= 1) {
-				blackAlpha = 1;
-
-				if (gameOverScene_->GetIsTitleOrGame() == false) {
-					scene_ = SceneType::Game;
-					// ここにリセット関数を置く
-				}
-				else if (gameOverScene_->GetIsTitleOrGame() == true) {
-					// ここにリセット関数を置く
-					Reset();
-
-					scene_ = SceneType::Title;
-				}
-			}
-		}
-		break;
-	default:
-		break;
 	}
-
 }
 
 void SceneManager::Reset()
 {
-	switch (scene_)
+	switch (sceneType_)
 	{
 	case SceneManager::Title:
 		titleScene_->Reset();

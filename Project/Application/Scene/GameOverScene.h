@@ -2,35 +2,41 @@
 #include "Sprite.h"
 #include "Object3d.h"
 #include "ViewProjection.h"
+#include "IScene.h"
 
-class GameOverScene
+class GameOverScene:public IScene
 {
 public:// メンバ関数
 
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	void Initialize();
+	void Initialize()override;
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update();
+	void Update()override;
 
 	/// <summary>
 	/// 3Dオブジェクトの描画処理
 	/// </summary>
-	void Draw3D();
+	void Draw3D()override;
 
 	/// <summary>
 	/// 前面スプライトの描画処理
 	/// </summary>
-	void Draw2DFront();
+	void Draw2DFront()override;
 
 	/// <summary>
 	/// リセット関数
 	/// </summary>
-	void Reset();
+	void Reset()override;
+
+	void ImguiUpdate()override;
+	void DrawBloomObject()override;
+	void DrawHighLumiObj()override;
+	bool GetIsGameClear()override;
 
 public:// 静的メンバ関数
 
@@ -42,7 +48,7 @@ public:// ゲッター
 	/// シーン終了しているかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsSceneFinsh() { return IsSceneFinsh_; }
+	bool GetIsSceneFinsh()override { return IsSceneFinsh_; }
 
 	/// <summary>
 	/// タイトルかゲームへのフラグを取得

@@ -24,8 +24,9 @@
 #include <BillboardTex.h>
 #include "ItemPaper.h"
 #include "BeatEffect.h"
+#include "IScene.h"
 
-class GameScene
+class GameScene:public IScene
 {
 public:
 	enum ObjsType {
@@ -40,32 +41,32 @@ public:// メンバ関数
 	~GameScene();
 
 	// 初期化処理
-	void Initialize();
+	void Initialize()override;
 
 	// 更新処理
-	void Update();
+	void Update()override;
 
 	// Imguiの更新処理
-	void ImguiUpdate();
+	void ImguiUpdate()override;
 
 	// 描画処理
 	void Draw2DBack();
 
-	void Draw3D();
+	void Draw3D()override;
 
 	void DrawParticle();
 
-	void Draw2DFront();
+	void Draw2DFront()override;
 
 	/// <summary>
 	/// ブルームを掛けるオブジェクトの描画
 	/// </summary>
-	void DrawBloomObject();
+	void DrawBloomObject()override;
 
 	/// <summary>
 	/// 高輝度抽出するオブジェクトの描画
 	/// </summary>
-	void DrawHighLumiObj();
+	void DrawHighLumiObj()override;
 
 	/// <summary>
 	/// ステンシルの読み込みをするオブジェクトの描画
@@ -83,7 +84,7 @@ public:// メンバ関数
 	void DrawBillboardTex();
 
 	// リセット関数
-	void Reset();
+	void Reset()override;
 
 	// 敵のレベルデータを読み込む
 	void LoadEnemy();
@@ -146,13 +147,13 @@ public:// ゲッター
 	/// シーン終了しているかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsSceneFinsh() { return IsSceneFinsh_; }
+	bool GetIsSceneFinsh()override { return IsSceneFinsh_; }
 
 	/// <summary>
 	/// ゲームをクリアしているかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsGameClear() { return IsGameClear_; }
+	bool GetIsGameClear()override { return IsGameClear_; }
 
 private:// サブクラス
 

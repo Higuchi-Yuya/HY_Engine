@@ -6,6 +6,7 @@
 #include "GameOverScene.h"
 #include "BeatEffect.h"
 #include "LoadManager.h"
+#include "IScene.h"
 
 class SceneManager
 {
@@ -80,6 +81,12 @@ public:// セッター
 	void SetDxComon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
 	void SetBeatEffect(BeatEffect* beatEffect);
 
+	/// <summary>
+	/// 次のシーンを予約
+	/// </summary>
+	/// <param name="nextScene">次のシーン</param>
+	void SetNextScene(SceneType sceneType);
+
 public:// ゲッター
 
 private:// プレイべーとメンバ関数
@@ -118,7 +125,7 @@ private:// メンバ変数
 	BeatEffect* beatEffect_ = nullptr;
 
 	// シーンの状態
-	SceneType scene_ = Title;
+	SceneType sceneType_ = Title;
 
 	// タイトルシーン
 	std::unique_ptr<TitleScene> titleScene_;
@@ -134,6 +141,9 @@ private:// メンバ変数
 
 	// ロードマネージャー
 	std::unique_ptr<LoadManager> loadManager_;
+
+	// 現在のシーン
+	IScene* currentScene_ = nullptr;
 
 	#pragma region 光源関連
 	// オブジェクト共通のライトの初期化
@@ -193,7 +203,7 @@ private:// メンバ変数
 	// ブラックアウトの変数
 	float blackAlpha = 0.0f;
 	bool sceneChangeFlag = false;
-	SceneType oldScene = SceneType::Title;
+	SceneType oldSceneType_ = SceneType::Title;
 
 	#pragma endregion
 

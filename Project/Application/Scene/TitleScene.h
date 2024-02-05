@@ -33,7 +33,7 @@ public:// メンバ関数
 	/// <summary>
 	/// 背面スプライトの描画処理
 	/// </summary>
-	void Draw2DBack()override;
+	void Draw2DBack();
 
 	/// <summary>
 	/// 3Dオブジェクトの描画処理
@@ -64,6 +64,10 @@ public:// メンバ関数
 	/// リセット関数
 	/// </summary>
 	void Reset()override;
+
+
+	void ImguiUpdate()override;
+	bool GetIsGameClear()override;
 
 public:// 静的メンバ関数
 
@@ -100,7 +104,7 @@ public:// ゲッター
 	/// シーン終了しているかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsSceneFinsh() { return IsSceneFinsh_; }
+	bool GetIsSceneFinsh()override { return IsSceneFinsh_; }
 
 private:// プレイべーとメンバ関数
 

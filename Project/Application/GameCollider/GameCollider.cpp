@@ -193,8 +193,8 @@ void GameCollider::EnemyCollisionUpdate()
 		Sphere sphereERange;
 		sphereERange.center = e->worldTransform_.translation;
 		sphereERange.radius = 7.0f;
-		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(pcol_, sphereERange)) {
-			e->SetAliveState(Enemy::AliveState::Tracking);
+		if (e->GetState() == Enemy::StateType::Alive && Collision::CheckSphere2Sphere(pcol_, sphereERange)) {
+			e->SetAliveState(IEnemyState::AliveState::Tracking);
 			e->NearPlayerParticleUpdate();
 			e->ResetBack();
 			if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
@@ -206,9 +206,9 @@ void GameCollider::EnemyCollisionUpdate()
 
 			}
 		}
-		else if(e->GetAliveState()!=Enemy::AliveState::Patrol) {
+		else if(e->GetAliveState()!= IEnemyState::AliveState::Patrol) {
 			player_->OnColUpSpeed();
-			e->SetAliveState(Enemy::AliveState::Back);
+			e->SetAliveState(IEnemyState::AliveState::Back);
 			e->worldTransform_.color.y = 1;
 			e->worldTransform_.color.z = 1;
 		}
@@ -222,7 +222,7 @@ void GameCollider::EnemyCollisionUpdate()
 			pB.radius = 1.0f;
 
 			// プレイヤーの弾とエネミーの当たり判定
-			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
+			if (e->GetState() == Enemy::StateType::Alive && Collision::CheckSphere2Sphere(sphereE, pB)) {
 				// エネミーが死亡
 				e->OnCollision();
 				// 弾を消す
@@ -237,7 +237,7 @@ void GameCollider::EnemyCollisionUpdate()
 				sphereE2.center = e2->worldTransform_.translation;
 				sphereE2.radius = 1.0f;
 
-				if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
+				if (e->GetState() == Enemy::StateType::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
 					e->pushBackOnCol();
 				}
 			}
@@ -245,7 +245,7 @@ void GameCollider::EnemyCollisionUpdate()
 
 
 		// -----------プレイヤーと敵の当たり判定------------- //
-		if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, pcol_, &e->interPos, &e->rejectVec)) {
+		if (e->GetState() == Enemy::StateType::Alive && Collision::CheckSphere2Sphere(sphereE, pcol_, &e->interPos, &e->rejectVec)) {
 			e->pushBackOnCol();
 
 			// プレイヤーの前方情報をスフィアのものに登録
@@ -268,7 +268,7 @@ void GameCollider::EnemyCollisionUpdate()
 			sphereE2.center.y += 1;
 			sphereE2.radius = 1.0f;
 
-			if (e->GetState() == Enemy::State::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
+			if (e->GetState() == Enemy::StateType::Alive && Collision::CheckSphere2Sphere(sphereE, sphereE2, &e->interPos, &e->rejectVec)) {
 				e->pushBackOnCol();
 			}
 		}

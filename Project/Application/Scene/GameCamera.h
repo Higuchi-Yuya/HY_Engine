@@ -10,8 +10,7 @@ private:
 	enum TitleCameraState
 	{
 		FirstMove,
-		SecondMove,
-
+		MoveEnd,
 	};
 
 	enum GameCameraState

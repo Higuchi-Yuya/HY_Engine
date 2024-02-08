@@ -85,7 +85,6 @@ void GameScene::Initialize()
 			// 今作成した敵を配列に格納
 			enemys_.push_back(newEnemy);
 			// 今作成した敵を当たり判定に情報を登録
-			gameCollider_->AddEnemy(newEnemy);
 		}
 #pragma endregion
 
@@ -366,8 +365,7 @@ void GameScene::Reset()
 void GameScene::LoadEnemy()
 {	
 	// レベルデータの読み込み
-	levelData_.reset(LevelLoader::LoadFile("testItem"));
-
+	levelData_.reset(LevelLoader::LoadFile("testS"));
 
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索

@@ -51,16 +51,12 @@ void GameCamera::TitleUpdate()
 			// イージングが終了したら
 			if (ease_.GetIsEnd()==true) {
 				easeTimer_ = 0;
-				titleCameraState_ = SecondMove;
 				ease_.Reset();
 				IsEaseEnd_ = true;
+				titleCameraState_ = MoveEnd;
 			}
 			break;
 		}
-		case GameCamera::SecondMove:
-
-
-			break;
 		default:
 			break;
 		}
@@ -111,10 +107,8 @@ void GameCamera::GameUpdate()
 
 	ImGui::Begin("gameCamera");
 
-	//ImGui::SetWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 
-	//ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
 	ImGui::InputFloat("ainfo", &aInfo);
 	ImGui::InputFloat3("angle", &angle_.x);
 	ImGui::InputFloat3("rotPos", &rotPos.x);
@@ -257,7 +251,7 @@ void GameCamera::RotUpdate()
 	// それ以外の時のカメラ処理
 	else {
 		viewProjection_.target += ((Vector3(playerPos_.x, playerPos_.y + offSet.y, playerPos_.z)) - viewProjection_.target) * cameraEaseSpeed;
-		viewProjection_.eye = ((viewProjection_.target + cameraFPos));// - viewProjection_.eye)* cameraEaseSpeed;
+		viewProjection_.eye = ((viewProjection_.target + cameraFPos));
 	}
 
 	// 行列を初期化

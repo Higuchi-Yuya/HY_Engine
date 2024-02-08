@@ -66,25 +66,25 @@ public:// セッター
 	/// ポジションの設定
 	/// </summary>
 	/// <param name="wTranslation">ポジション</param>
-	void SetWorldTransformPos(Vector3 wTranslation);
+	void SetWorldTransformPos(const Vector3 wTranslation);
 
 	/// <summary>
 	/// キーアイテムなのかを設定
 	/// </summary>
 	/// <param name="isKeyItem">キーアイテムフラグ</param>
-	void SetIsKeyItem(bool isKeyItem);
+	void SetIsKeyItem(const bool isKeyItem);
 
 	/// <summary>
 	/// キーアイテムのイージング処理が終わっているか
 	/// </summary>
 	/// <param name="isEaseKey"></param>
-	void SetIsEaseKey(bool isEaseKey);
+	void SetIsEaseKey(const bool isEaseKey);
 
 	/// <summary>
 	/// キーアイテムのイージング座標を設定
 	/// </summary>
 	/// <param name="easeKeyPos"></param>
-	void SetEaseKeyPos(Vector2 easeKeyPos);
+	void SetEaseKeyPos(const Vector2 easeKeyPos);
 
 public:// ゲッター
 

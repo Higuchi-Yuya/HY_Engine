@@ -3,20 +3,16 @@
 #include "MathUtil.h"
 #include "Easing.h"
 #include "Random.h"
-
-bool is_float_equal(Vector3 l, Vector3 r)
-{
-	if (r.x == std::nextafter(l.x, r.x) &&
-		r.y == std::nextafter(l.y, r.y) &&
-		r.z == std::nextafter(l.z, r.z)) {
-		return true;
-	}
-	return false;
-}
+#include "EnemySpawnState.h"
+#include "EnemyAliveState.h"
 
 std::unique_ptr<Texture> Enemy::sParticleTex_ = nullptr;
-Player* Enemy::player_ = nullptr;
 std::unique_ptr<Model> Enemy::modelDefu_ = nullptr;
+
+Enemy::~Enemy()
+{
+	delete curenntState_;
+}
 
 void Enemy::StaticInitialize()
 {
@@ -29,7 +25,6 @@ void Enemy::StaticInitialize()
 void Enemy::StaticFinalize()
 {
 	sParticleTex_ = nullptr;
-	player_ = nullptr;
 	modelDefu_ = nullptr;
 }
 
@@ -44,11 +39,7 @@ void Enemy::Initialize(Model* model)
 	else if (model == nullptr) {
 		SetModel(modelDefu_.get());
 	}
-
-	IsAlive_ = true;
 	worldTransform_.translation.y -= 2.5f;
-	//worldTransform_.rotation.y += MathUtil::DegreeToRadian(90);
-	//worldTransform_.scale.x = 1.0f;
 	worldTransform_.UpdateMatrix();
 
 	// パーティクルのマネージャの初期化
@@ -59,67 +50,30 @@ void Enemy::Initialize(Model* model)
 	// ライフの初期化
 	nowLife_ = maxLife_;
 
-	testW_ = worldTransform_;
-	testW_.translation.x += 5;
-
-	patrolPos_.push_back(worldTransform_.translation);
-	patrolPos_.push_back(testW_.translation);
+	curenntState_ = new EnemySpawnState();
 }
 
 void Enemy::Update()
 {
-	switch (nowState_)
-	{
-	case Enemy::State::Spawn:
-		// スポーンの最初のポジションがセットされたら
-		if (spawnFirstPos_ != 0) {
-			ease_.SetEaseLimitTime(240);
+	// 今の状態の更新処理
+	curenntState_->Update(*this);
 
-			float spawnPy = (float)ease_.In(spawnFirstPos_.y, spawnEndPos_.y);
-			ease_.Update();
-			worldTransform_.translation.y = spawnPy;
-			//worldTransform_.translation = spawnEndPos_;
-			ParticleUpdate();
-
-			// スポーンが終わったら
-			if (ease_.GetIsEnd() == true) {
-				nowState_ = State::Alive;
-				ease_.Reset();
-			}
-		}
-		else {
-			// 最初のスポーンポジションのセット
-			spawnFirstPos_ = worldTransform_.translation;
-			spawnEndPos_ = spawnFirstPos_;
-			spawnEndPos_.y += 2.5f;
-		}
-		break;
-	case Enemy::State::Alive:
-		AliveUpdate();
-
-		break;
-	case Enemy::State::Dead:
-		DeadUpdate();
-
-		break;
-	default:
-		break;
-	}
+	// パーティクルの更新処理
 	particleMan_->Update();
+
 	// 行列の更新など
 	Object3d::Update();
-
 }
 
 void Enemy::ParticleUpdate()
 {
-	if (spawnTimer < spawnTimeMax - 30) {
+	if (curenntState_->GetSpawnTimer() < curenntState_->GetSpawnTimeMax() - 30) {
 		// スポーンするときのパーティクル
 		for (int i = 0; i < particleNum; i++) {
 
 			Vector3 pos{};
 			// ポジションをエネミーの中心座標にセット
-			pos = spawnFirstPos_;
+			pos = curenntState_->GetSpawnFirstPos();
 			pos.y += 1.5f;
 
 			// X,Y,Z全てでランダムに分布
@@ -150,7 +104,6 @@ void Enemy::ParticleUpdate()
 void Enemy::Draw(ViewProjection* view)
 {
 	Object3d::Draw(view);
-
 }
 
 void Enemy::DrawParticle(ViewProjection* view)
@@ -165,7 +118,6 @@ void Enemy::OnCollision()
 
 	// ライフが0以下になったら死ぬ
 	if (nowLife_ <= 0) {
-		IsAlive_ = false;
 	}
 
 	// 当たり判定
@@ -175,7 +127,7 @@ void Enemy::OnCollision()
 
 		// ポジションをプレイヤーの中心座標にセット
 		pos = worldTransform_.translation;
-		//pos.y += 0.5f;
+
 		// X,Y,Z全て{-0.05f,+0.05f}でランダムに分布
 		const float md_vel = 0.15f;
 		Vector3 vel{};
@@ -217,13 +169,12 @@ void Enemy::pushBackOnCol()
 
 void Enemy::ResetBack()
 {
-	IsAlphaZero_ = true;
+	curenntState_->SetIsAlphaZero(false);
 	worldTransform_.color.w = 1;
-	easeAlpha_.Reset();
 
-	IsPatrolEnd_ = false;
-	patrolPosNum_ = 0;
-	easePatrol_.Reset();
+	curenntState_->SetIsPatrolEnd(false);
+	curenntState_->SetPatrolNum(0);
+	curenntState_->EaseReset();
 }
 
 void Enemy::SetWorldTransInfo(WorldTransform worldTrans)
@@ -241,136 +192,33 @@ void Enemy::SetWorldPos(Vector3 pos)
 	worldTransform_.UpdateMatrix();
 }
 
-void Enemy::AliveUpdate()
+void Enemy::SetPlayer(Player* player)
 {
-	switch (aliveState_)
+	IEnemyState::SetPlayer(player);
+}
+
+void Enemy::SetAliveState(IEnemyState::AliveState aState)
+{
+	curenntState_->SetAliveState(aState);
+}
+
+void Enemy::ChageState(StateType stateType)
+{
+	delete curenntState_;
+	switch (stateType)
 	{
-	case Enemy::Patrol:// 巡回
-		PatrolUpdate();
-
+	case Enemy::StateType::Spawn:
+		nowState_ = StateType::Spawn;
+		curenntState_ = new EnemySpawnState();
 		break;
-	case Enemy::Back:// 戻るとき
-		// アルファ値がゼロではないとき
-		if (IsAlphaZero_ == false) {
-			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
-
-			easeAlpha_.Update();
-			worldTransform_.color.w = easeAlpha_.easeOutCubic(0, 1);
-
-			if (easeAlpha_.GetIsEnd() == true) {
-				easeAlpha_.Reset();
-				IsAlphaZero_ = true;
-				worldTransform_.translation.x = patrolPos_[0].x;
-				worldTransform_.translation.z = patrolPos_[0].z;
-			}
-		}
-		// アルファ値がぜろのとき
-		if (IsAlphaZero_ == true) {
-			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
-
-			easeAlpha_.Update();
-			worldTransform_.color.w = easeAlpha_.easeOutCubic(1, 0);
-
-			if (easeAlpha_.GetIsEnd() == true) {
-				easeAlpha_.Reset();
-				aliveState_ = Patrol;
-			}
-		}
-		break;
-	case Enemy::Tracking:// 追跡
-		TrackingUpdate();
-
+	case Enemy::StateType::Alive:
+		nowState_ = StateType::Alive;
+		curenntState_ = new EnemyAliveState();
 		break;
 	default:
 		break;
 	}
-
-	// 死んだら状態を変更
-	if (IsAlive_ == false) {
-		nowState_ = State::Dead;
-	}
-}
-
-void Enemy::PatrolUpdate()
-{
-	int32_t patrolMaxNum = (int32_t)patrolPos_.size() - 1;
-
-	// 行きルート
-	if (IsPatrolEnd_ == false) {
-
-		if (patrolPosNum_ != patrolMaxNum) {
-			easePatrol_.SetEaseLimitTime(120);
-			easePatrol_.Update();
-
-			worldTransform_.translation.x = easePatrol_.Lerp(patrolPos_[patrolPosNum_].x, patrolPos_[patrolPosNum_ + 1].x);
-			worldTransform_.translation.z = easePatrol_.Lerp(patrolPos_[patrolPosNum_].z, patrolPos_[patrolPosNum_ + 1].z);
-
-			if (easePatrol_.GetIsEnd() == true) {
-
-				patrolPosNum_++;
-			}
-
-		}
-		if (patrolPosNum_ == patrolMaxNum &&
-			easePatrol_.GetIsEnd() == true) {
-			easePatrol_.Reset();
-			IsPatrolEnd_ = true;
-		}
-
-
-	}
-	// 戻りルート
-	if (IsPatrolEnd_ == true) {
-
-		if (patrolPosNum_ != 0) {
-			easePatrol_.SetEaseLimitTime(120);
-			easePatrol_.Update();
-
-			worldTransform_.translation.x = easePatrol_.Lerp(patrolPos_[patrolPosNum_].x, patrolPos_[patrolPosNum_ - 1].x);
-			worldTransform_.translation.z = easePatrol_.Lerp(patrolPos_[patrolPosNum_].z, patrolPos_[patrolPosNum_ - 1].z);
-
-			if (easePatrol_.GetIsEnd() == true) {
-
-				patrolPosNum_--;
-			}
-
-		}
-		if (patrolPosNum_ == 0 &&
-			easePatrol_.GetIsEnd() == true) {
-			easePatrol_.Reset();
-			IsPatrolEnd_ = false;
-		}
-	}
-
-	// 回転処理
-	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
-}
-
-void Enemy::TrackingUpdate()
-{
-	// 移動前ポジションを代入
-	oldPos_ = worldTransform_.translation;
-
-	timer++;
-	followTimer++;
-	if (timer > maxTime) {
-		timer = 0;
-	}
-	// 借りてきたプレイヤーのポジション
-	Vector3 playerPos = player_->worldTransform_.translation;
-
-	if (followTimer > followTimeMax) {
-		// 追従のベクトルの更新
-		Vector3 velo = playerPos - worldTransform_.translation;
-		followVec = velo.normalize() * followSpeed;
-		followTimer = 0;
-	}
-
-	worldTransform_.translation += followVec;
-	worldTransform_.translation.y = 1.0f;
-	worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
-
-
+	curenntState_->PatrolInit(*this);
 }
 
 void Enemy::DeadUpdate()
@@ -389,11 +237,11 @@ void Enemy::DeadUpdate()
 
 void Enemy::NearPlayerParticleUpdate()
 {
-	nearPlayerTimer++;
-	if (nearPlayerTimer > nearPlayerTimeLimit) {
-		nearPlayerTimer = 0;
+	curenntState_->IncrementNearTimer();
+	if (curenntState_->GetNearTimer() > curenntState_->GetNearTimeLimit()) {
+		curenntState_->SetNearTimer(0);
 		// スポーンするときのパーティクル
-		for (int i = 0; i < nearPlayerParticleNum; i++) {
+		for (int i = 0; i < curenntState_->GetNearParticleNum(); i++) {
 
 			Vector3 pos{};
 			// ポジションをエネミーの中心座標にセット
@@ -426,7 +274,7 @@ void Enemy::NearPlayerParticleUpdate()
 			acc.z = Random::RangeF(-md_acc, md_acc);
 
 			// 追加
-			particleMan_->Add(ParticleManager::Type::EnemyNear, 150, pos, vel, acc, angle, 0.1f, 0.0f, nearStartColor_, nearEndColor_);
+			particleMan_->Add(ParticleManager::Type::EnemyNear, 150, pos, vel, acc, angle, 0.1f, 0.0f, curenntState_->GetNearStartColor(), curenntState_->GetNearEndColor());
 		}
 	}
 }

@@ -513,6 +513,15 @@
     <ClCompile Include="Application\Scene\GameCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAliveState.cpp">
+      <Filter>ソース ファイル\Application\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemySpawnState.cpp">
+      <Filter>ソース ファイル\Application\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\IEnemyState.cpp">
+      <Filter>ソース ファイル\Application\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -760,6 +769,15 @@
     </ClInclude>
     <ClInclude Include="Application\Scene\GameCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAliveState.h">
+      <Filter>ヘッダー ファイル\Application\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemySpawnState.h">
+      <Filter>ヘッダー ファイル\Application\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\IEnemyState.h">
+      <Filter>ヘッダー ファイル\Application\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

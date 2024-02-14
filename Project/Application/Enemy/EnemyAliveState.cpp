@@ -26,6 +26,7 @@ void EnemyAliveState::AliveUpdate(Enemy& enemy)
 				IsAlphaZero_ = true;
 				enemy.worldTransform_.translation.x = patrolPos_[0].x;
 				enemy.worldTransform_.translation.z = patrolPos_[0].z;
+				//enemy.worldTransform_.scale = bigScale_;
 			}
 		}
 		// アルファ値がぜろのとき
@@ -127,6 +128,42 @@ void EnemyAliveState::TrackingUpdate(Enemy& enemy)
 		Vector3 velo = playerPos - enemy.worldTransform_.translation;
 		followVec = velo.normalize() * followSpeed;
 		followTimer = 0;
+	}
+
+	// スケールの変化
+	switch (tState_)
+	{
+	case EnemyAliveState::ScaleBig:
+		easeScale_.SetEaseLimitTime(30);
+		easeScale_.Update();
+
+		// スケール変化（大きいから小さい）
+		enemy.worldTransform_.scale = easeScale_.easeInCircVec3(bigScale_, smallScale_);
+
+		if (easeScale_.GetIsEnd() == true) {
+			tState_ = ScaleSmall;
+			easeScale_.Reset();
+		}
+		break;
+	case EnemyAliveState::ScaleSmall:
+		easeScale_.SetEaseLimitTime(30);
+		easeScale_.Update();
+
+		// スケール変化（大きいから小さい）
+		enemy.worldTransform_.scale = easeScale_.easeOutCircVec3(smallScale_, bigScale_);
+
+		if (easeScale_.GetIsEnd() == true) {
+			tState_ = ScaleBig;
+			easeScale_.Reset();
+		}
+		break;
+	default:
+		break;
+	}
+
+	if (enemy.worldTransform_.scale.x >= 1.0f) {
+		enemy.worldTransform_.scale.x -= 0.01f;
+		enemy.worldTransform_.scale.y -= 0.01f;
 	}
 
 	enemy.worldTransform_.translation += followVec;

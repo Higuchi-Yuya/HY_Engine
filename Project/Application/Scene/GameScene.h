@@ -310,5 +310,14 @@ private:// メンバ変数
 
 	// 鼓動エフェクト
 	BeatEffect* beatEffect_ = nullptr;
+
+	// ヒントアイテムの表示関連
+	std::unique_ptr<Texture> tipsDisplayTex_;
+	std::unique_ptr<Sprite> tipsDisplaySprite_;
+
+	Vector2 tipsDisplayPos_ = { 1135,220 };
+	Vector2 tipsDisplaySize_ = { 200,116 };
+
+	bool IsTipsDisplay = false;
 };
 

@@ -112,6 +112,12 @@ public:// ゲッター
 	/// <returns></returns>
 	const bool GetIsEaseKeyItem() { return IsEaseKeyItem_; }
 
+	/// <summary>
+	/// アイテムのテクスチャの名前を取得
+	/// </summary>
+	/// <returns></returns>
+	const std::string GetTexName() { return texName_; }
+
 private:// プライベート関数
 
 	// プレイヤーとの当たり判定関連
@@ -173,5 +179,8 @@ private:
 
 	// キーアイテムのイージング処理が終わっているか
 	bool IsEaseKeyItem_;
+
+	// アイテムのテクスチャの名前
+	std::string texName_;
 };
 

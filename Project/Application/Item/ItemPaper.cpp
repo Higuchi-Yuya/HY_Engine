@@ -6,18 +6,26 @@ Player* ItemPaper::sPlayer_ = nullptr;
 
 void ItemPaper::Initialize(std::string fileName)
 {
+	// スプライトのテクスチャ初期化
 	spriteTex_.reset(TextureManager::Load2DTextureP(fileName));
 
+	// テクスチャの名前を代入
+	texName_ = fileName;
+
+	// スケールの初期化
 	scaleBig_ = { 0.2f,0.2f,0.2f };
 	scaleSmall_ = { 0.1f,0.1f,0.1f };
 
+	// エフェクトのテクスチャの初期化
 	effectTex_.reset(TextureManager::Load2DTextureP("itemEffect.png"));
 
+	// ビルボードテクスチャの初期化
 	billTex_.Initialize();
 	billTex_.SetTexture(effectTex_.get());
 	billTex_.worldTransform_.translation.y = 0.6f;
 	billTex_.worldTransform_.scale = scaleSmall_;
 
+	// スプライトの初期化
 	itemSprite_.Initialize(spriteTex_.get());
 	itemSprite_.SetPosition({ WinApp::window_width / 2,WinApp::window_height / 2 });
 
@@ -25,8 +33,10 @@ void ItemPaper::Initialize(std::string fileName)
 	colState_ = withInRange;
 	itemState_ = sparkling;
 
+	// アルファの変化値の初期化
 	alphaChangeValue_ = 0.02f;
 
+	// フラグ関連の初期化
 	IsBig_ = false;
 	IsCheckSprite_ = false;
 	IsGetItem_ = false;

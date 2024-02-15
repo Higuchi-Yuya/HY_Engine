@@ -152,6 +152,12 @@ void GameScene::Initialize()
 
 	BillboardTex::SetViewProjection(&gameCamera_->GetView());
 	ItemPaper::SetPlayer(player_.get());
+
+	// ヒントアイテムの表示関連の初期化
+	tipsDisplayTex_.reset(TextureManager::Load2DTextureP("tips2Display.png"));
+
+	tipsDisplaySprite_ = std::make_unique<Sprite>();
+	tipsDisplaySprite_->Initialize(tipsDisplayTex_.get());
 }
 
 void GameScene::Update()
@@ -178,6 +184,9 @@ void GameScene::ImguiUpdate()
 
 	ImGui::InputFloat("door1Roty", &door1Roty);
 	ImGui::InputFloat("door2Roty", &door2Roty);
+
+	ImGui::InputFloat2("tipsPos", &tipsDisplayPos_.x);
+	ImGui::InputFloat2("tipsSize", &tipsDisplaySize_.x);
 
 	ImGui::End();
 
@@ -237,7 +246,7 @@ void GameScene::DrawParticle()
 
 void GameScene::Draw2DFront()
 {
-	if (player_->GetIsEndTurnAround() == true) {
+	if (gameCamera_->GetIsFirstCameraEnd() == true) {
 		player_->Draw2DFront();
 		timerUi_->DrawFrontSprite();
 		operationUi_->DrawFrontSprite();
@@ -245,6 +254,10 @@ void GameScene::Draw2DFront()
 
 	for (auto i : itemPapers_) {
 		i->Draw2D();
+	}
+
+	if (IsTipsDisplay == true) {
+		tipsDisplaySprite_->Draw();
 	}
 }
 
@@ -360,6 +373,9 @@ void GameScene::Reset()
 	// ドアのイージングのリセット
 	easeDoorRota_.Reset();
 	IsDoorFirstTurn = false;
+
+	// ヒントアイテムの表示のリセット
+	IsTipsDisplay = false;
 }
 
 void GameScene::LoadEnemy()
@@ -475,8 +491,13 @@ void GameScene::GameSceneUpdate()
 		beatEffect_->Reset();
 	}
 
+
+	// カメラの最初のイベントシーンが終了していなかったら
+	// プレイヤーとタイムUIを動かさない
 	if (gameCamera_->GetIsFirstCameraEnd() == true) {
 		player_->SetIsCanMove(true);
+		// タイマーの更新処理
+		timerUi_->Update();
 	}
 	else {
 		player_->SetIsCanMove(false);
@@ -498,9 +519,6 @@ void GameScene::GameSceneUpdate()
 
 	// 当たり判定関連の更新処理
 	gameCollider_->Update();
-
-	// タイマーの更新処理
-	timerUi_->Update();
 
 	// オペレーションの更新処理
 	operationUi_->Update();
@@ -544,7 +562,6 @@ void GameScene::LightUpdate()
 
 void GameScene::EnemyGameUpdate()
 {
-
 	//寿命が尽きた敵を全削除
 	auto it = std::partition(enemys_.begin(), enemys_.end(), [](Enemy* a)
 		{return a->GetDeadMotionEnd() == true; });
@@ -570,6 +587,15 @@ void GameScene::ItemUpdate()
 		if (i->GetIsCheckItem() == true &&
 			i->GetIsKeyItem() == true) {
 			keyItemCount += 1;
+		}
+
+		// アイテムが取得後
+		// アイテムのテクスチャの名前がかけらのヒントだったら
+		if (i->GetIsCheckItem() == true &&
+			i->GetTexName() == "tips2.png") {
+
+			// ヒントアイテムのテキストを画面上にずっと表示
+			IsTipsDisplay = true;
 		}
 	}
 
@@ -613,14 +639,16 @@ void GameScene::ItemUpdate()
 		}
 	}
 
-
-
 	// もしキーアイテムが三つ集まったら
 	// ゲームクリア
 	if (keyItemCount >= 3) {
 		gameCamera_->SetIsDoorOpen(true);
 		IsGameClear_ = true;
 	}
+
+	// ヒントアイテムの表示関連の更新処理
+	tipsDisplaySprite_->SetPosition(tipsDisplayPos_);
+	tipsDisplaySprite_->SetSize(tipsDisplaySize_);
 }
 
 void GameScene::FirstEventUpdate()

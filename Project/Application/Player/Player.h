@@ -6,6 +6,9 @@
 #include "Sprite.h"
 #include "BillboardTex.h"
 
+// 前方宣言
+class ItemPaper;
+
 class Player:public Object3d
 {
 private:
@@ -24,6 +27,12 @@ private:
 		Surprised,	// びっくりのフェーズ
 	};
 
+	enum ringEaseState
+	{
+		ValueSet,
+		EaseRing,
+	};
+
 public:
 	// 3Dオブジェクト生成
 	static Player* Create(Model* model = nullptr);
@@ -37,7 +46,7 @@ public:
 	bool Initialize()override;
 
 	// シルエット初期化
-	void InitializeFlashLightRange();
+	void InitializeSearchRing();
 
 	// ゲームシーンの最初のイベントの更新処理
 	void gameSceneFirstUpdate();
@@ -45,21 +54,25 @@ public:
 	// 毎フレーム処理
 	void Update()override;
 
+	/// <summary>
+	/// サーチリングの更新処理
+	/// </summary>
+	void SearchRingUpdate(std::vector<ItemPaper*>itemPapers);
+
 	// 描画
 	void Draw(ViewProjection* view)override;
 
+	// リングの描画
+	void DrawRing(ViewProjection* view);
+
 	// 描画ビルボード
 	void DrawBillTex();
-
 
 	// プレイヤーの2D描画前面
 	void Draw2DFront();
 
 	// Imguiの描画
 	void DrawImgui();
-
-	// 懐中電灯の範囲オブジェの描画
-	void DrawFlashLightRange(ViewProjection* view);
 
 	// リセット関数
 	void Reset();
@@ -193,9 +206,23 @@ private:
 	// 生きているかフラグ
 	bool IsAlive_ = true;
 
-	// 懐中電灯の範囲のオブジェクト
-	Object3d flashLightRangeObj_;
-	std::unique_ptr<Model> flashLightRangeModel_;
+	// サーチリングのオブジェクト
+	Object3d searchRingObj_;
+	std::unique_ptr<Model> searchRingModel_;
+
+	// リングのオブジェクト
+	Object3d ringObj_;
+	std::unique_ptr<Model> ringModel_;
+
+	Vector3 defuRingScale_ = { 2,1,2 };
+	Vector3 bigRingScale_ = { 5,1,5 };
+
+	float defuRingAlpha_ = 0.6f;
+	float bigRingAlpha_ = 0;
+
+	Easing easeRing_;
+
+	ringEaseState ringState_;
 
 #pragma region プレイヤーのHP関連
 	// プレイヤーのHP関連

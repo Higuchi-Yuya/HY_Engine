@@ -38,7 +38,7 @@ void GameScene::Initialize()
 #pragma region プレイヤー関連の初期化
 	player_ = std::make_unique<Player>();
 	player_.reset(Player::Create(playerModel_.get()));
-	player_->InitializeFlashLightRange();
+	player_->InitializeSearchRing();
 
 	gameCamera_->SetCameraFPos(player_->worldTransform_.translation);
 
@@ -204,9 +204,7 @@ void GameScene::Draw2DBack()
 void GameScene::Draw3D()
 {
 	// オブジェクト関連の描画
-
 	DrawShieldObj();
-
 
 	// お墓のドアのオブジェクトの描画
 	for (auto d : latticeDoors_) {
@@ -224,6 +222,12 @@ void GameScene::Draw3D()
 		player_->Draw(&gameCamera_->GetView());
 	}
 	
+	// ゲームの最初のシーンが終わっていたら
+	// リングの描画をする
+	if (gameCamera_->GetIsFirstCameraEnd() == true) {
+		player_->DrawRing(&gameCamera_->GetView());
+	}
+
 	DrawTransParentObj();
 
 	// パーティクルの描画
@@ -649,6 +653,9 @@ void GameScene::ItemUpdate()
 	// ヒントアイテムの表示関連の更新処理
 	tipsDisplaySprite_->SetPosition(tipsDisplayPos_);
 	tipsDisplaySprite_->SetSize(tipsDisplaySize_);
+
+	// プレイヤーのサーチリングの更新処理
+	player_->SearchRingUpdate(itemPapers_);
 }
 
 void GameScene::FirstEventUpdate()

@@ -6,6 +6,8 @@
 #include "JoyPadInput.h"
 #include "MathUtil.h"
 #include "Random.h"
+#include "ItemPaper.h"
+
 Player* Player::Create(Model* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
@@ -76,17 +78,21 @@ bool Player::Initialize()
 	return true;
 }
 
-void Player::InitializeFlashLightRange()
+void Player::InitializeSearchRing()
 {
-	flashLightRangeModel_.reset(Model::LoadFromOBJ("flashlightRange", true));
+	searchRingModel_.reset(Model::LoadFromOBJ("searchRing", true));
 
-	flashLightRangeObj_.Initialize();
-	flashLightRangeObj_.SetModel(flashLightRangeModel_.get());
+	searchRingObj_.Initialize();
+	searchRingObj_.SetModel(searchRingModel_.get());
 
-	flashLightRangeObj_.worldTransform_.scale = { 2.5f,1.5f,3.0f };
+	searchRingObj_.worldTransform_.color.w = 0.7f;
 
-	flashLightRangeObj_.worldTransform_.translation = { 0,0,3.3f };
-	flashLightRangeObj_.worldTransform_.parent_ = &worldTransform_;
+	ringModel_.reset(Model::LoadFromOBJ("ring", true));
+
+	ringObj_.Initialize();
+	ringObj_.SetModel(ringModel_.get());
+
+	ringState_ = ValueSet;
 }
 
 void Player::gameSceneFirstUpdate()
@@ -225,9 +231,6 @@ void Player::Update()
 
 	// 行列の更新など
 	Object3d::Update();
-
-	// 懐中電灯の範囲のオブジェの更新処理
-	flashLightRangeObj_.Update();
 }
 
 void Player::Draw(ViewProjection* view)
@@ -244,8 +247,15 @@ void Player::Draw(ViewProjection* view)
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(view);
 	}
+}
 
+void Player::DrawRing(ViewProjection* view)
+{
+	// サーチリングの描画
+	searchRingObj_.Draw(view);
 
+	// リングの描画
+	ringObj_.Draw(view);
 }
 
 void Player::DrawBillTex()
@@ -407,8 +417,6 @@ void Player::DrawImgui()
 	ImGui::SetNextWindowSize(ImVec2(500, 100));
 
 	ImGui::InputFloat("HitPoint", &playerHitPoint_, 0, playerHitPointMax_);
-	ImGui::InputFloat3("flashObjRange scale", &flashLightRangeObj_.worldTransform_.scale.x, 0, 5);
-	ImGui::InputFloat3("flashObjRange pos", &flashLightRangeObj_.worldTransform_.translation.x, 0, 5);
 
 	ImGui::End();
 
@@ -423,11 +431,6 @@ void Player::DrawImgui()
 	ImGui::InputFloat2("hpInsideSize", &pHpInsideSize_.x, "%.2f");
 
 	ImGui::End();
-}
-
-void Player::DrawFlashLightRange(ViewProjection* view)
-{
-	flashLightRangeObj_.Draw(view);
 }
 
 void Player::Reset()
@@ -587,6 +590,67 @@ void Player::Attack()
 	else {
 		IsAttack_ = false;
 	}
+}
+
+void Player::SearchRingUpdate(std::vector<ItemPaper*>itemPapers)
+{
+	Vector3 vel;
+	float length = 0;
+
+	Vector3 minVel;
+	float minLength = 9999;
+	float angle;
+
+	// アイテムのなかで一番近いものの座標とベクトルの長さを抽出
+	for (auto i: itemPapers)
+	{
+		if (i->GetIsCheckItem() == false) {
+			vel = i->billTex_.worldTransform_.translation - worldTransform_.translation;
+			length = vel.length();
+
+			if (length < minLength) {
+				minVel = vel;
+				minLength = length;
+			}
+		}
+	}
+
+	// サーチリングのY回転を設定
+	angle = atan2(minVel.x, minVel.z);
+	searchRingObj_.worldTransform_.rotation.y = angle;
+
+	// プレイヤーの座標と同じものにする
+	searchRingObj_.worldTransform_.translation = worldTransform_.translation;
+	ringObj_.worldTransform_.translation = worldTransform_.translation;
+
+	// リングの状態更新処理
+	switch (ringState_)
+	{
+	case Player::ValueSet:
+		ringObj_.worldTransform_.scale = defuRingScale_;
+		ringObj_.worldTransform_.color.w = defuRingAlpha_;
+		ringState_ = EaseRing;
+		break;
+	case Player::EaseRing:
+		easeRing_.SetEaseLimitTime(80);
+		easeRing_.Update();
+
+		ringObj_.worldTransform_.color.w = easeRing_.easeOutCubic(defuRingAlpha_, bigRingAlpha_);
+		ringObj_.worldTransform_.scale = easeRing_.easeOutCircVec3(defuRingScale_, bigRingScale_);
+
+		if (easeRing_.GetIsEnd() == true) {
+			easeRing_.Reset();
+			ringState_ = ValueSet;
+		}
+
+		break;
+	default:
+		break;
+	}
+
+	// サーチリングを更新
+	searchRingObj_.Update();
+	ringObj_.Update();
 }
 
 void Player::OnColHitPoint()

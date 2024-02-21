@@ -319,5 +319,7 @@ private:// メンバ変数
 	Vector2 tipsDisplaySize_ = { 200,116 };
 
 	bool IsTipsDisplay = false;
+
+	float spotIndensity = 1;
 };
 

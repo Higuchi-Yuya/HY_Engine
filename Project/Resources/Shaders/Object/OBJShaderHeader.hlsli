@@ -54,6 +54,7 @@ struct SpotLight
 	float3 lightcolor;  // ライトの色(RGB)
 	float3 lightatten;	// ライト距離減衰係数
 	float2 lightfactoranglecos; // ライト減衰角度のコサイン
+    float lightIndensity;		// ライトの輝度
 	uint active;
 };
 

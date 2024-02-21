@@ -104,6 +104,7 @@ void LightGroup::TransferConstBuffer()
 			constMap_->spotLights[i].lightcolor = spotLights_[i].GetLightColor();
 			constMap_->spotLights[i].lightatten = spotLights_[i].GetLightAtten();
 			constMap_->spotLights[i].lightfactoranglecos = spotLights_[i].GetLightFactorAngleCos();
+			constMap_->spotLights[i].ligntIndensity = spotLights_[i].GetIndensity();
 		}
 		// ライトが無効ならライト色を0に
 		else {
@@ -292,6 +293,14 @@ void LightGroup::SetSpotLightFactorAngle(int index, const Vector2& lightFactorAn
 	assert(0 <= index && index < sSpotLightNum);
 
 	spotLights_[index].SetLightFactorAngle(lightFactorAngle);
+	dirty_ = true;
+}
+
+void LightGroup::SetSpotLightIndensity(int index, const float lightIdensity)
+{
+	assert(0 <= index && index < sSpotLightNum);
+
+	spotLights_[index].SetIndensity(lightIdensity);
 	dirty_ = true;
 }
 

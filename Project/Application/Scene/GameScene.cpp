@@ -188,6 +188,8 @@ void GameScene::ImguiUpdate()
 	ImGui::InputFloat2("tipsPos", &tipsDisplayPos_.x);
 	ImGui::InputFloat2("tipsSize", &tipsDisplaySize_.x);
 
+	ImGui::InputFloat("spotLightIdensity", &spotIndensity);
+
 	ImGui::End();
 
 	// 時間のImgui
@@ -552,6 +554,8 @@ void GameScene::LightUpdate()
 
 	lightGroup_->SetSpotLightDir(0, playerFrontVec);
 	lightGroup_->SetSpotLightPos(0, spotPos);
+	lightGroup_->SetSpotLightIndensity(0, spotIndensity);
+
 	lightGroup_->SetPointLightPos((int)(pointLightsInfo_.size() + 1), spotPos);
 
 	lightGroup_->SetPointLightIndensity((int)(pointLightsInfo_.size() + 1), playerPointLightIndensity);

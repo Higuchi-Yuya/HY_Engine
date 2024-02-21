@@ -22,6 +22,7 @@ public: // サブクラス
 		Vector3 lightatten;
 		float pad4;
 		Vector2 lightfactoranglecos;
+		float ligntIndensity;
 		unsigned int active;
 		float pad5;
 	};
@@ -91,6 +92,19 @@ public: // メンバ関数
 	inline const Vector2& GetLightFactorAngleCos() { return lightFactorAngleCos_; }
 
 	/// <summary>
+	/// 光の輝度をセット
+	/// </summary>
+	/// <param name="indensity">光から照射点までの距離</param>
+	/// <returns></returns>
+	inline void SetIndensity(float indensity) { lightIndensity_ = indensity; }
+
+	/// <summary>
+	/// 光の輝度を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetIndensity() { return lightIndensity_; }
+
+	/// <summary>
 	/// 有効フラグをセット
 	/// </summary>
 	/// <param name="active">有効フラグ</param>
@@ -113,6 +127,8 @@ private: // メンバ変数
 	Vector3 lightAtten_ = { 1.0f, 1.0f, 1.0f };
 	// ライト減衰角度
 	Vector2 lightFactorAngleCos_ = { 0.2f, 0.5f };
+	// 光の輝度
+	float lightIndensity_ = 1;
 
 	// 有効フラグ
 	bool active_ = false;

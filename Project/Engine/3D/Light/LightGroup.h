@@ -198,6 +198,13 @@ public:// メンバ関数
 	void SetSpotLightFactorAngle(int index, const Vector2& lightFactorAngle);
 
 	/// <summary>
+	/// スポットライトの輝度
+	/// </summary>
+	/// <param name="index">ライト番号</param>
+	/// <param name="lightIdensity">光の輝度</param>
+	void SetSpotLightIndensity(int index, const float lightIdensity);
+
+	/// <summary>
 	/// 丸影の有効フラグをセット
 	/// </summary>
 	/// <param name="index">ライト番号</param>

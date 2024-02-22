@@ -206,6 +206,8 @@ void Player::Update()
 			if (IsCanMove_ == true) {
 				// 移動の更新処理
 				MoveUpdate();
+
+				FlashUpdate();
 			}
 
 			// スプライトのポジションやサイズの変更
@@ -285,6 +287,11 @@ void Player::SetIsCanMove(bool isCamMove)
 	IsCanMove_ = isCamMove;
 }
 
+void Player::SetIsFlashMax(bool isFlashMax)
+{
+	IsFlashMax_ = isFlashMax;
+}
+
 void Player::OnCollision()
 {
 
@@ -360,6 +367,16 @@ std::list<std::unique_ptr<PlayerBullet>>& Player::GetBullets()
 const bool Player::GetIsEndTurnAround() const
 {
 	return IsEndTurnAround_;
+}
+
+const bool Player::GetIsFlash() const
+{
+	return IsFlash_;
+}
+
+const bool Player::GetIsFlashMax() const
+{
+	return IsFlashMax_;
 }
 
 void Player::pushBackOnCol()
@@ -456,6 +473,10 @@ void Player::Reset()
 	turnAroundCount_ = 0;
 	aroundStopTimer = 0;
 	IsCanMove_ = false;
+
+	// フラッシュのリセット
+	IsFlash_ = false;
+	IsFlashMax_ = false;
 }
 
 void Player::MoveUpdate()
@@ -589,6 +610,18 @@ void Player::Attack()
 	}
 	else {
 		IsAttack_ = false;
+	}
+}
+
+void Player::FlashUpdate()
+{
+	IsFlash_ = false;
+	IsAttack_ = false;
+
+	// Bボタンを押していたらフラッシュを有効にする
+	if (JoypadInput::GetButton(PadCode::ButtonB)) {
+		IsFlash_ = true;
+		IsAttack_ = true;
 	}
 }
 

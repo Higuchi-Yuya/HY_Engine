@@ -17,7 +17,7 @@ GameScene::~GameScene()
 	}
 	enemys_.clear();
 
-	for (auto i:itemPapers_)
+	for (auto i : itemPapers_)
 	{
 		delete i;
 	}
@@ -223,7 +223,7 @@ void GameScene::Draw3D()
 	if (gameCamera_->GetIsDoorOpen() == false || gameCamera_->GetIsFinishDoorOpen_() == true) {
 		player_->Draw(&gameCamera_->GetView());
 	}
-	
+
 	// ゲームの最初のシーンが終わっていたら
 	// リングの描画をする
 	if (gameCamera_->GetIsFirstCameraEnd() == true) {
@@ -276,7 +276,7 @@ void GameScene::DrawBloomObject()
 		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}
-	
+
 }
 
 void GameScene::DrawHighLumiObj()
@@ -326,7 +326,7 @@ void GameScene::DrawShieldObj()
 void GameScene::DrawBillboardTex()
 {
 	BillboardTex::PreDraw(commandList_);
-	
+
 	player_->DrawBillTex();
 
 	for (auto i : itemPapers_) {
@@ -362,7 +362,7 @@ void GameScene::Reset()
 	gameCamera_->Reset();
 
 	// アイテムたちをリセット
-	for (auto i : itemPapers_){
+	for (auto i : itemPapers_) {
 		i->Reset();
 	}
 
@@ -385,7 +385,7 @@ void GameScene::Reset()
 }
 
 void GameScene::LoadEnemy()
-{	
+{
 	// レベルデータの読み込み
 	levelData_.reset(LevelLoader::LoadFile("testS"));
 
@@ -477,7 +477,7 @@ void GameScene::GameSceneUpdate()
 	// プレイヤーと敵の更新処理を行う
 	if (IsItemDisplay_ == false &&
 		(gameCamera_->GetIsDoorOpen() == false ||
-		 gameCamera_->GetIsFinishDoorOpen_() == true)) {
+			gameCamera_->GetIsFinishDoorOpen_() == true)) {
 
 		// プレイヤーの更新処理
 		player_->Update();
@@ -554,13 +554,103 @@ void GameScene::LightUpdate()
 
 	lightGroup_->SetSpotLightDir(0, playerFrontVec);
 	lightGroup_->SetSpotLightPos(0, spotPos);
-	lightGroup_->SetSpotLightIndensity(0, spotIndensity);
 
 	lightGroup_->SetPointLightPos((int)(pointLightsInfo_.size() + 1), spotPos);
 
 	lightGroup_->SetPointLightIndensity((int)(pointLightsInfo_.size() + 1), playerPointLightIndensity);
 	lightGroup_->SetPointLightRadius((int)(pointLightsInfo_.size() + 1), playerPointLightRadius_);
 	lightGroup_->SetPointLightDecay((int)(pointLightsInfo_.size() + 1), playerPointLightDecay_);
+
+	// プレイヤーのフラッシュの処理
+	float easeValue;
+	switch (flashState_)
+	{
+	case GameScene::None:
+		lightGroup_->SetSpotLightIndensity(0, flashDefuValue_);
+
+		if (player_->GetIsFlash() == true) {
+			flashState_ = Shine;
+		}
+		break;
+	case GameScene::Shine:
+		// フラッシュのカウントが最大なら
+		if (flashCount_ >= flashCountMax_ - 1) {
+			easeValue = easeFlash_.easeInCirc(flashDefuValue_, flashMaxValue_);
+			easeFlash_.SetEaseLimitTime(easeFlashMaxTimeLimit_);
+		}
+		else {// それ以外のとき
+			easeValue = easeFlash_.easeInCirc(flashDefuValue_, flashMiddleValue_);
+			easeFlash_.SetEaseLimitTime(easeFlashMiddleTimeLimit);
+		}
+		easeFlash_.Update();
+
+		lightGroup_->SetSpotLightIndensity(0, easeValue);
+
+		// 途中で処理が切り替わる場合
+		if (player_->GetIsFlash() == false) {
+			flashNowValue_ = easeValue;
+			easeFlash_.Reset();
+			flashState_ = BackDefu;
+			break;
+		}
+
+		//イージングが終了したら
+		if (easeFlash_.GetIsEnd() == true) {
+			easeFlash_.Reset();
+			flashState_ = Atten;
+		}
+
+		break;
+	case GameScene::Atten:
+		// フラッシュのカウントが最大なら
+		if (flashCount_ >= flashCountMax_ - 1) {
+			easeValue = easeFlash_.Out(flashMaxValue_, flashDefuValue_);
+			easeFlash_.SetEaseLimitTime(easeFlashMaxTimeLimit_);
+		}
+		else {// それ以外のとき
+			easeValue = easeFlash_.Out(flashMiddleValue_, flashDefuValue_);
+			easeFlash_.SetEaseLimitTime(easeFlashMiddleTimeLimit);
+		}
+		easeFlash_.Update();
+
+		lightGroup_->SetSpotLightIndensity(0, easeValue);
+
+		// 途中で処理が切り替わる場合
+		if (player_->GetIsFlash() == false) {
+			flashNowValue_ = easeValue;
+			easeFlash_.Reset();
+			flashState_ = BackDefu;
+			break;
+		}
+
+		//イージングが終了したら
+		if (easeFlash_.GetIsEnd() == true) {
+			easeFlash_.Reset();
+			flashCount_++;
+			if (flashCount_ >= flashCountMax_) {
+				flashCount_ = 0;
+			}
+			flashState_ = Shine;
+		}
+		break;
+	case GameScene::BackDefu:
+		easeFlash_.SetEaseLimitTime(15);
+		easeFlash_.Update();
+
+		easeValue = easeFlash_.easeInCirc(flashNowValue_, flashDefuValue_);
+
+		lightGroup_->SetSpotLightIndensity(0, easeValue);
+
+		//イージングが終了したら
+		if (easeFlash_.GetIsEnd() == true) {
+			flashCount_ = 0;
+			easeFlash_.Reset();
+			flashState_ = FlashState::None;
+		}
+
+		break;
+	}
+
 
 	// ライトの更新処理
 	circleShadowCasterPos = player_->GetWorldPosition();
@@ -676,5 +766,5 @@ void GameScene::FirstEventUpdate()
 			IsDoorFirstTurn = true;
 		}
 	}
-	
+
 }

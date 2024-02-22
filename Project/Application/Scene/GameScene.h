@@ -35,6 +35,14 @@ public:
 		Ranterns,
 		HiguLumiRanterns
 	};
+private:
+	enum FlashState {
+		None,// 何もないとき
+		Shine,// 光る
+		Atten,// 減衰
+		BackDefu,// 元の状態に戻す
+	};
+
 public:// メンバ関数
 	
 	// デストラクタ
@@ -319,6 +327,28 @@ private:// メンバ変数
 	Vector2 tipsDisplaySize_ = { 200,116 };
 
 	bool IsTipsDisplay = false;
+
+#pragma region フラッシュ関連
+	// フラッシュの状態
+	FlashState flashState_ = FlashState::Shine;
+
+	// フラッシュのカウント
+	int flashCount_ = 0;
+	int flashCountMax_ = 3;
+
+	// フラッシュの状態ごとの輝度の値
+	float flashDefuValue_ = 1;
+	float flashMiddleValue_ = 20;
+	float flashMaxValue_ = 200;
+	float flashNowValue_ = 1;
+
+	// フラッシュ用のイージング
+	Easing easeFlash_;
+	int easeFlashMiddleTimeLimit = 10;
+	int easeFlashMaxTimeLimit_ = 30;
+
+#pragma endregion
+
 
 	float spotIndensity = 1;
 };

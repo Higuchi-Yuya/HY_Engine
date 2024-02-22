@@ -99,6 +99,12 @@ public:// ゲッター
 	// プレイヤーのきょろきょろが終了しているかどうか
 	const bool GetIsEndTurnAround()const;
 
+	// フラッシュが有効かどうかを取得
+	const bool GetIsFlash()const;
+
+	// フラッシュの最後のカウントになっているかどうかを取得
+	const bool GetIsFlashMax()const;
+
 public:// セッター
 
 	// ワールドトランスフォームの情報をセット
@@ -124,6 +130,12 @@ public:// セッター
 	/// </summary>
 	/// <param name="isCamMove"></param>
 	void SetIsCanMove(bool isCamMove);
+
+	/// <summary>
+	/// フラッシュのカウントが最大かどうかを設定
+	/// </summary>
+	/// <param name="isFlashMax"></param>
+	void SetIsFlashMax(bool isFlashMax);
 
 public:// 当たり判定
 
@@ -154,6 +166,11 @@ private:// プライベート関数
 	/// 攻撃処理
 	/// </summary>
 	void Attack();
+
+	/// <summary>
+	/// フラッシュの更新処理
+	/// </summary>
+	void FlashUpdate();
 
 public:// パブリック変数
 	// 衝突点
@@ -281,6 +298,16 @@ private:
 	float firstEventMoveZS = -42;
 	float firstEventMoveZE = -32;
 
+
+#pragma endregion
+
+#pragma region 懐中電灯のフラッシュ関連
+
+	// フラッシュが押されていたら
+	bool IsFlash_ = false;
+
+	// フラッシュライトがマックスになったら
+	bool IsFlashMax_ = false;
 
 #pragma endregion
 

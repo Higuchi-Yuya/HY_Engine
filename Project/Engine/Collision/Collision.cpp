@@ -719,3 +719,42 @@ float Collision::SquareDistance_PointRectangle(Vector3 p, Vector3 c, Vector3 r)
 
 	return sqDist;
 }
+
+bool Collision::CheckSphereToCone(const Sphere& sphere, const Cone& cone)
+{
+	// 球体の中心から円錐の頂点へのベクトル
+	Vector3 sphereToCone = Vector3(cone.vertexPos.x - sphere.center.x, cone.vertexPos.y - sphere.center.y, cone.vertexPos.z - sphere.center.z);
+
+	// 円錐の高さのベクトル
+	Vector3 coneAxis = cone.directionVec;
+
+	// 円錐の頂点から底面へのベクトル
+	Vector3 coneToBase = Vector3(cone.vertexPos.x, cone.vertexPos.y, cone.vertexPos.z);
+	coneToBase.y -= cone.height; // 円錐の底面に移動
+
+	// 円錐の軸方向に対する球体中心からの距離
+	float dotProduct = (sphereToCone.x * coneAxis.x) + (sphereToCone.y * coneAxis.y) + (sphereToCone.z * coneAxis.z);
+
+	// 円錐の頂点から球体中心までの距離
+	float distanceToVertex = std::sqrt((sphereToCone.x * sphereToCone.x) + (sphereToCone.y * sphereToCone.y) + (sphereToCone.z * sphereToCone.z));
+
+	// 円錐の底面から球体中心までの距離
+	float distanceToBase = std::sqrt((coneToBase.x * coneToBase.x) + (coneToBase.y * coneToBase.y) + (coneToBase.z * coneToBase.z));
+
+	// 球体が円錐の側面にあるかどうかをチェック
+	if (dotProduct > 0 && dotProduct < distanceToBase) {
+		float radiusAtSphereHeight = (dotProduct / distanceToBase) * cone.radius;
+		float distanceToAxis = std::sqrt((distanceToVertex * distanceToVertex) - (radiusAtSphereHeight * radiusAtSphereHeight));
+		if (distanceToAxis <= sphere.radius) {
+			return true; // 交差している
+		}
+	}
+
+	// 球体が円錐の底面にあるかどうかをチェック
+	if (distanceToVertex <= cone.radius && sphere.center.y >= cone.vertexPos.y - cone.height) {
+		return true; // 交差している
+	}
+
+	return false; // 交差していない
+
+}

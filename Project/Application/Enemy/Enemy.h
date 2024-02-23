@@ -63,7 +63,7 @@ public:// ゲッター
 	const bool GetAlive() { return curenntState_->GetIsAlive(); }
 
 	// 死亡モーションが全て終わっているかを取得
-	const bool GetDeadMotionEnd() { return IsDeadMotionEnd; }
+	const bool GetDeadMotionEnd() { return curenntState_->GetIsDeadMotionEnd(); }
 
 	// 今の状態を取得
 	const StateType GetState() { return nowState_; }
@@ -85,6 +85,12 @@ public:// セッター
 	static void SetPlayer(Player* player);
 
 	/// <summary>
+	/// いきているかどうかを設定
+	/// </summary>
+	/// <param name="isAlive"></param>
+	void SetIsAlive(const bool isAlive);
+
+	/// <summary>
 	/// 敵の生きているときの行動状態を設定
 	/// </summary>
 	/// <param name="aState">状態</param>
@@ -95,13 +101,6 @@ public:// セッター
 	/// </summary>
 	/// <param name="newState">新しい状態</param>
 	void ChageState(StateType stateType);
-
-private:// プライベート関数
-
-	/// <summary>
-	/// 死亡時の更新処理
-	/// </summary>
-	void DeadUpdate();
 
 public:
 	// 衝突点
@@ -117,14 +116,6 @@ private:// 静的メンバ変数
 private:
 	// 当たったかどうか
 	bool IsCollision = false;
-
-	// 死亡時モーションが終わっているかどうか
-	bool IsDeadMotionEnd = false;
-
-	// ディゾルブ関連
-	float disoTimer_ = 0;
-	float disoTimeMax_ = 60 * 3;
-	float disoTimeLate_ = 0;
 
 	// フラグ
 	bool isH = false;

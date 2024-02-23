@@ -261,6 +261,20 @@ void GameCollider::EnemyCollisionUpdate()
 			}
 		}
 
+		// -----------プレイヤーの懐中電灯の範囲との当たり判定------------- //
+		Cone flashCone;
+		flashCone.vertexPos = player_->worldTransform_.translation;
+		flashCone.directionVec = player_->GetFrontVec();
+		flashCone.height = 14;
+		flashCone.radius = 10;
+
+		if (e->GetState() == Enemy::StateType::Alive &&
+			Collision::CheckSphereToCone(sphereE, flashCone) &&
+			player_->GetIsFlashMax() == true) {
+
+			e->SetIsAlive(false);
+		}
+
 		// -----------敵とフィールドのオブジェクトの当たり判定------------- //
 		for (auto obj : objectsInfo_) {
 			Sphere sphereE2;

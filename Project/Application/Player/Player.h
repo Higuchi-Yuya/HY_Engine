@@ -178,7 +178,6 @@ public:// パブリック変数
 	// 排斥ベクトル
 	Vector3 rejectVec;
 
-
 private:
 
 	bool IsStickOn = false;

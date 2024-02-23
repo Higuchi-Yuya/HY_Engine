@@ -47,5 +47,8 @@ public:
 	// 球とAABBの当たり判定の距離の平方を計算
 	static float SquareDistance_PointRectangle(Vector3 p, Vector3 c, Vector3 r);
 
+	// 球と円錐の当たり判定
+	static bool CheckSphereToCone(const Sphere& sphere, const Cone& cone);
+
 };
 

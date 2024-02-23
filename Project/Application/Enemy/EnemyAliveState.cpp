@@ -7,6 +7,11 @@ void EnemyAliveState::Update(Enemy& enemy)
 
 void EnemyAliveState::AliveUpdate(Enemy& enemy)
 {
+	// 死んだら状態を変更
+	if (IsAlive_ == false) {
+		aState_ = AliveState::Dead;
+	}
+
 	switch (aState_)
 	{
 	case AliveState::Patrol:// 巡回
@@ -14,44 +19,19 @@ void EnemyAliveState::AliveUpdate(Enemy& enemy)
 
 		break;
 	case AliveState::Back:// 戻るとき
-		// アルファ値がゼロではないとき
-		if (IsAlphaZero_ == false) {
-			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
+		BackUpdate(enemy);
 
-			easeAlpha_.Update();
-			enemy.worldTransform_.color.w = easeAlpha_.easeOutCubic(1, 0);
-
-			if (easeAlpha_.GetIsEnd() == true) {
-				easeAlpha_.Reset();
-				IsAlphaZero_ = true;
-				enemy.worldTransform_.translation.x = patrolPos_[0].x;
-				enemy.worldTransform_.translation.z = patrolPos_[0].z;
-				//enemy.worldTransform_.scale = bigScale_;
-			}
-		}
-		// アルファ値がぜろのとき
-		if (IsAlphaZero_ == true) {
-			easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
-
-			easeAlpha_.Update();
-			enemy.worldTransform_.color.w = easeAlpha_.easeOutCubic(0, 1);
-
-			if (easeAlpha_.GetIsEnd() == true) {
-				easeAlpha_.Reset();
-				aState_ = AliveState::Patrol;
-			}
-		}
 		break;
 	case AliveState::Tracking:// 追跡
 		TrackingUpdate(enemy);
 
 		break;
+	case AliveState::Dead:
+		DeadUpdate(enemy);
+
+		break;
 	default:
 		break;
-	}
-
-	// 死んだら状態を変更
-	if (IsAlive_ == false) {
 	}
 }
 
@@ -108,6 +88,37 @@ void EnemyAliveState::PatrolUpdate(Enemy& enemy)
 
 	// 回転処理
 	enemy.worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
+}
+
+void EnemyAliveState::BackUpdate(Enemy& enemy)
+{
+	// アルファ値がゼロではないとき
+	if (IsAlphaZero_ == false) {
+		easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
+
+		easeAlpha_.Update();
+		enemy.worldTransform_.color.w = easeAlpha_.easeOutCubic(1, 0);
+
+		if (easeAlpha_.GetIsEnd() == true) {
+			easeAlpha_.Reset();
+			IsAlphaZero_ = true;
+			enemy.worldTransform_.translation.x = patrolPos_[0].x;
+			enemy.worldTransform_.translation.z = patrolPos_[0].z;
+			//enemy.worldTransform_.scale = bigScale_;
+		}
+	}
+	// アルファ値がぜろのとき
+	if (IsAlphaZero_ == true) {
+		easeAlpha_.SetEaseLimitTime(backWaitTimeLimit_);
+
+		easeAlpha_.Update();
+		enemy.worldTransform_.color.w = easeAlpha_.easeOutCubic(0, 1);
+
+		if (easeAlpha_.GetIsEnd() == true) {
+			easeAlpha_.Reset();
+			aState_ = AliveState::Patrol;
+		}
+	}
 }
 
 void EnemyAliveState::TrackingUpdate(Enemy& enemy)
@@ -169,4 +180,18 @@ void EnemyAliveState::TrackingUpdate(Enemy& enemy)
 	enemy.worldTransform_.translation += followVec;
 	enemy.worldTransform_.translation.y = 1.0f;
 	enemy.worldTransform_.rotation.y += MathUtil::DegreeToRadian(5);
+}
+
+void EnemyAliveState::DeadUpdate(Enemy& enemy)
+{
+	// ディゾルブの処理
+	disoTimer_++;
+	disoTimeLate_ = disoTimer_ / disoTimeMax_;
+	enemy.dissolve_.isActiveDissolve_ = true;
+	enemy.dissolve_.dissolveColor_ = Vector4(0.15f, 0.0f, 0.0f, 1);
+	enemy.dissolve_.dissolveTime_ = disoTimeLate_;
+
+	if (enemy.dissolve_.dissolveTime_ >= 1.0f) {
+		IsDeadMotionEnd = true;
+	}
 }

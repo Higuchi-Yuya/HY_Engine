@@ -29,6 +29,11 @@ bool IEnemyState::GetIsAlive()
     return IsAlive_;
 }
 
+bool IEnemyState::GetIsDeadMotionEnd()
+{
+    return IsDeadMotionEnd;
+}
+
 int32_t IEnemyState::GetPatrolPosNum()
 {
     return patrolPosNum_;
@@ -97,6 +102,11 @@ void IEnemyState::EaseReset()
 void IEnemyState::SetAliveState(const AliveState aliveState)
 {
     aState_ = aliveState;
+}
+
+void IEnemyState::SetIsAlive(const bool IsAlive)
+{
+    IsAlive_ = IsAlive;
 }
 
 void IEnemyState::SetNearTimer(int nearTimer)

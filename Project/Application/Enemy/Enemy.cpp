@@ -197,6 +197,11 @@ void Enemy::SetPlayer(Player* player)
 	IEnemyState::SetPlayer(player);
 }
 
+void Enemy::SetIsAlive(const bool isAlive)
+{
+	curenntState_->SetIsAlive(isAlive);
+}
+
 void Enemy::SetAliveState(IEnemyState::AliveState aState)
 {
 	curenntState_->SetAliveState(aState);
@@ -219,20 +224,6 @@ void Enemy::ChageState(StateType stateType)
 		break;
 	}
 	curenntState_->PatrolInit(*this);
-}
-
-void Enemy::DeadUpdate()
-{
-	// ディゾルブの処理
-	disoTimer_++;
-	disoTimeLate_ = disoTimer_ / disoTimeMax_;
-	dissolve_.isActiveDissolve_ = true;
-	dissolve_.dissolveColor_ = Vector4(0.15f, 0.0f, 0.0f, 1);
-	dissolve_.dissolveTime_ = disoTimeLate_;
-
-	if (dissolve_.dissolveTime_ >= 1.0f) {
-		IsDeadMotionEnd = true;
-	}
 }
 
 void Enemy::NearPlayerParticleUpdate()

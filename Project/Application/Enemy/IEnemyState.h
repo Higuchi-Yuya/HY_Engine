@@ -15,6 +15,7 @@ public:
 		Patrol,//巡回
 		Back,// 戻る
 		Tracking,//追尾
+		Dead,
 	};
 public:
 	// 純粋仮想関数
@@ -43,6 +44,9 @@ public:// ゲッター
 
 	// 生存しているかどうかを取得
 	bool GetIsAlive();
+
+	// 死亡時モーションが終わっているかどうかを取得
+	bool GetIsDeadMotionEnd();
 
 	// パトロールのナンバー取得
 	int32_t GetPatrolPosNum();
@@ -79,6 +83,9 @@ public:// セッター
 	// 生存時の状態を設定
 	void SetAliveState(const AliveState aliveState);
 
+	// 生きているかどうかを設定
+	void SetIsAlive(const bool IsAlive);
+
 	// 近いときの時間
 	void SetNearTimer(int nearTimer);
 
@@ -110,6 +117,9 @@ protected:
 
 	// 生きているかどうか
 	bool IsAlive_ = true;
+
+	// 死亡時モーションが終わっているかどうか
+	bool IsDeadMotionEnd = false;
 
 	// 借りて来るプレイヤーのポインタ
 	static Player* player_;

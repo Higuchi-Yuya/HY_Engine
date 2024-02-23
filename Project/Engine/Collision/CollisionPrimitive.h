@@ -29,6 +29,22 @@ struct Box
 	Vector3 maxCenterRadius = { 0,0,0 };
 };
 
+// 円錐
+struct Cone
+{
+	// 円錐の頂点座標
+	Vector3 vertexPos = { 0,0,0 };
+
+	// 円錐がどこに向かって広がっているかの方向ベクトル
+	Vector3 directionVec = { 0,0,0 };
+
+	// 円錐の高さ（円錐の頂点から底面までの垂直距離）
+	float height = 0;
+
+	// 円錐の底面の半径
+	float radius = 1;
+};
+
 // OBB
 struct OBB
 {

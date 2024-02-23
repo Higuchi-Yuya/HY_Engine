@@ -269,8 +269,8 @@ void Player::DrawBillTex()
 		questionBillTex_.Draw();
 	}
 	else if (firstEventState_ == InterTurn ||
-			 firstEventState_ == FirstTurn ||
-			 firstEventState_ == SecondTurn) 
+		firstEventState_ == FirstTurn ||
+		firstEventState_ == SecondTurn)
 	{
 		questionBillTex_.SetTexture(questionTex_.get());
 		questionBillTex_.Draw();
@@ -635,7 +635,7 @@ void Player::SearchRingUpdate(std::vector<ItemPaper*>itemPapers)
 	float angle;
 
 	// アイテムのなかで一番近いものの座標とベクトルの長さを抽出
-	for (auto i: itemPapers)
+	for (auto i : itemPapers)
 	{
 		if (i->GetIsCheckItem() == false) {
 			vel = i->billTex_.worldTransform_.translation - worldTransform_.translation;

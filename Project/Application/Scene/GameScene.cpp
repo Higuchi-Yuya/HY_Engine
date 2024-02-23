@@ -523,14 +523,14 @@ void GameScene::GameSceneUpdate()
 		o->Update();
 	}
 
-	// 当たり判定関連の更新処理
-	gameCollider_->Update();
-
 	// オペレーションの更新処理
 	operationUi_->Update();
 
 	// ライトの更新処理
 	LightUpdate();
+
+	// 当たり判定関連の更新処理
+	gameCollider_->Update();
 
 	// 制限時間が過ぎたらクリア
 	if (timerUi_->GetIsTimeEnd() == true) {
@@ -598,6 +598,9 @@ void GameScene::LightUpdate()
 		if (easeFlash_.GetIsEnd() == true) {
 			easeFlash_.Reset();
 			flashState_ = Atten;
+			if (flashCount_ >= flashCountMax_ - 1) {
+				player_->SetIsFlashMax(true);
+			}
 		}
 
 		break;
@@ -645,6 +648,7 @@ void GameScene::LightUpdate()
 		if (easeFlash_.GetIsEnd() == true) {
 			flashCount_ = 0;
 			easeFlash_.Reset();
+			player_->SetIsFlashMax(false);
 			flashState_ = FlashState::None;
 		}
 

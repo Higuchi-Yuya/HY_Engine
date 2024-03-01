@@ -17,11 +17,16 @@ void PostEffectManager::Initialize()
 	beatEffect_ = std::make_unique<BeatEffect>();
 	beatEffect_->Initialize();
 	BeatEffect::SetGaussianBlur(gaussianBlur_.get());
+
+	boxModel_.reset(Model::LoadFromOBJ("CharacterYomawari"));
+	testDObj.reset(DeferredObject3d::Create());
+	testDObj->SetModel(boxModel_.get());
 }
 
 void PostEffectManager::Update()
 {
 	//beatEffect_->Update();
+	testDObj->Update();
 }
 
 void PostEffectManager::ImguiUpdate()
@@ -34,7 +39,7 @@ void PostEffectManager::ImguiUpdate()
 void PostEffectManager::EffectBloomDraw()
 {
 	beatEffect_->Draw();
-	
+	DeferredObject3d::DrawDeferredObjRenderTex();
 }
 
 void PostEffectManager::BloomDrawSetting()
@@ -54,7 +59,10 @@ void PostEffectManager::BloomDrawSetting()
 
 	postTarget_->PostDrawScene(dxCommon_->GetCommandList());
 
+	DeferredObject3d::PreDraw(dxCommon_->GetCommandList());
+	testDObj->Draw(&sceneManager_->GetGameCamera());
 
+	DeferredObject3d::PostDraw();
 
 	higuLumiTarget_->PreDrawScene(dxCommon_->GetCommandList());
 	Object3d::PreDraw(dxCommon_->GetCommandList());

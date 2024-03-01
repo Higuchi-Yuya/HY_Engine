@@ -406,7 +406,7 @@ void FbxModel::Draw(
 		sCommandList_->SetGraphicsRootConstantBufferView(6, constBuff_->GetGPUVirtualAddress());
 
 		// 全メッシュを描画
-		meshes_[i]->Draw(sCommandList_);
+		meshes_[i]->Draw(sCommandList_, 3, 0);
 	}
 }
 

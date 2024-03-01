@@ -62,7 +62,7 @@ public:
 	static void SetDevice(ID3D12Device* device);
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList, uint32_t materialRootIndex, uint32_t bodyTexRootIndex);
 	void DrawFBX(ID3D12GraphicsCommandList* cmdList,Texture texHandle);
 
 	// エッジ平滑化データの追加

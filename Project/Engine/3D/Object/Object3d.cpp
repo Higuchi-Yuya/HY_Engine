@@ -889,9 +889,8 @@ void Object3d::Draw(ViewProjection* viewProjection)
 	// ディゾルブの描画
 	dissolve_.Draw(sCmdList_, static_cast<uint32_t>(rootParameterIndex::DISSOLVEDATA));
 
-
 	// モデルを描画
-	model_->Draw(sCmdList_);
+	model_->Draw(sCmdList_, (uint32_t)rootParameterIndex::MATERIALDATA, (uint32_t)rootParameterIndex::BODYTEXTURE);
 
 }
 

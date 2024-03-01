@@ -89,6 +89,8 @@ public:// セッター
 
 public:// ゲッター
 
+	ViewProjection& GetGameCamera() { return gameCamera->GetView(); }
+
 private:// プレイべーとメンバ関数
 
 	/// <summary>

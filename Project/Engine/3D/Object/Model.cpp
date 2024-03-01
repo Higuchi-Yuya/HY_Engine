@@ -124,7 +124,7 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 	}
 }
 
-void Model::Draw(ID3D12GraphicsCommandList* cmdList)
+void Model::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t materialRootIndex, uint32_t bodyTexRootIndex)
 {
 	// nullptrチェック
 	assert(sDevice_);
@@ -132,7 +132,7 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	// 全メッシュを描画
 	for (auto& mesh : meshes_) {
-		mesh->Draw(cmdList);
+		mesh->Draw(cmdList, materialRootIndex, bodyTexRootIndex);
 	}
 }
 

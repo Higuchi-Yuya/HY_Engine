@@ -6,7 +6,7 @@
 #include "PostTarget.h"
 #include "SceneManager.h"
 #include "BeatEffect.h"
-
+#include "DeferredObject3d.h"
 
 class PostEffectManager
 {
@@ -26,6 +26,10 @@ private:// メンバー変数
 
 	// 鼓動エフェクト
 	std::unique_ptr<BeatEffect>beatEffect_;
+
+	// テスト用のディファードオブジェクト
+	std::unique_ptr<Model> boxModel_ = nullptr;
+	std::unique_ptr<DeferredObject3d>testDObj;
 
 private:// 借りてくるもの
 

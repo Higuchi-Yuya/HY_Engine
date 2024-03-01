@@ -52,6 +52,7 @@ void MyGame::Finalize()
 	FbxModel::StaticFainalize();
 	PostRenderBase::Destroy();
 	BillboardTex::StaticFinalize();
+	DeferredObject3d::StaticFinalize();
 	// WindouwsAPIの終了処理
 	winApp->Finalize();
 
@@ -104,7 +105,7 @@ void MyGame::Draw()
 	Draw2DFront();
 
 	#pragma region IMGUIの描画
-	imguiManager->Draw();
+	//imguiManager->Draw();
 	#pragma endregion
 
 	// 描画コマンドの終了
@@ -182,6 +183,9 @@ void MyGame::BaseInitialize()
 
 	// ビルボードの初期化
 	BillboardTex::StaticInitialize(dxCommon->GetDevice());
+
+	// ディファードオブジェクトの初期化
+	DeferredObject3d::StaticInitialize(dxCommon->GetDevice());
 
 	/////////////////////////////////////////////////////////
 	//--------------DirectX12初期化処理　ここまで-------------//

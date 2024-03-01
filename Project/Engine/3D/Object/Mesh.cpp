@@ -13,7 +13,7 @@ void Mesh::SetDevice(ID3D12Device* device)
 	Mesh::sDevice_ = device;
 }
 
-void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
+void Mesh::Draw(ID3D12GraphicsCommandList* cmdList, uint32_t materialRootIndex, uint32_t bodyTexRootIndex)
 {
 	// nullptrチェック
 	assert(sDevice_);
@@ -30,10 +30,10 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// マテリアル用定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(static_cast<uint32_t>(rootParameterIndex::MATERIALDATA), material_->GetConstantBuffer()->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(materialRootIndex, material_->GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(static_cast<uint32_t>(rootParameterIndex::BODYTEXTURE), material_->textureIndex_.GetGpuHandle());
+	cmdList->SetGraphicsRootDescriptorTable(bodyTexRootIndex, material_->textureIndex_.GetGpuHandle());
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);

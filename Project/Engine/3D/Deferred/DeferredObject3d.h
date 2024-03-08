@@ -59,6 +59,12 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static DeferredObject3d* Create();
 
+	/// <summary>
+	/// DSVハンドルをセット
+	/// </summary>
+	/// <param name="dsvHandle"></param>
+	static void SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+
 	// スタティック系を解放する関数
 	static void StaticFinalize();
 
@@ -112,13 +118,11 @@ private:
 	/// </summary>
 	static void CreateDSV();
 
-
-
-
-
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* sDevice_;
+
+	static D3D12_CPU_DESCRIPTOR_HANDLE sDsvHandle_;
 
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* sCmdList_;
@@ -139,13 +143,15 @@ private: // 静的メンバ変数
 
 
 	// テクスチャバッファ
-	static Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_[6];
+	static Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_[7];
 
 	// 頂点数
 	static const int kVertNum_ = 4;
 
 	// ハンドル
-	static Handles handles_[6];
+	static Handles handles_[7];
+
+	static const int kTexNum = 7;
 
 	// 頂点データ
 	static SpriteManager::Vertex vertices_[kVertNum_]; 

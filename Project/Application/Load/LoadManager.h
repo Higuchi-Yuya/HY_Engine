@@ -1,5 +1,5 @@
 #pragma once
-#include "Object3d.h"
+#include "DeferredObject3d.h"
 #include "LevelLoder.h"
 #include "Singleton.h"
 #include <GameCollider.h>
@@ -48,24 +48,24 @@ public://ゲッター
 	/// 配置オブジェクトの取得
 	/// </summary>
 	/// <returns></returns>
-	std::vector<Object3d*>GetObjects();
+	std::vector<DeferredObject3d*>GetObjects();
 
 	/// <summary>
 	/// 門のオブジェクトの取得
 	/// </summary>
-	std::vector<Object3d*>GetLatticeDoors();
+	std::vector<DeferredObject3d*>GetLatticeDoors();
 
 	/// <summary>
 	/// ランタンのオブジェクトの取得
 	/// </summary>
 	/// <returns></returns>
-	std::vector<Object3d*>GetRanterns();
+	std::vector<DeferredObject3d*>GetRanterns();
 
 	/// <summary>
 	/// 高輝度ランタンのオブジェクトの取得
 	/// </summary>
 	/// <returns></returns>
-	std::vector<Object3d*>GetHighRanterns();
+	std::vector<DeferredObject3d*>GetHighRanterns();
 
 	/// <summary>
 	/// ポイントライトの情報
@@ -121,16 +121,16 @@ private:
 	std::map<std::string, Model*> models;
 
 	// レベルデータに登録するオブジェクトの配列
-	std::vector<Object3d*> objects;
+	std::vector<DeferredObject3d*> objects;
 
 	// お墓のドアの配列
-	std::vector<Object3d*> latticeDoors_;
+	std::vector<DeferredObject3d*> latticeDoors_;
 
 	// ランタンの配列
-	std::vector<Object3d*> ranterns_;
+	std::vector<DeferredObject3d*> ranterns_;
 
 	// ランタンの高輝度用配列
-	std::vector<Object3d*> highLumiRanterns_;
+	std::vector<DeferredObject3d*> highLumiRanterns_;
 
 	// ポイントライト情報の配列
 	std::vector<WorldTransform*> pointLightsInfo_;

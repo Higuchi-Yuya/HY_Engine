@@ -95,7 +95,11 @@ void TitleScene::Draw2DBack()
 {
 }
 
-void TitleScene::Draw3D()
+void TitleScene::DrawForward3D()
+{
+}
+
+void TitleScene::DrawDefrred3D()
 {
 	// お墓のドアのオブジェクトの描画
 	for (auto l : latticeDoors_) {
@@ -149,7 +153,7 @@ void TitleScene::Reset()
 	titleAlpha_ = 1;
 }
 
-void TitleScene::SetObjs(std::vector<Object3d*> objs,ObjsType objType)
+void TitleScene::SetObjs(std::vector<DeferredObject3d*> objs,ObjsType objType)
 {
 	switch (objType)
 	{

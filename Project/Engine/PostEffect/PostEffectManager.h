@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include "BeatEffect.h"
 #include "DeferredObject3d.h"
+#include "DeferredRender.h"
 
 class PostEffectManager
 {
@@ -30,6 +31,8 @@ private:// メンバー変数
 	// テスト用のディファードオブジェクト
 	std::unique_ptr<Model> boxModel_ = nullptr;
 	std::unique_ptr<DeferredObject3d>testDObj;
+
+	std::unique_ptr<DeferredRender>testDefrredRender_;
 
 private:// 借りてくるもの
 

@@ -6,7 +6,8 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void ImguiUpdate() = 0;
-	virtual void Draw3D() = 0;
+	virtual void DrawForward3D() = 0;
+	virtual void DrawDefrred3D() = 0;
 	virtual void Draw2DFront() = 0;
 	virtual void DrawBloomObject() = 0;
 	virtual void DrawHighLumiObj() = 0;

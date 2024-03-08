@@ -17,21 +17,23 @@ float4 highLumiExtraction(float4 texColor)
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    PSOutput output;
     float4 texColor0 = tex.Sample(smp, input.uv);
-    float4 texColor1 = tex1.Sample(smp, input.uv);
+    //float4 texColor1 = tex1.Sample(smp, input.uv);
     
-    if (texColor1.g >= 1.0f && texColor1.b >= 1.0f)
-    {
-        float4 highLumiColor = highLumiExtraction(texColor0);
+    float4 highLumiColor = highLumiExtraction(texColor0);
   
-        return highLumiColor;
-    }
-    else
-    {
-        float4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
-        return black;
-    }
+    return highLumiColor;
+    //if (texColor1.g >= 1.0f && texColor1.b >= 1.0f)
+    //{
+    //    float4 highLumiColor = highLumiExtraction(texColor0);
+  
+    //    return highLumiColor;
+    //}
+    //else
+    //{
+    //    float4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
+    //    return black;
+    //}
     
    
     

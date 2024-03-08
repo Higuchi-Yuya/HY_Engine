@@ -33,8 +33,9 @@ struct PSOutput
 {
     float4 ColorMap : SV_Target0;
     float4 WorldPosMap : SV_Target1;
-    float4 NomalMap : SV_Target2;
-    float4 AmbientMap : SV_Target3;
-    float4 DiffuseMap : SV_Target4;
-    float4 SpecularMap : SV_Target5;
+    float4 CameraPosMap : SV_Target2;
+    float4 NomalMap : SV_Target3;
+    float4 AmbientMap : SV_Target4;
+    float4 DiffuseMap : SV_Target5;
+    float4 SpecularMap : SV_Target6;
 };

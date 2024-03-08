@@ -12,6 +12,7 @@ PSOutput main(VSOutput input) : SV_TARGET
     
     output.ColorMap = baseColor;
     output.WorldPosMap = float4(input.worldpos.x, input.worldpos.y, input.worldpos.z, 1.0f);
+    output.CameraPosMap = float4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
     output.NomalMap = float4(input.normal.x, input.normal.y, input.normal.z, 1.0f);
     output.AmbientMap = float4(m_ambient, 1.0f);
     output.DiffuseMap = float4(m_diffuse, 1.0f);

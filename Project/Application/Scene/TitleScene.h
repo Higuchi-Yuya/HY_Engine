@@ -36,9 +36,14 @@ public:// メンバ関数
 	void Draw2DBack();
 
 	/// <summary>
-	/// 3Dオブジェクトの描画処理
+	/// フォワード3Dオブジェクトの描画処理
 	/// </summary>
-	void Draw3D()override;
+	void DrawForward3D()override;
+
+	/// <summary>
+	/// ディファード3Dオブジェクトの描画処理
+	/// </summary>
+	void DrawDefrred3D()override;
 
 	/// <summary>
 	/// パーティクルの描画処理
@@ -84,7 +89,7 @@ public:// セッター
 	/// </summary>
 	/// <param name="objs">オブジェクトの配列</param>
 	/// <param name="objType">配列のタイプ</param>
-	void SetObjs(std::vector<Object3d*> objs,ObjsType objType);
+	void SetObjs(std::vector<DeferredObject3d*> objs,ObjsType objType);
 
 	/// <summary>
 	/// ライトグループを設定
@@ -132,16 +137,16 @@ private:// メンバ変数
 	float titleAlpha_ = 1;
 
 	// オブジェクトの配列(借りてくる)
-	std::vector<Object3d*> objects;
+	std::vector<DeferredObject3d*> objects;
 
 	// お墓のドアの配列(借りてくる)
-	std::vector<Object3d*> latticeDoors_;
+	std::vector<DeferredObject3d*> latticeDoors_;
 
 	// ランタンの配列(借りてくる)
-	std::vector<Object3d*> ranterns_;
+	std::vector<DeferredObject3d*> ranterns_;
 
 	// ランタンの高輝度用配列
-	std::vector<Object3d*> highLumiRanterns_;
+	std::vector<DeferredObject3d*> highLumiRanterns_;
 
 	// シーン終了フラグ
 	bool IsSceneFinsh_;

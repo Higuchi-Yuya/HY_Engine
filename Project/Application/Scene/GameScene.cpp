@@ -203,22 +203,8 @@ void GameScene::Draw2DBack()
 {
 }
 
-void GameScene::Draw3D()
+void GameScene::DrawForward3D()
 {
-	// オブジェクト関連の描画
-	DrawShieldObj();
-
-	// お墓のドアのオブジェクトの描画
-	for (auto d : latticeDoors_) {
-		d->Draw(&gameCamera_->GetView());
-	}
-
-	// 普通のオブジェクトの描画
-	for (auto o : objects_) {
-		o->Draw(&gameCamera_->GetView());
-	}
-	gameCollider_->Draw3D(&gameCamera_->GetView());
-
 	// プレイヤーの描画(カメラがクリア演出以外の時に描画)
 	if (gameCamera_->GetIsDoorOpen() == false || gameCamera_->GetIsFinishDoorOpen_() == true) {
 		player_->Draw(&gameCamera_->GetView());
@@ -230,6 +216,7 @@ void GameScene::Draw3D()
 		player_->DrawRing(&gameCamera_->GetView());
 	}
 
+	// 敵の描画
 	DrawTransParentObj();
 
 	// パーティクルの描画
@@ -237,6 +224,23 @@ void GameScene::Draw3D()
 
 	// ビルボードオブジェの描画
 	DrawBillboardTex();
+}
+
+void GameScene::DrawDefrred3D()
+{
+	// オブジェクト関連の描画
+	//DrawShieldObj();
+
+	// お墓のドアのオブジェクトの描画
+	for (auto d : latticeDoors_) {
+		d->Draw(&gameCamera_->GetView());
+	}
+
+	// 普通のオブジェクトの描画
+	for (auto o : objects_) {
+		o->Draw(&gameCamera_->GetView());
+	}
+	gameCollider_->Draw3D(&gameCamera_->GetView());
 }
 
 void GameScene::DrawParticle()
@@ -269,7 +273,7 @@ void GameScene::Draw2DFront()
 
 void GameScene::DrawBloomObject()
 {
-	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
+	//Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 	// ランタンのオブジェクトの描画
 	for (auto L : ranterns_) {
 		L->worldTransform_.IsBloom_ = false;
@@ -422,7 +426,7 @@ void GameScene::LoadEnemy()
 	}
 }
 
-void GameScene::SetObjs(std::vector<Object3d*> objs, ObjsType objType)
+void GameScene::SetObjs(std::vector<DeferredObject3d*> objs, ObjsType objType)
 {
 	switch (objType)
 	{

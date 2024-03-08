@@ -268,6 +268,9 @@
     <Filter Include="ヘッダー ファイル\Application\Camera">
       <UniqueIdentifier>{e3985756-75e3-4a95-be61-193f9a15c753}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Deferred">
+      <UniqueIdentifier>{104d64df-1227-4932-bf1e-4c134c2617e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -836,7 +839,10 @@
     <None Include="Resources\Shaders\Billboard\BasicShaderHeader.hlsli">
       <Filter>シェーダーファイル\Billboard</Filter>
     </None>
-    <None Include="Resources\Shaders\Deferred\DeferredObjHeader.hlsli" />
+    <None Include="Resources\Shaders\Deferred\DeferredObjHeader.hlsli">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </None>
+    <None Include="Resources\Shaders\Deferred\DeferredRenderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -929,7 +935,13 @@
     <FxCompile Include="Resources\Shaders\Billboard\BasicVertexShader.hlsl">
       <Filter>シェーダーファイル\Billboard</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Deferred\DeferredObjVS.hlsl" />
-    <FxCompile Include="Resources\Shaders\Deferred\DeferredObjPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\Deferred\DeferredObjVS.hlsl">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Deferred\DeferredObjPS.hlsl">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderPS.hlsl" />
   </ItemGroup>
 </Project>

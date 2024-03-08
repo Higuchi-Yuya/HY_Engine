@@ -29,7 +29,11 @@ void GameOverScene::Update()
 	}
 }
 
-void GameOverScene::Draw3D()
+void GameOverScene::DrawForward3D()
+{
+}
+
+void GameOverScene::DrawDefrred3D()
 {
 }
 

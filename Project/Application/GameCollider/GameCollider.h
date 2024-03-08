@@ -5,6 +5,7 @@
 #include "Collision.h"
 #include <ItemPaper.h>
 #include "Singleton.h"
+#include "DeferredObject3d.h"
 
 class GameCollider:Singleton<GameCollider>
 {
@@ -44,7 +45,7 @@ public:// メンバ関数
 	/// オブジェクトの情報をベクター型に格納
 	/// </summary>
 	/// <param name="obj">オブジェクト</param>
-	void AddObj(Object3d* obj);
+	void AddObj(DeferredObject3d* obj);
 
 	/// <summary>
 	/// 球の情報をベクター型に格納
@@ -105,7 +106,7 @@ private:// メンバ変数
 	// プレイヤーバレット当たり判定用の配列
 	std::list<std::unique_ptr<PlayerBullet>> bulletsInfo_;
 	// オブジェクト当たり判定用の配列
-	std::vector<Object3d*> objectsInfo_;
+	std::vector<DeferredObject3d*> objectsInfo_;
 
 	// 球の当たり判定用の配列
 	std::vector<Sphere> objSpheres_;

@@ -19,9 +19,14 @@ public:// メンバ関数
 	void Update()override;
 
 	/// <summary>
-	/// 3Dオブジェクトの描画処理
+	/// フォワード3Dオブジェクトの描画処理
 	/// </summary>
-	void Draw3D()override;
+	void DrawForward3D()override;
+
+	/// <summary>
+	/// ディファード3Dオブジェクトの描画処理
+	/// </summary>
+	void DrawDefrred3D()override;
 
 	/// <summary>
 	/// 前面スプライトの描画処理

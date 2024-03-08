@@ -29,7 +29,11 @@ void GameClearScene::Update()
 	}
 }
 
-void GameClearScene::Draw3D()
+void GameClearScene::DrawForward3D()
+{
+}
+
+void GameClearScene::DrawDefrred3D()
 {
 }
 

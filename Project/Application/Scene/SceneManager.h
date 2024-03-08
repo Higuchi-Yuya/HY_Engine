@@ -51,9 +51,14 @@ public:// メンバ関数
 	void Draw2DBack();
 
 	/// <summary>
-	/// 3Dオブジェクトの描画処理
+	/// フォワード3Dオブジェクトの描画処理
 	/// </summary>
-	void Draw3D();
+	void DrawForward3D();
+
+	/// <summary>
+	/// ディファード3Dオブジェクトの描画処理
+	/// </summary>
+	void DrawDefrred3D();
 
 	/// <summary>
 	/// パーティクルの描画処理

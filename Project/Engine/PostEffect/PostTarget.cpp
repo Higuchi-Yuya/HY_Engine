@@ -5,6 +5,7 @@
 ID3D12Device* PostTarget::sDevice_ = nullptr;
 
 const float PostTarget::clearColor_[4] = { 0.4f,1.0f,0.4f,0.0f };// ミドリっぽい色
+D3D12_CPU_DESCRIPTOR_HANDLE PostTarget::sDsvHandle_;
 
 PostTarget::PostTarget()
 {
@@ -81,7 +82,7 @@ void PostTarget::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
-		handles_.dsvCpuHandle_;
+		sDsvHandle_;
 
 	// レンダーターゲットをセット
 	cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
@@ -113,6 +114,11 @@ void PostTarget::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
 void PostTarget::SetDevice(ID3D12Device* device)
 {
 	sDevice_ = device;
+}
+
+void PostTarget::SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+{
+	sDsvHandle_ = dsvHandle;
 }
 
 void PostTarget::CreateVertBuff()

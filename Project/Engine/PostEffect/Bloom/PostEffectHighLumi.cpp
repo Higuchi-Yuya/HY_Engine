@@ -3,8 +3,8 @@
 
 ID3D12Device* PostEffectHighLumi::sDevice_ = nullptr;
 
-const float PostEffectHighLumi::clearColor_[4] = { 0.1f,0.1f,0.1f,0.0f };// ミドリっぽい色
-
+const float PostEffectHighLumi::clearColor_[4] = { 0.0f,0.0f,0.0f,1.0f };// 黒色
+D3D12_CPU_DESCRIPTOR_HANDLE PostEffectHighLumi::sDsvHandle_;
 PostEffectHighLumi::PostEffectHighLumi()
 {
 }
@@ -66,7 +66,7 @@ void PostEffectHighLumi::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	cmdList->SetGraphicsRootDescriptorTable(1, PostEffectHandleManager::GetPostEffectHandle("OriginalScene").srvGpuHandle_);
+	cmdList->SetGraphicsRootDescriptorTable(1, handles_[0].srvGpuHandle_);
 	cmdList->SetGraphicsRootDescriptorTable(2, PostEffectHandleManager::GetPostEffectHandle("HiguLumiTarget").srvGpuHandle_);
 
 	// 頂点バッファビューの設定コマンド
@@ -96,7 +96,7 @@ void PostEffectHighLumi::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
-		handles_[0].dsvCpuHandle_;
+		sDsvHandle_;
 
 	// レンダーターゲットをセット
 	cmdList->OMSetRenderTargets(2, rtvH, false, &dsvH);
@@ -140,6 +140,11 @@ void PostEffectHighLumi::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
 void PostEffectHighLumi::SetDevice(ID3D12Device* device)
 {
 	sDevice_ = device;
+}
+
+void PostEffectHighLumi::SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+{
+	sDsvHandle_ = dsvHandle;
 }
 
 void PostEffectHighLumi::CreateVertBuff()

@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "BeatEffect.h"
 #include"LoadManager.h"
+#include "DeferredRender.h"
 SceneManager::~SceneManager()
 {
 	loadManager_->Finalize();
@@ -26,6 +27,8 @@ void SceneManager::Initialize()
 
 	// 3Dオブジェクトにライトをセット
 	Object3d::SetLight(light.get());
+	// ディファードレンダリングにライトをセット
+	DeferredRender::SetLight(light.get());
 #pragma endregion
 
 #pragma region フォグ
@@ -35,6 +38,7 @@ void SceneManager::Initialize()
 	fog->isActiveFog = true;
 	fog->fogColor = Vector4(0.08f, 0.08f, 0.152f, 1);
 	Object3d::SetFog(fog.get());
+	DeferredRender::SetFog(fog.get());
 #pragma endregion
 
 #pragma region テクスチャの読み込み
@@ -198,13 +202,19 @@ void SceneManager::Draw2DBack()
 {
 }
 
-void SceneManager::Draw3D()
+void SceneManager::DrawForward3D()
 {
-	currentScene_->Draw3D();
+	currentScene_->DrawForward3D();
+}
+
+void SceneManager::DrawDefrred3D()
+{
+	currentScene_->DrawDefrred3D();
 }
 
 void SceneManager::DrawParticle()
 {
+
 }
 
 void SceneManager::Draw2DFront()

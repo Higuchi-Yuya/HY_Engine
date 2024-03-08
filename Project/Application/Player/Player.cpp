@@ -577,7 +577,7 @@ void Player::Attack()
 	//デスフラグの立った弾を削除
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 	bulletInterTimer--;
-	if (JoypadInput::GetButton(PadCode::ButtonA))//input_->PushKey(DIK_Y)) {
+	if (JoypadInput::GetButton(PadCode::ButtonA))
 	{
 		IsAttack_ = true;
 

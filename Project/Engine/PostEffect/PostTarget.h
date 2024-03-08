@@ -29,7 +29,11 @@ public:// セッター
 
     // デバイスのセッター
     static void SetDevice(ID3D12Device* device);
-
+    /// <summary>
+    /// DSVハンドルをセット
+    /// </summary>
+    /// <param name="dsvHandle"></param>
+    static void SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
 private:
 
     /// <summary>
@@ -71,7 +75,7 @@ private:
 
     // デバイス（借りてくる）
     static ID3D12Device* sDevice_;
-
+    static D3D12_CPU_DESCRIPTOR_HANDLE sDsvHandle_;
     // 頂点数
     static const int kVertNum_ = 4;
 

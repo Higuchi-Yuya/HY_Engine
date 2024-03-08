@@ -16,8 +16,8 @@ ComPtr<ID3DBlob> DeferredObject3d::sErrorBlob_;
 ShaderObj* DeferredObject3d::sVsShader_ = nullptr;
 ShaderObj* DeferredObject3d::sPsShader_ = nullptr;
 
-Microsoft::WRL::ComPtr<ID3D12Resource> DeferredObject3d::texBuff_[6];
-Handles DeferredObject3d::handles_[6];
+Microsoft::WRL::ComPtr<ID3D12Resource> DeferredObject3d::texBuff_[7];
+Handles DeferredObject3d::handles_[7];
 
 SpriteManager::Vertex DeferredObject3d::vertices_[kVertNum_] = {
 	{{-1.0f,-1.0f, 0.0f },{0.0f,1.0f}}, // 左下
@@ -32,8 +32,10 @@ D3D12_VERTEX_BUFFER_VIEW DeferredObject3d::vbView_;
 Microsoft::WRL::ComPtr<ID3D12Resource> DeferredObject3d::vertBuff_;
 Microsoft::WRL::ComPtr <ID3D12Resource>DeferredObject3d::depthBuff_;
 
-const float DeferredObject3d::clearColor_[4] = { 0.0f,0.0f,0.0f,0.0f };
+const float DeferredObject3d::clearColor_[4] = { 0.1f,0.1f,0.1f,0.0f };
 HRESULT DeferredObject3d::result;
+
+D3D12_CPU_DESCRIPTOR_HANDLE DeferredObject3d::sDsvHandle_;
 
 void DeferredObject3d::StaticInitialize(ID3D12Device* device)
 {
@@ -65,6 +67,14 @@ void DeferredObject3d::StaticInitialize(ID3D12Device* device)
 
 	// ノーマル
 	InitializeGraphicsPipelineNormal();
+
+	PostEffectHandleManager::SetPostEffectHandle("colorMap", handles_[0]);
+	PostEffectHandleManager::SetPostEffectHandle("worldPosMap", handles_[1]);
+	PostEffectHandleManager::SetPostEffectHandle("cameraPosMap", handles_[2]);
+	PostEffectHandleManager::SetPostEffectHandle("normalMap", handles_[3]);
+	PostEffectHandleManager::SetPostEffectHandle("ambientMap", handles_[4]);
+	PostEffectHandleManager::SetPostEffectHandle("diffuseMap", handles_[5]);
+	PostEffectHandleManager::SetPostEffectHandle("specularMap", handles_[6]);
 }
 
 void DeferredObject3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -72,7 +82,7 @@ void DeferredObject3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 	// コマンドリストをセット
 	DeferredObject3d::sCmdList_ = cmdList;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 7; i++) {
 		// リソースバリアを作成
 		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_[i].Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -80,33 +90,33 @@ void DeferredObject3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 		sCmdList_->ResourceBarrier(1, &resourceBarrier);
 	}
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH[6];
-	for (int i = 0; i < 6; i++) {
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH[7];
+	for (int i = 0; i < 7; i++) {
 		rtvH[i] = handles_[i].rtvCpuHandle_;
 	}
 
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
-		handles_[0].dsvCpuHandle_;
+		sDsvHandle_;
 
 	// レンダーターゲットをセット
-	sCmdList_->OMSetRenderTargets(6, rtvH, false, &dsvH);
+	sCmdList_->OMSetRenderTargets(kTexNum, rtvH, false, &dsvH);
 
-	CD3DX12_VIEWPORT viewPort[6];
-	CD3DX12_RECT rect[6];
+	CD3DX12_VIEWPORT viewPort[kTexNum];
+	CD3DX12_RECT rect[kTexNum];
 
-	for (size_t i = 0; i < 6; i++)
+	for (size_t i = 0; i < kTexNum; i++)
 	{
 		// ビューポートの設定
 		viewPort[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::window_width, WinApp::window_height);
 		// シザリング矩形の設定
 		rect[i] = CD3DX12_RECT(0, 0, WinApp::window_width, WinApp::window_height);
 	}
-	sCmdList_->RSSetViewports(6, viewPort);
-	sCmdList_->RSSetScissorRects(6, rect);
+	sCmdList_->RSSetViewports(kTexNum, viewPort);
+	sCmdList_->RSSetScissorRects(kTexNum, rect);
 
 	// 全画面クリア
-	for (size_t i = 0; i < 6; i++)
+	for (size_t i = 0; i < kTexNum; i++)
 	{
 		sCmdList_->ClearRenderTargetView(rtvH[i], clearColor_, 0, nullptr);
 	}
@@ -117,7 +127,7 @@ void DeferredObject3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 
 void DeferredObject3d::PostDraw()
 {
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < kTexNum; i++) {
 		// リソースバリアを作成
 		CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_[i].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
@@ -166,6 +176,11 @@ DeferredObject3d* DeferredObject3d::Create()
 	}
 
 	return object3d;
+}
+
+void DeferredObject3d::SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+{
+	sDsvHandle_ = dsvHandle;
 }
 
 void DeferredObject3d::InitializeRootSignature()
@@ -288,7 +303,7 @@ void DeferredObject3d::InitializeGraphicsPipelineNormal()
 	gpipeline.BlendState.RenderTarget[3] = blenddesc;
 	gpipeline.BlendState.RenderTarget[4] = blenddesc;
 	gpipeline.BlendState.RenderTarget[5] = blenddesc;
-
+	gpipeline.BlendState.RenderTarget[6] = blenddesc;
 	// 深度バッファのフォーマット
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
@@ -299,13 +314,14 @@ void DeferredObject3d::InitializeGraphicsPipelineNormal()
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	gpipeline.NumRenderTargets = 6;	// 描画対象は6つ
+	gpipeline.NumRenderTargets = 7;	// 描画対象は7つ
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 	gpipeline.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.RTVFormats[6] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
 
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
@@ -366,7 +382,7 @@ void DeferredObject3d::CreateTex()
 	CD3DX12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor_);
 
 	// テクスチャバッファの生成
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < kTexNum; i++) {
 		result = sDevice_->CreateCommittedResource(
 			&heapProp,
 			D3D12_HEAP_FLAG_NONE,
@@ -380,14 +396,14 @@ void DeferredObject3d::CreateTex()
 
 void DeferredObject3d::CreateSRV()
 {
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < kTexNum; i++) {
 		PostRenderBase::GetInstance()->CreateSRV(texBuff_[i].Get(), handles_[i].srvCpuHandle_, handles_[i].srvGpuHandle_);
 	}
 }
 
 void DeferredObject3d::CreateRTV()
 {
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < kTexNum; i++) {
 		PostRenderBase::GetInstance()->CreateRTV(texBuff_[i].Get(), handles_[i].rtvCpuHandle_);
 	}
 }
@@ -433,7 +449,7 @@ void DeferredObject3d::StaticFinalize()
 	sPipelinestateNormal_ = nullptr;
 	vertBuff_ = nullptr;
 	depthBuff_ = nullptr;
-	for (size_t i = 0; i < 6; i++)
+	for (size_t i = 0; i < kTexNum; i++)
 	{
 		texBuff_[i] = nullptr;
 	}

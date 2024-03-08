@@ -60,7 +60,15 @@ public:// メンバ関数
 	// 描画処理
 	void Draw2DBack();
 
-	void Draw3D()override;
+	/// <summary>
+	/// フォワード3Dオブジェクトの描画処理
+	/// </summary>
+	void DrawForward3D()override;
+
+	/// <summary>
+	/// ディファード3Dオブジェクトの描画処理
+	/// </summary>
+	void DrawDefrred3D()override;
 
 	void DrawParticle();
 
@@ -127,7 +135,7 @@ public:// セッター
 	/// </summary>
 	/// <param name="objs">オブジェクトの配列</param>
 	/// <param name="objType">配列のタイプ</param>
-	void SetObjs(std::vector<Object3d*> objs,ObjsType objType);
+	void SetObjs(std::vector<DeferredObject3d*> objs,ObjsType objType);
 
 	/// <summary>
 	/// ライトグループを設定
@@ -273,16 +281,16 @@ private:// メンバ変数
 	std::map<std::string, Model*> models_;
 
 	// オブジェクトの配列(借りてくる)
-	std::vector<Object3d*> objects_;
+	std::vector<DeferredObject3d*> objects_;
 
 	// お墓のドアの配列(借りてくる)
-	std::vector<Object3d*> latticeDoors_;
+	std::vector<DeferredObject3d*> latticeDoors_;
 
 	// ランタンの配列(借りてくる)
-	std::vector<Object3d*> ranterns_;
+	std::vector<DeferredObject3d*> ranterns_;
 
 	// ランタンの高輝度用配列
-	std::vector<Object3d*> highLumiRanterns_;
+	std::vector<DeferredObject3d*> highLumiRanterns_;
 #pragma endregion
 
 #pragma region アイテム関連

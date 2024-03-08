@@ -46,6 +46,9 @@ public:// メンバ関数
 	// コマンドアロケータを取得
 	inline ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator_.Get(); }
 
+	// デプスステンシルのCPUハンドルを取得
+	inline D3D12_CPU_DESCRIPTOR_HANDLE GetDepthCpuHandle()const {return dsvHeap_->GetCPUDescriptorHandleForHeapStart();}
+
 private:
 	// デバイスの初期化
 	void InitalizeDevice();

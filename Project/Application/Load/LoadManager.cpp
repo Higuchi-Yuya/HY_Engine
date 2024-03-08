@@ -114,7 +114,7 @@ void LoadManager::LoadLevelDate()
 		else if (objectData.tagName == "Door")
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			DeferredObject3d* newObject = DeferredObject3d::Create();
 			newObject->SetModel(model);
 
 			// 座標
@@ -142,8 +142,8 @@ void LoadManager::LoadLevelDate()
 		else if (objectData.tagName == "Rantern")
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
-			Object3d* newObj2 = Object3d::Create();
+			DeferredObject3d* newObject = DeferredObject3d::Create();
+			DeferredObject3d* newObj2 = DeferredObject3d::Create();
 			newObject->SetModel(model);
 			newObj2->SetModel(model);
 
@@ -190,7 +190,7 @@ void LoadManager::LoadLevelDate()
 		else
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			DeferredObject3d* newObject = DeferredObject3d::Create();
 			newObject->SetModel(model);
 
 			// 座標
@@ -243,22 +243,22 @@ std::map<std::string, Model*> LoadManager::GetModels()
 	return models;
 }
 
-std::vector<Object3d*> LoadManager::GetObjects()
+std::vector<DeferredObject3d*> LoadManager::GetObjects()
 {
 	return objects;
 }
 
-std::vector<Object3d*> LoadManager::GetLatticeDoors()
+std::vector<DeferredObject3d*> LoadManager::GetLatticeDoors()
 {
 	return latticeDoors_;
 }
 
-std::vector<Object3d*> LoadManager::GetRanterns()
+std::vector<DeferredObject3d*> LoadManager::GetRanterns()
 {
 	return ranterns_;
 }
 
-std::vector<Object3d*> LoadManager::GetHighRanterns()
+std::vector<DeferredObject3d*> LoadManager::GetHighRanterns()
 {
 	return highLumiRanterns_;
 }

@@ -147,7 +147,7 @@ void GameCollider::AddEnemy(Enemy* enemy)
 	enemysInfo_.push_back(enemy);
 }
 
-void GameCollider::AddObj(Object3d* obj)
+void GameCollider::AddObj(DeferredObject3d* obj)
 {
 	objectsInfo_.push_back(obj);
 }

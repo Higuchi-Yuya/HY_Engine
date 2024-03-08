@@ -50,8 +50,12 @@ struct CircleShadow
 };
 
 // ライトグループ
-cbuffer LightGroup : register(b0)
+cbuffer LightGroup : register(b1)
 {	
+    float3 ambientColor;
+    float3 diffuseColor; // ディフューズカラー
+    float3 specularColor; // スペキュラーカラー
+    
     DirLight dirLights[DIRLIGHT_NUM];
     PointLight pointLights[POINTLIGHT_NUM];
     SpotLight spotLights[SPOTLIGHT_NUM];
@@ -59,7 +63,7 @@ cbuffer LightGroup : register(b0)
 }
 
 // フォグ
-cbuffer Fog : register(b1)
+cbuffer Fog : register(b0)
 {
     float4 fogColor;
     bool isActiveFog;

@@ -263,7 +263,7 @@ void DeferredObject3d::InitializeShader()
 		   "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
 		   D3D12_APPEND_ALIGNED_ELEMENT,
 		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		});
+	});
 }
 
 void DeferredObject3d::InitializeGraphicsPipelineNormal()
@@ -499,7 +499,7 @@ void DeferredObject3d::Draw(ViewProjection* viewProjection)
 	sCmdList_->SetGraphicsRootSignature(sRootsignature_.Get());
 
 	// プリミティブ形状の設定コマンド
-	sCmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP); // 三角形リスト
+	sCmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
 
 	// ワールド変換データ定数バッファビューをセット
 	sCmdList_->SetGraphicsRootConstantBufferView((uint32_t)rootParameterIndex::WORLDTRANS,

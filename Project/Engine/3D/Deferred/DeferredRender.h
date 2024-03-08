@@ -1,7 +1,7 @@
 #pragma once
 #include "PostRenderBase.h"
-#include <LightGroup.h>
-#include <Fog.h>
+#include "LightGroup.h"
+#include "Fog.h"
 
 class DeferredRender
 {
@@ -16,8 +16,8 @@ private:
         AMBIENTMAP,// アンビエントマップ
         DIFFUSEMAP,// ディフューズマップ
         SPECULARMAP,// スペキュラーマップ
-        LIGHTDATA,// ライトのバッファデータ
         FOGDATA,// フォグのバッファデータ
+        LIGHTDATA,// ライトのバッファデータ
     };
 public:
     // コンストラクタ

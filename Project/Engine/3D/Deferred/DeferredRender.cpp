@@ -36,6 +36,7 @@ void DeferredRender::Initialize()
 
 void DeferredRender::Update()
 {
+	sLight_->Update();
 	sFog_->UpdateMatrix();
 }
 

@@ -70,7 +70,11 @@ cbuffer Fog : register(b0)
     float nearFog;
     float farFog;
 }
-
+// フォグ
+cbuffer CameraData : register(b2)
+{
+    float3 cameraPos;
+}
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {

@@ -2,6 +2,7 @@
 #include "BeatEffect.h"
 #include"LoadManager.h"
 #include "DeferredRender.h"
+
 SceneManager::~SceneManager()
 {
 	loadManager_->Finalize();
@@ -290,6 +291,7 @@ void SceneManager::InitScenesSets()
 	gameScene_->SetLightGroup(light.get());
 	gameScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
+	DeferredRender::SetGameCamera(gameCamera.get());
 }
 
 void SceneManager::LightUpdate()

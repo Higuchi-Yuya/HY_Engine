@@ -1,5 +1,6 @@
 #include "DeferredRender.h"
 #include <PostEffectHandleManager.h>
+
 ID3D12Device* DeferredRender::sDevice_ = nullptr;
 ID3D12GraphicsCommandList* DeferredRender::sCmdList_ = nullptr;
 
@@ -8,7 +9,7 @@ const float DeferredRender::clearColor_[4] = { 0.0f,0.0f,0.0f,0.0f };
 LightGroup* DeferredRender::sLight_ = nullptr;
 Fog* DeferredRender::sFog_ = nullptr;
 D3D12_CPU_DESCRIPTOR_HANDLE DeferredRender::sDsvHandle_;
-
+GameCamera* DeferredRender::sGameCamera_;
 DeferredRender::DeferredRender()
 {
 }
@@ -38,6 +39,7 @@ void DeferredRender::Update()
 {
 	sLight_->Update();
 	sFog_->UpdateMatrix();
+	constMap_->cameraPos = sGameCamera_->GetView().eye;
 }
 
 void DeferredRender::ImguiUpdate()
@@ -73,6 +75,7 @@ void DeferredRender::Draw()
 	// 定数バッファビュー(CBV)の設定コマンド
 	sLight_->Draw(sCmdList_, (uint32_t)rootParameterIndex::LIGHTDATA);
 	sFog_->Draw(sCmdList_, (uint32_t)rootParameterIndex::FOGDATA);
+	sCmdList_->SetGraphicsRootConstantBufferView((uint32_t)rootParameterIndex::CAMERADATA, constBuff_->GetGPUVirtualAddress());
 
 	// 描画コマンド
 	sCmdList_->DrawInstanced(_countof(vertices_), 1, 0, 0); // 全ての頂点を使って描画
@@ -164,6 +167,26 @@ void DeferredRender::CreateVertBuff()
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 	vbView_.SizeInBytes = sizeof(SpriteManager::Vertex) * 4;
 	vbView_.StrideInBytes = sizeof(SpriteManager::Vertex);
+
+	// ヒープ
+	CD3DX12_HEAP_PROPERTIES constHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+
+	// リソースデスク
+	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff);
+
+	// 定数バッファの生成
+	result = sDevice_->CreateCommittedResource(
+		&constHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&constResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuff_));
+	assert(SUCCEEDED(result));
+
+	//定数バッファのマッピング
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
+	assert(SUCCEEDED(result));
 }
 
 void DeferredRender::CreateTex()
@@ -338,7 +361,7 @@ void DeferredRender::CreateGraphicsPipelineState()
 	descRangeSRV6.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 6);// t6 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootParams[9];
+	CD3DX12_ROOT_PARAMETER rootParams[10];
 	rootParams[0].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
 	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
 	rootParams[2].InitAsDescriptorTable(1, &descRangeSRV2, D3D12_SHADER_VISIBILITY_ALL);
@@ -348,7 +371,7 @@ void DeferredRender::CreateGraphicsPipelineState()
 	rootParams[6].InitAsDescriptorTable(1, &descRangeSRV6, D3D12_SHADER_VISIBILITY_ALL);
 	rootParams[7].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootParams[8].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
-
+	rootParams[9].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT);
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;

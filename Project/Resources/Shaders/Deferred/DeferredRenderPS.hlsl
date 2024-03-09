@@ -14,7 +14,7 @@ float4 main(VSOutput input) : SV_TARGET
 	// テクスチャカラー
     float4 texcolor = colorMap.Sample(smp, input.uv);
     float4 worldPos = worldPosMap.Sample(smp, input.uv);
-    float4 cameraPos = cameraPosMap.Sample(smp, input.uv);
+    //float4 cameraPos = cameraPosMap.Sample(smp, input.uv);
     float4 normal = normalMap.Sample(smp, input.uv);
     float4 ambientValue = ambientMap.Sample(smp, input.uv);
     float4 diffuseValue = diffuseMap.Sample(smp, input.uv);
@@ -27,7 +27,7 @@ float4 main(VSOutput input) : SV_TARGET
     const float shininess = 32.0f;
 
 	// 頂点から視点への方向ベクトル
-    float3 eyedir = normalize(cameraPos.xyz - worldPos.xyz);
+    float3 eyedir = normalize(cameraPos - worldPos.xyz);
     
     // シェーディングによる色
     float4 shadecolor = { 0, 0, 0, 1 };
@@ -184,7 +184,7 @@ float4 main(VSOutput input) : SV_TARGET
     {
 
 		// 距離の計算
-        float dis = distance(worldPos.xyz, cameraPos.xyz);
+        float dis = distance(worldPos.xyz, cameraPos);
 
 		// フォグの距離によっての減衰を計算
 		//float rate = smoothstep(nearFog, farFog, dis);
@@ -201,7 +201,9 @@ float4 main(VSOutput input) : SV_TARGET
         return outputColor * f + fogColor * (1.0f - f);
     }
     
+    resultColor = texcolor * shadecolor;
+    
 	// テクスチャの色は使わず色を数値指定
-    return shadecolor * texcolor;
+    return resultColor;
 
 }

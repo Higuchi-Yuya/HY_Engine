@@ -2,7 +2,7 @@
 #include "PostRenderBase.h"
 #include "LightGroup.h"
 #include "Fog.h"
-
+#include "GameCamera.h"
 class DeferredRender
 {
 
@@ -18,6 +18,11 @@ private:
         SPECULARMAP,// スペキュラーマップ
         FOGDATA,// フォグのバッファデータ
         LIGHTDATA,// ライトのバッファデータ
+        CAMERADATA,
+    };
+    //定数バッファ用データ構造体
+    struct ConstBufferData {
+        Vector3 cameraPos;
     };
 public:
     // コンストラクタ
@@ -66,6 +71,12 @@ public:// セッター
     /// </summary>
     /// <param name="dsvHandle"></param>
     static void SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+
+    /// <summary>
+    /// ゲームカメラを設定
+    /// </summary>
+    /// <param name="gameCamera"></param>
+    static void SetGameCamera(GameCamera* gameCamera) { sGameCamera_ = gameCamera; }
 
 public:// ゲッター
 
@@ -116,6 +127,9 @@ private:
     // コマンドリスト
     static ID3D12GraphicsCommandList* sCmdList_;
 
+    // 借りて来るカメラ
+    static GameCamera* sGameCamera_;
+
     // 頂点数
     static const int kVertNum_ = 4;
 
@@ -164,4 +178,7 @@ private:
 
     // フォグ
     static Fog* sFog_;
+
+    // 定数バッファ
+    ConstBufferData* constMap_ = nullptr;
 };

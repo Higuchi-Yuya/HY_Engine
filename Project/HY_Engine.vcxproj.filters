@@ -271,6 +271,18 @@
     <Filter Include="シェーダーファイル\Deferred">
       <UniqueIdentifier>{104d64df-1227-4932-bf1e-4c134c2617e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect\PostDeferred">
+      <UniqueIdentifier>{7e95298c-d479-4bd1-8e39-cde5905a6f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\PostEffect\PostDefrred">
+      <UniqueIdentifier>{9a7ef0b8-45bf-42f9-90b1-081981698628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Deferred">
+      <UniqueIdentifier>{e3c1ac57-4439-4b10-a8b4-e34efc3e72a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Deferred">
+      <UniqueIdentifier>{b3fa34f1-2922-4710-9035-c13ba7101421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -525,11 +537,14 @@
     <ClCompile Include="Application\Enemy\IEnemyState.cpp">
       <Filter>ソース ファイル\Application\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostDefrred.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect\PostDeferred</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\3D\Deferred\DeferredObject3d.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\Deferred</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Deferred\DeferredRender.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Engine\Deferred</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -788,11 +803,14 @@
     <ClInclude Include="Application\Enemy\IEnemyState.h">
       <Filter>ヘッダー ファイル\Application\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostDefrred.h">
+      <Filter>ヘッダー ファイル\Engine\PostEffect\PostDefrred</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\3D\Deferred\DeferredObject3d.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\Deferred</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Deferred\DeferredRender.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Engine\Deferred</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -842,7 +860,10 @@
     <None Include="Resources\Shaders\Deferred\DeferredObjHeader.hlsli">
       <Filter>シェーダーファイル\Deferred</Filter>
     </None>
-    <None Include="Resources\Shaders\Deferred\DeferredRenderHeader.hlsli" />
+    <None Include="Resources\Shaders\Deferred\DeferredRenderHeader.hlsli">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </None>
+    <None Include="Resources\Shaders\Deferred\PostDeferredHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -941,7 +962,13 @@
     <FxCompile Include="Resources\Shaders\Deferred\DeferredObjPS.hlsl">
       <Filter>シェーダーファイル\Deferred</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderVS.hlsl" />
-    <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderPS.hlsl">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderVS.hlsl">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Deferred\PostDeferredPS.hlsl" />
+    <FxCompile Include="Resources\Shaders\Deferred\PostDeferredVS.hlsl" />
   </ItemGroup>
 </Project>

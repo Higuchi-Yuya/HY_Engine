@@ -143,7 +143,7 @@ void LoadManager::LoadLevelDate()
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			DeferredObject3d* newObject = DeferredObject3d::Create();
-			DeferredObject3d* newObj2 = DeferredObject3d::Create();
+			Object3d* newObj2 = Object3d::Create();
 			newObject->SetModel(model);
 			newObj2->SetModel(model);
 
@@ -258,7 +258,7 @@ std::vector<DeferredObject3d*> LoadManager::GetRanterns()
 	return ranterns_;
 }
 
-std::vector<DeferredObject3d*> LoadManager::GetHighRanterns()
+std::vector<Object3d*> LoadManager::GetHighRanterns()
 {
 	return highLumiRanterns_;
 }

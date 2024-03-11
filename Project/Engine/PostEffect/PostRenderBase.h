@@ -36,7 +36,7 @@ public:// メンバ関数
 	/// <summary>
 	/// レンダーターゲットビューの作成
 	/// </summary>
-	void CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& rtvCpuHandle);
+	void CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& rtvCpuHandle, DXGI_FORMAT rtvFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 
 	/// <summary>
 	/// 深度ステンシルビューの作成

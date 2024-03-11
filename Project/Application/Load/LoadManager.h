@@ -65,7 +65,7 @@ public://ゲッター
 	/// 高輝度ランタンのオブジェクトの取得
 	/// </summary>
 	/// <returns></returns>
-	std::vector<DeferredObject3d*>GetHighRanterns();
+	std::vector<Object3d*>GetHighRanterns();
 
 	/// <summary>
 	/// ポイントライトの情報
@@ -130,7 +130,7 @@ private:
 	std::vector<DeferredObject3d*> ranterns_;
 
 	// ランタンの高輝度用配列
-	std::vector<DeferredObject3d*> highLumiRanterns_;
+	std::vector<Object3d*> highLumiRanterns_;
 
 	// ポイントライト情報の配列
 	std::vector<WorldTransform*> pointLightsInfo_;

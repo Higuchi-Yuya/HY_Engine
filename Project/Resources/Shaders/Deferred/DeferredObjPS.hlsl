@@ -9,6 +9,7 @@ PSOutput main(VSOutput input) : SV_TARGET
     PSOutput output;
     float4 texColor = tex.Sample(smp, input.uv);
     float4 baseColor = color * texColor;
+    float4 testWorldPos = { 0, 3, 0, 1 };
     
     output.ColorMap = baseColor;
     output.WorldPosMap = float4(input.worldpos.x, input.worldpos.y, input.worldpos.z, 1.0f);

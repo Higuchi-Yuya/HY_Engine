@@ -25,25 +25,30 @@ void PostEffectManager::Initialize()
 	testDefrredRender_ = std::make_unique<DeferredRender>();
 	testDefrredRender_->Initialize();
 
+	postDeferred_ = std::make_unique<PostDefrred>();
+	postDeferred_->Initialize();
+
 }
 
 void PostEffectManager::Update()
 {
+	
 	//beatEffect_->Update();
 	testDObj->Update();
 	testDefrredRender_->Update();
+	postDeferred_->Update();
 }
 
 void PostEffectManager::ImguiUpdate()
 {
-	
+	postDeferred_->ImguiUpdate();
 
 	beatEffect_->ImguiUpdate();
 }
 
 void PostEffectManager::EffectBloomDraw()
 {
-	beatEffect_->Draw();
+	postDeferred_->Draw(dxCommon_->GetCommandList());
 
 }
 
@@ -53,7 +58,6 @@ void PostEffectManager::BloomDrawSetting()
 	DeferredObject3d::PreDraw(dxCommon_->GetCommandList());
 	testDObj->Draw(&sceneManager_->GetGameCamera());
 	sceneManager_->DrawDefrred3D();
-	sceneManager_->DrawBloomObject();
 
 	DeferredObject3d::PostDraw();
 
@@ -94,10 +98,9 @@ void PostEffectManager::BloomDrawSetting()
 #pragma region 高輝度抽出の描画
 	postLumi_->PreDrawScene(dxCommon_->GetCommandList());
 	
-	DeferredObject3d::PreDraw(dxCommon_->GetCommandList());
-	sceneManager_->DrawBloomObject();
-
-	DeferredObject3d::PostDraw();
+	Object3d::PreDraw(dxCommon_->GetCommandList());
+	sceneManager_->DrawHighLumiObj();
+	Object3d::PostDraw();
 	//higuLumiTarget_->Draw(dxCommon_->GetCommandList());
 
 	postLumi_->PostDrawScene(dxCommon_->GetCommandList());
@@ -115,6 +118,10 @@ void PostEffectManager::BloomDrawSetting()
 	beatEffect_->DrawPass();
 #pragma endregion
 
+	postDeferred_->PreDrawScene(dxCommon_->GetCommandList());
+	beatEffect_->Draw();
+
+	postDeferred_->PostDrawScene();
 
 }
 
@@ -136,10 +143,11 @@ void PostEffectManager::SetDxCommon(DirectXCommon* dxCommon)
 	PostEffectRipples::SetDevice(dxCommon_->GetDevice());
 	PostEffectScaling::SetDevice(dxCommon_->GetDevice());
 	DeferredRender::SetDevice(dxCommon_->GetDevice());
+	PostDefrred::SetDevice(dxCommon_->GetDevice());
 
 	DeferredObject3d::SetDsvHandle(dxCommon_->GetDepthCpuHandle());
 	DeferredRender::SetDsvHandle(dxCommon_->GetDepthCpuHandle());
 	PostTarget::SetDsvHandle(dxCommon_->GetDepthCpuHandle());
 	PostEffectHighLumi::SetDsvHandle(dxCommon_->GetDepthCpuHandle());
-
+	GaussianBlur::SetDsvHandle(dxCommon_->GetDepthCpuHandle());
 }

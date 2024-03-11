@@ -27,6 +27,19 @@ void TitleScene::Initialize()
 	// タイトルのボタンAのスプライト
 	titleKariPressA = std::make_unique<Sprite>();
 	titleKariPressA->Initialize(titleButtonTexHandle.get(), { WinApp::window_width / 2,WinApp::window_height / 2 + 200 }, { 250,50 });
+
+	testModel1_.reset(Model::LoadFromOBJ("box1x1x1"));
+	testModel2_.reset(Model::LoadFromOBJ("ground"));
+	testModel3_.reset(Model::LoadFromOBJ("skydome"));
+
+	testObj1_.reset(DeferredObject3d::Create());
+	testObj1_->SetModel(testModel1_.get());
+	testObj1_->worldTransform_.translation.y += 3;
+	testObj1_->Update();
+	testObj2_.reset(DeferredObject3d::Create());
+	testObj2_->SetModel(testModel2_.get());
+	testObj3_.reset(DeferredObject3d::Create());
+	testObj3_->SetModel(testModel3_.get());
 }
 
 void TitleScene::Update()
@@ -112,6 +125,13 @@ void TitleScene::DrawDefrred3D()
 
 		o->Draw(&gameCamera_->GetView());
 	}
+	// ランタンのオブジェクトの描画
+	for (auto L : ranterns_) {
+		L->Draw(&gameCamera_->GetView());
+	}
+	//testObj1_->Draw(&gameCamera_->GetView());
+	//testObj2_->Draw(&gameCamera_->GetView());
+	//testObj3_->Draw(&gameCamera_->GetView());
 }
 
 void TitleScene::DrawParticle()
@@ -128,20 +148,19 @@ void TitleScene::DrawBloomObject()
 {
 	// ランタンのオブジェクトの描画
 	for (auto L : ranterns_) {
-		L->worldTransform_.IsBloom_ = false;
-		L->worldTransform_.UpdateMatrix();
 		L->Draw(&gameCamera_->GetView());
 	}
 }
 
 void TitleScene::DrawHighLumiObj()
 {
+	Object3d::SetBlendMode(Object3d::BlendMode::BLOOM);
 	// ランタンのオブジェクトの描画
 	for (auto L : highLumiRanterns_) {
-		L->worldTransform_.IsBloom_ = true;
-		L->worldTransform_.UpdateMatrix();
+		L->Update();
 		L->Draw(&gameCamera_->GetView());
 	}
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 }
 
 void TitleScene::Reset()
@@ -166,10 +185,12 @@ void TitleScene::SetObjs(std::vector<DeferredObject3d*> objs,ObjsType objType)
 	case ObjsType::Ranterns:
 		ranterns_ = objs;
 		break;
-	case ObjsType::HiguLumiRanterns:
-		highLumiRanterns_ = objs;
-		break;
 	default:
 		break;
 	}
+}
+
+void TitleScene::SetBloomObjs(std::vector<Object3d*> objs)
+{
+	highLumiRanterns_ = objs;
 }

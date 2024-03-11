@@ -30,7 +30,7 @@ void PostRenderBase::CreateSRV(ID3D12Resource* buffer,D3D12_CPU_DESCRIPTOR_HANDL
 	srvIncrementIndex_++;
 }
 
-void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& rtvCpuHandle)
+void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HANDLE& rtvCpuHandle, DXGI_FORMAT rtvFormat)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE RtvCpuHandle = descHeapRTV_->GetCPUDescriptorHandleForHeapStart();
 
@@ -45,7 +45,7 @@ void PostRenderBase::CreateRTV(ID3D12Resource* buffer, D3D12_CPU_DESCRIPTOR_HAND
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};	// rtv設定構造体
 
 	// シェーダの計算結果をSRGBに変換して書き込む
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.Format = rtvFormat;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	// ハンドルの指す位置にレンダーターゲットビュー作成

@@ -26,6 +26,7 @@ ComPtr<ID3D12PipelineState> Object3d::sPipelinestateSilhouette_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateTransParent_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateShield_ = nullptr;
 ComPtr<ID3D12PipelineState> Object3d::sPipelinestateLightAtten_ = nullptr;
+ComPtr<ID3D12PipelineState> Object3d::sPipelinestateBloom_ = nullptr;
 
 std::vector<D3D12_INPUT_ELEMENT_DESC> Object3d::sInputLayout_;
 
@@ -99,6 +100,9 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 
 	// ライト減衰用のパイプラインの初期化
 	InitGraphicsPipelineLightAtten();
+
+	// ブルーム用のパイプラインの初期化
+	InitializeGraphicsPipelineBloom();
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -628,6 +632,66 @@ void Object3d::InitializeGraphicsPipelineShield()
 	assert(SUCCEEDED(result));
 }
 
+void Object3d::InitializeGraphicsPipelineBloom()
+{
+	HRESULT result = S_FALSE;
+
+	// グラフィックスパイプラインの流れを設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+	gpipeline.VS = *sVsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sVsBlob_.Get());
+	gpipeline.PS = *sPsShader_->GetShader();//CD3DX12_SHADER_BYTECODE(sPsBlob_.Get());
+
+	// サンプルマスク
+	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// ラスタライザステート
+	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// デプスステンシルステート
+	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	//gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER;
+
+	// レンダーターゲットのブレンド設定
+	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	// ブレンドステートの設定
+	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+
+	// 深度バッファのフォーマット
+	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+
+	// 頂点レイアウトの設定
+	gpipeline.InputLayout.pInputElementDescs = sInputLayout_.data();
+	gpipeline.InputLayout.NumElements = (UINT)sInputLayout_.size();
+
+	// 図形の形状設定（三角形）
+	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
+	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+	gpipeline.pRootSignature = sRootsignature_.Get();
+
+	// グラフィックスパイプラインの生成
+	result = sDevice_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sPipelinestateBloom_));
+	assert(SUCCEEDED(result));
+}
+
 void Object3d::InitializeShaderSilhouette()
 {
 	// 頂点シェーダの読み込みとコンパイル
@@ -960,6 +1024,9 @@ void Object3d::SetBlendMode(BlendMode mode)
 	case Object3d::LightAtten:// 光の減衰用
 		sCmdList_->SetPipelineState(sPipelinestateLightAtten_.Get());
 		break;
+	case Object3d::BLOOM:
+		sCmdList_->SetPipelineState(sPipelinestateBloom_.Get());
+		break;
 	default:
 		break;
 	}
@@ -977,6 +1044,7 @@ void Object3d::StaticFinalize()
 	sPipelinestateTransParent_ = nullptr;
 	sPipelinestateShield_ = nullptr;
 	sPipelinestateLightAtten_ = nullptr;
+	sPipelinestateBloom_ = nullptr;
 
 	sInputLayout_.clear();
 }

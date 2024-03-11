@@ -123,7 +123,7 @@ void PostEffectHighLumi::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 
 
 	// 深度バッファのクリア
-	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	//cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void PostEffectHighLumi::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
@@ -320,8 +320,8 @@ void PostEffectHighLumi::CreateGraphicsPipelineState()
 
 	// デプスステンシルステート
 	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;// 常に上書きルール
-
+	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;// 常に上書きルール
+	pipelineDesc.DepthStencilState.DepthEnable = true;
 	// レンダーターゲットのブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;// RBGA全てのチャンネルを描画

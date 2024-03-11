@@ -241,6 +241,10 @@ void GameScene::DrawDefrred3D()
 		o->Draw(&gameCamera_->GetView());
 	}
 	gameCollider_->Draw3D(&gameCamera_->GetView());
+
+	for (auto L : ranterns_) {
+		L->Draw(&gameCamera_->GetView());
+	}
 }
 
 void GameScene::DrawParticle()
@@ -278,19 +282,20 @@ void GameScene::DrawBloomObject()
 	for (auto L : ranterns_) {
 		L->worldTransform_.IsBloom_ = false;
 		L->worldTransform_.UpdateMatrix();
-		L->Draw(&gameCamera_->GetView());
+		L->DrawBloom(&gameCamera_->GetView());
 	}
 
 }
 
 void GameScene::DrawHighLumiObj()
 {
+	Object3d::SetBlendMode(Object3d::BlendMode::BLOOM);
 	// ランタンのオブジェクトの描画
 	for (auto L : highLumiRanterns_) {
-		L->worldTransform_.IsBloom_ = true;
-		L->worldTransform_.UpdateMatrix();
+		L->Update();
 		L->Draw(&gameCamera_->GetView());
 	}
+	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 }
 
 void GameScene::DrawTransParentObj()
@@ -439,12 +444,14 @@ void GameScene::SetObjs(std::vector<DeferredObject3d*> objs, ObjsType objType)
 	case ObjsType::Ranterns:
 		ranterns_ = objs;
 		break;
-	case ObjsType::HiguLumiRanterns:
-		highLumiRanterns_ = objs;
-		break;
 	default:
 		break;
 	}
+}
+
+void GameScene::SetBloomObjs(std::vector<Object3d*> objs)
+{
+	highLumiRanterns_ = objs;
 }
 
 void GameScene::SetBeatEffect(BeatEffect* beatEffect)

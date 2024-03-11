@@ -276,7 +276,7 @@ void SceneManager::InitScenesSets()
 	titleScene_->SetObjs(loadManager_->GetObjects(), TitleScene::Normal);
 	titleScene_->SetObjs(loadManager_->GetLatticeDoors(), TitleScene::Doors);
 	titleScene_->SetObjs(loadManager_->GetRanterns(), TitleScene::Ranterns);
-	titleScene_->SetObjs(loadManager_->GetHighRanterns(), TitleScene::HiguLumiRanterns);
+	titleScene_->SetBloomObjs(loadManager_->GetHighRanterns());
 	titleScene_->SetLightGroup(light.get());
 	titleScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
@@ -287,7 +287,7 @@ void SceneManager::InitScenesSets()
 	gameScene_->SetObjs(loadManager_->GetObjects(), GameScene::Normal);
 	gameScene_->SetObjs(loadManager_->GetLatticeDoors(), GameScene::Doors);
 	gameScene_->SetObjs(loadManager_->GetRanterns(), GameScene::Ranterns);
-	gameScene_->SetObjs(loadManager_->GetHighRanterns(), GameScene::HiguLumiRanterns);
+	gameScene_->SetBloomObjs(loadManager_->GetHighRanterns());
 	gameScene_->SetLightGroup(light.get());
 	gameScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 

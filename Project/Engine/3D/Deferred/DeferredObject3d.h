@@ -44,6 +44,12 @@ public: // 静的メンバ関数
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
 	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
+	static void PreDrawBloom(ID3D12GraphicsCommandList* cmdList);
+
+	/// <summary>
 	/// 描画後処理
 	/// </summary>
 	static void PostDraw();
@@ -88,6 +94,12 @@ private:
 	// ノーマルブレンド
 	static void InitializeGraphicsPipelineNormal();
 
+	// ノーマルブレンド
+	static void InitializeGraphicsPipelineTex();
+
+	// ノーマルブレンド
+	static void InitializeGraphicsPipelineBloom();
+
 	/// <summary>
 	/// 頂点バッファの生成
 	/// </summary>
@@ -130,6 +142,8 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12RootSignature> sRootsignature_;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> sPipelinestateNormal_;
+	static ComPtr<ID3D12PipelineState> sPipelinestateTex_;
+	static ComPtr<ID3D12PipelineState> sPipelinestateBloom_;
 
 	// インプットレイアウト
 	static std::vector<D3D12_INPUT_ELEMENT_DESC> sInputLayout_;
@@ -141,6 +155,7 @@ private: // 静的メンバ変数
 	static ShaderObj* sVsShader_;// 頂点シェーダー
 	static ShaderObj* sPsShader_;// ピクセルシェーダー
 
+	static DXGI_FORMAT rtvFormat_[7];
 
 	// テクスチャバッファ
 	static Microsoft::WRL::ComPtr<ID3D12Resource> texBuff_[7];
@@ -198,6 +213,11 @@ public: // メンバ関数
 	void Draw(ViewProjection * viewProjection);
 
 	/// <summary>
+	/// 描画
+	/// </summary>
+	void DrawBloom(ViewProjection* viewProjection);
+
+	/// <summary>
 	/// ワールド行列の取得
 	/// </summary>
 	const Matrix4& GetMatWorld() { return worldTransform_.matWorld_; }
@@ -215,7 +235,7 @@ public:// パブリック変数
 private: // メンバ変数
 	// モデル
 	Model* model_ = nullptr;
-
+	
 
 protected:// メンバ変数
 	// クラス名（デバッグ用）

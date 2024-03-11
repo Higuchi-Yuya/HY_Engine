@@ -138,6 +138,12 @@ public:// セッター
 	void SetObjs(std::vector<DeferredObject3d*> objs,ObjsType objType);
 
 	/// <summary>
+	/// ブルームオブジェクトを設定
+	/// </summary>
+	/// <param name="objs"></param>
+	void SetBloomObjs(std::vector<Object3d*>objs);
+
+	/// <summary>
 	/// ライトグループを設定
 	/// </summary>
 	/// <param name="lightGroup">ライトグループ</param>
@@ -290,7 +296,7 @@ private:// メンバ変数
 	std::vector<DeferredObject3d*> ranterns_;
 
 	// ランタンの高輝度用配列
-	std::vector<DeferredObject3d*> highLumiRanterns_;
+	std::vector<Object3d*> highLumiRanterns_;
 #pragma endregion
 
 #pragma region アイテム関連

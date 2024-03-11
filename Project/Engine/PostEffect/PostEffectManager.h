@@ -8,6 +8,7 @@
 #include "BeatEffect.h"
 #include "DeferredObject3d.h"
 #include "DeferredRender.h"
+#include "PostDefrred.h"
 
 class PostEffectManager
 {
@@ -33,6 +34,8 @@ private:// メンバー変数
 	std::unique_ptr<DeferredObject3d>testDObj;
 
 	std::unique_ptr<DeferredRender>testDefrredRender_;
+
+	std::unique_ptr<PostDefrred> postDeferred_;
 
 private:// 借りてくるもの
 

@@ -114,7 +114,7 @@ void DeferredRender::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	cmdList->ClearRenderTargetView(rtvH, clearColor_, 0, nullptr);
 
 	// 深度バッファのクリア
-	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	//cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
 
 void DeferredRender::PostDrawScene()
@@ -308,6 +308,7 @@ void DeferredRender::CreateGraphicsPipelineState()
 
 	// デプスステンシルステート
 	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	pipelineDesc.DepthStencilState.DepthEnable = false;
 	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;// 常に上書きルール
 
 	// レンダーターゲットのブレンド設定

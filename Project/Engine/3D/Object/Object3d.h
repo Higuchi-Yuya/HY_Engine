@@ -50,6 +50,7 @@ public:
 		TransParent,    // 窓透過用
 		Shield,			// 窓遮蔽物用
 		LightAtten,		// 光の減衰が違う用
+		BLOOM,
 		BLEND_NUMMAX,
 	};
 
@@ -136,6 +137,9 @@ public: // 静的メンバ関数
 	// 窓遮蔽物用(ステンシル書き込み側)
 	static void InitializeGraphicsPipelineShield();
 
+	// 窓遮蔽物用(ステンシル書き込み側)
+	static void InitializeGraphicsPipelineBloom();
+
 	// シルエット用のシェーダーオブジェクト
 	static void InitializeShaderSilhouette();
 
@@ -144,6 +148,8 @@ public: // 静的メンバ関数
 
 	// ライトの減衰用のシェーダーオブジェクト
 	static void InitShaderLightAtten();
+
+
 
 	/// <summary>
 	/// ブレンドモード設定
@@ -177,6 +183,9 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12PipelineState> sPipelinestateSUBTRACTION_;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> sPipelinestateSCREEN_;
+
+	// ブルーム用のパイプラインステート
+	static ComPtr<ID3D12PipelineState> sPipelinestateBloom_;
 
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> sPipelinestateSilhouette_;

@@ -92,6 +92,12 @@ public:// セッター
 	void SetObjs(std::vector<DeferredObject3d*> objs,ObjsType objType);
 
 	/// <summary>
+	/// ブルームオブジェクトを設定
+	/// </summary>
+	/// <param name="objs"></param>
+	void SetBloomObjs(std::vector<Object3d*> objs);
+
+	/// <summary>
 	/// ライトグループを設定
 	/// </summary>
 	/// <param name="lightGroup">ライトグループ</param>
@@ -146,7 +152,15 @@ private:// メンバ変数
 	std::vector<DeferredObject3d*> ranterns_;
 
 	// ランタンの高輝度用配列
-	std::vector<DeferredObject3d*> highLumiRanterns_;
+	std::vector<Object3d*> highLumiRanterns_;
+
+	std::unique_ptr < Model> testModel1_;
+	std::unique_ptr < Model> testModel2_;
+	std::unique_ptr < Model> testModel3_;
+
+	std::unique_ptr < DeferredObject3d> testObj1_;
+	std::unique_ptr < DeferredObject3d> testObj2_;
+	std::unique_ptr < DeferredObject3d> testObj3_;
 
 	// シーン終了フラグ
 	bool IsSceneFinsh_;

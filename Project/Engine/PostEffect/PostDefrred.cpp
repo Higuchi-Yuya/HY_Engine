@@ -1,15 +1,16 @@
-#include "GaussianBlur.h"
-#include "PostEffectHandleManager.h"
+#include "PostDefrred.h"
+#include <PostEffectHandleManager.h>
+#include <imgui.h>
+ID3D12GraphicsCommandList* PostDefrred::sCmdList_;
+ID3D12Device* PostDefrred::sDevice_ = nullptr;
 
-ID3D12Device* GaussianBlur::sDevice_ = nullptr;
+const float PostDefrred::clearColor_[4] = { 0.0f,0.0f,0.0f,0.0f };
 
-const float GaussianBlur::clearColor_[4] = { 0.1f,0.1f,0.1f,0.0f };// ミドリっぽい色
-D3D12_CPU_DESCRIPTOR_HANDLE GaussianBlur::sDsvHandle_;
-GaussianBlur::GaussianBlur()
+PostDefrred::PostDefrred()
 {
 }
 
-void GaussianBlur::Initialize()
+void PostDefrred::Initialize()
 {
 	CreateVertBuff();
 
@@ -25,24 +26,30 @@ void GaussianBlur::Initialize()
 
 	CreateGraphicsPipelineState();
 
-	PostEffectHandleManager::SetPostEffectHandle("GaussianBlur", handles_);
+
 }
 
-void GaussianBlur::Draw(ID3D12GraphicsCommandList* cmdList)
+void PostDefrred::Update()
 {
-	// 定数バッファにデータ転送
-	SpriteManager::ConstBufferData* constMap = nullptr;
-	Matrix4 mathMat;
+	constMap_->texNum = texNum_;
+}
 
-	result = constBuff_->Map(0, nullptr, (void**)&constMap);
-	if (SUCCEEDED(result)) {
-		constMap->color = { 1,1,1,1 };
-		constMap->mat = mathMat.identity();
-		constBuff_->Unmap(0, nullptr);
-	}
+void PostDefrred::ImguiUpdate()
+{
+	// 表示項目の追加--------//
+	ImGui::Begin("postDeferred");
 
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+
+	ImGui::InputInt("texNum", &texNum_);
+
+	ImGui::End();
+}
+
+void PostDefrred::Draw(ID3D12GraphicsCommandList* cmdList)
+{
 	// パイプラインステートの設定
-	// パイプラインステートとルートシグネチャの設定コマンド
+// パイプラインステートとルートシグネチャの設定コマンド
 	cmdList->SetPipelineState(pipelineState_.Get());
 	cmdList->SetGraphicsRootSignature(rootSignature_.Get());
 
@@ -54,20 +61,28 @@ void GaussianBlur::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// SRVヒープの先頭にあるSRVをルートパラメータ1番に設定
-	cmdList->SetGraphicsRootDescriptorTable(1, handles_.srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::TARGETSCENE, handles_.srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::WORLDPOSMAP, PostEffectHandleManager::GetPostEffectHandle("worldPosMap").srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::CAMERAPOSMAP, PostEffectHandleManager::GetPostEffectHandle("cameraPosMap").srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::NORMALMAP, PostEffectHandleManager::GetPostEffectHandle("normalMap").srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::AMBIENTMAP, PostEffectHandleManager::GetPostEffectHandle("ambientMap").srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::DIFFUSEMAP, PostEffectHandleManager::GetPostEffectHandle("diffuseMap").srvGpuHandle_);
+	sCmdList_->SetGraphicsRootDescriptorTable((uint32_t)rootParameterIndex::SPECULARMAP, PostEffectHandleManager::GetPostEffectHandle("specularMap").srvGpuHandle_);
 
 	// 頂点バッファビューの設定コマンド
 	cmdList->IASetVertexBuffers(0, 1, &vbView_);
 
 	// 定数バッファビュー(CBV)の設定コマンド
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView((uint32_t)rootParameterIndex::TEXNUM, constBuff_->GetGPUVirtualAddress());
 
 	// 描画コマンド
 	cmdList->DrawInstanced(_countof(vertices_), 1, 0, 0); // 全ての頂点を使って描画
 }
 
-void GaussianBlur::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
+void PostDefrred::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 {
+	sCmdList_ = cmdList;
+
 	// リソースバリアを作成
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -80,7 +95,7 @@ void GaussianBlur::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH =
-		sDsvHandle_;
+		handles_.dsvCpuHandle_;
 
 	// レンダーターゲットをセット
 	cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
@@ -97,32 +112,27 @@ void GaussianBlur::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	cmdList->ClearRenderTargetView(rtvH, clearColor_, 0, nullptr);
 
 	// 深度バッファのクリア
-	//cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
 
-void GaussianBlur::PostDrawScene(ID3D12GraphicsCommandList* cmdList)
+void PostDefrred::PostDrawScene()
 {
 	// リソースバリアを作成
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 	// リソースバリアを変更（描画可能シェーダーリソース）
-	cmdList->ResourceBarrier(1, &resourceBarrier);
+	sCmdList_->ResourceBarrier(1, &resourceBarrier);
 }
 
-void GaussianBlur::SetDevice(ID3D12Device* device)
+void PostDefrred::SetDevice(ID3D12Device* device)
 {
 	sDevice_ = device;
 }
 
-void GaussianBlur::SetDsvHandle(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
-{
-	sDsvHandle_ = dsvHandle;
-}
-
-void GaussianBlur::CreateVertBuff()
+void PostDefrred::CreateVertBuff()
 {
 	// 頂点バッファの設定
-	// ヒープ
+// ヒープ
 	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// テクスチャリソース設定
 	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(SpriteManager::Vertex) * kVertNum_);
@@ -155,7 +165,7 @@ void GaussianBlur::CreateVertBuff()
 	CD3DX12_HEAP_PROPERTIES constHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
 	// リソースデスク
-	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(SpriteManager::ConstBufferData) + 0xff) & ~0xff);
+	CD3DX12_RESOURCE_DESC constResDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataComposition) + 0xff) & ~0xff);
 
 	// 定数バッファの生成
 	result = sDevice_->CreateCommittedResource(
@@ -166,9 +176,13 @@ void GaussianBlur::CreateVertBuff()
 		nullptr,
 		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
+
+	//定数バッファのマッピング
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);//マッピング
+	assert(SUCCEEDED(result));
 }
 
-void GaussianBlur::CreateTex()
+void PostDefrred::CreateTex()
 {
 	// テクスチャリソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -196,17 +210,17 @@ void GaussianBlur::CreateTex()
 	assert(SUCCEEDED(result));
 }
 
-void GaussianBlur::CreateSRV()
+void PostDefrred::CreateSRV()
 {
 	PostRenderBase::GetInstance()->CreateSRV(texBuff_.Get(), handles_.srvCpuHandle_, handles_.srvGpuHandle_);
 }
 
-void GaussianBlur::CreateRTV()
+void PostDefrred::CreateRTV()
 {
 	PostRenderBase::GetInstance()->CreateRTV(texBuff_.Get(), handles_.rtvCpuHandle_);
 }
 
-void GaussianBlur::CreateDepthBuff()
+void PostDefrred::CreateDepthBuff()
 {
 	// 深度バッファリソース設定
 	CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -234,14 +248,15 @@ void GaussianBlur::CreateDepthBuff()
 		IID_PPV_ARGS(&depthBuff_)
 	);
 	assert(SUCCEEDED(result));
+	depthBuff_->SetName(L"postDefrredDepth");
 }
 
-void GaussianBlur::CreateDSV()
+void PostDefrred::CreateDSV()
 {
 	PostRenderBase::GetInstance()->CreateDSV(depthBuff_.Get(), handles_.dsvCpuHandle_, DXGI_FORMAT_D32_FLOAT_S8X24_UINT);
 }
 
-void GaussianBlur::CreateGraphicsPipelineState()
+void PostDefrred::CreateGraphicsPipelineState()
 {
 	result = S_FALSE;
 
@@ -249,11 +264,11 @@ void GaussianBlur::CreateGraphicsPipelineState()
 
 	// 頂点シェーダの読み込みとコンパイル
 	vsShader_ = std::make_unique<ShaderObj>();
-	vsShader_->Create("PostEffect/Bloom/GaussianBlurVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
+	vsShader_->Create("Deferred/PostDeferredVS.hlsl", "main", "vs_5_0", ShaderObj::ShaderType::VS);
 
 	// ピクセルシェーダの読み込みとコンパイル
 	psShader_ = std::make_unique<ShaderObj>();
-	psShader_->Create("PostEffect/Bloom/GaussianBlurPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
+	psShader_->Create("Deferred/PostDeferredPS.hlsl", "main", "ps_5_0", ShaderObj::ShaderType::PS);
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
@@ -286,6 +301,7 @@ void GaussianBlur::CreateGraphicsPipelineState()
 
 	// デプスステンシルステート
 	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	pipelineDesc.DepthStencilState.DepthEnable = false;
 	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;// 常に上書きルール
 
 	// レンダーターゲットのブレンド設定
@@ -325,11 +341,29 @@ void GaussianBlur::CreateGraphicsPipelineState()
 	// デスクリプタレンジ
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
 	descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);// t0 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);// t1 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV2;
+	descRangeSRV2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);// t2 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV3;
+	descRangeSRV3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 3);// t3 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV4;
+	descRangeSRV4.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 4);// t4 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV5;
+	descRangeSRV5.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 5);// t5 レジスタ
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV6;
+	descRangeSRV6.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 6);// t6 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootParams[2];
-	rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+	CD3DX12_ROOT_PARAMETER rootParams[8];
+	rootParams[0].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[2].InitAsDescriptorTable(1, &descRangeSRV2, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[3].InitAsDescriptorTable(1, &descRangeSRV3, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[4].InitAsDescriptorTable(1, &descRangeSRV4, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[5].InitAsDescriptorTable(1, &descRangeSRV5, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[6].InitAsDescriptorTable(1, &descRangeSRV6, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[7].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT);

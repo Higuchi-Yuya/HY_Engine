@@ -56,7 +56,7 @@ void PostEffectManager::BloomDrawSetting()
 {
 	// ------- ディファード用のオブジェクト ------- //
 	DeferredObject3d::PreDraw(dxCommon_->GetCommandList());
-	testDObj->Draw(&sceneManager_->GetGameCamera());
+	//testDObj->Draw(&sceneManager_->GetGameCamera());
 	sceneManager_->DrawDefrred3D();
 
 	DeferredObject3d::PostDraw();

@@ -863,7 +863,9 @@
     <None Include="Resources\Shaders\Deferred\DeferredRenderHeader.hlsli">
       <Filter>シェーダーファイル\Deferred</Filter>
     </None>
-    <None Include="Resources\Shaders\Deferred\PostDeferredHeader.hlsli" />
+    <None Include="Resources\Shaders\Deferred\PostDeferredHeader.hlsli">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\BasicPS.hlsl">
@@ -968,7 +970,11 @@
     <FxCompile Include="Resources\Shaders\Deferred\DeferredRenderVS.hlsl">
       <Filter>シェーダーファイル\Deferred</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Deferred\PostDeferredPS.hlsl" />
-    <FxCompile Include="Resources\Shaders\Deferred\PostDeferredVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\Deferred\PostDeferredPS.hlsl">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Deferred\PostDeferredVS.hlsl">
+      <Filter>シェーダーファイル\Deferred</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

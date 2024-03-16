@@ -283,6 +283,12 @@
     <Filter Include="ヘッダー ファイル\Engine\Deferred">
       <UniqueIdentifier>{b3fa34f1-2922-4710-9035-c13ba7101421}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Light">
+      <UniqueIdentifier>{d5f2d8b3-b11d-4e3e-8315-89daeb7db2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Light">
+      <UniqueIdentifier>{65e72947-e53d-41a7-b018-f96fe0612b5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -545,6 +551,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\Deferred\DeferredRender.cpp">
       <Filter>ソース ファイル\Engine\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Light\GameLight.cpp">
+      <Filter>ソース ファイル\Application\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -811,6 +820,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Deferred\DeferredRender.h">
       <Filter>ヘッダー ファイル\Engine\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Light\GameLight.h">
+      <Filter>ヘッダー ファイル\Application\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

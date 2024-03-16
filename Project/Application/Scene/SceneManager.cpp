@@ -105,6 +105,9 @@ void SceneManager::Initialize()
 	gameScene_->Initialize();
 	gameClearScene_->Initialize();
 	gameOverScene_->Initialize();
+	
+	gameScene_->SetLightGroup(light.get());
+	gameScene_->SetPointInfo(loadManager_->GetPointLightInfo());
 
 	currentScene_ = titleScene_.get();
 #pragma endregion
@@ -288,8 +291,7 @@ void SceneManager::InitScenesSets()
 	gameScene_->SetObjs(loadManager_->GetLatticeDoors(), GameScene::Doors);
 	gameScene_->SetObjs(loadManager_->GetRanterns(), GameScene::Ranterns);
 	gameScene_->SetBloomObjs(loadManager_->GetHighRanterns());
-	gameScene_->SetLightGroup(light.get());
-	gameScene_->SetPointInfo(loadManager_->GetPointLightInfo());
+
 
 	DeferredRender::SetGameCamera(gameCamera.get());
 }

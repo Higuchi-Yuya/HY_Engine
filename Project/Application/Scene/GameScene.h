@@ -5,7 +5,6 @@
 #include "ViewProjection.h"
 #include "Model.h"
 #include "Quaternion.h"
-#include "LightGroup.h"
 #include "ImGuiManager.h"
 #include "CollisionPrimitive.h"
 #include "LevelLoder.h"
@@ -25,6 +24,7 @@
 #include "ItemPaper.h"
 #include "BeatEffect.h"
 #include "IScene.h"
+#include "GameLight.h"
 
 class GameScene:public IScene
 {
@@ -35,13 +35,7 @@ public:
 		Ranterns,
 		HiguLumiRanterns
 	};
-private:
-	enum FlashState {
-		None,// 何もないとき
-		Shine,// 光る
-		Atten,// 減衰
-		BackDefu,// 元の状態に戻す
-	};
+
 
 public:// メンバ関数
 	
@@ -144,22 +138,22 @@ public:// セッター
 	void SetBloomObjs(std::vector<Object3d*>objs);
 
 	/// <summary>
+	/// 鼓動エフェクトを設定
+	/// </summary>
+	/// <param name="beatEffect"></param>
+	void SetBeatEffect(BeatEffect* beatEffect);
+
+	/// <summary>
 	/// ライトグループを設定
 	/// </summary>
 	/// <param name="lightGroup">ライトグループ</param>
-	void SetLightGroup(LightGroup* lightGroup) { lightGroup_ = lightGroup; }
+	void SetLightGroup(LightGroup* lightGroup);
 
 	/// <summary>
 	/// ポイントライトの情報を設定
 	/// </summary>
 	/// <param name="pointLightsInfo">ポイントライトの情報が格納されている配列</param>
-	void SetPointInfo(std::vector<WorldTransform*> pointLightsInfo) { pointLightsInfo_ = pointLightsInfo; }
-
-	/// <summary>
-	/// 鼓動エフェクトを設定
-	/// </summary>
-	/// <param name="beatEffect"></param>
-	void SetBeatEffect(BeatEffect* beatEffect);
+	void SetPointInfo(std::vector<WorldTransform*> pointLightsInfo);
 
 public:// ゲッター
 
@@ -221,20 +215,13 @@ private:// メンバ変数
 	// 借りてくるコマンドリスト
 	ID3D12GraphicsCommandList* commandList_ = nullptr;
 
-	//	借りてくるライトグループ
-	LightGroup* lightGroup_;
-
-	// ポイントライト情報の配列
-	std::vector<WorldTransform*> pointLightsInfo_;
-
 	// シーン終了フラグ
 	bool IsSceneFinsh_;
 
 	// ゲームクリアしてるかフラグ
 	bool IsGameClear_;
 
-	float spotDownPosY = 0.4f;
-	Vector3 circleShadowCasterPos = { 0,0,0 };
+	
 #pragma region オブジェクト関連
 	bool isDissolve = false;
 	std::unique_ptr<Model> playerModel_ = nullptr;
@@ -249,12 +236,6 @@ private:// メンバ変数
 #pragma region プレイヤー関連
 	std::unique_ptr<Player> player_;
 
-	// プレイヤーのポイントライトの輝度
-	float playerPointLightIndensity = 0.8f;
-	// プレイヤーのポイントライトの範囲
-	float playerPointLightRadius_ = 2;
-	// プレイヤーのポイントライトの減衰値
-	float playerPointLightDecay_ = 1;
 #pragma endregion
 
 #pragma region 当たり判定関連
@@ -342,28 +323,7 @@ private:// メンバ変数
 
 	bool IsTipsDisplay = false;
 
-#pragma region フラッシュ関連
-	// フラッシュの状態
-	FlashState flashState_ = FlashState::Shine;
-
-	// フラッシュのカウント
-	int flashCount_ = 0;
-	int flashCountMax_ = 3;
-
-	// フラッシュの状態ごとの輝度の値
-	float flashDefuValue_ = 1;
-	float flashMiddleValue_ = 20;
-	float flashMaxValue_ = 200;
-	float flashNowValue_ = 1;
-
-	// フラッシュ用のイージング
-	Easing easeFlash_;
-	int easeFlashMiddleTimeLimit = 10;
-	int easeFlashMaxTimeLimit_ = 30;
-
-#pragma endregion
-
-
-	float spotIndensity = 1;
+	// ゲームライト
+	std::unique_ptr<GameLight> gameLight_;
 };
 

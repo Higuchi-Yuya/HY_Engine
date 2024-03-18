@@ -128,78 +128,7 @@ void SceneManager::Update()
 
 void SceneManager::ImguiUpdate()
 {
-	ImGui::SetNextWindowSize(ImVec2(500, 250));
-	ImGui::Begin("Light");
-
-	// 平行光源
-	if (ImGui::TreeNode("DirectionalLight")) {
-		ImGui::Checkbox("Is Active", &isActiveDirectional);
-
-		ImGui::ColorEdit3("ambientColor", &AmColor.x);
-		ImGui::ColorEdit3("diffuseColor", &DiColor.x);
-		ImGui::ColorEdit3("specularColor", &SpColor.x);
-
-		ImGui::TreePop();
-	}
-	// ポイントライト
-	if (ImGui::TreeNode("PointLight")) {
-		//ImGui::Checkbox("Is Active", &isActivePoint);
-
-		ImGui::InputFloat3("pointLightPos", pointLightPos);
-		ImGui::ColorEdit3("pointLightColor", &pointLightColor.x, ImGuiColorEditFlags_Float);
-		ImGui::SliderFloat3("pointLightAtten", &pointLightAtten.x, 0, 1);
-
-		ImGui::InputFloat("pointLightIndensity", &pointLightIndensity);
-		ImGui::InputFloat("pointLightRadius", &pointLightRadius);
-		ImGui::InputFloat("pointLightDecay", &pointLightDecay);
-		ImGui::InputFloat("pointLightDistance", &pointLightDistance);
-
-		ImGui::TreePop();
-	}
-	// スポットライト
-	if (ImGui::TreeNode("spotLight")) {
-		ImGui::Checkbox("Is Active", &isActiveSpot);
-
-		ImGui::InputFloat3("spotLightPos", &spotLightPos.x);
-		ImGui::InputFloat3("spotLightDir", &spotLightDir.x);
-		ImGui::InputFloat3("spotLightAtten", &spotLightAtten.x);
-		ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
-		ImGui::InputFloat2("spotLightFactorAngle", &spotLightFactorAngle.x);
-
-		ImGui::TreePop();
-	}
-	// 丸影
-	if (ImGui::TreeNode("circleShadow")) {
-		ImGui::Checkbox("Is Active", &isActiveCircleShadow);
-
-		ImGui::InputFloat3("circleShadowPos", &circleShadowCasterPos.x);
-		ImGui::InputFloat3("circleShadowDir", &circleShadowDir.x);
-		//ImGui::ColorEdit3("spotLightColor", &spotLightColor.x, ImGuiColorEditFlags_Float);
-		ImGui::InputFloat3("circleShadowAtten", &circleShadowAtten.x);
-		ImGui::InputFloat2("circleShadowFactorAngle", &circleShadowFactorAngle.x);
-
-		ImGui::TreePop();
-	}
-	// フォグ
-	if (ImGui::TreeNode("Fog")) {
-		ImGui::Checkbox("Is Active", &isFogActive);
-
-		if (isFogActive == true) {
-			fog->isActiveFog = true;
-		}
-		else if (isFogActive == false) {
-			fog->isActiveFog = false;
-		}
-
-		ImGui::SliderFloat("nearFog", &fog->nearFog, 0.0f, 100.0f, "%.1f");
-		ImGui::SliderFloat("farFog", &fog->farFog, 50.0f, 500.0f, "%.1f");
-		ImGui::ColorEdit4("fogColor", &fog->fogColor.x, ImGuiColorEditFlags_Float);
-		ImGui::TreePop();
-	}
-
-	ImGui::End();
-
-	currentScene_->ImguiUpdate();
+	//currentScene_->ImguiUpdate();
 }
 
 void SceneManager::Draw2DBack()

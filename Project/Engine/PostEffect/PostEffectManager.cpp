@@ -43,7 +43,7 @@ void PostEffectManager::ImguiUpdate()
 {
 	postDeferred_->ImguiUpdate();
 
-	beatEffect_->ImguiUpdate();
+	//beatEffect_->ImguiUpdate();
 }
 
 void PostEffectManager::EffectBloomDraw()

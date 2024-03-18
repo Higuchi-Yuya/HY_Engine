@@ -63,24 +63,24 @@ void GameCamera::TitleUpdate()
 	}
 	
 	
-	ImGui::Begin("gameCamera");
+	//ImGui::Begin("gameCamera");
 
-	//ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(500, 100));
+	////ImGui::SetWindowPos(ImVec2(0, 0));
+	//ImGui::SetNextWindowSize(ImVec2(500, 100));
 
-	//ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
-	ImGui::InputFloat("ainfo", &aInfo);
-	ImGui::InputFloat3("angle", &angle_.x);
-	ImGui::InputFloat3("rotPos", &rotPos.x);
-	ImGui::InputFloat3("rotnorm", &rotNorm.x);
-	ImGui::InputFloat3("rotnorm", &vel.x);
-	ImGui::InputFloat("chagePos Y", &offSet.y);
-	ImGui::InputFloat3("worldRot", &worldTransform_.rotation.x, "%.2f");
-	ImGui::InputFloat3("worldPos", &worldTransform_.translation.x, "%.2f");
-	ImGui::InputFloat3("cameraEye", &viewProjection_.eye.x, "%.2f");
-	ImGui::InputFloat3("cameraTraget", &viewProjection_.target.x, "%.2f");
+	////ImGui::InputFloat2("joySrick", &joyStickInfo.x, "%.2f");
+	//ImGui::InputFloat("ainfo", &aInfo);
+	//ImGui::InputFloat3("angle", &angle_.x);
+	//ImGui::InputFloat3("rotPos", &rotPos.x);
+	//ImGui::InputFloat3("rotnorm", &rotNorm.x);
+	//ImGui::InputFloat3("rotnorm", &vel.x);
+	//ImGui::InputFloat("chagePos Y", &offSet.y);
+	//ImGui::InputFloat3("worldRot", &worldTransform_.rotation.x, "%.2f");
+	//ImGui::InputFloat3("worldPos", &worldTransform_.translation.x, "%.2f");
+	//ImGui::InputFloat3("cameraEye", &viewProjection_.eye.x, "%.2f");
+	//ImGui::InputFloat3("cameraTraget", &viewProjection_.target.x, "%.2f");
 
-	ImGui::End();
+	//ImGui::End();
 	// ビューの更新処理
 	viewProjection_.UpdateMatrix();
 }
@@ -105,22 +105,22 @@ void GameCamera::GameUpdate()
 	//ビュープロジェクションを更新
 	viewProjection_.UpdateMatrix();
 
-	ImGui::Begin("gameCamera");
+	//ImGui::Begin("gameCamera");
 
-	ImGui::SetNextWindowSize(ImVec2(500, 100));
+	//ImGui::SetNextWindowSize(ImVec2(500, 100));
 
-	ImGui::InputFloat("ainfo", &aInfo);
-	ImGui::InputFloat3("angle", &angle_.x);
-	ImGui::InputFloat3("rotPos", &rotPos.x);
-	ImGui::InputFloat3("rotnorm", &rotNorm.x);
-	ImGui::InputFloat3("rotnorm", &vel.x);
-	ImGui::InputFloat("chagePos Y", &offSet.y);
-	ImGui::InputFloat3("worldRot", &worldTransform_.rotation.x, "%.2f");
-	ImGui::InputFloat3("worldPos", &worldTransform_.translation.x, "%.2f");
-	ImGui::InputFloat3("cameraEye", &viewProjection_.eye.x, "%.2f");
-	ImGui::InputFloat3("cameraTraget", &viewProjection_.target.x, "%.2f");
+	//ImGui::InputFloat("ainfo", &aInfo);
+	//ImGui::InputFloat3("angle", &angle_.x);
+	//ImGui::InputFloat3("rotPos", &rotPos.x);
+	//ImGui::InputFloat3("rotnorm", &rotNorm.x);
+	//ImGui::InputFloat3("rotnorm", &vel.x);
+	//ImGui::InputFloat("chagePos Y", &offSet.y);
+	//ImGui::InputFloat3("worldRot", &worldTransform_.rotation.x, "%.2f");
+	//ImGui::InputFloat3("worldPos", &worldTransform_.translation.x, "%.2f");
+	//ImGui::InputFloat3("cameraEye", &viewProjection_.eye.x, "%.2f");
+	//ImGui::InputFloat3("cameraTraget", &viewProjection_.target.x, "%.2f");
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void GameCamera::GameFirstEventUpdate()

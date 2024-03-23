@@ -3,8 +3,11 @@
 #include <vector>
 #include <WorldTransform.h>
 #include "Easing.h"
+#include "Object3d.h"
 
+// 前方宣言
 class Player;
+class ItemPaper;
 
 class GameLight
 {
@@ -16,13 +19,51 @@ private:
 		BackDefu,// 元の状態に戻す
 	};
 
+	enum GuidLightState
+	{
+		ShiftTime,
+		SetValue,
+		Move,
+	};
+
+	struct GuidingLight
+	{
+		std::unique_ptr<Object3d> guidlightObj;
+
+		bool IsShift = false;
+
+		float startTaiming;
+		float startTimer = 0;
+
+		Easing easeGuid;
+		Vector3 colPoint;
+
+		Vector3 startPos;
+		Vector3 endPos;
+		Vector3 halfVel;
+		Vector3 shiftVel;
+
+		GuidLightState state;
+	};
+
 public:// メンバ関数
+
+	~GameLight();
 
 	// 初期化処理
 	void Initialize();
 
 	// 更新処理
 	void Update();
+
+	// 3Dモデルの描画
+	void DrawForward3D(ViewProjection* view);
+
+	/// <summary>
+	/// 導きの光の更新処理
+	/// </summary>
+	/// <param name="itemPapers">アイテムのリスト</param>
+	void GuidLightUpdate(std::vector<ItemPaper*>itemPapers);
 
 public:// セッター
 
@@ -43,6 +84,9 @@ public:// セッター
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
 	void SetPlayer(Player* player);
+
+
+private:
 
 private:
 	// 借りてくるライトグループ
@@ -87,5 +131,26 @@ private:
 	int easeFlashMaxTimeLimit_;
 
 #pragma endregion
+
+	// 導きの光関連
+
+	// 導きの光の番号
+	UINT guidLightStartNum_;
+
+	// 導きの光の数
+	UINT guidLightNum_;
+	
+	// 導きの光の構造体
+	std::vector<GuidingLight*> guidLights_;
+
+	// 導きの光の実体モデル
+	std::unique_ptr<Model> guidModel_;
+
+	Vector3 guidObjScale_;
+
+	Vector3 guidLightIdensity_;
+	Vector3 guidLightRadius_;
+
+	Vector3 guidLightColor_[3];
 };
 

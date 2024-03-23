@@ -74,6 +74,12 @@ float Easing::Lerp(const float startPos, const float endPos)
 	return dis * timeRate_ + startPos;
 }
 
+Vector3 Easing::Lerp(const Vector3& start, const Vector3& end)
+{
+	Vector3 dis = end - start;
+	return dis * timeRate_ + start;
+}
+
 //追加
 float Easing::In(float start, float end)
 {
@@ -273,6 +279,27 @@ Vector3 Easing::easeInCircVec3(Vector3 start, Vector3 end)
 	Vec = { static_cast <float>(x),static_cast <float>(y),static_cast <float>(z) };
 
 	return Vec;
+}
+
+float Easing::LerpBezireQuadratic(const float& start, const float& contRollP, const float& end)
+{
+	float p1, p2, p3;
+	p1 = Lerp(start, contRollP);
+	p2 = Lerp(contRollP, end);
+	p3 = Lerp(p1, p2);
+
+	return p3;
+}
+
+Vector3 Easing::LerpBezireQuadratic(const Vector3& start, const Vector3& contRollP, const Vector3& end)
+{
+
+	Vector3 p1, p2, p3;
+	p1 = Lerp(start, contRollP);
+	p2 = Lerp(contRollP, end);
+	p3 = Lerp(p1, p2);
+
+	return p3;
 }
 
 Vector3 Easing::easeOutCircVec3(Vector3 start, Vector3 end)

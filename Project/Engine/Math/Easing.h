@@ -84,6 +84,7 @@ public:// ゲッター
 	bool GetIsEnd();
 public:
 	float Lerp(const float startPos, const float endPos);
+	Vector3 Lerp(const Vector3& start, const Vector3& end);
 
 	float In(float start, float end);
 
@@ -111,6 +112,9 @@ public:
 	float easeInCirc(float start, float end);
 	Vector2 easeInCircVec2(Vector2 start, Vector2 end);
 	Vector3 easeInCircVec3(Vector3 start, Vector3 end);
+
+	float LerpBezireQuadratic(const float& start, const float& contRollP, const float& end);
+	Vector3 LerpBezireQuadratic(const Vector3& start, const Vector3& contRollP, const Vector3& end);
 
 private:// メンバ
 	// 時間

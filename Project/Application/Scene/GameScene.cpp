@@ -212,7 +212,10 @@ void GameScene::DrawForward3D()
 	// リングの描画をする
 	if (gameCamera_->GetIsFirstCameraEnd() == true) {
 		player_->DrawRing(&gameCamera_->GetView());
+		gameLight_->DrawForward3D(&gameCamera_->GetView());
 	}
+
+	
 
 	// 敵の描画
 	DrawTransParentObj();
@@ -293,6 +296,8 @@ void GameScene::DrawHighLumiObj()
 		L->Update();
 		L->Draw(&gameCamera_->GetView());
 	}
+
+
 	Object3d::SetBlendMode(Object3d::BlendMode::NORMAL);
 }
 
@@ -523,6 +528,9 @@ void GameScene::GameSceneUpdate()
 		player_->SetIsCanMove(true);
 		// タイマーの更新処理
 		timerUi_->Update();
+
+		// 導きの光の更新処理
+		gameLight_->GuidLightUpdate(itemPapers_);
 	}
 	else {
 		player_->SetIsCanMove(false);

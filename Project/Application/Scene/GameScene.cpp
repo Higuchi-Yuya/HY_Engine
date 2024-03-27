@@ -163,11 +163,15 @@ void GameScene::Initialize()
 	gameLight_ = std::make_unique<GameLight>();
 	gameLight_->Initialize();
 	gameLight_->SetPlayer(player_.get());
+
+	testW.Initialize();
+	testHeart_.Initialize();
 }
 
 void GameScene::Update()
 {
 	input_->Update();
+	testHeart_.Update(testW);
 
 	GameSceneUpdate();
 }
@@ -212,10 +216,9 @@ void GameScene::DrawForward3D()
 	// リングの描画をする
 	if (gameCamera_->GetIsFirstCameraEnd() == true) {
 		player_->DrawRing(&gameCamera_->GetView());
-		gameLight_->DrawForward3D(&gameCamera_->GetView());
+		//gameLight_->DrawForward3D(&gameCamera_->GetView());
 	}
-
-	
+	testHeart_.Draw(&gameCamera_->GetView());
 
 	// 敵の描画
 	DrawTransParentObj();
@@ -225,6 +228,7 @@ void GameScene::DrawForward3D()
 
 	// ビルボードオブジェの描画
 	DrawBillboardTex();
+
 }
 
 void GameScene::DrawDefrred3D()
@@ -530,7 +534,7 @@ void GameScene::GameSceneUpdate()
 		timerUi_->Update();
 
 		// 導きの光の更新処理
-		gameLight_->GuidLightUpdate(itemPapers_);
+		//gameLight_->GuidLightUpdate(itemPapers_);
 	}
 	else {
 		player_->SetIsCanMove(false);
@@ -678,5 +682,13 @@ void GameScene::FirstEventUpdate()
 			// プレイヤーがびっくりするモーションに入るようにする
 			IsDoorFirstTurn = true;
 		}
+	}
+
+	if (Pad::GetButton(PadCode::ButtonY)) {
+		gameCamera_->SetIsFirstCameraEnd(true);
+		player_->SetFirstEventEnd();
+
+		latticeDoors_[0]->worldTransform_.rotation.y = doorLDefuRota;
+		latticeDoors_[1]->worldTransform_.rotation.y = doorRDefuRota;
 	}
 }

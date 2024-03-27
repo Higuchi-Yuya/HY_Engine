@@ -292,6 +292,17 @@ void Player::SetIsFlashMax(bool isFlashMax)
 	IsFlashMax_ = isFlashMax;
 }
 
+void Player::SetIsEndTurnArond(bool isEndTurnArond)
+{
+	IsEndTurnAround_ = isEndTurnArond;
+}
+
+void Player::SetFirstEventEnd()
+{
+	IsEndTurnAround_ = true;
+	firstEventState_ = Surprised;
+}
+
 void Player::OnCollision()
 {
 
@@ -553,19 +564,6 @@ void Player::MoveUpdate()
 	cameraWorld_.translation = worldTransform_.translation;
 	cameraWorld_.rotation.y += MathUtil::DegreeToRadian(rot.y);
 	cameraWorld_.UpdateMatrix();
-
-
-	ImGui::Begin("joyPadInfo");
-
-	//ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(500, 100));
-
-	ImGui::InputFloat2("joySrickL", &joyStickInfoL.x, "%.2f");
-	ImGui::InputFloat2("joySrickR", &joyStickInfoR.x, "%.2f");
-	ImGui::InputFloat3("playerRot", &worldTransform_.rotation.x, "%.2f");
-
-	ImGui::End();
-
 
 	frontW_.UpdateMatrix();
 	// ワールド行列更新

@@ -555,6 +555,9 @@
     <ClCompile Include="Application\Light\GameLight.cpp">
       <Filter>ソース ファイル\Application\Light</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyHeart.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\ViewProjection.h">
@@ -823,6 +826,9 @@
     </ClInclude>
     <ClInclude Include="Application\Light\GameLight.h">
       <Filter>ヘッダー ファイル\Application\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyHeart.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

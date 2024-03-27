@@ -40,6 +40,8 @@ namespace MathUtil
 	// sin波の動きを作る関数
 	float Sin_ZeroToOne(float pos, float maxCount, float nowCount, float swingWidth);
 
+	Vector3 Sin_ZeroToOne(Vector3 pos, float maxCount, float nowCount, Vector3 swingWidth);
+
 	// 単位行列を取得
 	Matrix4 Matrix4Indecity();
 

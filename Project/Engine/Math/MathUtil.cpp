@@ -112,6 +112,15 @@ float MathUtil::Sin_ZeroToOne(float pos, float maxCount, float nowCount, float s
 	return result;
 }
 
+Vector3 MathUtil::Sin_ZeroToOne(Vector3 pos, float maxCount, float nowCount, Vector3 swingWidth)
+{
+	float x = pos.x + sin(PI * 2 / maxCount * nowCount) * swingWidth.x;
+	float y = pos.y + sin(PI * 2 / maxCount * nowCount) * swingWidth.y;
+	float z = pos.z + sin(PI * 2 / maxCount * nowCount) * swingWidth.z;
+
+	return Vector3(x, y, z);
+}
+
 Matrix4 MathUtil::Matrix4Indecity()
 {
 	Matrix4 mat4;

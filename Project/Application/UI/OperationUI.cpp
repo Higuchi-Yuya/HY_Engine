@@ -21,8 +21,8 @@ void OperationUI::Init()
 	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/MoveText.png"));
 	itemFlameTex_.reset(TextureManager::Load2DTextureP("itemKeyFlame.png"));
 
-	Vector3 AbuttonScale(1.0f, 1.0f, 0);
-	Vector3 LstickScale(1.5f, 1.5f, 0);
+	Vector3 AbuttonScale(0.6f, 0.6f, 0);
+	Vector3 LstickScale(1.0f, 1.0f, 0);
 
 	// Aボタン Up の初期化
 	sprites_[AButtonUp]->Initialize(AbuttonTex_.get(),Vector2(100, 500), Vector2(49, 48));

@@ -25,7 +25,7 @@
 #include "BeatEffect.h"
 #include "IScene.h"
 #include "GameLight.h"
-
+#include "EnemyHeart.h"
 class GameScene:public IScene
 {
 public:
@@ -325,5 +325,9 @@ private:// メンバ変数
 
 	// ゲームライト
 	std::unique_ptr<GameLight> gameLight_;
+
+	// 敵のはーと
+	WorldTransform testW;
+	EnemyHeart testHeart_;
 };
 

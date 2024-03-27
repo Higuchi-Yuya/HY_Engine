@@ -179,8 +179,10 @@ void GameCamera::GameFirstEventUpdate()
 			IsFirstCameraEnd = true;
 		}
 		break;
-	default:
-		break;
+	}
+
+	if (IsFirstCameraEnd == true) {
+		gameCameraState_ = Normal;
 	}
 }
 
@@ -225,6 +227,11 @@ void GameCamera::SetIsCanEase(bool IsCanEase)
 void GameCamera::SetIsDoorOpen(bool isDoorOpen)
 {
 	IsDoorOpen_ = isDoorOpen;
+}
+
+void GameCamera::SetIsFirstCameraEnd(bool isFirstCameraEnd)
+{
+	IsFirstCameraEnd = isFirstCameraEnd;
 }
 
 void GameCamera::SetGameState(GameCameraState state)

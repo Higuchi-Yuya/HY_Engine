@@ -137,6 +137,17 @@ public:// セッター
 	/// <param name="isFlashMax"></param>
 	void SetIsFlashMax(bool isFlashMax);
 
+	/// <summary>
+	/// プレイヤーの最初の回転が終わっているかどうかを設定
+	/// </summary>
+	/// <param name="isEndTurnArond"></param>
+	void SetIsEndTurnArond(bool isEndTurnArond);
+
+	/// <summary>
+	/// 最初のシーンの処理を飛ばす
+	/// </summary>
+	void SetFirstEventEnd();
+
 public:// 当たり判定
 
 	// 衝突時コールバック関数

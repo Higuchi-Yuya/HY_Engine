@@ -121,6 +121,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Application\Effect\BeatEffect.cpp" />
     <ClCompile Include="Application\Enemy\EnemySpawnState.cpp" />
     <ClCompile Include="Application\Enemy\EnemyAliveState.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyHeart.cpp" />
     <ClCompile Include="Engine\3D\Deferred\DeferredRender.cpp" />
     <ClCompile Include="Engine\3D\Deferred\DeferredObject3d.cpp" />
     <ClCompile Include="Engine\2D\BillboardTex.cpp" />
@@ -211,6 +212,7 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Application\Effect\BeatEffect.h" />
     <ClInclude Include="Application\Enemy\EnemySpawnState.h" />
     <ClInclude Include="Application\Enemy\EnemyAliveState.h" />
+    <ClInclude Include="Application\Enemy\EnemyHeart.h" />
     <ClInclude Include="Engine\3D\Deferred\DeferredRender.h" />
     <ClInclude Include="Engine\3D\Deferred\DeferredObject3d.h" />
     <ClInclude Include="Engine\2D\BillboardTex.h" />

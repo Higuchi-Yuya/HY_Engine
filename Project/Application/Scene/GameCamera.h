@@ -5,14 +5,8 @@
 #include "Easing.h"
 class GameCamera
 {
-private:
-	// 状態
-	enum TitleCameraState
-	{
-		FirstMove,
-		MoveEnd,
-	};
-
+public:
+	// ゲーム状態
 	enum GameCameraState
 	{
 		FirstEvent,
@@ -20,6 +14,13 @@ private:
 		DoorOpen,
 	};
 
+private:
+	// タイトル状態
+	enum TitleCameraState
+	{
+		FirstMove,
+		MoveEnd,
+	};
 	enum GameFirstEventState
 	{
 		EventCamera,// 最初のイベントシーンのカメラ
@@ -73,6 +74,9 @@ public:// セッター
 
 	// ドアが開くときのカメラをセット
 	void SetIsDoorOpen(bool isDoorOpen);
+
+	// 最初のカットシーンのフラグをセット
+	void SetIsFirstCameraEnd(bool isFirstCameraEnd);
 
 	// ゲームカメラの状態のセット
 	void SetGameState(GameCameraState state);

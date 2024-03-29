@@ -196,7 +196,8 @@ void BeatEffect::NearUpdate()
 		// 敵とプレイヤーのベクトルをとり、長さが一定以下の場合鼓動のフラグをオンして
 		// ループを抜ける
 		float nearDistance = beatDistance_ * 0.5f;
-		if (dis <= nearDistance) {
+		if (dis <= nearDistance &&
+			e->GetDissolveEnd() == false) {
 			IsBeat_ = true;
 			IsNear_ = true;
 			beatInterval_ = 15;
@@ -215,7 +216,8 @@ void BeatEffect::NearUpdate()
 
 			Vector3 vec = e->worldTransform_.translation - player_->worldTransform_.translation;
 			float dis = vec.length();
-			if (dis <= beatDistance_) {
+			if (dis <= beatDistance_ &&
+				e->GetDissolveEnd() == false) {
 				IsBeat_ = true;
 				beatInterval_ = 30;
 				break;

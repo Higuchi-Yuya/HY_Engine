@@ -192,6 +192,6 @@ void EnemyAliveState::DeadUpdate(Enemy& enemy)
 	enemy.dissolve_.dissolveTime_ = disoTimeLate_;
 
 	if (enemy.dissolve_.dissolveTime_ >= 1.0f) {
-		IsDeadMotionEnd = true;
+		IsDissolveEnd = true;
 	}
 }

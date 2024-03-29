@@ -45,6 +45,9 @@ public:// ゲッター
 	// 生存しているかどうかを取得
 	bool GetIsAlive();
 
+	// ディゾルブ処理が終わっているかどうかを取得
+	bool GetIsDissolveEnd();
+
 	// 死亡時モーションが終わっているかどうかを取得
 	bool GetIsDeadMotionEnd();
 
@@ -86,6 +89,9 @@ public:// セッター
 	// 生きているかどうかを設定
 	void SetIsAlive(const bool IsAlive);
 
+	// 死亡時モーションが終了しているかどうか
+	void SetIsDeadMotionEnd(const bool IsDeadEnd);
+
 	// 近いときの時間
 	void SetNearTimer(int nearTimer);
 
@@ -117,6 +123,9 @@ protected:
 
 	// 生きているかどうか
 	bool IsAlive_ = true;
+
+	// ディゾルブが終了しているかどうか
+	bool IsDissolveEnd = false;
 
 	// 死亡時モーションが終わっているかどうか
 	bool IsDeadMotionEnd = false;

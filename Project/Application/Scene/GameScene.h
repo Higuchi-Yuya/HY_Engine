@@ -325,9 +325,5 @@ private:// メンバ変数
 
 	// ゲームライト
 	std::unique_ptr<GameLight> gameLight_;
-
-	// 敵のはーと
-	WorldTransform testW;
-	EnemyHeart testHeart_;
 };
 

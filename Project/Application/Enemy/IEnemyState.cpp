@@ -29,6 +29,11 @@ bool IEnemyState::GetIsAlive()
     return IsAlive_;
 }
 
+bool IEnemyState::GetIsDissolveEnd()
+{
+    return IsDissolveEnd;
+}
+
 bool IEnemyState::GetIsDeadMotionEnd()
 {
     return IsDeadMotionEnd;
@@ -107,6 +112,11 @@ void IEnemyState::SetAliveState(const AliveState aliveState)
 void IEnemyState::SetIsAlive(const bool IsAlive)
 {
     IsAlive_ = IsAlive;
+}
+
+void IEnemyState::SetIsDeadMotionEnd(const bool IsDeadEnd)
+{
+    IsDeadMotionEnd = IsDeadEnd;
 }
 
 void IEnemyState::SetNearTimer(int nearTimer)

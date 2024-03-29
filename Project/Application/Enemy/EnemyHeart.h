@@ -9,8 +9,9 @@ private:
 	// ハートの状態
 	enum HeartState
 	{
+		Spawn,// 生成時
 		Beat,// 鼓動
-
+		BeatReduction,// 心臓の縮小
 	};
 
 	enum HeartScaleState
@@ -29,7 +30,7 @@ public:
 	/// 更新処理
 	/// </summary>
 	/// <param name="worldData">敵のワールドデータ</param>
-	void Update(WorldTransform& worldData);
+	void Update(WorldTransform& worldData,bool isLightMoveEnd);
 
 	/// <summary>
 	/// 描画処理
@@ -37,12 +38,30 @@ public:
 	/// <param name="view">ゲームカメラ</param>
 	void Draw(ViewProjection* view);
 
+public:// ゲッター
+
+	/// <summary>
+	/// 心臓の縮小処理が終了しているかを取得
+	/// </summary>
+	/// <returns></returns>
+	const bool GetIsSmallEnd() { return IsSmallEnd_; }
+
 private:// プライベート関数
+
+	/// <summary>
+	/// 生成時の更新処理
+	/// </summary>
+	void SpawnUpdate();
 
 	/// <summary>
 	/// 鼓動状態の更新処理
 	/// </summary>
 	void BeatUpdate();
+
+	/// <summary>
+	/// 心臓が縮小するときの処理
+	/// </summary>
+	void BeatReductionUpdate();
 
 private:
 
@@ -71,5 +90,14 @@ private:
 	Vector3 defuScale_;
 	Vector3 bigScale_;
 
+	// 心臓の縮小関連
+	Vector3 smallValue_;
+	Vector3 minScale_;
+	bool IsSmallEnd_;
+	bool IsLightEnd_;
+
+	// 生成関連
+	Vector3 spawnValue_;
+	Vector3 spawnScale_;
 };
 

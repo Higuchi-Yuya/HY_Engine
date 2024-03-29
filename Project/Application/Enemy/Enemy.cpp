@@ -50,6 +50,9 @@ void Enemy::Initialize(Model* model)
 	// ライフの初期化
 	nowLife_ = maxLife_;
 
+	heart_ = std::make_unique<EnemyHeart>();
+	heart_->Initialize();
+
 	curenntState_ = new EnemySpawnState();
 }
 
@@ -60,6 +63,16 @@ void Enemy::Update()
 
 	// パーティクルの更新処理
 	particleMan_->Update();
+
+	// ハートの更新処理
+	if (curenntState_->GetIsDissolveEnd()) {
+		heart_->Update(worldTransform_, IsLightMoveEnd_);
+	}
+
+	// ハートの縮小が完了したら死亡モーションを終了とみなす
+	if (heart_->GetIsSmallEnd() == true) {
+		curenntState_->SetIsDeadMotionEnd(true);
+	}
 
 	// 行列の更新など
 	Object3d::Update();
@@ -104,6 +117,13 @@ void Enemy::ParticleUpdate()
 void Enemy::Draw(ViewProjection* view)
 {
 	Object3d::Draw(view);
+}
+
+void Enemy::DrawForward3D(ViewProjection* view)
+{
+	if (curenntState_->GetIsDissolveEnd()) {
+		heart_->Draw(view);
+	}
 }
 
 void Enemy::DrawParticle(ViewProjection* view)
@@ -207,6 +227,24 @@ void Enemy::SetAliveState(IEnemyState::AliveState aState)
 	curenntState_->SetAliveState(aState);
 }
 
+void Enemy::SetDeadMotionEnd(const bool isDeadMotionEnd)
+{
+	curenntState_->SetIsDeadMotionEnd(isDeadMotionEnd);
+}
+
+void Enemy::SetLightMoveEnd(const bool isLightMoveEnd)
+{
+	IsLightMoveEnd_ = isLightMoveEnd;
+}
+
+void Enemy::SetDeadNum(const int deadNum)
+{
+	if (IsSetDeadNum_ == false) {
+		deadNum_ = deadNum;
+		IsSetDeadNum_ = true;
+	}
+}
+
 void Enemy::ChageState(StateType stateType)
 {
 	delete curenntState_;
@@ -268,4 +306,9 @@ void Enemy::NearPlayerParticleUpdate()
 			particleMan_->Add(ParticleManager::Type::EnemyNear, 150, pos, vel, acc, angle, 0.1f, 0.0f, curenntState_->GetNearStartColor(), curenntState_->GetNearEndColor());
 		}
 	}
+}
+
+void Enemy::AddLightMoveCount()
+{
+	lightMoveCount++;
 }

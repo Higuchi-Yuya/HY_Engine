@@ -128,7 +128,7 @@ void SceneManager::Update()
 
 void SceneManager::ImguiUpdate()
 {
-	//currentScene_->ImguiUpdate();
+	currentScene_->ImguiUpdate();
 }
 
 void SceneManager::Draw2DBack()

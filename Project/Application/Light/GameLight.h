@@ -8,6 +8,7 @@
 // 前方宣言
 class Player;
 class ItemPaper;
+class Enemy;
 
 class GameLight
 {
@@ -56,6 +57,9 @@ public:// メンバ関数
 	// 更新処理
 	void Update();
 
+	// Imgui
+	void ImguiUpdate();
+
 	// 3Dモデルの描画
 	void DrawForward3D(ViewProjection* view);
 
@@ -63,7 +67,20 @@ public:// メンバ関数
 	/// 導きの光の更新処理
 	/// </summary>
 	/// <param name="itemPapers">アイテムのリスト</param>
-	void GuidLightUpdate(std::vector<ItemPaper*>itemPapers);
+	void GuidLightUpdate(std::vector<ItemPaper*>itemPapers, Enemy& enemy);
+
+	/// <summary>
+	/// 敵が死亡時の導きの光の処理
+	/// </summary>
+	/// <param name="itemPapers">アイテムのリスト</param>
+	void EnemyGuidLightUpdate(std::vector<ItemPaper*>itemPapers);
+
+private:// プライベート関数
+
+	/// <summary>
+	/// モーション終了後のライトを消す処理
+	/// </summary>
+	void GuidLightOffUpdate(Enemy& enemy);
 
 public:// セッター
 
@@ -85,8 +102,16 @@ public:// セッター
 	/// <param name="player">プレイヤー</param>
 	void SetPlayer(Player* player);
 
+	/// <summary>
+	/// 敵の情報を設定
+	/// </summary>
+	/// <param name="enemysInfo">敵の情報のベクター配列</param>
+	static void SetEnemys(std::vector<Enemy*>enemysInfo) { enemysInfo_ = enemysInfo; }
 
 private:
+
+	// エネミーの情報配列
+	static std::vector<Enemy*>enemysInfo_;
 
 private:
 	// 借りてくるライトグループ
@@ -152,5 +177,21 @@ private:
 	Vector3 guidLightRadius_;
 
 	Vector3 guidLightColor_[3];
+
+	Vector3 lightOffPos_;
+	Vector3 enemyDeadPos_;
+
+	int guidLightMoveCount_;
+	int guidLightMoveMaxCount_;
+
+	// 死亡している敵の数
+	int enmeyDeadNum_;
+
+	// 敵の心臓の光関連
+	Vector3 heartLightColor_;
+	float heartLightIndensity_;
+	float heartLightRadius_;
+	float heartLightDecay_;
+
 };
 

@@ -163,15 +163,11 @@ void GameScene::Initialize()
 	gameLight_ = std::make_unique<GameLight>();
 	gameLight_->Initialize();
 	gameLight_->SetPlayer(player_.get());
-
-	testW.Initialize();
-	testHeart_.Initialize();
 }
 
 void GameScene::Update()
 {
 	input_->Update();
-	testHeart_.Update(testW);
 
 	GameSceneUpdate();
 }
@@ -193,6 +189,8 @@ void GameScene::ImguiUpdate()
 	ImGui::InputFloat2("tipsSize", &tipsDisplaySize_.x);
 
 	ImGui::End();
+
+	gameLight_->ImguiUpdate();
 
 	// 時間のImgui
 	timerUi_->DrawImgui();
@@ -218,9 +216,12 @@ void GameScene::DrawForward3D()
 		player_->DrawRing(&gameCamera_->GetView());
 		//gameLight_->DrawForward3D(&gameCamera_->GetView());
 	}
-	testHeart_.Draw(&gameCamera_->GetView());
 
 	// 敵の描画
+	for (auto e : enemys_) {
+		e->DrawForward3D(&gameCamera_->GetView());
+	}
+
 	DrawTransParentObj();
 
 	// パーティクルの描画
@@ -587,6 +588,9 @@ void GameScene::EnemyGameUpdate()
 	for (auto e : enemys_) {
 		e->Update();
 	}
+
+	GameLight::SetEnemys(enemys_);
+	gameLight_->EnemyGuidLightUpdate(itemPapers_);
 
 	BeatEffect::SetEnemys(enemys_);
 }

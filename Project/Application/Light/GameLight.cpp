@@ -2,6 +2,9 @@
 #include "Player.h"
 #include "ItemPaper.h"
 #include "Random.h"
+#include "Enemy.h"
+
+std::vector<Enemy*>GameLight::enemysInfo_{};
 
 GameLight::~GameLight()
 {
@@ -34,17 +37,25 @@ void GameLight::Initialize()
 	playerPointLightRadius_ = 2;
 	playerPointLightDecay_ = 1;
 
-	guidLightNum_ = 25;
+	guidLightNum_ = 26;
+	lightOffPos_ = { 0,1000,0 };
 	guidObjScale_ = { 0.1f,0.1f ,0.1f };
-	guidLightIdensity_ = { 0.6f,2.0f,0.2f };
+	guidLightIdensity_ = { 1.0f,1.0f,1.0f };
 	guidLightRadius_ = { 1.0f,4.0f,2.0f };
-	guidLightColor_[0] = { 0.3f,0.55f,0.8f };
-	guidLightColor_[1] = { 0.4f,0.8f,0.8f };
-	guidLightColor_[2] = { 0.65f,0.8f,0.8f };
+	guidLightColor_[0] = { 0.85f,0.2f,0.24f };
+	guidLightColor_[1] = { 0.72f,0.14f,0.21f };
+	guidLightColor_[2] = { 0.39f,0.003f,0.14f };
+	guidLightMoveCount_ = 0;
+	guidLightMoveMaxCount_ = 5;
 
-	guidModel_.reset(Model::LoadFromOBJ("sphere",true));
+	heartLightColor_ = { 0.72f,0.14f,0.21f };
+	heartLightIndensity_ = 1.0f;
+	heartLightRadius_ = 10.0f;
+	heartLightDecay_ = 6.0f;
 
-	for (size_t i = 0; i < guidLightNum_; i++)
+	guidModel_.reset(Model::LoadFromOBJ("sphere", true));
+
+	for (size_t i = 0; i < guidLightNum_ * 10; i++)
 	{
 		GuidingLight* g = new GuidingLight();
 		g->startTaiming = Random::RangeF(3, 30);
@@ -179,9 +190,21 @@ void GameLight::Update()
 	lightGroup_->Update();
 }
 
+void GameLight::ImguiUpdate()
+{
+	ImGui::SetNextWindowSize(ImVec2(500, 100));
+	ImGui::Begin("heartLight");
+
+	ImGui::InputFloat("indensity", &heartLightIndensity_);
+	ImGui::InputFloat("radius", &heartLightRadius_);
+	ImGui::InputFloat2("decay", &heartLightDecay_);
+
+	ImGui::End();
+}
+
 void GameLight::DrawForward3D(ViewProjection* view)
 {
-	for (size_t i = 0; i < guidLightNum_; i++)
+	for (size_t i = 0; i < guidLightNum_ * enmeyDeadNum_; i++)
 	{
 		guidLights_[i]->guidlightObj->Draw(view);
 	}
@@ -202,95 +225,167 @@ void GameLight::SetPlayer(Player* player)
 	player_ = player;
 }
 
-void GameLight::GuidLightUpdate(std::vector<ItemPaper*> itemPapers)
+void GameLight::GuidLightUpdate(std::vector<ItemPaper*> itemPapers, Enemy& enemy)
 {
 	guidLightStartNum_ = (int)(pointLightsInfo_.size() + 2);
 
 	for (size_t i = 0; i < guidLightNum_; i++)
 	{
-		int pointLightNum = (int)(guidLightStartNum_ + i);
+		if (i == 0) {
+			int firstNum = (int)(guidLightStartNum_ * enemy.GetDeadNum());
+			// ポイントライトの情報を更新
+			lightGroup_->SetPointLightColor(firstNum, heartLightColor_);
+			lightGroup_->SetPointLightPos(firstNum, enemyDeadPos_);
+			lightGroup_->SetPointLightIndensity(firstNum, heartLightIndensity_);
+			lightGroup_->SetPointLightRadius(firstNum, heartLightRadius_);
+			lightGroup_->SetPointLightDecay(firstNum, heartLightDecay_);
+			lightGroup_->SetPointLightActive(firstNum, true);
 
-		switch (guidLights_[i]->state)
-		{
-		case ShiftTime:// 最初の生成のタイミングをずらすフェーズ
-			guidLights_[i]->startTimer++;
-			guidLights_[i]->guidlightObj->worldTransform_.translation = player_->worldTransform_.translation;
+		}
+		else {
+			int pointLightNum = (int)((guidLightStartNum_ * enemy.GetDeadNum()) + i);
+			int guidNum = (int)((guidLightNum_ * (enemy.GetDeadNum() - 1)) + i);
 
-			if (guidLights_[i]->startTimer >= guidLights_[i]->startTaiming) {
-				guidLights_[i]->state = SetValue;
-			}
-			break;
-		case SetValue:// 各種移動等に必要な値を設定
-		{
-			guidLights_[i]->guidlightObj->worldTransform_.translation = player_->worldTransform_.translation;
-			Vector3 vel;
-			float length = 0;
-			float minLength = 9999;
-
-			// アイテムのなかで一番近いものの座標とベクトルの長さを抽出
-			for (auto j : itemPapers)
+			switch (guidLights_[guidNum]->state)
 			{
-				if (j->GetIsCheckItem() == false) {
-					vel = j->billTex_.worldTransform_.translation - player_->worldTransform_.translation;
-					length = vel.length();
+			case ShiftTime:// 最初の生成のタイミングをずらすフェーズ
+				guidLights_[guidNum]->startTimer++;
+				guidLights_[guidNum]->guidlightObj->worldTransform_.translation = enemyDeadPos_;
 
-					if (length < minLength) {
-						guidLights_[i]->startPos = player_->worldTransform_.translation;
-						guidLights_[i]->endPos = j->billTex_.worldTransform_.translation;
-						guidLights_[i]->halfVel = vel / 2;
-						guidLights_[i]->easeGuid.SetEaseLimitTime(60);
-						minLength = length;
+				if (guidLights_[guidNum]->startTimer >= guidLights_[guidNum]->startTaiming) {
+					guidLights_[guidNum]->startTimer = 0;
+					guidLights_[guidNum]->state = SetValue;
+				}
+				break;
+			case SetValue:// 各種移動等に必要な値を設定
+			{
+				guidLights_[guidNum]->guidlightObj->worldTransform_.translation = enemyDeadPos_;
+				Vector3 vel;
+				float length = 0;
+				float minLength = 9999;
+
+				// アイテムのなかで一番近いものの座標とベクトルの長さを抽出
+				for (auto j : itemPapers)
+				{
+					if (j->GetIsCheckItem() == false) {
+						vel = j->billTex_.worldTransform_.translation - enemyDeadPos_;
+						length = vel.length();
+
+						if (length < minLength) {
+							guidLights_[guidNum]->startPos = enemyDeadPos_;
+							guidLights_[guidNum]->endPos = j->billTex_.worldTransform_.translation;
+							guidLights_[guidNum]->halfVel = vel / 2;
+							guidLights_[guidNum]->easeGuid.SetEaseLimitTime(60);
+							minLength = length;
+						}
 					}
 				}
+				guidLights_[guidNum]->state = Move;
+				break;
 			}
-			guidLights_[i]->state = Move;
-			break;
-		}
-		case Move:// 移動処理
-		{
-			guidLights_[i]->easeGuid.Update();
-
-			if (guidLights_[i]->IsShift == false)
+			case Move:// 移動処理
 			{
-				guidLights_[i]->IsShift = true;
-				guidLights_[i]->shiftVel.x = Random::RangeF(-3.0f, 3.0f);
-				guidLights_[i]->shiftVel.y = Random::RangeF(1.0f, 5.0f);
-				guidLights_[i]->shiftVel.z = Random::RangeF(-3.0f, 3.0f);
+				guidLights_[guidNum]->easeGuid.Update();
 
-				guidLights_[i]->halfVel += guidLights_[i]->shiftVel;
-				guidLights_[i]->colPoint = guidLights_[i]->startPos + guidLights_[i]->halfVel;
+				if (guidLights_[guidNum]->IsShift == false)
+				{
+					guidLights_[guidNum]->IsShift = true;
+					guidLights_[guidNum]->shiftVel.x = Random::RangeF(-3.0f, 3.0f);
+					guidLights_[guidNum]->shiftVel.y = Random::RangeF(1.0f, 5.0f);
+					guidLights_[guidNum]->shiftVel.z = Random::RangeF(-3.0f, 3.0f);
+
+					guidLights_[guidNum]->halfVel += guidLights_[guidNum]->shiftVel;
+					guidLights_[guidNum]->colPoint = guidLights_[guidNum]->startPos + guidLights_[guidNum]->halfVel;
+				}
+
+				// ベジエで移動
+				Vector3 BeziersVel = guidLights_[guidNum]->easeGuid.LerpBezireQuadratic(guidLights_[guidNum]->startPos, guidLights_[guidNum]->colPoint, guidLights_[guidNum]->endPos);
+				float lightIndensity = guidLights_[guidNum]->easeGuid.LerpBezireQuadratic(guidLightIdensity_.x, guidLightIdensity_.y, guidLightIdensity_.z);
+				float lightRadius = guidLights_[guidNum]->easeGuid.LerpBezireQuadratic(guidLightRadius_.x, guidLightRadius_.y, guidLightRadius_.z);
+				Vector3 lightColor = guidLights_[guidNum]->easeGuid.LerpBezireQuadratic(guidLightColor_[0], guidLightColor_[1], guidLightColor_[2]);
+				guidLights_[guidNum]->guidlightObj->worldTransform_.translation = BeziersVel;
+				guidLights_[guidNum]->guidlightObj->worldTransform_.color = Vector4(lightColor.x, lightColor.y, lightColor.z, 0.3f);
+
+				// ポイントライトの情報を更新
+				lightGroup_->SetPointLightColor(pointLightNum, lightColor);
+				lightGroup_->SetPointLightPos(pointLightNum, BeziersVel);
+				lightGroup_->SetPointLightIndensity(pointLightNum, lightIndensity);
+				lightGroup_->SetPointLightRadius(pointLightNum, lightRadius);
+				lightGroup_->SetPointLightDecay(pointLightNum, playerPointLightDecay_);
+				lightGroup_->SetPointLightActive(pointLightNum, true);
+
+				// 導きの光の最後尾のものが移動完了したらカウントをプラス
+				if (guidLights_[(guidLightNum_ * enemy.GetDeadNum()) - 1]->easeGuid.GetIsEnd() == true)
+				{
+					enemy.AddLightMoveCount();
+				}
+
+				// ベジエが終了したらリセットをして再度始める準備をする
+				if (guidLights_[guidNum]->easeGuid.GetIsEnd() == true) {
+					guidLights_[guidNum]->easeGuid.Reset();
+					guidLights_[guidNum]->state = ShiftTime;
+					guidLights_[guidNum]->IsShift = false;
+
+				}
+
+				break;
+			}
 			}
 
-			// ベジエで移動
-			Vector3 BeziersVel = guidLights_[i]->easeGuid.LerpBezireQuadratic(guidLights_[i]->startPos, guidLights_[i]->colPoint, guidLights_[i]->endPos);
-			float lightIndensity = guidLights_[i]->easeGuid.LerpBezireQuadratic(guidLightIdensity_.x, guidLightIdensity_.y, guidLightIdensity_.z);
-			float lightRadius = guidLights_[i]->easeGuid.LerpBezireQuadratic(guidLightRadius_.x, guidLightRadius_.y, guidLightRadius_.z);
-			Vector3 lightColor= guidLights_[i]->easeGuid.LerpBezireQuadratic(guidLightColor_[0], guidLightColor_[1], guidLightColor_[2]);
-			guidLights_[i]->guidlightObj->worldTransform_.translation = BeziersVel;
-			guidLights_[i]->guidlightObj->worldTransform_.color = Vector4(lightColor.x, lightColor.y, lightColor.z, 0.3f);
-
-			// ポイントライトの情報を更新
-			lightGroup_->SetPointLightActive(pointLightNum, true);
-			lightGroup_->SetPointLightColor(pointLightNum, lightColor);
-			lightGroup_->SetPointLightPos(pointLightNum, BeziersVel);
-			lightGroup_->SetPointLightIndensity(pointLightNum, lightIndensity);
-			lightGroup_->SetPointLightRadius(pointLightNum, lightRadius);
-			lightGroup_->SetPointLightDecay(pointLightNum, playerPointLightDecay_);
-
-			// ベジエが終了したらリセットをして再度始める準備をする
-			if (guidLights_[i]->easeGuid.GetIsEnd() == true) {
-				guidLights_[i]->easeGuid.Reset();
-				guidLights_[i]->state = ShiftTime;
-				guidLights_[i]->IsShift = false;
-			}
-
-			break;
+			// オブジェクトの情報更新
+			guidLights_[guidNum]->guidlightObj->Update();
 		}
 
+	}
+}
+
+void GameLight::EnemyGuidLightUpdate(std::vector<ItemPaper*> itemPapers)
+{
+	enmeyDeadNum_ = 0;
+
+	// 敵のディゾルブ処理が終了していたら
+	for (auto e : enemysInfo_)
+	{
+
+		if (e->GetDissolveEnd() == true) {
+			enmeyDeadNum_++;
 		}
 
-		// オブジェクトの情報更新
-		guidLights_[i]->guidlightObj->Update();
+		// 導きの光の処理
+		if (e->GetDissolveEnd() == true && e->GetDeadMotionEnd() == false) {
+
+			e->SetDeadNum(enmeyDeadNum_);
+			enemyDeadPos_ = e->worldTransform_.translation;
+
+			GuidLightUpdate(itemPapers, *e);
+		}
+
+		// 導きの光のガイド数が限界に達したら死亡モーションが終了とする
+		if (e->GetDissolveEnd() == true &&
+			e->GetLightMoveCount() >= guidLightMoveMaxCount_) {
+
+			// モーション終了後にライトを消す
+			GuidLightOffUpdate(*e);
+
+			e->SetLightMoveEnd(true);
+		}
+	}
+
+	// ライトグループの更新
+	lightGroup_->Update();
+}
+
+void GameLight::GuidLightOffUpdate(Enemy& enemy)
+{
+	for (size_t i = 0; i < guidLightNum_; i++)
+	{
+		int pointLightNum = (int)((guidLightStartNum_ * enemy.GetDeadNum()) + i);
+		int guidNum = (int)((guidLightNum_ * (enemy.GetDeadNum() - 1)) + i);
+		guidLights_[guidNum]->state = ShiftTime;
+		guidLights_[guidNum]->easeGuid.Reset();
+		guidLights_[guidNum]->IsShift = false;
+		lightGroup_->SetPointLightActive(pointLightNum, false);
+		lightGroup_->SetPointLightPos(pointLightNum, lightOffPos_);
 	}
 
 	// ライトグループの更新

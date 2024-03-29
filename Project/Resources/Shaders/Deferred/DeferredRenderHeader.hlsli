@@ -9,7 +9,7 @@ struct DirLight
 };
 
 // “_ŒõŒ¹‚Ì”
-static const int POINTLIGHT_NUM = 60;
+static const int POINTLIGHT_NUM = 200;
 
 struct PointLight
 {

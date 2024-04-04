@@ -12,10 +12,14 @@ private:
 		AButtonUp,
 		AButtonDown,
 
+		BButtonUp,
+		BButtonDown,
+
 		LstickUnder,
 		LstickCover,
 
 		AttackText,
+		FlashText,
 		MoveText,
 
 		itemFlame1,
@@ -31,11 +35,17 @@ private:
 	// Aボタンのテクスチャ
 	std::unique_ptr<Texture> AbuttonTex_;
 
+	// Bボタンのテクスチャ
+	std::unique_ptr<Texture> BbuttonTex_;
+
 	// Lスティックのテクスチャ
 	std::unique_ptr<Texture> LstickTex_;
 
 	// 移動のテキストテクスチャ
 	std::unique_ptr<Texture> moveTextTex_;
+
+	// 移動のテキストテクスチャ
+	std::unique_ptr<Texture> flashTextTex_;
 
 	// 攻撃のテキストテクスチャ
 	std::unique_ptr<Texture> attackTextTex_;

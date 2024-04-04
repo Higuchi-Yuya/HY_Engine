@@ -12,27 +12,44 @@ OperationUI::OperationUI()
 
 void OperationUI::Init()
 {
-	LstickDefuPos_ = Vector2(100, 600);
+	
 
 	// スプライトのハンドルの初期化
 	AbuttonTex_.reset(TextureManager::Load2DTextureP("UI/Abutton.png"));
+	BbuttonTex_.reset(TextureManager::Load2DTextureP("UI/Bbutton.png"));
 	LstickTex_.reset(TextureManager::Load2DTextureP("UI/Lstic.png"));
-	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/findText.png"));
-	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/MoveText.png"));
+	attackTextTex_.reset(TextureManager::Load2DTextureP("UI/findText1.png"));
+	flashTextTex_.reset(TextureManager::Load2DTextureP("UI/FlashText.png"));
+	moveTextTex_.reset(TextureManager::Load2DTextureP("UI/moveText1.png"));
 	itemFlameTex_.reset(TextureManager::Load2DTextureP("itemKeyFlame.png"));
 
-	Vector3 AbuttonScale(0.6f, 0.6f, 0);
+	Vector2 AbuttonPos(80, 480);
+	Vector2 BbuttonPos(80, 540);
+	LstickDefuPos_ = Vector2(80, 600);
+
+	Vector3 AbuttonScale(0.7f, 0.7f, 0);
+	Vector3 BbuttonScale(0.7f, 0.7f, 0);
 	Vector3 LstickScale(1.0f, 1.0f, 0);
 
 	// Aボタン Up の初期化
-	sprites_[AButtonUp]->Initialize(AbuttonTex_.get(),Vector2(100, 500), Vector2(49, 48));
+	sprites_[AButtonUp]->Initialize(AbuttonTex_.get(), AbuttonPos, Vector2(49, 48));
 	sprites_[AButtonUp]->SetRectSize(Vector2(0, 0), Vector2(204, 200));
 	sprites_[AButtonUp]->SetScale(AbuttonScale);
 
 	// Aボタン Down の初期化
-	sprites_[AButtonDown]->Initialize(AbuttonTex_.get(), Vector2(100, 500), Vector2(49, 48));
+	sprites_[AButtonDown]->Initialize(AbuttonTex_.get(), AbuttonPos, Vector2(49, 48));
 	sprites_[AButtonDown]->SetRectSize(Vector2(204, 0), Vector2(408, 200));
 	sprites_[AButtonDown]->SetScale(AbuttonScale);
+
+	// Bボタン Up の初期化
+	sprites_[BButtonUp]->Initialize(BbuttonTex_.get(), BbuttonPos, Vector2(49, 48));
+	sprites_[BButtonUp]->SetRectSize(Vector2(0, 0), Vector2(204, 200));
+	sprites_[BButtonUp]->SetScale(BbuttonScale);
+
+	// Bボタン Down の初期化
+	sprites_[BButtonDown]->Initialize(BbuttonTex_.get(), BbuttonPos, Vector2(49, 48));
+	sprites_[BButtonDown]->SetRectSize(Vector2(204, 0), Vector2(408, 200));
+	sprites_[BButtonDown]->SetScale(BbuttonScale);
 
 	// Lスティック 上 の初期化
 	sprites_[LstickCover]->Initialize(LstickTex_.get(), LstickDefuPos_, Vector2(28, 48));
@@ -45,11 +62,15 @@ void OperationUI::Init()
 	sprites_[LstickUnder]->SetScale(LstickScale);
 
 	// 攻撃テキストの初期化
-	sprites_[AttackText]->Initialize(attackTextTex_.get(), Vector2(100, 500) + Vector2(100, -2),Vector2(360,120));
+	sprites_[AttackText]->Initialize(attackTextTex_.get(), AbuttonPos + Vector2(100, -2),Vector2(360,120));
 	sprites_[AttackText]->SetScale(Vector3(0.3f, 0.3f, 0));
 
+	// フラッシュテキストの初期化
+	sprites_[FlashText]->Initialize(flashTextTex_.get(), BbuttonPos + Vector2(100, -2), Vector2(480, 120));
+	sprites_[FlashText]->SetScale(Vector3(0.3f, 0.3f, 0));
+
 	// 移動テキストの初期化
-	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(100, 0), Vector2(272, 120));
+	sprites_[MoveText]->Initialize(moveTextTex_.get(), LstickDefuPos_ + Vector2(100, 0), Vector2(360, 120));
 	sprites_[MoveText]->SetScale(Vector3(0.3f, 0.3f, 0));
 
 	// アイテムフレームの初期化
@@ -88,7 +109,8 @@ void OperationUI::DrawFrontSprite()
 {
 	for (uint32_t i = 0; i < Type::Size; i++)
 	{
-		if (i != AButtonUp && i != AButtonDown)
+		if (i != AButtonUp && i != AButtonDown&&
+			i != BButtonUp && i != BButtonDown)
 		{
 			sprites_[i]->Draw();
 		}
@@ -100,5 +122,14 @@ void OperationUI::DrawFrontSprite()
 	else
 	{
 		sprites_[AButtonUp]->Draw();
+	}
+
+	if (Pad::GetButton(PadCode::ButtonB))
+	{
+		sprites_[BButtonDown]->Draw();
+	}
+	else
+	{
+		sprites_[BButtonUp]->Draw();
 	}
 }

@@ -194,7 +194,7 @@ void GameCollider::EnemyCollisionUpdate()
 		sphereERange.center = e->worldTransform_.translation;
 		sphereERange.radius = 7.0f;
 		if (e->GetState() == Enemy::StateType::Alive && Collision::CheckSphere2Sphere(pcol_, sphereERange)) {
-			e->SetAliveState(IEnemyState::AliveState::Tracking);
+			e->SetAliveState(State::AliveState::Tracking);
 			e->NearPlayerParticleUpdate();
 			e->ResetBack();
 			if (Collision::CheckOBB(player_->worldTransform_, e->worldTransform_)) {
@@ -206,9 +206,9 @@ void GameCollider::EnemyCollisionUpdate()
 
 			}
 		}
-		else if(e->GetAliveState()!= IEnemyState::AliveState::Patrol) {
+		else if(e->GetAliveState()!= State::AliveState::Patrol) {
 			player_->OnColUpSpeed();
-			e->SetAliveState(IEnemyState::AliveState::Back);
+			e->SetAliveState(State::AliveState::Back);
 			e->worldTransform_.color.y = 1;
 			e->worldTransform_.color.z = 1;
 		}

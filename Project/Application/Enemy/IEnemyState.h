@@ -2,6 +2,7 @@
 #include "WorldTransform.h"
 #include "Easing.h"
 #include <vector>
+#include "state.h"
 
 // エネミークラスの前方宣言
 class Enemy;
@@ -9,14 +10,6 @@ class Player;
 
 class IEnemyState
 {
-public:
-	enum class AliveState
-	{
-		Patrol,//巡回
-		Back,// 戻る
-		Tracking,//追尾
-		Dead,
-	};
 public:
 	// 純粋仮想関数
 	virtual void Update(Enemy& enemy) = 0;
@@ -31,7 +24,7 @@ public:
 public:// ゲッター
 
 	// 生存時の状態取得
-	AliveState GetAliveState();
+	State::AliveState GetAliveState();
 
 	// スポーン時間を取得
 	float GetSpawnTimer();
@@ -84,7 +77,7 @@ public:// ゲッター
 public:// セッター
 
 	// 生存時の状態を設定
-	void SetAliveState(const AliveState aliveState);
+	void SetAliveState(State::AliveState aliveState);
 
 	// 生きているかどうかを設定
 	void SetIsAlive(const bool IsAlive);
@@ -114,7 +107,7 @@ public:
 
 protected:
 	// 生存時の状態
-	AliveState aState_;
+	State::AliveState aState_;
 
 	// スポーン時間
 	float spawnTimer = 0;

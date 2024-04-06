@@ -222,7 +222,7 @@ void Enemy::SetIsAlive(const bool isAlive)
 	curenntState_->SetIsAlive(isAlive);
 }
 
-void Enemy::SetAliveState(IEnemyState::AliveState aState)
+void Enemy::SetAliveState(State::AliveState aState)
 {
 	curenntState_->SetAliveState(aState);
 }

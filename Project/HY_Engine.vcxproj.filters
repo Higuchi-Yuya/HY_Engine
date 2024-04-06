@@ -289,6 +289,12 @@
     <Filter Include="ヘッダー ファイル\Application\Light">
       <UniqueIdentifier>{65e72947-e53d-41a7-b018-f96fe0612b5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Enemy\EnemyAliveState">
+      <UniqueIdentifier>{d6e9f1ab-a4f2-4093-8298-da5ee24a8e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Enemy\EnemyState">
+      <UniqueIdentifier>{040c9d8f-a3ef-44cc-b1db-c0086f232b5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\ViewProjection.cpp">
@@ -534,9 +540,6 @@
     <ClCompile Include="Application\Scene\GameCamera.cpp">
       <Filter>ソース ファイル\Application\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Enemy\EnemyAliveState.cpp">
-      <Filter>ソース ファイル\Application\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Enemy\EnemySpawnState.cpp">
       <Filter>ソース ファイル\Application\Enemy</Filter>
     </ClCompile>
@@ -557,6 +560,24 @@
     </ClCompile>
     <ClCompile Include="Application\Enemy\EnemyHeart.cpp">
       <Filter>ソース ファイル\Application\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveState.cpp">
+      <Filter>ソース ファイル\Application\Enemy\EnemyAliveState</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveBack.cpp">
+      <Filter>ソース ファイル\Application\Enemy\EnemyAliveState</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveDead.cpp">
+      <Filter>ソース ファイル\Application\Enemy\EnemyAliveState</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAlivePatrol.cpp">
+      <Filter>ソース ファイル\Application\Enemy\EnemyAliveState</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveTracking.cpp">
+      <Filter>ソース ファイル\Application\Enemy\EnemyAliveState</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Enemy\EnemyAlive\IEnemyAliveState.cpp">
+      <Filter>ソース ファイル\Application\Enemy\EnemyAliveState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -806,9 +827,6 @@
     <ClInclude Include="Application\Scene\GameCamera.h">
       <Filter>ヘッダー ファイル\Application\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Enemy\EnemyAliveState.h">
-      <Filter>ヘッダー ファイル\Application\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Enemy\EnemySpawnState.h">
       <Filter>ヘッダー ファイル\Application\Enemy</Filter>
     </ClInclude>
@@ -829,6 +847,27 @@
     </ClInclude>
     <ClInclude Include="Application\Enemy\EnemyHeart.h">
       <Filter>ヘッダー ファイル\Application\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveState.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveBack.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveDead.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAlivePatrol.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveTracking.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\IEnemyAliveState.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Enemy\EnemyAlive\state.h">
+      <Filter>ヘッダー ファイル\Application\Enemy\EnemyState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

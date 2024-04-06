@@ -84,7 +84,7 @@ public:// ゲッター
 	const StateType GetState() { return nowState_; }
 
 	// 生きているときの今の状態を取得
-	const IEnemyState::AliveState GetAliveState() { return curenntState_->GetAliveState(); }
+	const State::AliveState GetAliveState() { return curenntState_->GetAliveState(); }
 
 	// ガイドライトの移動完了カウントを取得
 	const int GetLightMoveCount() { return lightMoveCount; }
@@ -115,7 +115,7 @@ public:// セッター
 	/// 敵の生きているときの行動状態を設定
 	/// </summary>
 	/// <param name="aState">状態</param>
-	void SetAliveState(IEnemyState::AliveState aState);
+	void SetAliveState(State::AliveState aState);
 
 	/// <summary>
 	/// 敵の死亡モーションが終了しているかどうかを設定

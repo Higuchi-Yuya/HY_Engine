@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D/Deferred;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Engine/PostEffect/Ripples;$(ProjectDir)/Engine/PostEffect/Scaling;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect;$(ProjectDir)/Application/Item;$(ProjectDir)/Application/Load;$(ProjectDir)/Application/Light</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D/Deferred;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Engine/PostEffect/Ripples;$(ProjectDir)/Engine/PostEffect/Scaling;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect;$(ProjectDir)/Application/Item;$(ProjectDir)/Application/Load;$(ProjectDir)/Application/Light;$(ProjectDir)/Application/Enemy/EnemyAlive</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -92,7 +92,7 @@ copy "$(SolutionDir)External\assimp\dll\Debug\pugixml.dll" "$(TargetDir)pugixml.
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D/Deferred;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Engine/PostEffect/Ripples;$(ProjectDir)/Engine/PostEffect/Scaling;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect;$(ProjectDir)/Application/Item;$(ProjectDir)/Application/Load;$(ProjectDir)/Application/Light</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine/Collision;$(ProjectDir)/Engine/Camera;$(ProjectDir)/Engine/DirectXBase;$(ProjectDir)/Engine/2D;$(ProjectDir)/Engine/3D/FBX;$(ProjectDir)/Engine/3D/Light;$(ProjectDir)/Engine/3D/Object;$(ProjectDir)/Engine/3D/Deferred;$(ProjectDir)/Engine/3D;$(ProjectDir)/Engine/Input;$(ProjectDir)/Engine/LevelLoder;$(ProjectDir)/Engine/Math;$(ProjectDir)/Engine/PostEffect;$(ProjectDir)/Engine/RenderBase;$(ProjectDir)/Engine/Sound;$(ProjectDir)/Engine/Particle;$(ProjectDir)/Engine/Util;$(ProjectDir)/Engine/PostEffect/Bloom;$(ProjectDir)/Engine/PostEffect/Blur;$(ProjectDir)/Engine/PostEffect/Composition;$(ProjectDir)/Engine/PostEffect/Vignette;$(ProjectDir)/Engine/PostEffect/Ripples;$(ProjectDir)/Engine/PostEffect/Scaling;$(ProjectDir)/Application/Enemy;$(ProjectDir)/Application/Player;$(ProjectDir)/Application/Scene;$(ProjectDir)/Application/GameCollider;$(ProjectDir)/Application/UI;$(ProjectDir)/Application/Effect;$(ProjectDir)/Application/Item;$(ProjectDir)/Application/Load;$(ProjectDir)/Application/Light;$(ProjectDir)/Application/Enemy/EnemyAlive</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -120,8 +120,11 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Application\Enemy\Enemy.cpp" />
     <ClCompile Include="Application\Effect\BeatEffect.cpp" />
     <ClCompile Include="Application\Enemy\EnemySpawnState.cpp" />
-    <ClCompile Include="Application\Enemy\EnemyAliveState.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveState.cpp" />
     <ClCompile Include="Application\Enemy\EnemyHeart.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAlivePatrol.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveBack.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveDead.cpp" />
     <ClCompile Include="Engine\3D\Deferred\DeferredRender.cpp" />
     <ClCompile Include="Engine\3D\Deferred\DeferredObject3d.cpp" />
     <ClCompile Include="Engine\2D\BillboardTex.cpp" />
@@ -205,14 +208,19 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClCompile Include="Application\Enemy\IEnemyState.cpp" />
     <ClCompile Include="Engine\PostEffect\PostDefrred.cpp" />
     <ClCompile Include="Application\Light\GameLight.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyAlive\IEnemyAliveState.cpp" />
+    <ClCompile Include="Application\Enemy\EnemyAlive\EnemyAliveTracking.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Player\Player.h" />
     <ClInclude Include="Application\Enemy\Enemy.h" />
     <ClInclude Include="Application\Effect\BeatEffect.h" />
     <ClInclude Include="Application\Enemy\EnemySpawnState.h" />
-    <ClInclude Include="Application\Enemy\EnemyAliveState.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveState.h" />
     <ClInclude Include="Application\Enemy\EnemyHeart.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAlivePatrol.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveBack.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveDead.h" />
     <ClInclude Include="Engine\3D\Deferred\DeferredRender.h" />
     <ClInclude Include="Engine\3D\Deferred\DeferredObject3d.h" />
     <ClInclude Include="Engine\2D\BillboardTex.h" />
@@ -297,6 +305,9 @@ copy "$(SolutionDir)External\assimp\dll\Release\pugixml.dll" "$(TargetDir)pugixm
     <ClInclude Include="Application\Enemy\IEnemyState.h" />
     <ClInclude Include="Engine\PostEffect\PostDefrred.h" />
     <ClInclude Include="Application\Light\GameLight.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\IEnemyAliveState.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\EnemyAliveTracking.h" />
+    <ClInclude Include="Application\Enemy\EnemyAlive\state.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

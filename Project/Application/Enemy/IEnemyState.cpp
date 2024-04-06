@@ -1,10 +1,11 @@
 #include "IEnemyState.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "IEnemyAliveState.h"
 
 Player* IEnemyState::player_ = nullptr;
 
-IEnemyState::AliveState IEnemyState::GetAliveState()
+State::AliveState IEnemyState::GetAliveState()
 {
     return aState_;
 }
@@ -104,7 +105,7 @@ void IEnemyState::EaseReset()
     easePatrol_.Reset();
 }
 
-void IEnemyState::SetAliveState(const AliveState aliveState)
+void IEnemyState::SetAliveState(State::AliveState aliveState)
 {
     aState_ = aliveState;
 }
@@ -142,6 +143,7 @@ void IEnemyState::SetIsPatrolEnd(bool IsPatrolEnd)
 void IEnemyState::SetPlayer(Player* player)
 {
     player_ = player;
+    IEnemyAliveState::SetPlayer(player);
 }
 
 void IEnemyState::SetPatrolNum(int32_t patrolNum)

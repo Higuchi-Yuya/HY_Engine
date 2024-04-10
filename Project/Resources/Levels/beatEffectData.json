@@ -1,0 +1,31 @@
+{
+    "int":{
+
+    },
+
+    "float":{
+        "beatDistance_" : 10,
+        "beatInterval_" : 30,
+        "timer_" : 0,
+        "timeLimit_" : 240
+    },
+
+    "Vec2":{
+        "beatExpansionStart_" : [
+            1.0,
+            1.0
+        ],
+        "beatExpansionEnd_" : [
+            0.96,
+            0.96
+        ]
+    },
+
+    "Vec3":{
+
+    },
+
+    "Vec4":{
+
+    }
+}

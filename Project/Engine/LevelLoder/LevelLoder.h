@@ -4,6 +4,7 @@
 #include <vector>
 #include <DirectXMath.h>
 #include "WorldTransform.h"
+#include <Vector2.h>
 
 // レベルデータ
 struct LevelData {
@@ -43,5 +44,46 @@ public:// メンバ関数
 	/// </summary>
 	/// <param name="fileName">ファイル名</param>
 	static LevelData* LoadFile(const std::string& fileName);
+
+
+	/// <summary>
+	/// int のデータの読み込み
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="variableName">変数名</param>
+	/// <returns></returns>
+	static int LoadIntData(const std::string& fileName,const std::string& variableName);
+
+	/// <summary>
+	/// float のデータの読み込み
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="variableName">変数名</param>
+	/// <returns></returns>
+	static float LoadFloatData(const std::string& fileName, const std::string& variableName);
+
+	/// <summary>
+	/// Vector2 のデータの読み込み
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="variableName">変数名</param>
+	/// <returns></returns>
+	static Vector2 LoadVec2Data(const std::string& fileName, const std::string& variableName);
+
+	/// <summary>
+	/// Vector3 のデータの読み込み
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="variableName">変数名</param>
+	/// <returns></returns>
+	static Vector3 LoadVec3Data(const std::string& fileName, const std::string& variableName);
+
+	/// <summary>
+	/// Vector4 のデータの読み込み
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="variableName">変数名</param>
+	/// <returns></returns>
+	static Vector4 LoadVec4Data(const std::string& fileName, const std::string& variableName);
 };
 

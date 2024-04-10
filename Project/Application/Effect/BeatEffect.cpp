@@ -1,4 +1,5 @@
 #include "BeatEffect.h"
+#include "LevelLoder.h"
 
 GaussianBlur* BeatEffect::gaussianBlur_ = nullptr;
 std::vector<Enemy*>BeatEffect::enemysInfo_{};
@@ -19,8 +20,8 @@ void BeatEffect::Initialize()
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
 
-	beatDistance_ = 10;
-	beatInterval_ = 30;
+	beatDistance_ = LevelLoader::LoadFloatData("beatEffectData", "beatDistance_");
+	beatInterval_ = LevelLoader::LoadFloatData("beatEffectData", "beatInterval_");
 
 	IsBeat_ = true;
 	IsNotBeatDo_ = false;
@@ -28,14 +29,14 @@ void BeatEffect::Initialize()
 	beatState_ = _Expansion;
 	notBeatState_ = _SetValue;
 
-	beatExpansionStart_ = { 1.0f,1.0f };
-	beatExpansionEnd_ = { 0.96f,0.96f };
+	beatExpansionStart_ = LevelLoader::LoadVec2Data("beatEffectData", "beatExpansionStart_");
+	beatExpansionEnd_ = LevelLoader::LoadVec2Data("beatEffectData", "beatExpansionEnd_");
 
 	beatReductionStart_ = beatExpansionEnd_;
 	beatReductionEnd_ = beatExpansionStart_;
 
-	timer_ = 0;
-	timeLimit_ = 60 * 4;
+	timer_ = LevelLoader::LoadFloatData("beatEffectData", "timer_");
+	timeLimit_ = LevelLoader::LoadFloatData("beatEffectData", "timeLimit_");
 
 	postRipples_->centerPos_ = { 0.5f,0.7f };
 	postRipples_->waveSpan_ = 20;

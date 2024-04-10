@@ -98,3 +98,196 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName) {
 	return levelData;
 }
 
+int LevelLoader::LoadIntData(const std::string& fileName, const std::string& variableName)
+{
+	// TODO: return ステートメントをここに挿入します
+	
+	// 連結してフルパスを得る
+	const std::string fullpath = kDefaultBaseDirectory + fileName + kExtension;
+
+	// ファイルストリーム
+	std::ifstream file;
+
+	// ファイルを開く
+	file.open(fullpath);
+	// ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	// JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
+
+	// 解凍
+	file >> deserialized;
+
+	//正しいファイルかチェック
+	assert(deserialized.is_object());
+
+	// データを格納
+	int data;
+
+	// intのパラメータ読み込み
+	nlohmann::json& int_ = deserialized["int"];
+
+	// 変数名に適応したもののデータを格納
+	data = int_[variableName];
+
+	// 値を返す
+	return data;
+}
+
+float LevelLoader::LoadFloatData(const std::string& fileName, const std::string& variableName)
+{
+	// 連結してフルパスを得る
+	const std::string fullpath = kDefaultBaseDirectory + fileName + kExtension;
+
+	// ファイルストリーム
+	std::ifstream file;
+
+	// ファイルを開く
+	file.open(fullpath);
+	// ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	// JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
+
+	// 解凍
+	file >> deserialized;
+
+	//正しいファイルかチェック
+	assert(deserialized.is_object());
+
+	// データを格納
+	float data;
+
+	// floatのパラメータ読み込み
+	nlohmann::json& float_ = deserialized["float"];
+
+	// 変数名に適応したもののデータを格納
+	data = float_[variableName];
+
+	// 値を返す
+	return data;
+}
+
+Vector2 LevelLoader::LoadVec2Data(const std::string& fileName, const std::string& variableName)
+{
+	// 連結してフルパスを得る
+	const std::string fullpath = kDefaultBaseDirectory + fileName + kExtension;
+
+	// ファイルストリーム
+	std::ifstream file;
+
+	// ファイルを開く
+	file.open(fullpath);
+	// ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	// JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
+
+	// 解凍
+	file >> deserialized;
+
+	//正しいファイルかチェック
+	assert(deserialized.is_object());
+
+	// データを格納
+	Vector2 data;
+
+	// vec2のパラメータ読み込み
+	nlohmann::json& vec2 = deserialized["Vec2"];
+
+	// 変数名に適応したもののデータを格納
+	data.x = vec2[variableName][0];
+	data.y = vec2[variableName][1];
+
+	// 値を返す
+	return data;
+}
+
+Vector3 LevelLoader::LoadVec3Data(const std::string& fileName, const std::string& variableName)
+{
+	// 連結してフルパスを得る
+	const std::string fullpath = kDefaultBaseDirectory + fileName + kExtension;
+
+	// ファイルストリーム
+	std::ifstream file;
+
+	// ファイルを開く
+	file.open(fullpath);
+	// ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	// JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
+
+	// 解凍
+	file >> deserialized;
+
+	//正しいファイルかチェック
+	assert(deserialized.is_object());
+
+	// データを格納
+	Vector3 data;
+
+	// vec3のパラメータ読み込み
+	nlohmann::json& vec3 = deserialized["Vec3"];
+
+	// 変数名に適応したもののデータを格納
+	data.x = vec3[variableName][0];
+	data.y = vec3[variableName][1];
+	data.z = vec3[variableName][2];
+
+	// 値を返す
+	return data;
+}
+
+Vector4 LevelLoader::LoadVec4Data(const std::string& fileName, const std::string& variableName)
+{
+	// 連結してフルパスを得る
+	const std::string fullpath = kDefaultBaseDirectory + fileName + kExtension;
+
+	// ファイルストリーム
+	std::ifstream file;
+
+	// ファイルを開く
+	file.open(fullpath);
+	// ファイルオープン失敗をチェック
+	if (file.fail()) {
+		assert(0);
+	}
+
+	// JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
+
+	// 解凍
+	file >> deserialized;
+
+	//正しいファイルかチェック
+	assert(deserialized.is_object());
+
+	// データを格納
+	Vector4 data;
+
+	// vec4のパラメータ読み込み
+	nlohmann::json& vec4 = deserialized["Vec4"];
+
+	// 変数名に適応したもののデータを格納
+	data.x = vec4[variableName][0];
+	data.y = vec4[variableName][1];
+	data.z = vec4[variableName][2];
+	data.w = vec4[variableName][3];
+
+	// 値を返す
+	return data;
+}
+

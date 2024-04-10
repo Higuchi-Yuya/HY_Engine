@@ -162,7 +162,7 @@ private:// メンバー変数
 	notBeatState notBeatState_;
 
 	// 波紋タイム
-	float timer_ = 0;
+	float timer_;
 	float timeLimit_ = 120;
 
 	// ビネットの色

@@ -128,7 +128,9 @@ void SceneManager::Update()
 
 void SceneManager::ImguiUpdate()
 {
+#ifdef DEBUG
 	currentScene_->ImguiUpdate();
+#endif // DEBUG
 }
 
 void SceneManager::Draw2DBack()
